@@ -38,3 +38,7 @@ De link hieronder is naar het standaard boek om git te leren.
 Dat boek is gratis te downloaden in alle ereader versies met de link hieronder.
 Git-scm is de officiele site voor git.
 https://git-scm.com/book/en/v2
+
+Calibre is goeie software om als ereader te dienen voor je computer.
+Dat staat ook gewoon in de repositories met `sudo apt install calibre` of op hun site voor windows https://calibre-ebook.com/download .
+Als je daaraan een .epub file geeft wordt alles super easy en leesbaar opgesteld voor je onafhankelijk van de vorm of grote van je scherm, dat is veel beter dan lezen van een epub. 
