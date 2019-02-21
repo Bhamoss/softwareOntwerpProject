@@ -6,7 +6,6 @@ De repo voor het project van softwareontwerp.
 ## ToDo
 
 - [x] Repo aanmaken en voorbeeld todo geven.
-- [ ] Michie toevoegen
 - [ ] 20/20 halen
 
 
