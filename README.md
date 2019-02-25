@@ -22,6 +22,9 @@ Dit omdat we dan later makkelijk kunnen terug gaan naar hoe de repo was op het m
 Plantuml kunje in debian gebaseerde distro's downloaden met
 `sudo apt install plantuml`
 Intellij weet je zelf al allemaal hoe het moet.
+Er is en plug-in in intellij voor plantuml.
+Installeer hem via de plug-in faciliteiten in intellij, maar hier is toch nog de link voor documentatie purposes.
+https://plugins.jetbrains.com/plugin/7017-plantuml-integration
 
 ### README.md aanpassen
 
