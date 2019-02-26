@@ -1,0 +1,7 @@
+@startuml
+Actor User
+User -> System: create new column
+System --> User: column list including new column
+
+
+@enduml

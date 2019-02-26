@@ -1,0 +1,11 @@
+@startuml
+Actor User
+User -> System: selectTable()
+alt table has no columns
+    System --> User:open table in Table Design
+else table has colums
+    System --> User:open table in Table Rows
+end
+
+
+@enduml

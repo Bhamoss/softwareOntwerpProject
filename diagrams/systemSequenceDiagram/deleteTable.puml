@@ -1,0 +1,9 @@
+@startuml
+Actor User
+User -> System: indicateTable()
+User -> System: deleteTable()
+System --> User: updated table list
+
+
+
+@enduml
