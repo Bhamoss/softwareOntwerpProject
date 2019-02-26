@@ -1,0 +1,15 @@
+@startuml
+Actor User
+User -> System: selectTableName()
+loop invalid
+    loop
+        User -> System: editTableName(newName)
+        System --> User: valid, invalid
+    end
+    User -> System: tryToFinish()
+    System --> User: valid, invalid
+end
+
+
+System --> User: table name
+@enduml

@@ -8,6 +8,11 @@ De repo voor het project van softwareontwerp.
 - [x] Repo aanmaken en voorbeeld todo geven.
 - [ ] De taken die we bespreken dinsdag 26/02 hier toevoegen, mss per teamlid maar we werken best samen aan alles
 - [ ] 20/20 halen
+- [ ] Michiel: UC: Delete Table, Open Table, Add Column
+- [ ] Thomas: UC: Edit Column Characteristics
+- [ ] Jaron: UC: delete column, add row
+- [ ] Michy/Michel: UC: Edit row value, Delete Row
+
 
 
 ## Regelen
