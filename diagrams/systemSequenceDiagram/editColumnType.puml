@@ -1,0 +1,52 @@
+@startuml
+title Edit column type \n \n Main Success Scenario
+Actor User
+Boundary System
+User -> System: selectColumnType(Column)
+alt Type == String
+        System --> User: Type == Email
+    else Type == Email
+        System --> User: Type == Boolean
+    else Type == Boolean
+        System --> User: Type == Integer
+    else Type == Integer
+        System --> User: Type == String
+
+    end
+
+System -> User: valid, invalid
+note left
+    Ik weet dat dit lelijk is,
+    maar je hebt niet echt
+    een do-while hierin,
+    plus zeggen invalid
+    of 1e iteratie is ook
+    zo brak.
+    Op deze manier wordt
+    ook benadrukt dat er
+    niets anders mag worden
+    gedaan als het invalid
+    is.
+    In principe zou ik ook
+    van het onderste
+    Een aparte use case
+    trekt ook op niets
+    want dat is exact hetzelfde
+    maar met enkel invalid hier.
+end note
+loop invalid
+    User -> System: selectColumnType(Column)
+    alt Type == String
+        System --> User: Type == Email
+    else Type == Email
+        System --> User: Type == Boolean
+    else Type == Boolean
+        System --> User: Type == Integer
+    else Type == Integer
+        System --> User: Type == String
+
+    end
+
+System -> User: valid, invalid
+end
+@enduml

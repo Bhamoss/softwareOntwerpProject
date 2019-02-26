@@ -1,0 +1,49 @@
+@startuml
+title Edit Column Name Characteristic \n\nMain Success Scenario
+Actor User
+Boundary System
+User -> System: selectColumnName(Column)
+note left
+    I try to put all
+    the SSDs in the
+    same image here.
+end note
+loop
+    User -> System: editColumnName(newName)
+    System --> User: valid, not valid
+end
+System --> User: valid
+User -> System: finishEditing()
+System --> User: column name
+
+
+
+
+newpage User tries invalid name
+User -> System: selectColumnName(Column)
+loop invalid
+    loop
+        User -> System: editColumnName(newName)
+        System --> User: valid, invalid
+    end
+    User -> System: tryToFinish()
+    System --> User: valid, invalid
+end
+
+System --> User: column name
+
+newpage User cancels editing
+User -> System: selectColumnName(Column)
+loop
+    User -> System: editColumnName(newName)
+    System --> User: valid, not valid
+end
+User -> System: cancelEditing()
+note left
+    I think we do not need
+    the valid confirmation.
+    It can be invalid also
+    when the user cancels.
+end note
+System --> User: original unedited column name
+@enduml

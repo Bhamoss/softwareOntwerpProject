@@ -1,0 +1,49 @@
+@startuml
+title Edit column default value \n\n Main Success Scenario
+Actor User
+Boundary System
+User -> System: selectColumnDefaultValue(Column)
+alt Type == not Boolean
+
+    User -> System: setDefaultValue(value)
+    System --> User: valid
+
+else Type == Boolean
+    alt blanks == allowed
+        alt default == True
+            System --> User: False
+        else default == False
+            System --> User: blank
+        else default == blank
+            System --> User: True
+        end
+    else blanks == not allowed
+        alt default == True
+            System --> User: False
+        else default == False
+            System --> User: True
+        end
+    end
+end
+System --> User: new default value
+newpage Invalid non boolean default
+User -> System: setDefaultValue(value)
+opt Type == not Boolean
+loop invalid OR first iteration
+alt blanks = notAllowed AND value = blank
+        System --> User: invalid
+    else Type == String AND value == *empty*
+        System --> User: invalid
+    else Type == Email AND valueHasExactlyOne@(value) == false
+        System --> User: invalid
+    else Type == Integer \nAND isDecimalRepresentation(value) == True \nAND hasExtraneousLeadingZeros(value) == False
+
+        System --> User: invalid
+    else else
+    System --> User: valid
+end
+end
+end
+System --> User: new default value
+newpage User cancels edit
+@enduml
