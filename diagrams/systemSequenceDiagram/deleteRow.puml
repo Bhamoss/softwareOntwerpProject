@@ -1,0 +1,8 @@
+@startuml
+Actor User
+User-> System: selectRow(row)
+System --> User: selected rows
+User -> System: deleteSelection()
+System --> User: updated rows
+
+@enduml

@@ -11,7 +11,7 @@ De repo voor het project van softwareontwerp.
 - [x] Michiel: UC: Delete Table, Open Table, Add Column
 - [ ] Thomas: UC: Edit Column Characteristics
 - [ ] Jaron: UC: delete column, add row
-- [ ] Michy/Michel: UC: Edit row value, Delete Row
+- [x] Michy/Michel: UC: Edit row value, Delete Row
 
 
 

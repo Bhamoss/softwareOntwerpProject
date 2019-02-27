@@ -1,0 +1,5 @@
+@startuml
+Actor User
+User -> System: editCell(column,row)
+System --> User: updated value
+@enduml
