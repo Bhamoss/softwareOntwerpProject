@@ -1,0 +1,9 @@
+@startuml
+Actor User
+User -> System: selectColumn()
+System --> User: indicateSelected
+User -> System: deleteColumn()
+System --> User: updated columns list
+
+
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+Actor User
+User -> System: addRow()
+System --> User: updated rows list
+
+
+@enduml

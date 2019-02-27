@@ -10,7 +10,7 @@ De repo voor het project van softwareontwerp.
 - [ ] 20/20 halen
 - [x] Michiel: UC: Delete Table, Open Table, Add Column
 - [x] Thomas: UC: Edit Column Characteristics (testcommit)
-- [ ] Jaron: UC: delete column, add row
+- [x] Jaron: UC: delete column, add row
 - [x] Michy/Michel: UC: Edit row value, Delete Row
 
 
