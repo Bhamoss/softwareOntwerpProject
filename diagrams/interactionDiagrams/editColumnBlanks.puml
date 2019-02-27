@@ -1,0 +1,16 @@
+@startuml
+title Edit column blanks \n \n Main Success Scenario
+Actor User
+Boundary System
+alt blanks == allowed
+    User -> System: setBlanks(notAllowed)
+else blanks == not allowed
+    User -> System: setBlanks(allowed)
+end
+System --> User: valid
+newpage Not allowed invalid
+User -> System: setBlanks(notAllowed)
+System --> User: invalid
+User -> System: setBlanks(allowed)
+System --> User: valid
+@enduml
