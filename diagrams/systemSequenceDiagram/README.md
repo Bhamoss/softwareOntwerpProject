@@ -11,7 +11,9 @@ Je kunt ook right zetten in plaats van left
 om je commentaar rechts van de SSD te plaatsen.
 
 ## Use Case: Edit Column Characteristics
-Kdenk dat we int algemeen toch nog best een nadenken over die precondition in de use cases.  
 
-### MSS
+We moeten toch nog eens praten denken over die preconditions.  
+
+Ik heb de alternative use cases een eigen SSD gegeven.
+Ze waren te groot en los van elkaar, plus ze wijken af al van stap 1, da is basically een aparte use case.
 

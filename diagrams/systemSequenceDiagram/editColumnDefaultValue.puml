@@ -28,6 +28,16 @@ end
 System --> User: new default value
 newpage Invalid non boolean default
 User -> System: setDefaultValue(value)
+note left
+    I include the actual cases
+    here because I thought it
+    would be useful to
+    visualize all these
+    different cases
+    instead of ploughing
+    through that awful
+    text again.
+end note
 opt Type == not Boolean
 loop invalid OR first iteration
 alt blanks = notAllowed AND value = blank
@@ -46,4 +56,13 @@ end
 end
 System --> User: new default value
 newpage User cancels edit
+User -> System: selectColumnDefaultValue(Column)
+opt Type == not Boolean
+    loop
+        User -> System: setDefaultValue(value)
+        System --> User: valid, invalid
+    end
+    User -> System: cancelEditing()
+    System --> User: original unedited default value
+end
 @enduml
