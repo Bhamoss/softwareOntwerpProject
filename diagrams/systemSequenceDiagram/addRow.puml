@@ -1,5 +1,7 @@
 @startuml
+title Add row
 Actor User
+Boundary System
 User -> System: addRow()
 System --> User: updated rows list
 

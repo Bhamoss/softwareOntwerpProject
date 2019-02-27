@@ -1,6 +1,9 @@
 @startuml
+title Detelte table \n MSS
 Actor User
-User -> System: indicateTable()
+Boundary System
+User -> System: selectTable(table)
+System --> User: show selected
 User -> System: deleteTable()
 System --> User: updated table list
 

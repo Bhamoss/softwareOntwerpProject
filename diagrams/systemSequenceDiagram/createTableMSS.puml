@@ -1,6 +1,6 @@
 @startuml
 Actor User
-User -> System: create new table
+User -> System: createNewTable()
 System --> User: table list including new table
 
 

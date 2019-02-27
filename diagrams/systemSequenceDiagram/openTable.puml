@@ -1,6 +1,8 @@
 @startuml
+title Open table \n MSS
 Actor User
-User -> System: selectTable()
+Boundary System
+User -> System: selectTable(table)
 alt table has no columns
     System --> User:open table in Table Design
 else table has colums

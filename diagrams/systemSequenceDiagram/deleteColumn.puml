@@ -1,6 +1,8 @@
 @startuml
+title Delete column\nMSS
 Actor User
-User -> System: selectColumn()
+Boundary System
+User -> System: selectColumn(column)
 System --> User: indicateSelected
 User -> System: deleteColumn()
 System --> User: updated columns list

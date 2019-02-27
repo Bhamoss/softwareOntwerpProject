@@ -1,6 +1,8 @@
 @startuml
+title Add column \n MSS
 Actor User
-User -> System: create new column
+Boundary System
+User -> System: createNewColumn()
 System --> User: column list including new column
 
 

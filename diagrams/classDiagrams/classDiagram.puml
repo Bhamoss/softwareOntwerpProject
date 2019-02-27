@@ -1,0 +1,117 @@
+@startuml
+title Class Diagram
+
+class ModeCoordinator
+{
+
+__Responsibility__
+manage mode
+Is Information Expert
+about the modes
+so needs to manage
+them
+}
+
+ModeCoordinator "1" -- "1" TableHandler:  manages
+ModeCoordinator "1" -- "1" TableDesignHandler:  manages
+ModeCoordinator "1" -- "1" TableRowsHandler:  manages
+
+class TableHandler
+{
+    width : int
+    create() : Table
+    destroy(Table)
+    editTableName(String)
+    openTable(Table): Table
+    __Responsibilities__
+    managing tables
+}
+TableHandler "1" -- "0..*" Table
+TableDesignHandler "1" -- "1" Table
+TableRowsHandler "1" -- "1" Table
+
+
+class TableDesignHandler
+{
+    Layout
+
+__Responsibility__
+}
+
+class TableRowsHandler
+{
+    Layout
+__Responsibility__
+
+}
+
+class Table{
+    name
+    create(): Column
+    destroy(Column)
+    addRow()
+    deleteRow(Integer)
+__Responsibility__
+manage Column
+}
+
+
+
+class Cell
+{
+editValue(value): {abstract}
+__Responsibility__
+Know:
+maintain data
+}
+Cell <|-- BooleanCell
+Cell <|-- IntegerCell
+Cell <|-- EmailCell
+Cell <|-- StringCell
+
+class Column
+{
+name:String
+allowsBlanks:Boolean
+    editColumnName(String)
+    editColumnType()
+    editColumnBlanks()
+__Responsibility__
+Know: column
+manage Cells
+}
+Column "1" -- "1" Type: has
+Enum Type
+{
+    defaultValue
+    __PROBLEM__
+    Can't you
+    see this
+    from cel
+    type?
+}
+
+Table "1" -- "0..*" Column: has
+Column "1" -- "0..*" Cell: has
+
+class BooleanCell
+{
+value : Boolean
+editValue(Boolean)
+}
+class StringCell
+{
+value : String
+editValue(String)
+}
+class EmailCell
+{
+value : String
+editValue(String)
+}
+class IntegerCell
+{
+value : Integer
+editValue(Integer)
+}
+@enduml
