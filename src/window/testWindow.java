@@ -3,13 +3,21 @@ package window;
 import java.awt.*;
 
 public class testWindow extends CanvasWindow {
+
+    public testWindow(String title)
+    {
+        super(title);
+    }
+
     /**
      * Initializes a CanvasWindow object.
      *
      * @param title Window title
      */
-    public testWindow(String title) {
+    public testWindow(String title, int width, int height) {
         super(title);
+        this.width = width;
+        this.height = height;
     }
 
     /**
