@@ -1,0 +1,6 @@
+@startuml
+actor User
+User -> ModeHandler: deleteTable(table)
+ModeHandler -> ModeHandler: isValidMode
+ModeHandler -> TableHandler: deleteTable(table)
+@enduml

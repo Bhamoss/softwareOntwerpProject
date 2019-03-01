@@ -1,0 +1,16 @@
+@startuml
+actor User
+
+activate ModeHandler
+User -> ModeHandler: createTable()
+activate TableHandler
+ModeHandler -> TableHandler: createTable()
+ModeHandler -> ModeHandler: isValid
+create Table
+TableHandler -> Table: create Table(N)
+activate Table
+Table -> Table: setName("TableN")
+return Table
+deactivate TableHandler
+deactivate ModeHandler
+@enduml

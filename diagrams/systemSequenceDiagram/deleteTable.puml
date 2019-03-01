@@ -1,5 +1,5 @@
 @startuml
-title Detelte table \n MSS
+title Delete table \n MSS
 Actor User
 Boundary System
 User -> System: selectTable(table)

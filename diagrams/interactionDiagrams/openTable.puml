@@ -1,0 +1,23 @@
+@startuml
+actor User
+User -> ModeHandler: openTable(table)
+activate ModeHandler
+ModeHandler -> ModeHandler: isValidMode
+ModeHandler -> TableHandler: isEmpty(table)
+activate TableHandler
+TableHandler -> Table: isEmpty()
+activate Table
+deactivate Table
+deactivate TableHandler
+alt empty
+    ModeHandler -> ModeHandler: setMode(designMode)
+    ModeHandler -> DesignHandler: setTable(table)
+else !empty
+    ModeHandler -> ModeHandler: setMode(rowsMode)
+    ModeHandler -> RowsHandler: setTable(table)
+
+
+end
+deactivate ModeHandler
+
+@enduml
