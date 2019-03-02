@@ -3,7 +3,10 @@ title Class Diagram
 
 class ModeCoordinator
 {
-
+    setColumnName(Column, String): Boolean
+    setColumnType(Column): Boolean
+    setColumnDV(Column, Type): Boolean
+    setColumnBlanks(Column)
 __Responsibility__
 manage mode
 Is Information Expert
@@ -33,7 +36,7 @@ TableRowsHandler "1" -- "1" Table
 
 class TableDesignHandler
 {
-    Layout
+    setColumnBlanks(Column)
 
 __Responsibility__
 }

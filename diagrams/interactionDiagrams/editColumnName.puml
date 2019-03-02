@@ -11,14 +11,18 @@ note left
     Als er in de DesignHandler zit,
     dan weet die welke tabel, juist?
 end note
-DesignHandler -> DesignHandler: isNameAlreadyUsed(name)
+DesignHandler -> Table: setColumnName(column, name)
+activate Table
+Table -> Table: isColumnNameAlreadyUsed(name)
 
-DesignHandler -> Column: setName(name)
+Table -> Column: setColumnName(column, name)
 Activate Column
 
 Column -> Column: isNameEmpty(name)
 
 Deactivate Column
+
+deactivate Table
 
 Deactivate DesignHandler
 

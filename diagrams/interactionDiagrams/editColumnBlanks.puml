@@ -2,20 +2,24 @@
 title Edit Column Blanks
 Actor User
 
-loop while !isValid
-    User -> ModeHandler: isValid = setColumnBlanks(column)
+
+    User -> ModeHandler: setColumnBlanks(column)
     activate ModeHandler
     ModeHandler -> ModeHandler: isValidMode
-    ModeHandler -> DesignHandler: isValid = setColumnBlanks(column)
+    ModeHandler -> DesignHandler: setColumnBlanks(column)
     activate DesignHandler
-    DesignHandler -> Column: isValid = changeBlanks()
+    DesignHandler -> Column: changeBlanks()
     activate Column
     Column -> Column: bA = isBlankAllowed()
-    Column -> Column: setBlanks(!bA)
+    Column -> Column: isValid = isValidBlank(!bA)
+    opt isValid
+        Column -> Column: setBlanks(!bA)
+    end
+
     deactivate Column
     deactivate DesignHandler
     deactivate ModeHandler
-end
+
 
 
 
