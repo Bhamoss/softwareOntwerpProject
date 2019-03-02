@@ -1,0 +1,29 @@
+@startuml
+title Edit Column Type
+Actor User
+
+loop while !isValid
+    User -> ModeHandler: isValid = setColumnType(column)
+    Activate ModeHandler
+    ModeHandler -> ModeHandler: isValidMode
+    ModeHandler -> DesignHandler: isValid = setColumnType(column)
+    Activate DesignHandler
+    DesignHandler -> Column: isValid = changeType()
+    activate Column
+    alt getType() == String
+        Column -> Column: setType(Email)
+    else getType() == Email
+        Column -> Column: setType(Boolean)
+    else getType() == Boolean
+        Column -> Column: setType(Integer)
+    else getType() == Integer
+        Column -> Column: setType(String)
+    end
+    deactivate Column
+    deactivate DesignHandler
+    deactivate ModeHandler
+end
+
+
+
+@enduml
