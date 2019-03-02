@@ -4,19 +4,24 @@ Actor User
 
 loop while !isValid
     User -> ModeHandler: isValid = setColumnType(column)
-    Activate ModeHandler
+    activate ModeHandler
     ModeHandler -> ModeHandler: isValidMode
     ModeHandler -> DesignHandler: isValid = setColumnType(column)
-    Activate DesignHandler
+    activate DesignHandler
     DesignHandler -> Column: isValid = changeType()
     activate Column
-    alt getType() == String
+    Column -> Column: t = getType()
+    note left
+        hier nog een
+        return bij?
+    end note
+    alt t = String
         Column -> Column: setType(Email)
-    else getType() == Email
+    else t = Email
         Column -> Column: setType(Boolean)
-    else getType() == Boolean
+    else t = Boolean
         Column -> Column: setType(Integer)
-    else getType() == Integer
+    else t = Integer
         Column -> Column: setType(String)
     end
     deactivate Column

@@ -1,0 +1,23 @@
+@startuml
+title Edit Column Blanks
+Actor User
+
+loop while !isValid
+    User -> ModeHandler: isValid = setColumnBlanks(column)
+    activate ModeHandler
+    ModeHandler -> ModeHandler: isValidMode
+    ModeHandler -> DesignHandler: isValid = setColumnBlanks(column)
+    activate DesignHandler
+    DesignHandler -> Column: isValid = changeBlanks()
+    activate Column
+    Column -> Column: bA = isBlankAllowed()
+    Column -> Column: setBlanks(!bA)
+    deactivate Column
+    deactivate DesignHandler
+    deactivate ModeHandler
+end
+
+
+
+
+@enduml

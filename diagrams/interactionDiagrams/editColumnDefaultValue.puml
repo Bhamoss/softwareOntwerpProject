@@ -1,0 +1,32 @@
+@startuml
+title Edit Column Default Value
+Actor User
+
+loop while !isValid
+    User -> ModeHandler: isValid = setColumnDV(column, value)
+    activate ModeHandler
+    ModeHandler -> ModeHandler: isValidMode
+    ModeHandler -> DesignHandler: isValid = setColumnDV(column, value)
+    activate DesignHandler
+    DesignHandler -> Column: isValid = changeDV(value)
+    activate Column
+
+    Column -> Column: t = getType()
+    Column -> Column: bA = isBlankAllowed()
+    Column -> Column: dv = getDV()
+
+    alt t = Boolean
+        alt bA
+            Column -> Column: setDV(False)
+        else
+            Column -> Column: setDV(!dv)
+        end
+    else
+        Column -> Column: isValidDV(value)
+    end
+
+    deactivate Column
+    deactivate DesignHandler
+    deactivate ModeHandler
+end
+@enduml
