@@ -1,0 +1,26 @@
+@startuml
+title Delete column\nMSS
+Actor User
+User -> ModeHandler: deleteColumn(Column)
+activate ModeHandler
+alt mode = TableDesign
+ModeHandler -> TableDesignHandler: deleteColumn(Column)
+activate TableDesignHandler
+TableDesignHandler -> Table: deleteColumn(Column)
+activate Table
+alt is(Valid)Column(Column)
+Table -> Column: destroy()
+destroy Column
+ModeHandler -> User: repaint?
+else
+Table -> TableDesignHandler: ERROR
+deactivate Table
+TableDesignHandler -> ModeHandler : ERROR
+deactivate TableDesignHandler
+ModeHandler-> User : ERROR
+end
+else else
+ModeHandler -> User: ERROR
+end
+deactivate ModeHandler
+@enduml

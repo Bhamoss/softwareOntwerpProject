@@ -5,15 +5,22 @@ De repo voor het project van softwareontwerp.
 
 ## ToDo
 
-- [x] Repo aanmaken en voorbeeld todo geven.
-- [ ] De taken die we bespreken dinsdag 26/02 hier toevoegen, mss per teamlid maar we werken best samen aan alles
-- [ ] 20/20 halen
 - [ ] Michy: ID: Delete Table, Open Table, Add Column
 - [ ] Michiel: ID: Edit Column Characteristics (testcommit)
-- [ ] Thomas: ID: delete column, add row
+- [x] Thomas: ID: delete column, add row
 - [ ] Jaron: ID: Edit row value, Delete Row
+- [ ] Die graphics uitvogelen
 
-
+## Commentaar
+Dus voor zover ik zie met die GUI, kunnen
+we dingen op da canvas tekenen door in de
+paint methode die Graphics object aan te passen.
+(Zie testwindow)  
+Ik heb wel nog geen idee hoe we zullen bepalen
+waar precies geklikt wordt en daar anders op reageren
+dan als er ergens anders wordt geklikt.
+Ik dacht dat we dat moesten doen met die Panel,
+maar kheb daar al wa mee gespeeld en da veranderd precies niets.
 
 
 ## Regelen
@@ -23,6 +30,10 @@ we een commit maken met de naam "IteratieXFinaal".
 Dit omdat we dan later makkelijk kunnen terug gaan naar hoe de repo was op het moment dat we het inleveren.
 
 ## Resources
+
+### GUI
+Info over die graphics waarmee we moeten werken:
+[Graphics](https://docs.oracle.com/javase/tutorial/2d/basic2d/index.html)
 
 ### Software
 
