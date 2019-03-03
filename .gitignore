@@ -2,8 +2,8 @@
 **/*.idea
 **/*.iml
 ## output files
-out/*
-output/*
+out/**/*
+output/**/*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
