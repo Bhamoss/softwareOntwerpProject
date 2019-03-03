@@ -3,29 +3,38 @@ title Edit Column Name
 Actor User
 
 User -> ModeHandler: setColumnName(column, name)
-Activate ModeHandler
-ModeHandler -> ModeHandler: isValidMode
-ModeHandler -> DesignHandler: setColumnName(column, name)
-Activate DesignHandler
-note left
-    Als er in de DesignHandler zit,
-    dan weet die welke tabel, juist?
-end note
-DesignHandler -> Table: setColumnName(column, name)
-activate Table
-Table -> Table: isColumnNameAlreadyUsed(name)
+activate ModeHandler
+alt mode = TableDesign
+    ModeHandler -> TableDesignHandler: setColumnName(column, name)
+    activate TableDesignHandler
+    TableDesignHandler -> Table: setColumnName(column, name)
+    activate Table
+    alt !isAllReadyUsedColumnName(name)
+        Table -> Column: isEmpty = isEmptyName(name)
+        activate Column
+        deactivate Column
+        alt !isEmpty
+            Table -> Column: setName(name)
+            activate Column
+            deactivate Column
+        else
+            Table -> TableDesignHandler: ERROR
+            deactivate Table
+            TableDesignHandler -> ModeHandler: ERROR
+            ModeHandler -> User: ERROR
+        end
+    else
+    TableDesignHandler -> ModeHandler: ERROR
+    deactivate TableDesignHandler
+    ModeHandler -> User: ERROR
+    end
+else
+    ModeHandler -> User: ERROR
 
-Table -> Column: setColumnName(column, name)
-Activate Column
+end
 
-Column -> Column: isNameEmpty(name)
 
-Deactivate Column
+deactivate ModeHandler
 
-deactivate Table
-
-Deactivate DesignHandler
-
-Deactivate ModeHandler
 
 @enduml

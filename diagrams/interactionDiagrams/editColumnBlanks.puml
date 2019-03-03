@@ -2,25 +2,31 @@
 title Edit Column Blanks
 Actor User
 
-
-    User -> ModeHandler: setColumnBlanks(column)
-    activate ModeHandler
-    ModeHandler -> ModeHandler: isValidMode
-    ModeHandler -> DesignHandler: setColumnBlanks(column)
-    activate DesignHandler
-    DesignHandler -> Column: changeBlanks()
+User -> ModeHandler: changeColumnBlanks(column)
+activate ModeHandler
+alt mode = TableDesign
+    ModeHandler -> TableDesignHandler: changeColumnBlanks(column)
+    activate TableDesignHandler
+    TableDesignHandler -> Table: changeColumnBlanks(column)
+    activate Table
+    Table -> Column: changeBlanks()
     activate Column
-    Column -> Column: bA = isBlankAllowed()
-    Column -> Column: isValid = isValidBlank(!bA)
-    opt isValid
-        Column -> Column: setBlanks(!bA)
+    alt changeOfBlanksAllowed()
+        Column -> Column: b = areBlanksAllowed()
+        Column -> Column: setBlanks(!b)
+    else
+        Column -> Table: ERROR
+        deactivate Column
+        Table -> TableDesignHandler: ERROR
+        deactivate Table
+        TableDesignHandler -> ModeHandler: ERROR
+        deactivate TableDesignHandler
+        ModeHandler -> User: ERROR
     end
-
-    deactivate Column
-    deactivate DesignHandler
-    deactivate ModeHandler
-
-
+else
+    ModeHandler -> User: ERROR
+end
+deactivate ModeHandler
 
 
 

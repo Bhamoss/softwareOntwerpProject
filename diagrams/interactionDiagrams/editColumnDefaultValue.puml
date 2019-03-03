@@ -2,31 +2,109 @@
 title Edit Column Default Value
 Actor User
 
-loop while !isValid
-    User -> ModeHandler: isValid = setColumnDV(column, value)
-    activate ModeHandler
-    ModeHandler -> ModeHandler: isValidMode
-    ModeHandler -> DesignHandler: isValid = setColumnDV(column, value)
-    activate DesignHandler
-    DesignHandler -> Column: isValid = changeDV(value)
+
+
+User -> ModeHandler: setColumnDV(column, value)
+activate ModeHandler
+alt mode = TableDesign
+    ModeHandler -> TableDesignHandler: setColumnDV(column, value)
+    activate TableDesignHandler
+    TableDesignHandler -> Table: setColumnDV(column, value)
+    activate Table
+    Table -> Column: setDV(value)
     activate Column
-
-    Column -> Column: t = getType()
-    Column -> Column: bA = isBlankAllowed()
-    Column -> Column: dv = getDV()
-
-    alt t = Boolean
-        alt bA
+    alt getType() = Boolean
+        alt getDV() = True
             Column -> Column: setDV(False)
-        else
-            Column -> Column: setDV(!dv)
+        else getDV() = False
+            alt areBlanksAllowed()
+                Column -> Column: setDV(blank)
+            else
+                Column -> Column: setDV(True)
+            end
+        else getDV() = blank
+        note left
+            hoe noemen we
+            blank?
+            mag dit zo?
+        end note
+            Column -> Column: setDV(True)
+
         end
-    else
-        Column -> Column: isValidDV(value)
+
+    else getType() != Boolean
+
+
+        alt isValidDV(value)
+            Column -> Column: setDV(value)
+        else
+            Column -> Table: ERROR
+                    deactivate Column
+                    Table -> TableDesignHandler: ERROR
+                    deactivate Table
+                    TableDesignHandler -> ModeHandler: ERROR
+                    deactivate TableDesignHandler
+                    ModeHandler -> User: ERROR
+        end
     end
 
-    deactivate Column
-    deactivate DesignHandler
-    deactivate ModeHandler
+
+else
+    ModeHandler -> User: ERROR
 end
+deactivate ModeHandler
+
+newpage 2e optie
+
+User -> ModeHandler: setColumnDV(column, value)
+activate ModeHandler
+alt mode = TableDesign
+    ModeHandler -> TableDesignHandler: setColumnDV(column, value)
+    activate TableDesignHandler
+    TableDesignHandler -> Table: setColumnDV(column, value)
+    activate Table
+    Table -> Column: setDV(value)
+    activate Column
+    alt getType() = Boolean
+        alt areBlanksAllowed()
+            alt getDV() = True
+                Column -> Column: setDV(False)
+            else getDV() = False
+                Column -> Column: setDV(blank)
+            else getDV() = blank
+                Column -> Column: setDV(True)
+            end
+        else
+            alt getDV() = True
+                Column -> Column: setDV(False)
+            else getDV() = True
+                Column -> Column: setDV(False)
+            else getDV() = True
+                Column -> Column: setDV(False)
+            end
+        end
+
+    else getType() != Boolean
+
+
+        alt isValidDV(value)
+            Column -> Column: setDV(value)
+        else
+            Column -> Table: ERROR
+                    deactivate Column
+                    Table -> TableDesignHandler: ERROR
+                    deactivate Table
+                    TableDesignHandler -> ModeHandler: ERROR
+                    deactivate TableDesignHandler
+                    ModeHandler -> User: ERROR
+        end
+    end
+
+
+else
+    ModeHandler -> User: ERROR
+end
+deactivate ModeHandler
+
+
 @enduml

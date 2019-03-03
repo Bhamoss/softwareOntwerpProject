@@ -2,32 +2,42 @@
 title Edit Column Type
 Actor User
 
-loop while !isValid
-    User -> ModeHandler: isValid = setColumnType(column)
-    activate ModeHandler
-    ModeHandler -> ModeHandler: isValidMode
-    ModeHandler -> DesignHandler: isValid = setColumnType(column)
-    activate DesignHandler
-    DesignHandler -> Column: isValid = changeType()
+
+User -> ModeHandler: setColumnType(column)
+activate ModeHandler
+alt mode = TableDesign
+    ModeHandler -> TableDesignHandler: setColumnType(column)
+    activate TableDesignHandler
+    TableDesignHandler -> Table: setColumnType(column)
+    activate Table
+    Table -> Column: changeType()
     activate Column
-    Column -> Column: t = getType()
+    Column -> Column: newType = getFollowingType()
     note left
-        hier nog een
-        return bij?
+        Is dit correct?
+        method geeft volgende
+        type terug, gebaseerd
+        op huidige type
     end note
-    alt t = String
-        Column -> Column: setType(Email)
-    else t = Email
-        Column -> Column: setType(Boolean)
-    else t = Boolean
-        Column -> Column: setType(Integer)
-    else t = Integer
-        Column -> Column: setType(String)
+    alt isValidType(newType)
+        Column -> Column: setType(newType)
+    else
+        Column -> Table: ERROR
+        deactivate Column
+        Table -> TableDesignHandler: ERROR
+        deactivate Table
+        TableDesignHandler -> ModeHandler: ERROR
+        deactivate TableDesignHandler
+        ModeHandler -> User: ERROR
     end
-    deactivate Column
-    deactivate DesignHandler
-    deactivate ModeHandler
+
+
+else
+    ModeHandler -> User: ERROR
 end
+deactivate ModeHandler
+
+
 
 
 
