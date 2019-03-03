@@ -3,6 +3,7 @@
 **/*.iml
 ## output files
 out/*
+output/*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
