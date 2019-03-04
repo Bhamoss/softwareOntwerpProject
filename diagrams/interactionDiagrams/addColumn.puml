@@ -1,0 +1,31 @@
+@startuml
+title Add column
+Actor User
+User -> ModeHandler: addColumn()
+activate ModeHandler
+alt mode = TableRows
+ModeHandler -> TableDesignHandler: addColumn()
+activate TableDesignHandler
+TableDesignHandler -> Table: addColumn()
+activate Table
+create Column
+Table -> Column: create Column(N)
+activate Column
+Column -> Column: setName("ColumnN")
+return Column
+loop for all Rows
+    Table -> Column: addCell()
+    activate Column
+    create Cell
+    Column -> Cell: create()
+    deactivate Column
+end
+deactivate Table
+deactivate TableDesignHandler
+ModeHandler -> User: repaint()
+else else
+    ModeHandler -> User: ERROR
+    deactivate ModeHandler
+end
+
+@enduml
