@@ -2,7 +2,7 @@
 actor User
 User -> ModeHandler: openTable(table)
 activate ModeHandler
-ModeHandler -> ModeHandler: isValidMode
+alt mode = TableHandler
 ModeHandler -> TableHandler: isEmpty(table)
 activate TableHandler
 TableHandler -> Table: isEmpty()
@@ -18,6 +18,9 @@ else !empty
 
 
 end
+else else
+ModeHandler -> User: ERROR
 deactivate ModeHandler
+end
 
 @enduml
