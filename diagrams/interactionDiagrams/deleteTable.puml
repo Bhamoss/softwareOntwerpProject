@@ -1,6 +1,23 @@
 @startuml
-actor User
-User -> ModeHandler: deleteTable(table)
-ModeHandler -> ModeHandler: isValidMode
-ModeHandler -> TableHandler: deleteTable(table)
+title Delete Table\nMSS
+Actor User
+User -> ModeHandler: deleteColumn(Column)
+activate ModeHandler
+alt mode = Tables
+ModeHandler -> TablesHandler: deleteTable(Table)
+alt is(Valid)Table(table)
+activate TablesHandler
+
+TablesHandler -> Table: destroy()
+destroy Table
+ModeHandler -> User: repaint?
+else
+TablesHandler -> ModeHandler : ERROR
+deactivate TablesHandler
+ModeHandler-> User : ERROR
+end
+else else
+ModeHandler -> User: ERROR
+end
+deactivate ModeHandler
 @enduml
