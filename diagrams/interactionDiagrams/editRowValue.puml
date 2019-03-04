@@ -1,0 +1,26 @@
+@startuml
+title Delete Row\nMSS
+Actor User
+User -> ModeHandler: editCell(cell, value)
+activate ModeHandler
+ModeHandler -> TableRowsHandler: editCell(cell, value)
+activate TableRowsHandler
+
+TableRowsHandler -> Table: isValidCell(cell, value)
+activate Table
+TableRowsHandler -> Table: editCell(cell, value)
+
+Table -> Column: editCell(cell, value)
+activate Column
+Column -> Cell: setValue(value)
+activate Cell
+Cell -> Cell: isValidValue(value)
+deactivate Cell
+deactivate Column
+
+deactivate Table
+
+ModeHandler -> User: repaint?
+deactivate TableRowsHandler
+deactivate ModeHandler
+@enduml

@@ -8,7 +8,7 @@ De repo voor het project van softwareontwerp.
 - [x] Michy: ID: Delete Table, Open Table, Add Column
 - [x] Michiel: ID: Edit Column Characteristics (testcommit)
 - [x] Thomas: ID: delete column, add row --> ipv (Column) (column) meegeven als parameter
-- [ ] Jaron: ID: Edit row value, Delete Row
+- [x] Jaron: ID: Edit row value, Delete Row
 - [ ] Die graphics uitvogelen
 
 ## Commentaar

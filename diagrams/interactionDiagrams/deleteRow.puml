@@ -1,0 +1,25 @@
+@startuml
+title Delete Row\nMSS
+Actor User
+User -> ModeHandler: deleteRow(rowIndex)
+activate ModeHandler
+ModeHandler -> TableRowsHandler: deleteRow(rowIndex)
+activate TableRowsHandler
+
+TableRowsHandler -> Table: isValidRowIndex(rowIndex)
+activate Table
+TableRowsHandler -> Table: deleteRow(rowIndex)
+
+loop
+    Table -> Column: deleteCell(index)
+    activate Column
+    Column -> Cell: destroy()
+    deactivate Column
+    destroy Cell
+end
+deactivate Table
+
+ModeHandler -> User: repaint?
+deactivate TableRowsHandler
+deactivate ModeHandler
+@enduml
