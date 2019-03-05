@@ -1,15 +1,19 @@
 package window;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-import be.kuleuven.cs.som.*;
+import window.widget.*;
+import window.widget.Button;
+import window.widget.Rectangle;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class testWindow extends CanvasWindow {
 
     public testWindow(String title) {super(title);}
+
+    private ArrayList<Widget> widgets;
 
     /**
      * Initializes a CanvasWindow object.
@@ -18,15 +22,21 @@ public class testWindow extends CanvasWindow {
      */
     public testWindow(String title, int width, int height) {
         super(title);
-        Panel links = new Panel();
-        links.setBackground(Color.BLACK);
-        Panel rechts = new Panel();
-        rechts.setBackground(Color.YELLOW);
-        System.out.println(this.panel);
-        this.panel.add(links, BorderLayout.WEST);
-        this.panel.add(rechts, BorderLayout.EAST);
-        this.panel.setBackground(Color.BLACK);
-        repaint();
+        this.widgets = new ArrayList();
+
+        widgets.add(new Rectangle(20, 100, 50, 50));
+
+        widgets.add(new TextLabel("This is a label!", 200, 200));
+
+        Consumer<Integer> lam = x -> System.out.println("Button was pressed!");
+        widgets.add(new Button(new Rectangle(20,10,50,25), "Button", lam));
+
+        Consumer<Boolean> lam2 = x -> System.out.println(x);
+        widgets.add(new CheckBox(20, 50,lam2));
+
+        Function<String, Boolean> lam3 = x -> !"lor".equals(x);
+        widgets.add(new TextBox(new Rectangle(20, 160, 80, 25), lam3));
+        widgets.add(new TextBox(new Rectangle(120, 160, 80, 25), lam3));
     }
 
     /**
@@ -37,41 +47,52 @@ public class testWindow extends CanvasWindow {
      * @param g This object offers the methods that allow you to paint on the canvas.
      */
     protected void paint(Graphics g) {
-        int height = 25;
-        int width = 100;
-        int nbOfRows = 20;
-        int nbOfColumns = 10;
-        for (int i = 0; i < nbOfColumns*width; i += width) {
-
-            for (int j = 0; j < nbOfRows*height; j += height) {
-                g.drawRect(i,j,width,height);
-                g.drawString("Cell?",i,j);
-            }
+        for(Widget w : widgets) {
+            w.paint(g);
         }
     }
 
     /**
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
      *
-     * @param e
+     * @param id
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+        boolean paintflag = false;
+        for(Widget w : widgets) {
+            paintflag |= w.handleKeyEvent(id, keyCode, keyChar);
+        }
+
+        if(paintflag)
+            repaint();
     }
 
 
     /**
      * Called when the user presses (id == MouseEvent.MOUSE_PRESSED), releases (id == MouseEvent.MOUSE_RELEASED), or drags (id == MouseEvent.MOUSE_DRAGGED) the mouse.
      *
-     * @param e Details about the event
+     * @param id Details about the event
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-        if(x <= 300)
-        {
-            this.panel.getGraphics().drawString("links",0,310);
+        boolean blocked = false;
+        for (Widget w: widgets) {
+            blocked |= w.isBlocking();
         }
-        else
-        {
-            this.panel.getGraphics().drawString("rechts",310,310);
+        if (blocked)
+            return;
+
+        boolean paintflag = false;
+        for(Widget w: widgets) {
+            paintflag |= w.handleMouseEvent(id, x, y, clickCount);
         }
+        if (paintflag)
+            repaint();
     }
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new testWindow("Tablr Prototype" ,100, 100).show();
+        });
+    }
+
 }
