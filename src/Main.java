@@ -1,5 +1,4 @@
 import window.testWindow;
-import be.kuleuven.cs.som.*;
 
 
 public class Main{

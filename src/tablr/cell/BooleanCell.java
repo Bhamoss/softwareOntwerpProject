@@ -1,6 +1,7 @@
 package tablr.cell;
 
 import be.kuleuven.cs.som.*;
+import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  *
@@ -24,12 +25,14 @@ public class BooleanCell extends Cell {
     public static Boolean isValidValue(Boolean Value)
     {
 
+        return true;
     }
 
     /**
      *
      *
      */
+    @Raw
     public void setValue()
     {
 

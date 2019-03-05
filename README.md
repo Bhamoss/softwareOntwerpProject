@@ -11,6 +11,12 @@ De repo voor het project van softwareontwerp.
 - [x] Jaron: ID: Edit row value, Delete Row
 - [ ] Die graphics uitvogelen
 
+## Vragen voor assistent
+
+- (testvraag) Normaal hebben we toch geen lage
+cohesie gecreerd door Row niet als classe te nemen
+, hé?
+
 ## Commentaar
 Dus voor zover ik zie met die GUI, kunnen
 we dingen op da canvas tekenen door in de
