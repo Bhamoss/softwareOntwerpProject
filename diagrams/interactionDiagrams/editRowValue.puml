@@ -1,9 +1,8 @@
 @startuml
 title Delete Row\nMSS
 Actor User
-User -> ModeHandler: editCell(cell, value)
-activate ModeHandler
-ModeHandler -> TableRowsHandler: editCell(cell, value)
+
+User -> TableRowsHandler: editCell(cell, value)
 activate TableRowsHandler
 
 TableRowsHandler -> Table: isValidCell(cell, value)
@@ -20,7 +19,5 @@ deactivate Column
 
 deactivate Table
 
-ModeHandler -> User: repaint?
 deactivate TableRowsHandler
-deactivate ModeHandler
 @enduml

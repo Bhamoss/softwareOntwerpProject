@@ -1,26 +1,24 @@
 @startuml
 actor User
-User -> ModeHandler: openTable(table)
-activate ModeHandler
-alt mode = TableHandler
-ModeHandler -> TableHandler: isEmpty(table)
+
+User -> TableHandler: isEmpty(table)
 activate TableHandler
 TableHandler -> Table: isEmpty()
 activate Table
 deactivate Table
-deactivate TableHandler
 alt empty
-    ModeHandler -> ModeHandler: setMode(designMode)
-    ModeHandler -> DesignHandler: setTable(table)
+    TableHandler -> TableHandler: setMode(designMode)
+    TableHandler -> DesignHandler: setTable(table)
+    activate DesignHandler
+    deactivate DesignHandler
 else !empty
-    ModeHandler -> ModeHandler: setMode(rowsMode)
-    ModeHandler -> RowsHandler: setTable(table)
+    TableHandler -> TableHandler: setMode(rowsMode)
+    TableHandler -> RowsHandler: setTable(table)
+    activate RowsHandler
+    deactivate RowsHandler
+end
+deactivate TableHandler
 
 
-end
-else else
-ModeHandler -> User: ERROR
-deactivate ModeHandler
-end
 
 @enduml

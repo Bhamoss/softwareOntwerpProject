@@ -1,10 +1,8 @@
 @startuml
 title Add column
 Actor User
-User -> ModeHandler: addColumn()
-activate ModeHandler
-alt mode = TableRows
-ModeHandler -> TableDesignHandler: addColumn()
+
+User -> TableDesignHandler: addColumn()
 activate TableDesignHandler
 TableDesignHandler -> Table: addColumn()
 activate Table
@@ -22,10 +20,5 @@ loop for all Rows
 end
 deactivate Table
 deactivate TableDesignHandler
-ModeHandler -> User: repaint()
-else else
-    ModeHandler -> User: ERROR
-    deactivate ModeHandler
-end
 
 @enduml

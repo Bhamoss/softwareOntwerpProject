@@ -1,9 +1,8 @@
 @startuml
 title Delete Row\nMSS
 Actor User
-User -> ModeHandler: deleteRow(rowIndex)
-activate ModeHandler
-ModeHandler -> TableRowsHandler: deleteRow(rowIndex)
+
+User -> TableRowsHandler: deleteRow(rowIndex)
 activate TableRowsHandler
 
 TableRowsHandler -> Table: isValidRowIndex(rowIndex)
@@ -19,7 +18,5 @@ loop
 end
 deactivate Table
 
-ModeHandler -> User: repaint?
 deactivate TableRowsHandler
-deactivate ModeHandler
 @enduml

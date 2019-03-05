@@ -3,39 +3,30 @@ title Edit Column Type
 Actor User
 
 
-User -> ModeHandler: setColumnType(column)
-activate ModeHandler
-alt mode = TableDesign
-    ModeHandler -> TableDesignHandler: setColumnType(column)
-    activate TableDesignHandler
-    TableDesignHandler -> Table: setColumnType(column)
-    activate Table
-    Table -> Column: changeType()
-    activate Column
-    Column -> Column: newType = getFollowingType()
-    note left
-        Is dit correct?
-        method geeft volgende
-        type terug, gebaseerd
-        op huidige type
-    end note
-    alt isValidType(newType)
-        Column -> Column: setType(newType)
-    else
-        Column -> Table: ERROR
-        deactivate Column
-        Table -> TableDesignHandler: ERROR
-        deactivate Table
-        TableDesignHandler -> ModeHandler: ERROR
-        deactivate TableDesignHandler
-        ModeHandler -> User: ERROR
-    end
 
-
+User -> TableDesignHandler: setColumnType(column)
+activate TableDesignHandler
+TableDesignHandler -> Table: setColumnType(column)
+activate Table
+Table -> Column: changeType()
+activate Column
+Column -> Column: newType = getFollowingType()
+note left
+    Is dit correct?
+    method geeft volgende
+    type terug, gebaseerd
+    op huidige type
+end note
+alt isValidType(newType)
+    Column -> Column: setType(newType)
 else
-    ModeHandler -> User: ERROR
+    Column -> Table: ERROR
+    deactivate Column
+    Table -> TableDesignHandler: ERROR
+    deactivate Table
+    TableDesignHandler -> User: ERROR
+    deactivate TableDesignHandler
 end
-deactivate ModeHandler
 
 
 

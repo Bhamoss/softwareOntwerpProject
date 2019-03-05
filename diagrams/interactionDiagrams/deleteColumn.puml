@@ -1,26 +1,19 @@
 @startuml
 title Delete column\nMSS
 Actor User
-User -> ModeHandler: deleteColumn(Column)
-activate ModeHandler
-alt mode = TableDesign
-ModeHandler -> TableDesignHandler: deleteColumn(Column)
+
+User -> TableDesignHandler: deleteColumn(column)
 activate TableDesignHandler
-TableDesignHandler -> Table: deleteColumn(Column)
+TableDesignHandler -> Table: deleteColumn(column)
 activate Table
-alt is(Valid)Column(Column)
-Table -> Column: destroy()
-destroy Column
-ModeHandler -> User: repaint?
+alt isValidColumn(column)
+    Table -> Column: destroy()
+    destroy Column
 else
-Table -> TableDesignHandler: ERROR
-deactivate Table
-TableDesignHandler -> ModeHandler : ERROR
-deactivate TableDesignHandler
-ModeHandler-> User : ERROR
+    Table -> TableDesignHandler: ERROR
+    deactivate Table
+    TableDesignHandler -> User: ERROR
+    deactivate TableDesignHandler
 end
-else else
-ModeHandler -> User: ERROR
-end
-deactivate ModeHandler
+
 @enduml

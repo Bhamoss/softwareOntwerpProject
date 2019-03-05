@@ -1,18 +1,14 @@
 @startuml
 actor User
 
-activate ModeHandler
-User -> ModeHandler: setTableName(table, name)
-ModeHandler -> ModeHandler: isValidMode
+User -> TableHandler: setTableName(table, name)
 activate TableHandler
-ModeHandler -> TableHandler: setTableName(table, name)
 activate Table
 TableHandler -> TableHandler: isNameAlreadyUsed(name)
 TableHandler -> Table: setName(name)
 Table -> Table: isNameEmpty(name)
 deactivate Table
 deactivate TableHandler
-deactivate ModeHandler
 
 
 @enduml
