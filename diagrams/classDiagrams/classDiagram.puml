@@ -39,9 +39,9 @@ class UIWindow
 {
 }
 
-UIWindow "1" -- "1" TableHandler:  communicates
-UIWindow "1" -- "1" TableDesignHandler:  communicates
-UIWindow "1" -- "1" TableRowsHandler:  communicates
+UIWindow "1" --> "1" TableHandler:  communicates
+UIWindow "1" --> "1" TableDesignHandler:  communicates
+UIWindow "1" --> "1" TableRowsHandler:  communicates
 
 
 class TableHandler
@@ -54,14 +54,18 @@ class TableHandler
     __Responsibilities__
     managing tables
 }
-TableHandler "1" -- "0..*" Table
-TableDesignHandler "1" -- "1" Table
-TableRowsHandler "1" -- "1" Table
+TableHandler "1" --> "0..*" Table
+TableDesignHandler "1" --> "1" Table
+TableRowsHandler "1" --> "1" Table
 
+note left
+    Zo schrijf je commentaar
+    en ideën.
+end note
 
 class TableDesignHandler
 {
-
+    getColumnTypes():ArrayList(Type,Column)
 __Responsibility__
 }
 
@@ -73,11 +77,11 @@ __Responsibility__
 }
 
 class Table{
-    name
+    name : string
     create(): Column
-    destroy(Column)
-    addRow()
-    deleteRow(Integer)
+    destroy(Column) : void
+    addRow() : void
+    deleteRow(Integer) : void
 __Responsibility__
 manage Column
 }
@@ -87,6 +91,7 @@ manage Column
 class Cell
 {
 editValue(value): {abstract}
+isValid(value): {abstract}
 __Responsibility__
 Know:
 maintain data
@@ -100,43 +105,38 @@ class Column
 {
 name:String
 allowsBlanks:Boolean
+cells : ArrayList<Cell>
 
 __Responsibility__
 Know: column
 manage Cells
 }
-Column "1" -- "1" Type: has
-Enum Type
-{
-    defaultValue
-    __PROBLEM__
-    Can't you
-    see this
-    from cel
-    type?
-}
 
-Table "1" -- "0..*" Column: has
-Column "1" -- "0..*" Cell: has
+Table "1" <--> "0..*" Column: has
+Column "1" <--> "0..*" Cell: has
 
 class BooleanCell
 {
 value : Boolean
 editValue(Boolean)
+isValid(Boolean): Boolean
 }
 class StringCell
 {
 value : String
 editValue(String)
+isValid(String): Boolean
 }
 class EmailCell
 {
 value : String
 editValue(String)
+isValid(String): Boolean
 }
 class IntegerCell
 {
 value : Integer
 editValue(Integer)
+isValid(Integer): Boolean
 }
 @enduml
