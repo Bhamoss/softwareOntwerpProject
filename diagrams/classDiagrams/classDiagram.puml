@@ -1,20 +1,48 @@
 @startuml
 title Class Diagram
 
-class ModeCoordinator
+class Textfield
 {
+}
+Textfield --|> Element
 
-__Responsibility__
-manage mode
-Is Information Expert
-about the modes
-so needs to manage
-them
+class Label
+{
+}
+Label --|> Element
+
+class Toggle
+{
+}
+Toggle --|> Button
+class Button
+{
+}
+Button --|> Element
+
+class CellField
+{
+}
+CellField --|> Textfield
+
+class Element
+{
+    width: int
+    height: int
+    x: int
+    y: int
+    borderWidth: int
+}
+UIWindow "1" <--> "0...*" Element: has
+
+class UIWindow
+{
 }
 
-ModeCoordinator "1" -- "1" TableHandler:  manages
-ModeCoordinator "1" -- "1" TableDesignHandler:  manages
-ModeCoordinator "1" -- "1" TableRowsHandler:  manages
+UIWindow "1" -- "1" TableHandler:  communicates
+UIWindow "1" -- "1" TableDesignHandler:  communicates
+UIWindow "1" -- "1" TableRowsHandler:  communicates
+
 
 class TableHandler
 {
