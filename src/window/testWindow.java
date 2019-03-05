@@ -7,17 +7,7 @@ import java.awt.geom.Rectangle2D;
 
 public class testWindow extends CanvasWindow {
 
-    public testWindow(String title)
-    {
-        super(title);
-        Panel links = new Panel();
-        links.setBackground(Color.BLACK);
-        Panel rechts = new Panel();
-        rechts.setBackground(Color.YELLOW);
-        this.panel.add(links, BorderLayout.WEST);
-        this.panel.add(rechts, BorderLayout.EAST);
-        this.panel.setBackground(Color.BLACK);
-    }
+    public testWindow(String title) {super(title);}
 
     /**
      * Initializes a CanvasWindow object.
@@ -26,8 +16,15 @@ public class testWindow extends CanvasWindow {
      */
     public testWindow(String title, int width, int height) {
         super(title);
-        this.width = width;
-        this.height = height;
+        Panel links = new Panel();
+        links.setBackground(Color.BLACK);
+        Panel rechts = new Panel();
+        rechts.setBackground(Color.YELLOW);
+        System.out.println(this.panel);
+        this.panel.add(links, BorderLayout.WEST);
+        this.panel.add(rechts, BorderLayout.EAST);
+        this.panel.setBackground(Color.BLACK);
+        repaint();
     }
 
     /**
@@ -66,5 +63,13 @@ public class testWindow extends CanvasWindow {
      * @param e Details about the event
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
+        if(x <= 300)
+        {
+            this.panel.getGraphics().drawString("links",0,310);
+        }
+        else
+        {
+            this.panel.getGraphics().drawString("rechts",310,310);
+        }
     }
 }
