@@ -1,4 +1,6 @@
 import window.testWindow;
+import be.kuleuven.cs.som.*;
+
 
 public class Main{
     public static void main(String[] args) {

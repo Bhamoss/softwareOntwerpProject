@@ -1,5 +1,6 @@
 package tablr.cell;
 
+import be.kuleuven.cs.som.*;
 
 /**
  *
