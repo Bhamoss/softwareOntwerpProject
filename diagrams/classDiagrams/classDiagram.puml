@@ -1,32 +1,26 @@
 @startuml
 title Class Diagram
 
-class Textfield
-{
+class Textfield{
 }
 Textfield --|> Element
 
-class Label
-{
+class Label{
 }
 Label --|> Element
 
-class Toggle
-{
+class Toggle{
 }
 Toggle --|> Button
-class Button
-{
+class Button{
 }
 Button --|> Element
 
-class CellField
-{
+class CellField{
 }
 CellField --|> Textfield
 
-class Element
-{
+class Element{
     width: int
     height: int
     x: int
@@ -35,8 +29,7 @@ class Element
 }
 UIWindow "1" <--> "0...*" Element: has
 
-class UIWindow
-{
+class UIWindow{
 }
 
 UIWindow "1" --> "1" TableHandler:  communicates
@@ -44,8 +37,7 @@ UIWindow "1" --> "1" TableDesignHandler:  communicates
 UIWindow "1" --> "1" TableRowsHandler:  communicates
 
 
-class TableHandler
-{
+class TableHandler{
     width : int
     create() : Table
     destroy(Table)
@@ -54,6 +46,15 @@ class TableHandler
     __Responsibilities__
     managing tables
 }
+note left
+    Wat als we hier
+    een interface Mode
+    maken en die een
+    getLayout() of
+    getWidth functie
+    geven? Onnodige
+    coupling?
+end note
 TableHandler "1" --> "0..*" Table
 TableDesignHandler "1" --> "1" Table
 TableRowsHandler "1" --> "1" Table
@@ -63,14 +64,12 @@ note left
     en ideën.
 end note
 
-class TableDesignHandler
-{
+class TableDesignHandler{
     getColumnTypes():ArrayList(Type,Column)
 __Responsibility__
 }
 
-class TableRowsHandler
-{
+class TableRowsHandler{
     Layout
 __Responsibility__
 
@@ -88,8 +87,7 @@ manage Column
 
 
 
-class Cell
-{
+class Cell{
 editValue(value): {abstract}
 isValid(value): {abstract}
 __Responsibility__
@@ -101,8 +99,7 @@ Cell <|-- IntegerCell
 Cell <|-- EmailCell
 Cell <|-- StringCell
 
-class Column
-{
+class Column{
 name:String
 allowsBlanks:Boolean
 cells : ArrayList<Cell>
@@ -115,26 +112,22 @@ manage Cells
 Table "1" <--> "0..*" Column: has
 Column "1" <--> "0..*" Cell: has
 
-class BooleanCell
-{
+class BooleanCell{
 value : Boolean
 editValue(Boolean)
 isValid(Boolean): Boolean
 }
-class StringCell
-{
+class StringCell{
 value : String
 editValue(String)
 isValid(String): Boolean
 }
-class EmailCell
-{
+class EmailCell{
 value : String
 editValue(String)
 isValid(String): Boolean
 }
-class IntegerCell
-{
+class IntegerCell{
 value : Integer
 editValue(Integer)
 isValid(Integer): Boolean
