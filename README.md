@@ -16,6 +16,11 @@ De repo voor het project van softwareontwerp.
 - (testvraag) Normaal hebben we toch geen lage
 cohesie gecreerd door Row niet als classe te nemen
 , hé?
+- Zou het beter zijn om een klasse tableManager te hebben
+die alle tables en hun onderlinge dependencies (naam,...)
+bijhoud in plaats van de tableHandler (responsibility ervan is controller zijn
+, niet tables managen) om cohesion te verbeteren
+of is cohesion niet te hard aangetast daardoor.
 
 ## Commentaar
 Dus voor zover ik zie met die GUI, kunnen

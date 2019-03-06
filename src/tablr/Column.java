@@ -4,7 +4,7 @@ import be.kuleuven.cs.som.annotate.*;
 import be.kuleuven.cs.som.taglet.*;
 
 /**
- * @pre
+ * IS COMPOSITE OF TABLE
  *
  * @Invar sdf
  */
@@ -44,4 +44,12 @@ public class Column {
      * Used to indicate if the column allows blanks.
      */
     private boolean blanksAllowed;
+
+
+    /**
+     * Bidirectional with restricted multiplicity: CR78-82
+     *
+     * //TODO: CR93 invoke the checker of Table on this realtionship in the checker of this class for the relationship
+     */
+    private Table table = null;
 }

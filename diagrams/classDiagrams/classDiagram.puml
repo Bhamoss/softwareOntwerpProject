@@ -76,7 +76,19 @@ __Responsibility__
 }
 
 class Table{
-    name : string
+    name : string = "newTable"
+    <<constructor>> Table(String) {exception IllegalArgumentException}
+    getName(): String
+    isValidName(String): boolean {static}
+    setName(String) {exception IllegalArgumentException}
+    getNbColumns: int
+    getColumnAt(int): Column
+    canHaveAsColumnAt(int): boolean
+    hasProperColumns: boolean
+    addColumnAt(int)
+    removeColumnAt(int)
+    - setNbColumns(int)
+
     create(): Column
     destroy(Column) : void
     addRow() : void
@@ -109,8 +121,17 @@ Know: column
 manage Cells
 }
 
-Table "1" <--> "0..*" Column: has
-Column "1" <--> "0..*" Cell: has
+Table "1" *-- "0..*" Column
+note left
+    De lijn tussen
+    table en column
+    en column en
+    cell duid
+    een composite
+    aggregation aan.
+    (geen naam nodig)
+end note
+Column "1" *-- "0..*" Cell: has
 
 class BooleanCell{
 value : Boolean

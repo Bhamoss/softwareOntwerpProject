@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class TableTest {
 
     private Table testTable;
@@ -20,6 +24,12 @@ class TableTest {
     void tearDown() {
     }
 
+
+    /**
+     * CONSTRUCTOR
+     * ********************************************************************
+     */
+
     @Test
     @DisplayName("Create table with null name")
     void createTableNameNull() {
@@ -32,11 +42,44 @@ class TableTest {
         assertThrows(IllegalArgumentException.class, () -> new Table(""));
     }
 
+    /**
+     * getName
+     * *******************************************************************
+     */
+
     @Test
     @DisplayName("The only getName() test.")
     void getName() {
         assertEquals("test", testTable.getName());
     }
+
+    /**
+     * isValidName
+     * ********************************************************************
+     */
+
+    @Test
+    @DisplayName("Is valid name success scenario")
+    void isValidNameSuccess() {
+        assertTrue(Table.isValidName("newName"));
+    }
+
+    @Test
+    @DisplayName("Is valid name null scenario")
+    void isValidNameNull() {
+        assertFalse(Table.isValidName(null));
+    }
+
+    @Test
+    @DisplayName("Is valid name empty string scenario")
+    void isValidNameEmpty() {
+        assertFalse(Table.isValidName(""));
+    }
+
+    /**
+     * setName
+     * ***************************************************************************
+     */
 
     @Test
     @DisplayName("Succesfull case")

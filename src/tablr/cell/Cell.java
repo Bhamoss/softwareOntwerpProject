@@ -2,5 +2,8 @@ package tablr.cell;
 
 import be.kuleuven.cs.som.*;
 
-public class Cell {
+/**
+ * IS COMPOSITE OF COLUMN
+ */
+public abstract class Cell {
 }

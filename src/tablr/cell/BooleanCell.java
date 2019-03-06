@@ -5,6 +5,7 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  *
+ * TODO: see CR94-114 for inheritance
  */
 public class BooleanCell extends Cell {
 
