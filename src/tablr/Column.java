@@ -1,7 +1,11 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
+import tablr.cell.Cell;
 import be.kuleuven.cs.som.taglet.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * IS COMPOSITE OF TABLE
@@ -11,6 +15,11 @@ import be.kuleuven.cs.som.taglet.*;
 public class Column {
 
     public Column()
+    {
+        new Column(0);
+    }
+
+    public Column(int nbOfCells)
     {
 
     }
@@ -46,10 +55,26 @@ public class Column {
     private boolean blanksAllowed;
 
 
+    public boolean canHaveAsTable(Table table)
+    {
+        table.canHaveAsColumnAt()
+    }
+
     /**
      * Bidirectional with restricted multiplicity: CR78-82
      *
      * //TODO: CR93 invoke the checker of Table on this realtionship in the checker of this class for the relationship
      */
     private Table table = null;
+
+
+    public int getNbCells()
+    {
+        return 0; // placeholder
+    }
+
+
+
+    private List<Cell> cells = new ArrayList<Cell>();
+
 }

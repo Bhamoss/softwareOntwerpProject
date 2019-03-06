@@ -14,10 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class TableTest {
 
     private Table testTable;
+    private Table emptyTable;
+    private Table tenTable;
 
     @BeforeEach
     void setUp() {
+        emptyTable = new Table("emptyTable");
         testTable = new Table("test");
+        tenTable = new Table("tableWithTenColumns");
     }
 
     @AfterEach
@@ -41,6 +45,20 @@ class TableTest {
     void createTableNameEmpyt() {
         assertThrows(IllegalArgumentException.class, () -> new Table(""));
     }
+
+
+    /**
+     * *********************************************************************
+     * *********************************************************************
+     *
+     *                      NAME
+     *
+     * *********************************************************************
+     * *********************************************************************
+     *
+     */
+
+
 
     /**
      * getName
@@ -99,4 +117,54 @@ class TableTest {
     void setNameToEmpty() {
         assertThrows(IllegalArgumentException.class, () -> testTable.setName(""));
     }
+
+
+
+    /**
+     * *********************************************************************
+     * *********************************************************************
+     *
+     *                      Columns
+     *
+     * *********************************************************************
+     * *********************************************************************
+     *
+     */
+
+
+    /**
+     * setNbColumns
+     * *************************************************************************
+     */
+
+    @Test
+    @DisplayName("Number of columns for empty table")
+    void getNbColumnsEmpty()
+    {
+        assertEquals(0, emptyTable.getNbColumns());
+    }
+
+
+    @Test
+    @DisplayName("Number of columns for empty table")
+    void getNbColumnsTen()
+    {
+        assertEquals(10, tenTable.getNbColumns());
+    }
+
+    /**
+     * getColumnAt
+     * ************************************************************************************
+     */
+
+
+    void getColumnAt()
+    {
+
+    }
+
+
+
+
+
 }

@@ -16,6 +16,8 @@ import java.util.List;
  *  | isValidName(getName()) = true
  *
  * @Invar all columns of the table have an equal amount of cells.
+ *
+ * @Invar columns is never null.
  */
 public class Table {
 
@@ -27,6 +29,7 @@ public class Table {
     @Raw
     public Table(String name) throws IllegalArgumentException{
         setName(name);
+        this.columns = new ArrayList<Column>();
 
         /*
             TODO: CR86 make at least one constructor which initialises Table with 0 Columns
@@ -91,20 +94,32 @@ public class Table {
 
 
     /**
-     * CR 83
+     *
      * Returns the number of columns in this table.
      *
-     * @return
+     * CR 83
+     *
+     * @pre columns is not null.
+     *  | columns != null
+     *
+     * @return the number of columns of the table
+     * | return = columns.length
+     *
+     * @throws IllegalStateException if columns is null
+     *  | columns == null
      */
     @Basic
-    public int getNbColumns()
+    public int getNbColumns() throws IllegalStateException
     {
-        // Dummy before testing
-        return 0;
+        // TODO: is this necesary? I think not cause this is not raw and invar is it is not null
+        if(this.columns == null) throw new IllegalStateException("The columns should not be null");
+
+        return this.columns.size();
     }
 
     /**
      * CR84
+     * SHOULD BE STARTING ON 1
      * @param index
      * @return
      */
@@ -116,12 +131,18 @@ public class Table {
     }
 
     /**
+     *
+     * Returns true if the column is not null, has the same amount of rows and
+     *
      * CR 84
      *
      * @param index
+     *
+     * @param newColumn
+     *
      * @return
      */
-    public boolean canHaveAsColumnAt(int index)
+    public boolean canHaveAsColumnAt(int index, Column newColumn)
     {
         return false; //placeholder before testing
     }
@@ -138,15 +159,65 @@ public class Table {
     }
 
     /**
+     *
+     * Inserts a new column with default values at the index and shifts the other columns to the right.
+     *
      * CR 85
-     * Could be addAsColumn
-     * @param index
+     *
+     * @param index the index at which the new column should be inserted.
+     *
+     * @pre index is not larger then the amount of columns plus one and strictly positive.
+     *  | 0 < index =< getNbColumns() + 1
+     *
+     *
+     * @effect the new column will be inserted at the given index
+     *  | getColumnAt(index) = new column
+     *
+     * @effect the index of the columns with index equal or larger then index has incremented.
+     *  | for (index <= i <= old.getNbColumns) {new.getColumnAt(i + 1) = new.getColumnAt(i)}
+     *
+     * @effect the number of columns is raised by one.
+     *  | old.getNbColumns() + 1 = new.getNbColumns()
+     *
+     * @effect the new column has 0 cells if the table was empty, and the same number of cells as the other columns if not
+     *  | if(getNbOfColumns() = 0) {newColumn.getNbCells() = 0}
+     *  | else {getNbRows() = newColumn.getNbCells()}
+     *
+     * @throws IllegalArgumentException if the index is larger then the columns plus one.
+     *  | index > getNbColumns() + 1
+     *
      */
-    public void addColumnAt(int index)
+    public void addColumnAt(int index) throws IllegalStateException
     {
+        if (index > getNbColumns() + 1 || index >= 0) throw new IllegalArgumentException("Illegal Index");
 
+        Column newColumn = new Column(getNbRows());
+
+        // is this necesarry?
+        // because we suffice the invariants, but without it is not correct encapsulation
+
+        if(canHaveAsColumnAt(index)) {
+            columns.add(index, newColumn);
+        }
+        // otherwise error?
     }
 
+
+    /**
+     *
+     * Appends a new column at the end of the table.
+     *
+     *
+     * @effect A new column is added at the end of the table.
+     *  | addColumnAt(getNbColumns() + 1)
+     *
+     */
+    public void addColumn()
+    {
+
+        addColumnAt(getNbColumns() + 1);
+
+    }
 
     /**
      * CR 85
@@ -182,7 +253,7 @@ public class Table {
      *
      * @Invar not null
      * @Invar elements not null
-     * @Invar all collumns have an equal amount of cells
+     * @Invar all collumns have an equal amount of cells, equal to the amout of rows.
      *
      * (see coding rule 32 AND 58)
      * TODO: WE HAVE TO MAKE EVERY METHOD FOR COLUMNS START COUNTING FROM 1 AND NOT 0
@@ -196,12 +267,30 @@ public class Table {
      */
     private List<Column> columns = new ArrayList<Column>();
 
+
     /**
-     * The number of rows in the table.
+     * Returns the number of rows.
      *
-     * TODO: kunnen we ook een derived inspector van maken, maar mss te brak? Zie later
+     *
+     *
+     * @return If the table has no columns 0, otherwise the amount of rows of this table.
+     * | if(getNbColumns() == 0) {return = 0}
+     * | else { for (0 < i =< getNbColumns()) {return == getColumnAt(i).getNbCells()}}
+     *
      */
-    private int nbOfRows = 0;
+    public int getNbRows() {
+
+        if(getNbColumns() == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            // there should always be a column at one if there are columns.
+            return getColumnAt(1).getNbCells();
+        }
+    }
+
 
     /**
      * This methods returns a string containing the table in human-readable form.
