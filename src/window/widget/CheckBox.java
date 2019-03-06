@@ -14,7 +14,14 @@ public class CheckBox extends Widget {
     private Rectangle box;
 
 
-
+    /**
+     * Widget for a toggleable checkbox
+     *
+     * @param x x-coordinate of top-left of box
+     * @param y y-coordinate of top-left of box
+     * @param toggleHandler function handler, called
+     *                      when checkbox gets toggled
+     */
     public CheckBox(int x, int y, Consumer<Boolean> toggleHandler) {
         this.checked = false;
         this.x = x;

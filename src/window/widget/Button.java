@@ -11,6 +11,13 @@ public class Button extends Widget {
     Consumer<Integer> onClick;
     private static int OFFSET = 5;
 
+    /**
+     * Widget for a pressable button.
+     *
+     * @param rect Rectangle defining geometry of button
+     * @param text Text displayed on button
+     * @param onClick Function handler, called when button is pressed
+     */
     public Button(Rectangle rect, String text, Consumer<Integer> onClick) {
         this.rect = rect;
         this.text = new TextLabel(text, rect.x + OFFSET, rect.y+rect.height - OFFSET);

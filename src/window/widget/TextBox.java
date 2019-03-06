@@ -14,6 +14,13 @@ public class TextBox extends Widget {
     private boolean blocked;
     private static int OFFSET = 5;
 
+    /**
+     * Widget for a selectable box, containing editable text
+     *
+     * @param rect Rectangle defineing the geometry of the box
+     * @param isValidText Function handle used to determine if the
+     *                    content of the textbox is valid
+     */
     public TextBox(Rectangle rect, Function<String, Boolean> isValidText) {
         this.rect = rect;
         this.isValidText = isValidText;

@@ -9,6 +9,13 @@ public class TextLabel extends Widget{
     String text;
     int x, y;
 
+    /**
+     * Widget for a static piece of text
+     *
+     * @param text the displayed string
+     * @param x x-coordinate of text
+     * @param y y-coordinate of text
+     */
     public TextLabel(java.lang.String text, int x, int y) {
         this.text = text;
         this.x = x;

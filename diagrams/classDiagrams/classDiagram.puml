@@ -1,33 +1,39 @@
 @startuml
 title Class Diagram
 
-class Textfield{
+class Widget{
+    paint(Graphics)
+    handleKeyEvent(int, int, char): boolean
+    handleMouseEvent(int, int ,int): boolean
+    isBlocking(): boolean
 }
-Textfield --|> Element
+UIWindow "1" <--> "0...*" Widget: has
+
+
+class Rectangle{
+}
+Rectangle --|> Widget
+
+class TextLabel{
+}
+TextLabel --|> Widget
+
+class TextBox {
+}
+TextBox --|> Widget
 
 class Label{
 }
-Label --|> Element
+Label --|> Widget
 
-class Toggle{
+class CheckBox{
 }
-Toggle --|> Button
+CheckBox --|> Widget
 class Button{
 }
-Button --|> Element
+Button --|> Widget
 
-class CellField{
-}
-CellField --|> Textfield
 
-class Element{
-    width: int
-    height: int
-    x: int
-    y: int
-    borderWidth: int
-}
-UIWindow "1" <--> "0...*" Element: has
 
 class UIWindow{
 }
