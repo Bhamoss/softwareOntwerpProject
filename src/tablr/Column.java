@@ -55,9 +55,16 @@ public class Column {
     private boolean blanksAllowed;
 
 
+    /**
+     * TODO: because the place of the column does not matter, can I write one here?
+     * TODO: it would be weird to write something else
+     *
+     * @param table
+     * @return
+     */
     public boolean canHaveAsTable(Table table)
     {
-        table.canHaveAsColumnAt()
+        return table.canHaveAsColumnAt(1, this);
     }
 
     /**

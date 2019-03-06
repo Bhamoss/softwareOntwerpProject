@@ -130,22 +130,6 @@ public class Table {
         return null;
     }
 
-    /**
-     *
-     * Returns true if the column is not null, has the same amount of rows and
-     *
-     * CR 84
-     *
-     * @param index
-     *
-     * @param newColumn
-     *
-     * @return
-     */
-    public boolean canHaveAsColumnAt(int index, Column newColumn)
-    {
-        return false; //placeholder before testing
-    }
 
 
     /**
@@ -189,17 +173,11 @@ public class Table {
      */
     public void addColumnAt(int index) throws IllegalStateException
     {
-        if (index > getNbColumns() + 1 || index >= 0) throw new IllegalArgumentException("Illegal Index");
 
         Column newColumn = new Column(getNbRows());
 
-        // is this necesarry?
-        // because we suffice the invariants, but without it is not correct encapsulation
+        addColumnAt(index, newColumn);
 
-        if(canHaveAsColumnAt(index)) {
-            columns.add(index, newColumn);
-        }
-        // otherwise error?
     }
 
 
@@ -228,6 +206,79 @@ public class Table {
 
     }
 
+
+
+
+    /**
+     *
+     * Returns true if the column is not null, has the same amount of rows and has a strictly positive valid index.
+     *
+     * CR 84
+     *
+     * @param index the index at which the column has to be evaluated.
+     *
+     * @param newColumn the column which has to be evaluated.
+     *
+     * @return false if index is larger then the amount of columns plus one or not strictly positive.
+     *  | return = 0 >= index || index > getNbColumns() + 1
+     *
+     * @return false if newColumn is null or it does not have the same amount of rows as in this table.
+     *  | return ==  (newColumn == null || newColumn.getNbCells() != getNbRows())
+     *
+     * @return true if newColumn is not null, the column has the same amount of rows as this table
+     *      and the index is strictly positive and not larger then the amount of columns plus one.
+     *  | return == ( newColumn != 0 && newColumn.getNbCells() == getNbRows() && index > 0 && index =< getNbColumns + 1)
+     */
+    @Model
+    private boolean canHaveAsColumnAt(int index, Column newColumn)
+    {
+
+        boolean validIndex =  index > 0 && index <= getNbColumns() + 1;
+        boolean validColumn = newColumn != null && newColumn.getNbCells() == getNbRows();
+
+        return validColumn && validIndex;
+    }
+
+
+
+    /**
+     *
+     * Inserts a new column with default values at the index and shifts the other columns to the right.
+     *
+     * CR 85
+     *
+     * @param index the index at which the new column should be inserted.
+     *
+     * @param column the column which should be inserted.
+     *
+     * @pre the given index and column should be valid.
+     *  | canHaveAsColumnAt(index, column)
+     *
+     *
+     * @effect the new column will be inserted at the given index
+     *  | getColumnAt(index) = new column
+     *
+     * @effect the index of the columns with index equal or larger then index has incremented.
+     *  | for (index <= i <= old.getNbColumns) {new.getColumnAt(i + 1) = new.getColumnAt(i)}
+     *
+     * @effect the number of columns is raised by one.
+     *  | old.getNbColumns() + 1 = new.getNbColumns()
+     *
+     * @effect the new column has 0 cells if the table was empty, and the same number of cells as the other columns if not
+     *  | if(getNbOfColumns() = 0) {newColumn.getNbCells() = 0}
+     *  | else {getNbRows() = newColumn.getNbCells()}
+     *
+     * @throws IllegalArgumentException if the given index or column is invalid.
+     *  | !canHaveAsColumn(index, column)
+     *
+     */
+    @Model
+    private void addColumnAt(int index, Column column) throws IllegalStateException
+    {
+        if (!canHaveAsColumnAt(index,column)) throw new IllegalArgumentException("Illegal index or column");
+
+            columns.add(index, column);
+    }
 
     /**
      * CR 83
