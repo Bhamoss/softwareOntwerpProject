@@ -1,6 +1,5 @@
 package tablr.cell;
 
-import be.kuleuven.cs.som.*;
 import be.kuleuven.cs.som.annotate.Raw;
 
 /**

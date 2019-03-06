@@ -1,5 +1,8 @@
 package window;
 
+import tablr.TableDesignHandler;
+import tablr.TableHandler;
+import tablr.TableRowsHandler;
 import window.widget.*;
 import window.widget.Button;
 import window.widget.Rectangle;
@@ -15,6 +18,10 @@ public class testWindow extends CanvasWindow {
 
     private ArrayList<Widget> widgets;
 
+    private TableHandler tableHandler;
+    private TableRowsHandler rowsHandler;
+    private TableDesignHandler designHandler;
+
     /**
      * Initializes a CanvasWindow object.
      *
@@ -23,6 +30,13 @@ public class testWindow extends CanvasWindow {
     public testWindow(String title, int width, int height) {
         super(title);
         this.widgets = new ArrayList();
+
+        tableHandler = new TableHandler();
+        rowsHandler = new TableRowsHandler();
+        designHandler = new TableDesignHandler();
+
+
+
 
         widgets.add(new Rectangle(20, 100, 50, 50));
 
@@ -37,6 +51,7 @@ public class testWindow extends CanvasWindow {
         Function<String, Boolean> lam3 = x -> !"lor".equals(x);
         widgets.add(new TextBox(new Rectangle(20, 160, 80, 25), lam3));
         widgets.add(new TextBox(new Rectangle(120, 160, 80, 25), lam3));
+
     }
 
     /**
@@ -51,6 +66,7 @@ public class testWindow extends CanvasWindow {
             w.paint(g);
         }
     }
+
 
     /**
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
@@ -74,6 +90,7 @@ public class testWindow extends CanvasWindow {
      * @param id Details about the event
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
+        // If any widget is blocking, don't handle mouse events
         boolean blocked = false;
         for (Widget w: widgets) {
             blocked |= w.isBlocking();
@@ -81,6 +98,7 @@ public class testWindow extends CanvasWindow {
         if (blocked)
             return;
 
+        // Handle all mouse events and repaint if necessary
         boolean paintflag = false;
         for(Widget w: widgets) {
             paintflag |= w.handleMouseEvent(id, x, y, clickCount);

@@ -12,6 +12,7 @@ public class TextBox extends Widget {
     private String text;
     private boolean selected;
     private boolean blocked;
+    private static int OFFSET = 5;
 
     public TextBox(Rectangle rect, Function<String, Boolean> isValidText) {
         this.rect = rect;
@@ -39,7 +40,7 @@ public class TextBox extends Widget {
 
         // Draw rectangle and text
         rect.paint(g);
-        g.drawString(text, rect.x+5, rect.y + rect.height-5);
+        g.drawString(text, rect.x+OFFSET, rect.y + rect.height-OFFSET);
     }
 
     public boolean isSelected() {

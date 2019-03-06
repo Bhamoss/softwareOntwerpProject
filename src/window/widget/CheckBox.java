@@ -30,6 +30,7 @@ public class CheckBox extends Widget {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+        toggleHandler.accept(checked);
     }
 
     @Override
@@ -45,7 +46,6 @@ public class CheckBox extends Widget {
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (box.containsPoint(x,y) && id == MouseEvent.MOUSE_PRESSED) {
             setChecked(!isChecked());
-            toggleHandler.accept(isChecked());
             return true;
         }
         return false;
