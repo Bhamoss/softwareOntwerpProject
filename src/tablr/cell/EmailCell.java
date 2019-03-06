@@ -5,4 +5,5 @@ import be.kuleuven.cs.som.*;
 
 
 public class EmailCell extends Cell {
+    public static final String TYPE = "Email";
 }

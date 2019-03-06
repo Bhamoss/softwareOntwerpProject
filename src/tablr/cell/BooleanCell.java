@@ -66,4 +66,7 @@ public class BooleanCell extends Cell {
      *
      */
     private static Boolean DefaultValue;
+
+
+    public static final String TYPE = "Boolean";
 }

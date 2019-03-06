@@ -5,4 +5,5 @@ import be.kuleuven.cs.som.*;
 
 
 public class StringCell extends Cell {
+    public static final String TYPE = "String";
 }

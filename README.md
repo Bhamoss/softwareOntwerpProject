@@ -21,6 +21,7 @@ die alle tables en hun onderlinge dependencies (naam,...)
 bijhoud in plaats van de tableHandler (responsibility ervan is controller zijn
 , niet tables managen) om cohesion te verbeteren
 of is cohesion niet te hard aangetast daardoor.
+- enum voor type of niet? Is er anders geen indirecte coupling als je het niet doet?
 
 ## Commentaar
 Dus voor zover ik zie met die GUI, kunnen

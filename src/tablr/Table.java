@@ -171,10 +171,10 @@ public class Table {
      *  | index > getNbColumns() + 1
      *
      */
-    public void addColumnAt(int index) throws IllegalStateException
+    public void addColumnAt(int index, type) throws IllegalStateException
     {
 
-        Column newColumn = new Column(getNbRows());
+        Column newColumn = new Column(,getNbRows());
 
         addColumnAt(index, newColumn);
 
@@ -225,6 +225,9 @@ public class Table {
      * @return false if newColumn is null or it does not have the same amount of rows as in this table.
      *  | return ==  (newColumn == null || newColumn.getNbCells() != getNbRows())
      *
+     * @return TODO: false if the name of the column is the same as another name of columns
+     *
+     *
      * @return true if newColumn is not null, the column has the same amount of rows as this table
      *      and the index is strictly positive and not larger then the amount of columns plus one.
      *  | return == ( newColumn != 0 && newColumn.getNbCells() == getNbRows() && index > 0 && index =< getNbColumns + 1)
@@ -235,6 +238,8 @@ public class Table {
 
         boolean validIndex =  index > 0 && index <= getNbColumns() + 1;
         boolean validColumn = newColumn != null && newColumn.getNbCells() == getNbRows();
+
+        boolean validName
 
         return validColumn && validIndex;
     }

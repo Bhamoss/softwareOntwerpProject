@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class Column {
 
-    public Column()
+    public Column(String type)
     {
-        new Column(0);
+        new Column(type,0);
     }
 
-    public Column(int nbOfCells)
+    public Column(String type, int nbOfCells)
     {
 
     }
@@ -81,7 +81,20 @@ public class Column {
     }
 
 
+    public boolean canHaveAsCell(Cell cell)
+    {
+        return true;
+    }
+
+    public boolean canHaveAsCellAt(int index, Cell cell)
+    {
+        return true;
+    }
 
     private List<Cell> cells = new ArrayList<Cell>();
+
+
+
+    private String name = "newColumns";
 
 }
