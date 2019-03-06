@@ -3,40 +3,36 @@ package window.widget;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class TextBox extends Widget {
+public class EditorWidget extends LabelWidget {
 
-    private Rectangle rect;
     private Function<String, Boolean> isValidText;
-    private String text;
+    private Consumer<String> pushText;
     private boolean selected;
     private boolean blocked;
-    private static int OFFSET = 5;
 
-    /**
-     * Widget for a selectable box, containing editable text
-     *
-     * @param rect Rectangle defineing the geometry of the box
-     * @param isValidText Function handle used to determine if the
-     *                    content of the textbox is valid
-     */
-    public TextBox(Rectangle rect, Function<String, Boolean> isValidText) {
-        this.rect = rect;
+
+    public EditorWidget(int x, int y, int width, int height, boolean border, Function<String, Boolean> isValidText, Consumer<String> pushText) {
+        super(x, y, width, height, border, "");
         this.isValidText = isValidText;
-        this.text = "";
+        this.pushText = pushText;
 
         this.blocked = false;
         this.selected = false;
 
     }
 
+
+
     @Override
     public void paint(Graphics g) {
+
         // background color
         if (isSelected()) {
             g.setColor(Color.lightGray);
-            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+            g.fillRect(getX(), getY(), getWidth(), getHeight());
         }
 
         // red border if invalid
@@ -45,9 +41,8 @@ public class TextBox extends Widget {
         else
             g.setColor(Color.black);
 
-        // Draw rectangle and text
-        rect.paint(g);
-        g.drawString(text, rect.x+OFFSET, rect.y + rect.height-OFFSET);
+        // text
+        super.paint(g);
     }
 
     public boolean isSelected() {
@@ -61,6 +56,7 @@ public class TextBox extends Widget {
     public boolean attemptDeselect() {
         if (!isBlocking()) {
             selected = false;
+            pushText.accept(getText());
             return true;
         }
         return false;
@@ -76,9 +72,6 @@ public class TextBox extends Widget {
         blocked = b;
     }
 
-    public String getText() {
-        return text;
-    }
 
     private void setText(String t) {
         text = t;
@@ -88,7 +81,7 @@ public class TextBox extends Widget {
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_PRESSED) {
-            if (rect.containsPoint(x,y)) {
+            if (this.containsPoint(x,y)) {
                 setSelected();
                 return true;
             } else {

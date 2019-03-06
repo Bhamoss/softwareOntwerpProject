@@ -10,28 +10,22 @@ class Widget{
 UIWindow "1" <--> "0...*" Widget: has
 
 
-class Rectangle{
-}
-Rectangle --|> Widget
 
-class TextLabel{
+class LabelWidget{
 }
-TextLabel --|> Widget
+LabelWidget --|> Widget
 
-class TextBox {
-}
-TextBox --|> Widget
 
-class Label{
+class EditorWidget{
 }
-Label --|> Widget
+EditorWidget --|> LabelWidget
 
-class CheckBox{
+class CheckBoxWidget{
 }
-CheckBox --|> Widget
-class Button{
+CheckBoxWidget --|> Widget
+class ButtonWidget{
 }
-Button --|> Widget
+ButtonWidget --|> LabelWidget
 
 
 
