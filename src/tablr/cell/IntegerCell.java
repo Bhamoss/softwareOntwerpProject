@@ -1,13 +1,11 @@
 package tablr.cell;
 
 import tablr.Type;
-import tablr.cell.Cell;
-import be.kuleuven.cs.som.*;
 
 
 public class IntegerCell extends Cell {
 
-    public static final Type TYPE = Type.INT;
+    public static final Type TYPE = Type.INTEGER;
 
     /**
      *
@@ -30,6 +28,11 @@ public class IntegerCell extends Cell {
     @Override
     public String toString() {
         return getValue().toString();
+    }
+
+    @Override
+    public void terminate() {
+
     }
 
 }

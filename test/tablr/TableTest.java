@@ -19,9 +19,9 @@ class TableTest {
 
     @BeforeEach
     void setUp() {
-        emptyTable = new Table("emptyTable");
-        testTable = new Table("test");
-        tenTable = new Table("tableWithTenColumns");
+        emptyTable = new Table(0);
+        testTable = new Table(1);
+        tenTable = new Table(2);
     }
 
     @AfterEach
@@ -32,19 +32,21 @@ class TableTest {
     /**
      * CONSTRUCTOR
      * ********************************************************************
+     * nogal overbodig als je naar usecase 1 kijkt ;)
      */
 
-    @Test
-    @DisplayName("Create table with null name")
-    void createTableNameNull() {
-        assertThrows(IllegalArgumentException.class, () -> new Table(null));
-    }
-
-    @Test
-    @DisplayName("Create table with empty name")
-    void createTableNameEmpyt() {
-        assertThrows(IllegalArgumentException.class, () -> new Table(""));
-    }
+//    @Test
+//    @DisplayName("Create table with null name")
+//    void createTableNameNull() {
+//        assertThrows(IllegalArgumentException.class, () -> new Table(null));
+//    }
+//
+//
+//    @Test
+//    @DisplayName("Create table with empty name")
+//    void createTableNameEmpyt() {
+//        assertThrows(IllegalArgumentException.class, () -> new Table(""));
+//    }
 
 
     /**
@@ -68,7 +70,7 @@ class TableTest {
     @Test
     @DisplayName("The only getName() test.")
     void getName() {
-        assertEquals("test", testTable.getName());
+        assertEquals("table1", testTable.getName());
     }
 
     /**

@@ -30,4 +30,9 @@ public class StringCell extends Cell {
     public String toString() {
         return getValue();
     }
+
+    @Override
+    public void terminate() {
+
+    }
 }

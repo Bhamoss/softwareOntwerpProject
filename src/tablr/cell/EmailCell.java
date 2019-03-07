@@ -30,4 +30,9 @@ public class EmailCell extends Cell {
     public String toString() {
         return getValue();
     }
+
+    @Override
+    public void terminate() {
+
+    }
 }

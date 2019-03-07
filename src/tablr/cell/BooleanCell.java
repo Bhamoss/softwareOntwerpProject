@@ -69,7 +69,7 @@ public class BooleanCell extends Cell {
     private static Boolean DefaultValue;
 
 
-    public static final Type TYPE = Type.BOOL;
+    public static final Type TYPE = Type.BOOLEAN;
 
     @Override
     public Type getType() { return TYPE; }
@@ -80,5 +80,10 @@ public class BooleanCell extends Cell {
             return "True";
         } else
             return "False";
+    }
+
+    @Override
+    public void terminate() {
+
     }
 }

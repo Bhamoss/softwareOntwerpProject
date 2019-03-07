@@ -125,9 +125,7 @@ public class Table {
      */
     public Column getColumnAt(int index)
     {
-
-        //placeholder
-        return null;
+        return columns.get(index - 1);
     }
 
 
@@ -174,7 +172,7 @@ public class Table {
     public void addColumnAt(int index, Type type, String value) throws IllegalStateException
     {
 
-        Column newColumn = new Column(type ,getNbRows());
+        Column newColumn = new Column(type , "Column" + getNbColumns(), getNbRows());
 
         addColumnAt(index, newColumn);
 
@@ -299,6 +297,64 @@ public class Table {
 
     }
 
+    /**
+     * Set the name of the given column to the given name.
+     *
+     * @param   column
+     *          The column of which the name must be changed.
+     * @param   name
+     *          The new name of the given column
+     * @effect  The name of the given column is set to the given name.
+     *          | column.setName(name)
+     * @throws  IllegalColumnException
+     *          The given name is already used for another column in this table.
+     *          | isAlreadyUsedColumnName(name)
+     * @throws  IllegalColumnException
+     *          The given column doesn't exist in this table.
+     *          | !isAlreadyUsedColumnName(column)
+     */
+    public void setColumnName(String column, String name) throws IllegalColumnException {
+        if (!isAlreadyUsedColumnName(column))
+            throw new IllegalColumnException();
+        if (isAlreadyUsedColumnName(name))
+            throw new IllegalColumnException();
+        getColumn(column).setName(name);
+    }
+
+
+    /**
+     * Returns the columns with the given column name
+     * @param   columnName
+     *          The name of the column to return.
+     * @return  The column of this table with the given columnName.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !!isAlreadyUsedColumnName(columnName)
+     */
+    private Column getColumn(String columnName) {
+        for (Column c : columns) {
+            if (c.getName().equals(columnName))
+                return c;
+        }
+        throw new IllegalColumnException();
+    }
+
+    /**
+     * Checks whether the given columnName is a name of a column in this table.
+     * @param   name
+     *          The name to be checked
+     * @return  True if and only if the given name is a name
+     *          of a column in this table.
+     */
+    private boolean isAlreadyUsedColumnName(String name) {
+        for (Column c : columns) {
+            if (c.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+
     // TODO: ITERATE WITH for(Column column : columns)
     // for very complicated loops, use loop invariants (CR 61)
 
@@ -364,5 +420,33 @@ public class Table {
          zijn cellen en collommen printen
         */
         return getName();
+    }
+
+    /**
+     * Variable registering whether this table is terminated.
+     */
+    private boolean isTerminated = false;
+
+    /**
+     * Check whether this table is terminated.
+     */
+    @Basic
+    public boolean isTerminated() {
+        return isTerminated;
+    }
+    /**
+     * Terminate this table.
+     *
+     * @post    This table is terminated
+     *          | new.isTerminated()
+     * @post    All the columns of this table will also be terminated
+     */
+    public void terminate() {
+        if (!isTerminated()) {
+            this.isTerminated = true;
+            for (int i = 1; i < getNbColumns()+1; i++) {
+                getColumnAt(i).terminate();
+            }
+        }
     }
 }
