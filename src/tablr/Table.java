@@ -27,9 +27,9 @@ public class Table {
      *  | if(!isValidName(name) throw IllegalArgumentException
      */
     @Raw
-    public Table(String name) throws IllegalArgumentException{
-        setName(name);
-        this.columns = new ArrayList<Column>();
+    public Table(Integer n) throws IllegalArgumentException{
+        setName("table" + n);
+        //this.columns = new ArrayList<Column>(); //TODO deze lijn is niet bepaald nodig toch?
 
         /*
             TODO: CR86 make at least one constructor which initialises Table with 0 Columns
@@ -171,10 +171,10 @@ public class Table {
      *  | index > getNbColumns() + 1
      *
      */
-    public void addColumnAt(int index, type) throws IllegalStateException
+    public void addColumnAt(int index, Type type, String value) throws IllegalStateException
     {
 
-        Column newColumn = new Column(,getNbRows());
+        Column newColumn = new Column(type ,getNbRows());
 
         addColumnAt(index, newColumn);
 
@@ -193,7 +193,7 @@ public class Table {
     public void addColumn()
     {
 
-        addColumnAt(getNbColumns() + 1);
+        addColumnAt(getNbColumns() + 1, Type.STRING, "");
 
     }
 
@@ -239,7 +239,7 @@ public class Table {
         boolean validIndex =  index > 0 && index <= getNbColumns() + 1;
         boolean validColumn = newColumn != null && newColumn.getNbCells() == getNbRows();
 
-        boolean validName
+        boolean validName;
 
         return validColumn && validIndex;
     }

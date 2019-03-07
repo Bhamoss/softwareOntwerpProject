@@ -1,6 +1,7 @@
 package tablr.cell;
 
 import be.kuleuven.cs.som.annotate.Raw;
+import tablr.Type;
 
 /**
  *
@@ -68,5 +69,16 @@ public class BooleanCell extends Cell {
     private static Boolean DefaultValue;
 
 
-    public static final String TYPE = "Boolean";
+    public static final Type TYPE = Type.BOOL;
+
+    @Override
+    public Type getType() { return TYPE; }
+
+    @Override
+    public String toString() {
+        if (getValue()) {
+            return "True";
+        } else
+            return "False";
+    }
 }

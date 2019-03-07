@@ -5,6 +5,7 @@ import be.kuleuven.cs.som.taglet.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import tablr.Column;
+import tablr.Type;
 
 /**
  * IS COMPOSITE OF COLUMN
@@ -45,7 +46,7 @@ public abstract class Cell {
      * The column of this cell.
      * Cell is the non-controlling class.
      */
-    private Column column = new Column("name");
+    private Column column; //TODO: wat wordt bedoelt met dit: new Column("name"); vooral dan de "name"? de Column wordt toch gwn meegegeven best met de constructor van Cell?
 
     /**
      *
@@ -53,7 +54,7 @@ public abstract class Cell {
      *
      * @return
      */
-    public abstract String getType();
+    public abstract Type getType();
 
     /**
      * Represents the cell in human readable form.

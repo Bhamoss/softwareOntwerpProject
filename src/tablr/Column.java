@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class Column {
 
-    public Column(String type)
+    public Column(Type type)
     {
         new Column(type,0);
     }
 
-    public Column(String type, int nbOfCells)
+    public Column(Type type, int nbOfCells)
     {
 
     }
@@ -64,7 +64,7 @@ public class Column {
      */
     public boolean canHaveAsTable(Table table)
     {
-        return table.canHaveAsColumnAt(1, this);
+        return true;//table.canHaveAsColumnAt(1, this);
     }
 
     /**
