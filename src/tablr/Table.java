@@ -169,10 +169,10 @@ public class Table {
      *  | index > getNbColumns() + 1
      *
      */
-    public void addColumnAt(int index, Type type, String value) throws IllegalStateException
+    public void addColumnAt(int index) throws IllegalStateException
     {
 
-        Column newColumn = new Column(type , "Column" + getNbColumns(), getNbRows());
+        Column newColumn = new Column("Column" + getNbColumns(), getNbRows());
 
         addColumnAt(index, newColumn);
 
@@ -191,7 +191,7 @@ public class Table {
     public void addColumn()
     {
 
-        addColumnAt(getNbColumns() + 1, Type.STRING, "");
+        addColumnAt(getNbColumns() + 1);
 
     }
 

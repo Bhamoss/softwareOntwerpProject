@@ -64,5 +64,9 @@ public abstract class Cell {
     @Override
     public abstract String toString();
 
+
+
+    public abstract boolean isTerminated();
+
     public abstract void terminate();
 }

@@ -31,6 +31,13 @@ public class StringCell extends Cell {
         return getValue();
     }
 
+    private boolean isTerminated = false;
+
+    @Override
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
+
     @Override
     public void terminate() {
 

@@ -80,6 +80,14 @@ public class BooleanCell extends Cell {
             return "True";
         } else
             return "False";
+
+    }
+
+    private boolean isTerminated = false;
+
+    @Override
+    public boolean isTerminated() {
+        return this.isTerminated;
     }
 
     @Override

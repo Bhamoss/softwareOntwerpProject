@@ -30,6 +30,13 @@ public class IntegerCell extends Cell {
         return getValue().toString();
     }
 
+    private boolean isTerminated = false;
+
+    @Override
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
+
     @Override
     public void terminate() {
 
