@@ -18,7 +18,7 @@ public class TableRowsHandler {
 
 
     //TODO: doubting between enum and string, we should make the enum Boolean("Boolean")
-    public TYPE getColumnType(String columnName) throws IllegalColumnException
+    public Type getColumnType(String columnName) throws IllegalColumnException
     {
         return null;
     }

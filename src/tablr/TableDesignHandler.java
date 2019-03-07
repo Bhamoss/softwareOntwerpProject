@@ -12,7 +12,7 @@ public class TableDesignHandler {
     }
 
     //TODO: doubting between enum and string, we should make the enum Boolean("Boolean")
-    public TYPE getColumnType(String columnName) throws IllegalColumnException
+    public Type getColumnType(String columnName) throws IllegalColumnException
     {
         return null;
     }
@@ -34,7 +34,7 @@ public class TableDesignHandler {
     }
 
     // Dit kan enum type zijn of string
-    public boolean canHaveAsColumnType(String columnName, TYPE type) throws IllegalColumnException
+    public boolean canHaveAsColumnType(String columnName, Type type) throws IllegalColumnException
     {
         return false;
     }
@@ -55,7 +55,7 @@ public class TableDesignHandler {
 
     }
 
-    public void setColumnType(String columName, TYPE type) throws IllegalColumnException, IllegalArgumentException
+    public void setColumnType(String columName, Type type) throws IllegalColumnException, IllegalArgumentException
     {
 
     }
