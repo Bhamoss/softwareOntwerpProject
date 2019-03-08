@@ -1,11 +1,10 @@
 package tablr.cell;
 
-import be.kuleuven.cs.som.annotate.*;
-import be.kuleuven.cs.som.taglet.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
-import tablr.Column;
+import tablr.OldColumn;
 import tablr.Type;
+import tablr.column.Column;
 
 /**
  * IS COMPOSITE OF COLUMN
@@ -32,7 +31,7 @@ public abstract class Cell {
      */
     private boolean canHaveAsColumn(Column column)
     {
-        return column.canHaveAsCell(this);
+        return column.canHaveAsValue(this);
     }
 
     /**
@@ -50,7 +49,7 @@ public abstract class Cell {
      * The column of this cell.
      * Cell is the non-controlling class.
      */
-    private Column column; //TODO: wat wordt bedoelt met dit: new Column("name"); vooral dan de "name"? de Column wordt toch gwn meegegeven best met de constructor van Cell?
+    private Column column; //TODO: wat wordt bedoelt met dit: new OldColumn("name"); vooral dan de "name"? de OldColumn wordt toch gwn meegegeven best met de constructor van Cell?
 
     /**
      *

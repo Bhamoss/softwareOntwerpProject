@@ -11,13 +11,13 @@ import java.util.List;
  *
  * @Invar sdf
  */
-public class Column {
+public class OldColumn {
 
 
 
 
 
-    public Column(String name, int nbOfCells)
+    public OldColumn(String name, int nbOfCells)
     {
 
         this(name, nbOfCells, Type.STRING, "", true);
@@ -38,7 +38,7 @@ public class Column {
      *          | for each I in 1..nbOfCells:
      *          |   addCell(new Cell())
      */
-    public Column(String name, int nbOfCells, Type type, String defaultValue, boolean blanksAllowed)
+    public OldColumn(String name, int nbOfCells, Type type, String defaultValue, boolean blanksAllowed)
             throws IllegalArgumentException
     {
         setType(type);

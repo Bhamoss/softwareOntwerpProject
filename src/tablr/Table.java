@@ -1,7 +1,7 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
-import be.kuleuven.cs.som.taglet.*;
+import tablr.column.Column;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +235,7 @@ public class Table {
     {
 
         boolean validIndex =  index > 0 && index <= getNbColumns() + 1;
-        boolean validColumn = newColumn != null && newColumn.getNbCells() == getNbRows();
+        boolean validColumn = newColumn != null && newColumn.getNbValues() == getNbRows();
 
         boolean validName;
 
@@ -460,7 +460,7 @@ public class Table {
         else
         {
             // there should always be a column at one if there are columns.
-            return getColumnAt(1).getNbCells();
+            return getColumnAt(1).getNbValues();
         }
     }
 
