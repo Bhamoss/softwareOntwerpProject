@@ -14,10 +14,13 @@ public class EditorWidget extends LabelWidget {
     private boolean blocked;
 
 
-    public EditorWidget(int x, int y, int width, int height, boolean border, Function<String, Boolean> isValidText, Consumer<String> pushText) {
+    public EditorWidget(int x, int y, int width, int height, boolean border,String text, Function<String, Boolean> isValidText, Consumer<String> pushText) {
         super(x, y, width, height, border, "");
         this.isValidText = isValidText;
         this.pushText = pushText;
+        if(isValidText.apply(text)){
+            setText(text);
+        }
 
         this.blocked = false;
         this.selected = false;

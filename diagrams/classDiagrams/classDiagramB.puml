@@ -46,6 +46,15 @@ class TableHandler{
     __Responsibilities__
     managing tables
 }
+note left
+    Wat als we hier
+    een interface Mode
+    maken en die een
+    getLayout() of
+    getWidth functie
+    geven? Onnodige
+    coupling?
+end note
 TableHandler "1" --> "0..*" Table
 TableDesignHandler "1" --> "1" Table
 TableRowsHandler "1" --> "1" Table
@@ -84,51 +93,40 @@ __Responsibility__
 manage Column
 }
 
-
-
-class Cell{
-editValue(value): {abstract}
-isValid(value): {abstract}
-__Responsibility__
-Know:
-maintain data
-}
-Cell <|-- BooleanCell
-Cell <|-- IntegerCell
-Cell <|-- EmailCell
-Cell <|-- StringCell
+Column <|-- BooleanColumn
+Column <|-- IntegerColumn
+Column <|-- EmailColumn
+Column <|-- StringColumn
 
 class Column{
 name:String
 allowsBlanks:Boolean
-cells : ArrayList<Cell>
+valueList : List<Object>
 
 __Responsibility__
-Know: column
-manage Cells
+Manage list with correct entries
 }
 
 Table "1" *-- "0..*" Column
-Column "1" *-- "0..*" Cell: has
 
-class BooleanCell{
-value : Boolean
-editValue(Boolean)
+class BooleanColumn{
+valueList : List<Boolean>
+editValue(Integer,Boolean)
 isValid(Boolean): Boolean
 }
-class StringCell{
-value : String
-editValue(String)
+class StringColumn{
+valueList : List<String>
+editValue(Integer,String)
 isValid(String): Boolean
 }
-class EmailCell{
-value : String
-editValue(String)
+class EmailColumn{
+valueList : List<String>
+editValue(Integer,String)
 isValid(String): Boolean
 }
-class IntegerCell{
-value : Integer
-editValue(Integer)
+class IntegerColumn{
+valueList : List<Integer>
+editValue(Integer,Integer)
 isValid(Integer): Boolean
 }
 @enduml
