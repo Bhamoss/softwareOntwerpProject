@@ -1,6 +1,9 @@
 ## Idea ignore
 **/*.idea
 **/*.iml
+.idea/**/*
+*.iml
+
 ## output files
 out/**/*
 output/**/*
