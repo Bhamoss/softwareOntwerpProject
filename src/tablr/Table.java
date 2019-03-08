@@ -305,7 +305,7 @@ public class Table {
      * @param   name
      *          The new name of the given column
      * @effect  The name of the given column is set to the given name.
-     *          | column.setName(name)
+     *          | getColumn(column).setName(name)
      * @throws  IllegalColumnException
      *          The given name is already used for another column in this table.
      *          | isAlreadyUsedColumnName(name)
@@ -314,11 +314,72 @@ public class Table {
      *          | !isAlreadyUsedColumnName(column)
      */
     public void setColumnName(String column, String name) throws IllegalColumnException {
+        // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
+        // check of deze naam al bestaat in deze table
         if (isAlreadyUsedColumnName(name))
             throw new IllegalColumnException();
         getColumn(column).setName(name);
+    }
+
+    /**
+     * Change the type of the given column
+     *
+     * @param   column
+     *          The column of which the type must be changed
+     * @effect  The type of the given is changed to the following type
+     *          | getColumn(column).changeType()
+     * @throws  IllegalColumnException
+     *          The given column doesn't exists in this table.
+     *          | !isAlreadyUsedColumnName(column)
+     */
+    public void setColumnType(String column) throws IllegalColumnException {
+        // check of deze column wel in de table zit
+        if (!isAlreadyUsedColumnName(column))
+            throw new IllegalColumnException();
+        getColumn(column).changeType();
+    }
+
+    /**
+     * Change the possibility of using blanks or not
+     *
+     * @param   column
+     *          The column of which the blanks must be changed.
+     * @effect  The blanks of the given column are changed.
+     *          | getColumn(column).changeBlanks()
+     * @throws  IllegalColumnException
+     *          The given column doesn't exists in this table.
+     *          | !isAlreadyUsedColumnName(column)
+     */
+    public void changeColumnBlanks(String column)
+            throws IllegalColumnException {
+        // check of deze column wel in de table zit
+        if (!isAlreadyUsedColumnName(column))
+            throw new IllegalColumnException();
+        getColumn(column).changeBlanks();
+    }
+
+    /**
+     * Sets the default value of the given column to the given
+     * default value.
+     *
+     * @param   column
+     *          The column of which the default value must be changed.
+     * @param   dv
+     *          The new default value for the given column
+     * @effect  The default value of the given column is set to the given value.
+     *          | getColumn(column).setDefaultValue(dv);
+     * @throws  IllegalColumnException
+     *          The given column doesn't exists in this table.
+     *          | !isAlreadyUsedColumnName(column)
+     */
+    public void setColumnDefaultValue(String column, String dv)
+            throws IllegalColumnException {
+        // check of deze column wel in de table zit
+        if (!isAlreadyUsedColumnName(column))
+            throw new IllegalColumnException();
+        getColumn(column).setDefaultValue(dv);
     }
 
 

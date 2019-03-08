@@ -13,6 +13,10 @@ import tablr.Type;
 public abstract class Cell {
 
     /**
+     *
+     */
+
+    /**
      * Returns the column of this cell.
      */
     @Basic @Raw

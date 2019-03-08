@@ -1,7 +1,7 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
-import tablr.cell.Cell;
+import tablr.cell.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Column {
     public Column(String name, int nbOfCells)
     {
 
-        new Column(name, nbOfCells, Type.STRING, "", true);
+        this(name, nbOfCells, Type.STRING, "", true);
     }
 
     /**
@@ -28,19 +28,38 @@ public class Column {
      * @param   name
      *          The name of the new column
      * @param   nbOfCells
+     *          The number of cells in the new column
      * @param   type
- *          The type of the new column
+     *          The type of the new column
      * @param   defaultValue
-*          The default value of the new column
+     *          The default value of the new column
+     * @effect  There are nbOfCells new cells created in the list cells,
+     *          based on the given type.
+     *          | for each I in 1..nbOfCells:
+     *          |   addCell(new Cell())
      */
     public Column(String name, int nbOfCells, Type type, String defaultValue, boolean blanksAllowed)
+            throws IllegalArgumentException
     {
         setType(type);
         setName(name);
         setBlanksAllowed(blanksAllowed);
         setDefaultValue(defaultValue);
         if (type == Type.STRING) {
-
+            for (int i = 0; i < nbOfCells; i++)
+                addCell(new StringCell());
+        }
+        else if (type == Type.EMAIL) {
+            for (int i = 0; i < nbOfCells; i++)
+                addCell(new EmailCell());
+        }
+        else if (type == Type.BOOLEAN) {
+            for (int i = 0; i < nbOfCells; i++)
+                addCell(new BooleanCell());
+        }
+        else if (type == Type.INTEGER) {
+            for (int i = 0; i < nbOfCells; i++)
+                addCell(new IntegerCell());
         }
     }
 
@@ -53,20 +72,50 @@ public class Column {
         return blanksAllowed;
     }
 
-    public boolean canHaveAsBlanksAllowed(boolean param)
+    /**
+     * Checks this column can have the given blanksAllowed or not.
+     *
+     * @param   blanksAllowed
+     *          The boolean to be checked.
+     * @return  False if not blanksAllowed and the default value of this column is blank
+     *          | if ( !blanksAllowed && getDefaultValue().equals(""))
+     *          |   then result == false
+     *          Otherwise, true if blanksAllowed or not blanksAllowed and there is no
+     *          cell in this column with a blank value.
+     *          | else if (!blanksAllowed)
+     *          |   then result ==
+     *          |       for each I in 1..getNbCells():
+     *          |           !getCellAt(i).toString().equals("")
+     *          | else
+     *          |   then result == true
+     */
+    public boolean canHaveAsBlanksAllowed(boolean blanksAllowed)
     {
+        if (!blanksAllowed) {
+            if (getDefaultValue().equals(""))
+                return false;
+            else
+                for (int i = 1; i <= getNbCells(); i++)
+                    if (getCellAt(i).toString().equals(""))
+                        return false;
+        }
         return true;
     }
 
     /**
+     * Sets blanks allowed or not, depending on the given boolean
      *
-     * @param blanksAllowed
+     * @param   blanksAllowed
+     *          The boolean to set as blanks allowed.
+     * @pre     The given value must be valid for this column
+     *          | canHaveAsBlanksAllowed(blanksAllowed)
+     * @post    If blanksAllowed is true, then from now on blanks are allowed,
+     *          otherwise, from now on blanks are not allowed.
+     *          | new.isBlanksAllowed() == blanksAllowed
      */
     @Raw
-    public void setBlanksAllowed(boolean blanksAllowed) {
-        if (canHaveAsBlanksAllowed(blanksAllowed)) {
-            this.blanksAllowed = blanksAllowed;
-        }
+    private void setBlanksAllowed(boolean blanksAllowed) {
+        this.blanksAllowed = blanksAllowed;
     }
 
     /**
@@ -229,6 +278,19 @@ public class Column {
     }
 
     /**
+     * Add the given cell as a cell for this column at the end of the list cells
+     *
+     * @param   cell
+     *          The cell to be added.
+     * @effect  This column has the given cell as one of its cells at the end of the list and
+     *          the number of cells of this column is incremented by 1.
+     *          | addCellAt(getNbCells() + 1, cell)
+     */
+    public void addCell(Cell cell) throws IllegalArgumentException {
+        addCellAt(getNbCells() + 1, cell);
+    }
+
+    /**
      * Remove the cell of this column at the given index.
      *
      * @param   index
@@ -327,7 +389,7 @@ public class Column {
      *          The new type for this column.
      * @post    The new type of this column is equal to the given type
      *          | new.getType() == type
-     * @throws  IllegalColumnException
+     * @throws  IllegalTypeException
      *          The given type is not a valid type for this column
      *          | !isValidType(type)
      */
@@ -342,9 +404,47 @@ public class Column {
      *
      * @param   type
      *          The type to check.
-     * @return  True if and only the type is ... TODO: AANVULLEN EN CHECKER MAKEN
+     * @return  False if the given type is not effective.
+     *          | if (type == null)
+     *          |   then result == false
+     *          Otherwise, false if the type is invalid for the default value
+     *          of this column. the value of a cell of this column would be
+     *          invalid with this type.
+     *          | else if ( !isValidTypeForValue(type, getDefaultValue()) )
+     *          |   then result == false
+     *          Otherwise, true if all the cells their values of this column are
+     *          valid with this type
+     *          | else
+     *          |   result ==
+     *          |       for each I in 1..getNbCells():
+     *          |           isValidTypeForValue(type, getCellAt(I).getValue())
      */
     private boolean isValidType(Type type) {
+        if (type == null)
+            return false;
+        else if (!isValidTypeForValue(type, getDefaultValue()))
+            return false;
+        else
+            for (int i = 1; i <= getNbCells(); i++)
+                if (!isValidTypeForValue(type, getCellAt(i).toString()))
+                    return false;
+        return true;
+
+    }
+
+    /**
+     * Checks whether the given type is a valid type for the given value.
+     *
+     * @param   type
+     *          The type to be checked.
+     * @param   value
+     *          The value to be checked.
+     * @return //TODO checker voor valid type schrijven, eerst samenoverlopen wat kan.
+     */
+    private boolean isValidTypeForValue(Type type, String value) {
+        if (type == Type.STRING) {
+            return true; // als het gegeven type string is, alles kan omgezet worden in string
+        }
         return true;
     }
 
@@ -372,6 +472,19 @@ public class Column {
      */
     @Basic
     public void setDefaultValue(String defaultValue) {
+        if (getType() == Type.BOOLEAN) {
+            if (getDefaultValue().equals("True"))
+                this.defaultValue = "False";
+            else if (getDefaultValue().equals("False")) {
+                if (isBlanksAllowed())
+                    this.defaultValue = "";
+                else
+                    this.defaultValue = "True";
+            }
+            else if (getDefaultValue().equals(""))
+                this.defaultValue = "True";
+        }
+        // TODO: nog verder checken!!! 4.6 1c
         this.defaultValue = defaultValue;
     }
 
@@ -404,5 +517,70 @@ public class Column {
                 getCellAt(i).terminate();
             }
         }
+    }
+
+    /**
+     * Method to change the current type to next following type.
+     *
+     * @post    The new type of this column is set to the following type
+     *          of the current type
+     *          | new.getType() == getFollowingType()
+     * @throws  IllegalTypeException
+     *          The following type on the current type cannot be the type of this
+     *          column.
+     *          | !isValidType(getFollowingType())
+     */
+    public void changeType() throws IllegalTypeException {
+        Type nextType = getFollowingType();
+        if (!isValidType(nextType))
+            throw new IllegalTypeException();
+        setType(nextType);
+    }
+
+    /**
+     * Returns the next following type based on the current type.
+     *
+     * @return  The next following type based on the current type.
+     *          If the current type is String, then return type Email
+     *          | if (getType() == Type.STRING)
+     *          |   then result == Type.EMAIL
+     *          Otherwise, if the current type is Email, then return type Boolean
+     *          | else if (getType() == Type.EMAIL)
+     *          |   then result == Type.BOOLEAN
+     *          Otherwise, if the current type is Boolean, then return type Integer
+     *          | else if (getType() == Type.BOOLEAN)
+     *          |   then result == Type.INTEGER
+     *          Otherwise, if the current type is Integer, then return type String
+     *          | else if (getType() == Type.INTEGER)
+     *          |   then result == Type.STRING
+     * @throws  IllegalTypeException
+     *          The current type isn't a valid type.
+     */
+    private Type getFollowingType() throws IllegalTypeException {
+        if (getType() == Type.STRING)
+            return Type.EMAIL;
+        else if (getType() == Type.EMAIL)
+            return Type.BOOLEAN;
+        else if (getType() == Type.BOOLEAN)
+            return Type.INTEGER;
+        else if (getType() == Type.INTEGER)
+            return Type.STRING;
+        else
+            throw new IllegalTypeException();
+    }
+
+    /**
+     * Changes if blanks are allowed or not.
+     *  If blanks are currently allowed, then they will be disabled
+     *      otherwise, if blanks are currently not allowed, then they will be allowed
+     *
+     * @throws  IllegalColumnException
+     *          The new configuration is not possible with the given
+     *          default value or values in the cells of this column.
+     */
+    public void changeBlanks() {
+        if (!canHaveAsBlanksAllowed(!isBlanksAllowed()))
+            throw new IllegalColumnException();
+        setBlanksAllowed(!isBlanksAllowed());
     }
 }
