@@ -47,13 +47,14 @@ public class TableDesignWindow extends ModeWindow{
                     }
                 }));//empty
                 x +=25;
-                layout.add(new EditorWidget(x,y,80,25,true, columnName, (String string) -> getTableDesignHandler().isValidColumnName(string),(String string) -> getTableDesignHandler().setColumnName(columnName,string)));//edit name
+                layout.add(new EditorWidget(x,y,80,25,true, columnName, (String string) -> getTableDesignHandler().canHaveAsColumnName(columnName,string),(String string) -> getTableDesignHandler().setColumnName(columnName,string)));//edit name
                 x +=80;
-                ButtonWidget typeButton = new ButtonWidget(x,y,80,25,true,getTableDesignHandler().getColumnType(columnName).getName(),(Integer clickCount) ->{if(clickCount == 1)typeButton.setText})
-                layout.add(new ButtonWidget(x,y,80,25,true,getTableDesignHandler().getColumnType(columnName).getName(),(Integer clickCount) ->{if(clickCount == 1)}))
+                ButtonWidget typeButton = new ButtonWidget(x,y,80,25,true,getTableDesignHandler().getColumnType(columnName).getName());
+                typeButton.setOnClick((Integer clickCount) ->{if(clickCount == 1)typeButton.setText(tableDesignHandler.getColumnType(columnName).toString());});
+                layout.add(typeButton);
                 y += 25;
             }
-            layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)getTableDesignHandler().createColumn();}));
+            layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)getTableDesignHandler().addColumn();}));
 
             return layout;
         }
