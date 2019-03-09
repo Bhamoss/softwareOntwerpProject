@@ -12,12 +12,13 @@ import java.util.List;
  *
  *
  *
- * @Invar the name of the table is always valid.
- *  | isValidName(getName()) = true
- *
- * @Invar all columns of the table have an equal amount of cells.
- *
- * @Invar columns is never null.
+ * @Invar   The name of the table is always valid.
+ *          | isValidName(getName())
+ * @Invar   All columns of the table have an equal amount of cells.
+ *          | for each I in 2..getNbColumns():
+ *          |   getColumnAt(I).getNbValues() == getColumnAt(1).getNbValues()
+ * @Invar   Columns is always effective.
+ *          | columns != null
  */
 public class Table {
 

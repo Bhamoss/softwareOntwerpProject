@@ -1,10 +1,6 @@
 package tablr.column;
 
 import be.kuleuven.cs.som.annotate.Basic;
-import tablr.IllegalColumnException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BooleanColumn extends Column {
 

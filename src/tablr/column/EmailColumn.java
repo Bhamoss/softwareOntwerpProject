@@ -1,7 +1,6 @@
 package tablr.column;
 
 import be.kuleuven.cs.som.annotate.Basic;
-import tablr.IllegalColumnException;
 
 
 public class EmailColumn extends Column {
