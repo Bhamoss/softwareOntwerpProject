@@ -131,18 +131,22 @@ Table "1" *-- "0..*" Column
 
 class BooleanColumn{
 __
-
++getType(): boolean
++canHaveAsValue(String): boolean
 }
 class StringColumn{
-editValue(Integer,String)
-isValid(String): Boolean
+__
++getType(): boolean
++canHaveAsValue(String): boolean
 }
 class EmailColumn{
-editValue(Integer,String)
-isValid(String): Boolean
+__
++getType(): boolean
++canHaveAsValue(String): boolean
 }
 class IntegerColumn{
-editValue(Integer,Integer)
-isValid(Integer): Boolean
+__
++getType(): boolean
++canHaveAsValue(String): boolean
 }
 @enduml
