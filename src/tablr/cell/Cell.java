@@ -31,7 +31,7 @@ public abstract class Cell {
      */
     private boolean canHaveAsColumn(Column column)
     {
-        return column.canHaveAsValue(this);
+        return false;//return column.canHaveAsValue(this);
     }
 
     /**

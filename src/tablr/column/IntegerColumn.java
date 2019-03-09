@@ -1,14 +1,36 @@
 package tablr.column;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import tablr.IllegalColumnException;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class IntegerColumn extends Column {
+
+
     /**
-     * Return the type of this column
-     *  The type of this column is Integer.
+     * Initialize this new integer column with given name, given number of values, given default value and
+     *  given blanks allowed.
+     *
+     * @param   name
+     *          The name of the new integer column.
+     * @param   nbOfValues
+     *          The number of values of the new integer column.
+     * @param   defaultValue
+     *          The default value of the new integer column
+     * @param   blanksAllowed
+     *          Boolean to determine whether blanks are allowed or not.
+     * @effect  This new integer column is initialised as a column
+     *          with given name, given number of values, given default value and
+     *          given blanks allowed.
+     *          | super(name, nbOfValues, defaultValue, blanksAllowed)
+     */
+    public IntegerColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
+            throws IllegalColumnException, IllegalArgumentException{
+        super(name, nbOfValues, defaultValue, blanksAllowed);
+    }
+
+    /**
+     * Return the type of this integer column
      */
     @Basic @Override
     public String getType() {
@@ -16,68 +38,44 @@ public class IntegerColumn extends Column {
     }
 
     /**
-     * Returns whether the default value of this column is empty or not.
+     * Check whether this integer column can have the given value as one of its values
      *
-     * @return  False if and only if the default value is effective.
+     * @param   value
+     *          The value to be checked.
+     * @return  False if the given value is not effective.
      *          | result ==
-     *          |   ( getDefaultValue() == null )
+     *          |   ( value == null )
+     *          Otherwise, false if the given value is blank and blanks are not allowed
+     *          | result ==
+     *          |   ( !isBlanksAllowed() && isValueBlank(value)
+     *          Otherwise, false if the given value is not an integer
+     *          | result ==
+     *          |   ( !isInteger(value) )
      */
     @Override
-    protected boolean isDefaultValueEmpty() {
-        return (super.isDefaultValueEmpty());
-    }
-
-    /**
-     * Returns the default value of this column.
-     */
-    @Basic
-    @Override
-    public Integer getDefaultValue() {
-        return defaultValue;
-    }
-
-    /**
-     * Variable registering the default value of this column
-     */
-    private Integer defaultValue;
-
-    /**
-     * List of collecting references to the integer values of this column.
-     *
-     * @invar   The list of values is effective
-     *          | values != null
-     * @invar   Each element in the list of values is a reference to a value
-     *          that is acceptable as a value for this column.
-     *          | for each value in values:
-     *          |   canHaveAsValue(value)
-     */
-    private List<Integer> values = new ArrayList<Integer>();
-
-    /**
-     * Return the number of values of this column
-     */
-    @Basic
-    public int getNbValues()
+    public boolean canHaveAsValue(String value)
     {
-        return values.size();
+        if (!super.canHaveAsValue(value))
+            return false;
+        return isInteger(value);
     }
 
     /**
-     * Return the value of this column at the given index
+     * Check whether the given value is an integer
      *
-     * @param   index
-     *          The index of the value to return
-     * @throws  IndexOutOfBoundsException
-     *          The index isn't a number strict positive or
-     *          the index exceeds the number of values in this column
-     *          | ( index < 1 || index > getNbValues() )
+     * @param   value
+     *          The value to be checked.
+     * @return  False if the given value cannot be parsed into an integer
      */
-    @Basic
-    public Integer getValueAt(int index) throws IndexOutOfBoundsException {
-        if (index < 1 || index > getNbValues()) {
-            throw new IndexOutOfBoundsException();
+    public static boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch(NumberFormatException | NullPointerException e) {
+            return false;
         }
-        return values.get(index - 1);
+        // only got here if we didn't return false
+        return true;
     }
+
 }
 
