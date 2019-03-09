@@ -89,6 +89,6 @@ public class TableDesignHandler {
 
     }
 
-    private final TableManager tableManager;
+    //private final TableManager tableManager;
 
 }

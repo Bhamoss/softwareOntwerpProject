@@ -76,7 +76,7 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    private void setText(String t) {
+    public void setText(String t) {
         text = t;
         setBlocking(!isValidText.apply(t));
     }

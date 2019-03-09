@@ -175,9 +175,9 @@ public class Table {
     public void addColumnAt(int index) throws IllegalStateException
     {
 
-        Column newColumn = new Column("Column" + getNbColumns(), getNbRows());
+        //Column newColumn = new Column("Column" + getNbColumns(), getNbRows());
 
-        addColumnAt(index, newColumn);
+        //addColumnAt(index, newColumn);
 
     }
 
@@ -341,7 +341,7 @@ public class Table {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
-        getColumn(column).changeType();
+        //getColumn(column).changeType();
     }
 
     /**
@@ -360,7 +360,7 @@ public class Table {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
-        getColumn(column).changeBlanks();
+        //getColumn(column).changeBlanks();
     }
 
     /**

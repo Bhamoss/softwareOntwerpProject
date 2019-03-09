@@ -62,7 +62,7 @@ public class TableRowsHandler {
      * @Invar this.currentTable == designHandler.currentTable
      */
 
-    private final TableManager tableManager;
+    //private final TableManager tableManager;
 
 
 }

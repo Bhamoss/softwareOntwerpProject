@@ -40,10 +40,10 @@ public class TablesWindow extends ModeWindow{
                     tableHandler.openTable(tableName);
                 }
             }));
-            layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.isValidText(string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
+            //layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.isValidText(string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
             y += 25;
         }
-        layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)tableHandler.createTable();}));
+        //layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)tableHandler.createTable();}));
 
         return layout;
     }

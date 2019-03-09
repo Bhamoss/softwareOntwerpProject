@@ -4,8 +4,7 @@ import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;
 import window.widget.*;
-import window.widget.Button;
-import window.widget.Rectangle;
+import window.widget.ButtonWidget;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,19 +37,19 @@ public class testWindow extends CanvasWindow {
 
 
 
-        widgets.add(new Rectangle(20, 100, 50, 50));
+        //widgets.add(new Rectangle(20, 100, 50, 50));
 
-        widgets.add(new TextLabel("This is a label!", 200, 200));
+        //widgets.add(new TextLabel("This is a label!", 200, 200));
 
         Consumer<Integer> lam = x -> System.out.println("Button was pressed!");
-        widgets.add(new Button(new Rectangle(20,10,50,25), "Button", lam));
+        //widgets.add(new Button(new Rectangle(20,10,50,25), "Button", lam));
 
         Consumer<Boolean> lam2 = x -> System.out.println(x);
-        widgets.add(new CheckBox(20, 50,lam2));
+        //widgets.add(new CheckBox(20, 50,lam2));
 
         Function<String, Boolean> lam3 = x -> !"lor".equals(x);
-        widgets.add(new TextBox(new Rectangle(20, 160, 80, 25), lam3));
-        widgets.add(new TextBox(new Rectangle(120, 160, 80, 25), lam3));
+        //widgets.add(new TextBox(new Rectangle(20, 160, 80, 25), lam3));
+        //widgets.add(new TextBox(new Rectangle(120, 160, 80, 25), lam3));
 
     }
 

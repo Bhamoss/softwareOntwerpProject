@@ -89,7 +89,7 @@ public abstract class Column {
      *          |       || (name == "") )
      */
     private boolean canHaveAsName(String name) {
-        return (name == null || name.equals(""));
+        return !(name == null || name.equals(""));
     }
 
     /**
