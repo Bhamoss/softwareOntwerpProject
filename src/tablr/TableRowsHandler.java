@@ -3,7 +3,12 @@ package tablr;
 import be.kuleuven.cs.som.*;
 
 import java.util.ArrayList;
-
+/**
+ *
+ *
+ * @invar the handler always has a tablemanager.
+ *  | getTableManager() != null
+ */
 public class TableRowsHandler {
 
     public String getCellValue(String columnName, int Row) throws IllegalColumnException, IllegalRowException

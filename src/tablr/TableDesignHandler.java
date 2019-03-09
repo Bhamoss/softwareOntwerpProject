@@ -4,6 +4,13 @@ import be.kuleuven.cs.som.*;
 
 import java.util.ArrayList;
 
+/**
+ *
+ *
+ *
+ * @invar the handler always has a tablemanager.
+ *  | getTableManager() != null
+ */
 public class TableDesignHandler {
 
     public ArrayList<String> getColumnNames()

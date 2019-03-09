@@ -30,7 +30,9 @@ public class Table {
     @Raw
     public Table(Integer n) throws IllegalArgumentException{
         setName("table" + n);
-        //this.columns = new ArrayList<Column>(); //TODO deze lijn is niet bepaald nodig toch?
+
+        // deze lijjn is nodig omdat je alles moet initialiseren.
+        this.columns = new ArrayList<Column>();
 
         /*
             TODO: CR86 make at least one constructor which initialises Table with 0 Columns
@@ -484,10 +486,17 @@ public class Table {
         return getName();
     }
 
+
     /**
      * Variable registering whether this table is terminated.
      */
     private boolean isTerminated = false;
+
+
+    public boolean canTerminate()
+    {
+        return true;
+    }
 
     /**
      * Check whether this table is terminated.
