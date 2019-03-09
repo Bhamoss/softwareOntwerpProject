@@ -208,8 +208,7 @@ public abstract class Column {
      *          | values != null
      * @invar   Each element in the list of values is a reference to a value
      *          that is acceptable as a value for this column.
-     *          | for each value in values:
-     *          |   canHaveAsValue(value)
+     *          | hasProperValues()
      */
     private List<String> values = new ArrayList<String>();
 
