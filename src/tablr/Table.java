@@ -41,10 +41,6 @@ public class Table {
 
     /**
      * Returns the name of the table.
-     *
-     * @return The name of the table.
-     *
-     *
      */
     @Basic @Raw
     public String getName() {
@@ -52,11 +48,12 @@ public class Table {
     }
 
     /**
-     * Returns true if the name is valid (not null and not empty) and false otherwise.
+     * Returns whether the given name is a valid name.
      *
-     * @param name the name to be evaluated.
-     * @return true if the name is valid (not null and not empty) and false otherwise.
-     *  | return name != null && !name.equals("")
+     * @param   name
+     *          The name to be evaluated.
+     * @return  False if the name is null or empty
+     *          | return name == null || name.equals("")
      */
     public static boolean isValidName(String name)
     {
@@ -64,83 +61,132 @@ public class Table {
     }
 
     /**
-     * Sets the name of table if the given name is not empty.
+     * Sets the name of table to the given name.
      *
-     * @param name The new, not null, name of the table.
-     *             WRONG CANT BE DOUBLE EITHER
-     *             OR IS THAT RESPONSIBILITY OF
-     *             THE HANDLER INFORMATION EXPERT
-     *
-     * @pre name is valid
-     *  | isValidName(name) = true
-     *
-     * @effect If the given name was not null or empty, the name of the table
-     *  is now the given name.
-     *  | if(isValidName(name)) getName() == name
-     *
-     * @throws IllegalArgumentException ("Table name must not be empty.") if the given name is not valid.
-     *  | if(!isValidName(name)) throw IllegalArgumentException
+     * @param   name
+     *          The new name to be set.
+     * @post    The name of the table is set to the given name
+     *          | new.getName() == name
+     * @throws  IllegalArgumentException
+     *          If the given name is not valid.
+     *          | !isValidName(name)
      */
     @Raw
     public void setName(String name) throws IllegalArgumentException
     {
-        if(!isValidName(name)) throw new IllegalArgumentException("Table name must not be empty.");
+        if(!isValidName(name))
+            throw new IllegalArgumentException("Table name must not be empty.");
         this.name = name;
     }
 
     /**
      * The name of the table.
-     *
-     * (See coding rule 32)
      */
     private String name = "newTable";
 
+    /**
+     * List of collecting references to the columns of this table
+     *
+     * @Invar   The list of columns is effective
+     *          | columns != null
+     * @Invar   Each element in the list of columns is a reference to a column
+     *          that is acceptable as a column for this table.
+     *          | hasProperColumns()
+     */
+    private List<Column> columns = new ArrayList<Column>();
+
 
     /**
-     *
      * Returns the number of columns in this table.
-     *
-     * CR 83
-     *
-     * @pre columns is not null.
-     *  | columns != null
-     *
-     * @return the number of columns of the table
-     * | return = columns.length
-     *
-     * @throws IllegalStateException if columns is null
-     *  | columns == null
      */
     @Basic
-    public int getNbColumns() throws IllegalStateException
-    {
-        // TODO: is this necesary? I think not cause this is not raw and invar is it is not null
-        if(this.columns == null) throw new IllegalStateException("The columns should not be null");
-
+    public int getNbColumns() {
         return this.columns.size();
     }
 
     /**
-     * CR84
-     * SHOULD BE STARTING ON 1
-     * @param index
-     * @return
+     * Return the column of this table at the given index.
+     *
+     * @param   index
+     *          The index of the value to return.
+     * @throws  IndexOutOfBoundsException
+     *          The index isn't a number strict positive or
+     *          the index exceeds the number of columns in this table
+     *          | ( index < 1 || index > getNbColumns() )
      */
-    public Column getColumnAt(int index)
-    {
+    public Column getColumnAt(int index) throws IndexOutOfBoundsException {
         return columns.get(index - 1);
     }
 
-
+    /**
+     * Check whether this table can have the given column as one of its columns
+     *
+     * @param   column
+     *          The column to be checked.
+     * @return  False if the given column is not effective.
+     *          | result ==
+     *          |   ( column == null )
+     *          Otherwise, false if the the name of the given column already
+     *          exists in the list of columns or the number of values of the given column
+     *          is the not same as the number of values of the other columns in the list columns.
+     *          | result ==
+     *          |   for each c in columns:
+     *          |       column.getName() == c.getName() ||
+     *          |           column.getNbValues() != c.getNbValues()
+     */
+    private boolean canHaveAsColumn(Column column) {
+        if (column == null)
+            return false;
+        else
+            for (int i = 1; i <= getNbColumns(); i++)
+                if (column.getName().equals(getColumnAt(i).getName()) ||
+                        column.getNbValues() != getColumnAt(i).getNbValues())
+                    return false;
+        return true;
+    }
 
     /**
-     * CR84
-     * encapsulate class invariants
-     * @return
+     * Check whether this table can have the given column as one of its columns at the given index.
+     *
+     * @param   index
+     *          The index at which the column has to be evaluated.
+     * @param   column
+     *          The column which has to be evaluated.
+     * @return  False if this table cannot have the given column as column at any index.
+     *          | if (! canHaveAsColumn(column) )
+     *          |   then result == false
+     *          Otherwise, false if the given index is not strict positive, or
+     *          it exceeds the number of values with more than one.
+     *          | else if ( (index < 1)
+     *          |           || (index > getNbColumns() + 1) )
+     *          |   then result == false
+     */
+    @Model
+    private boolean canHaveAsColumnAt(int index, Column column)
+    {
+        if (!canHaveAsColumn(column))
+            return false;
+        else if ((index < 1) || (index > getNbColumns() + 1))
+            return false;
+        return true;
+    }
+
+    /**
+     * Check whether this table has proper columns associated with it.
+     *
+     * @return  True if and only if this table can have each of its columns
+     *          as a column at their index.
+     *          | result ==
+     *          |   for each I in 1..getNbColumns():
+     *          |       canHaveAsColumnAt(I, getColumnAt(I))
      */
     public boolean hasProperColumns()
     {
-        return false; //placeholder
+        for (int i = 1; i <= getNbColumns(); i++) {
+            if (!canHaveAsColumnAt(i, getColumnAt(i)))
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -208,42 +254,6 @@ public class Table {
     }
 
 
-
-
-    /**
-     *
-     * Returns true if the column is not null, has the same amount of rows and has a strictly positive valid index.
-     *
-     * CR 84
-     *
-     * @param index the index at which the column has to be evaluated.
-     *
-     * @param newColumn the column which has to be evaluated.
-     *
-     * @return false if index is larger then the amount of columns plus one or not strictly positive.
-     *  | return = 0 >= index || index > getNbColumns() + 1
-     *
-     * @return false if newColumn is null or it does not have the same amount of rows as in this table.
-     *  | return ==  (newColumn == null || newColumn.getNbCells() != getNbRows())
-     *
-     * @return TODO: false if the name of the column is the same as another name of columns
-     *
-     *
-     * @return true if newColumn is not null, the column has the same amount of rows as this table
-     *      and the index is strictly positive and not larger then the amount of columns plus one.
-     *  | return == ( newColumn != 0 && newColumn.getNbCells() == getNbRows() && index > 0 && index =< getNbColumns + 1)
-     */
-    @Model
-    private boolean canHaveAsColumnAt(int index, Column newColumn)
-    {
-
-        boolean validIndex =  index > 0 && index <= getNbColumns() + 1;
-        boolean validColumn = newColumn != null && newColumn.getNbValues() == getNbRows();
-
-        boolean validName;
-
-        return validColumn && validIndex;
-    }
 
 
 
@@ -423,25 +433,6 @@ public class Table {
     // for very complicated loops, use loop invariants (CR 61)
 
     //TODO: make a destructor for decoupling the columns when the table terminates (CR87)
-
-    /**
-     * An array holding the columns of the table.
-     *
-     * @Invar not null
-     * @Invar elements not null
-     * @Invar all collumns have an equal amount of cells, equal to the amout of rows.
-     *
-     * (see coding rule 32 AND 58)
-     * TODO: WE HAVE TO MAKE EVERY METHOD FOR COLUMNS START COUNTING FROM 1 AND NOT 0
-     *
-     * (table controlling class?)
-     *
-     * List because of CR 91
-     *
-     * //TODO see CR92-94 when implementing
-     * // TODO: CR92: je mag de List in je methodes rechtstreeks aanspreken zonder getter en setter
-     */
-    private List<Column> columns = new ArrayList<Column>();
 
 
     /**
