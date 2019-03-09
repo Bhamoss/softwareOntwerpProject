@@ -1,6 +1,5 @@
 package window;
 
-import tablr.Table;
 import tablr.TableHandler;
 import window.widget.ButtonWidget;
 import window.widget.EditorWidget;
@@ -8,7 +7,7 @@ import window.widget.Widget;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
+
 
 public class TablesWindow extends ModeWindow{
 
@@ -38,11 +37,9 @@ public class TablesWindow extends ModeWindow{
             x +=25;
             layout.add(new ButtonWidget(x,y,80,25,true,"",(Integer clickCount) ->{
                 if(clickCount == 2) {
-                    if(tableHandler.getTable(tableName).isEmpty()){
-                    UIHandler.switchTo(new TableDesignWindow(tableHandler.getTable(tableName)));}
-
+                    tableHandler.openTable(tableName);
                 }
-            }));//open correct mode
+            }));
             layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.isValidText(string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
             y += 25;
         }

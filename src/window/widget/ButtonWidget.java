@@ -13,6 +13,13 @@ public class ButtonWidget extends LabelWidget {
         this.onClick = onClick;
     }
 
+    public ButtonWidget(int x, int y, int width, int height, boolean border, String text) {
+        this(x, y, width, height, border, text, (integer) -> {});
+    }
+
+    public void setOnClick(Consumer<Integer> onClick) {
+        this.onClick = onClick;
+    }
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {

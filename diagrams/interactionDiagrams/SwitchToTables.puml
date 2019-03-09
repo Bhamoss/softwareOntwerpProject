@@ -1,0 +1,20 @@
+@startuml
+Actor User
+User --> ButtonWidget: handleKeyEvent(...)
+activate ButtonWidget
+ButtonWidget -> UIWindowHandler: switchToTablesWindow()
+deactivate ButtonWidget
+activate UIWindowHandler
+UIWindowHandler -> TablesWindow: getLayout(tableHandler)
+activate TablesWindow
+TablesWindow -> TableHandler: getTables()
+activate TableHandler
+...
+TablesWindow <-- TableHandler:
+deactivate TableHandler
+UIWindowHandler <-- TablesWindow: layout
+deactivate TablesWindow
+UIWindowHandler -> UIWindowHandler: setLayout(layout)
+deactivate UIWindowHandler
+
+@enduml

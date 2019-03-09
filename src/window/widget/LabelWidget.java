@@ -26,6 +26,9 @@ public class LabelWidget extends Widget{
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 
     @Override
     public void paint(Graphics g) {

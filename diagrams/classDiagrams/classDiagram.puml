@@ -7,7 +7,7 @@ class Widget{
     handleMouseEvent(int, int ,int): boolean
     isBlocking(): boolean
 }
-UIWindow "1" <--> "0...*" Widget: has
+UIWindowHandler "1" <--> "0...*" Widget: has
 
 
 
@@ -29,12 +29,35 @@ ButtonWidget --|> LabelWidget
 
 
 
-class UIWindow{
+class UIWindowHandler{
+__Responsibilities__
+    managing windows
 }
 
-UIWindow "1" --> "1" TableHandler:  communicates
-UIWindow "1" --> "1" TableDesignHandler:  communicates
-UIWindow "1" --> "1" TableRowsHandler:  communicates
+class TablesWindow{
+__Responsibilities__
+    generating tables window widgets
+}
+class TableDesignWindow{
+__Responsibilities__
+    generating table design window widgets
+}
+class TableRowsWindow{
+__Responsibilities__
+    generating table rows window widgets
+}
+
+UIWindowHandler "1" --> "1" TablesWindow: manages
+UIWindowHandler "1" --> "1" TableDesignWindow: manages
+UIWindowHandler "1" --> "1" TableRowsWindow: manages
+
+TablesWindow "1" <--> "0...*" Widget: has
+TableDesignWindow "1" <--> "0...*" Widget: has
+TableRowsWindow "1" <--> "0...*" Widget: has
+
+UIWindowHandler "1" --> "1" TableHandler:  communicates
+UIWindowHandler "1" --> "1" TableDesignHandler:  communicates
+UIWindowHandler "1" --> "1" TableRowsHandler:  communicates
 
 
 class TableHandler{
