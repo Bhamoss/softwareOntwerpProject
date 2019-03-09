@@ -7,6 +7,12 @@ import tablr.IllegalColumnException;
 public class EmailColumn extends Column {
 
     /**
+     * Variable registering the type of this column
+     */
+    private final static String type = "Email";
+
+
+    /**
      * Initialize this new email column with given name, given number of values, given default value and
      *  given blanks allowed.
      *
@@ -33,7 +39,7 @@ public class EmailColumn extends Column {
      */
     @Basic @Override
     public String getType() {
-        return "Email";
+        return type;
     }
 
     /**

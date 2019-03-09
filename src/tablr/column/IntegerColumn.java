@@ -6,6 +6,11 @@ import tablr.IllegalColumnException;
 
 public class IntegerColumn extends Column {
 
+    /**
+     * Variable registering the type of this column
+     */
+    private final static String type = "Integer";
+
 
     /**
      * Initialize this new integer column with given name, given number of values, given default value and
@@ -34,7 +39,7 @@ public class IntegerColumn extends Column {
      */
     @Basic @Override
     public String getType() {
-        return "Integer";
+        return type;
     }
 
     /**

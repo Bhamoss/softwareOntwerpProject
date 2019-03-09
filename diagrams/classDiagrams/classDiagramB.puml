@@ -93,60 +93,70 @@ __Responsibility__
 manage Column
 }
 
-Column <|-- BooleanColumn
-Column <|-- IntegerColumn
-Column <|-- EmailColumn
-Column <|-- StringColumn
+package "column" {
 
-class Column{
-    -name:String
-    -allowsBlanks:Boolean
-    -defaultValue: String = ""
-    -values : List<String>
-    __
-    +getName(): String
-    +setName(String) {exception IllegalArgumentException}
-    -canHaveAsName(String): boolean
-    +getType(): String
-    +setBlankAllowed(boolean) {exception IllegalArgumentException}
-    -canHaveBlanksAllowed(boolean): boolean
-    -isValueBlank(String): boolean
-    +getDefaultValue(): String
-    +setDefaultValue(String) {exception IllegalArgumentException}
-    +getNbValues(): int
-    +getValueAt(int): String {exception IndexOutOfBoundsException}
-    #canHaveAsValue(String): boolean
-    -canHaveAsValueAt(int, String): boolean
-    +hasProperValues(): boolean
-    +addValueAt(int String) {exception IllegalArgumentException}
-    +addValue(String) {exception IllegalArgumentException}
-    +setValueAt(int String) {exception IllegalArgumentException}
-    +removeValueAt(int) {exception IllegalArgumentException}
+    Column <|-- BooleanColumn
+    Column <|-- IntegerColumn
+    Column <|-- EmailColumn
+    Column <|-- StringColumn
 
-__Responsibility__
-Manage list with correct entries
-}
+    class Column{
+        -name:String
+        -allowsBlanks: boolean
+        -defaultValue: String = ""
+        -values : List<String>
+        -isTerminated: boolean
+        __
+        +getName(): String
+        +setName(String) {exception IllegalArgumentException}
+        -canHaveAsName(String): boolean
+        +getType(): String
+        +setBlankAllowed(boolean) {exception IllegalArgumentException}
+        -canHaveBlanksAllowed(boolean): boolean
+        -isValueBlank(String): boolean
+        +getDefaultValue(): String
+        +setDefaultValue(String) {exception IllegalArgumentException}
+        +getNbValues(): int
+        +getValueAt(int): String {exception IndexOutOfBoundsException}
+        #canHaveAsValue(String): boolean
+        -canHaveAsValueAt(int, String): boolean
+        +hasProperValues(): boolean
+        +addValueAt(int String) {exception IllegalArgumentException}
+        +addValue(String) {exception IllegalArgumentException}
+        +setValueAt(int String) {exception IllegalArgumentException}
+        +removeValueAt(int) {exception IllegalArgumentException}
+        +isTerminated(): boolean
+        +terminate()
 
-Table "1" *-- "0..*" Column
+    __Responsibility__
+    Manage list with correct entries
+    }
 
-class BooleanColumn{
-__
-+getType(): boolean
-+canHaveAsValue(String): boolean
-}
-class StringColumn{
-__
-+getType(): boolean
-+canHaveAsValue(String): boolean
-}
-class EmailColumn{
-__
-+getType(): boolean
-+canHaveAsValue(String): boolean
-}
-class IntegerColumn{
-__
-+getType(): boolean
-+canHaveAsValue(String): boolean
+    Table *-- "0..*" Column
+
+    class BooleanColumn{
+        -type: String = "Boolean"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class StringColumn{
+        -type: String = "String"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class EmailColumn{
+        -type: String = "Email"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class IntegerColumn{
+        -type: String = "Integer"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
 }
 @enduml

@@ -380,4 +380,29 @@ public abstract class Column {
         values.remove(index - 1);
     }
 
+    /**
+     * Variable registering whether this column is terminated.
+     */
+    private boolean isTerminated = false;
+
+    /**
+     * Check whether this column is terminated.
+     */
+    @Basic
+    public boolean isTerminated() { return isTerminated; }
+
+    /**
+     * Terminate this column.
+     *
+     * @post    This column is terminated
+     *          | new.isTerminated()
+     * @post    All the values of the list values are deleted.
+     *          | new.getNbValues() == 0
+     */
+    public void terminate() throws IllegalStateException {
+        for (int i = 1; i <= getNbValues(); i++)
+            removeCellAt(i);
+        this.isTerminated = false;
+    }
+
 }

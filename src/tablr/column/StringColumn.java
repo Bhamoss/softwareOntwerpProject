@@ -7,6 +7,12 @@ import tablr.IllegalColumnException;
 public class StringColumn extends Column {
 
     /**
+     * Variable registering the type of this column
+     */
+    private final static String type = "String";
+
+
+    /**
      * Initialize this new string column with given name, given number of values, given default value and
      *  given blanks allowed.
      *
@@ -34,7 +40,7 @@ public class StringColumn extends Column {
     @Basic
     @Override
     public String getType() {
-        return "String";
+        return type;
     }
 
     /**

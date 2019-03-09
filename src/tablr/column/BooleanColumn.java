@@ -9,6 +9,12 @@ import java.util.List;
 public class BooleanColumn extends Column {
 
     /**
+     * Variable registering the type of this column
+     */
+    private final static String type = "Boolean";
+
+
+    /**
      * Initialize this new boolean column with given name, given number of values, given default value and
      *  given blanks allowed.
      *
@@ -37,7 +43,7 @@ public class BooleanColumn extends Column {
     @Basic
     @Override
     public String getType() {
-        return "Boolean";
+        return type;
     }
 
     /**
