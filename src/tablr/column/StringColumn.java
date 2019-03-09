@@ -24,7 +24,7 @@ public class StringColumn extends Column {
      *          | super(name, nbOfValues, defaultValue, blanksAllowed)
      */
     public StringColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
-            throws IllegalColumnException, IllegalArgumentException{
+            throws IllegalArgumentException{
         super(name, nbOfValues, defaultValue, blanksAllowed);
     }
 

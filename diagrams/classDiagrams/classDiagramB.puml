@@ -99,9 +99,29 @@ Column <|-- EmailColumn
 Column <|-- StringColumn
 
 class Column{
-name:String
-allowsBlanks:Boolean
-valueList : List<Object>
+    -name:String
+    -allowsBlanks:Boolean
+    -defaultValue: String = ""
+    -values : List<String>
+    __
+    +getName(): String
+    +setName(String) {exception IllegalArgumentException}
+    -canHaveAsName(String): boolean
+    +getType(): String
+    +setBlankAllowed(boolean) {exception IllegalArgumentException}
+    -canHaveBlanksAllowed(boolean): boolean
+    -isValueBlank(String): boolean
+    +getDefaultValue(): String
+    +setDefaultValue(String) {exception IllegalArgumentException}
+    +getNbValues(): int
+    +getValueAt(int): String {exception IndexOutOfBoundsException}
+    #canHaveAsValue(String): boolean
+    -canHaveAsValueAt(int, String): boolean
+    +hasProperValues(): boolean
+    +addValueAt(int String) {exception IllegalArgumentException}
+    +addValue(String) {exception IllegalArgumentException}
+    +setValueAt(int String) {exception IllegalArgumentException}
+    +removeValueAt(int) {exception IllegalArgumentException}
 
 __Responsibility__
 Manage list with correct entries
@@ -110,22 +130,18 @@ Manage list with correct entries
 Table "1" *-- "0..*" Column
 
 class BooleanColumn{
-valueList : List<Boolean>
-editValue(Integer,Boolean)
-isValid(Boolean): Boolean
+__
+
 }
 class StringColumn{
-valueList : List<String>
 editValue(Integer,String)
 isValid(String): Boolean
 }
 class EmailColumn{
-valueList : List<String>
 editValue(Integer,String)
 isValid(String): Boolean
 }
 class IntegerColumn{
-valueList : List<Integer>
 editValue(Integer,Integer)
 isValid(Integer): Boolean
 }

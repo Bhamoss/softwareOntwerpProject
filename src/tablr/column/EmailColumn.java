@@ -24,7 +24,7 @@ public class EmailColumn extends Column {
      *          | super(name, nbOfValues, defaultValue, blanksAllowed)
      */
     public EmailColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
-            throws IllegalColumnException, IllegalArgumentException{
+            throws IllegalArgumentException{
         super(name, nbOfValues, defaultValue, blanksAllowed);
     }
 

@@ -53,7 +53,7 @@ class ColumnTest {
     }
 
     @Test
-    void setBlanksAllowed_LegalCase() throws IllegalArgumentException {
+    void setBlanksAllowed_LegalCase() throws java.lang.IllegalArgumentException {
         boolColumn10.setBlanksAllowed(false);
         assertFalse(boolColumn10.isBlanksAllowed());
         intColumnNoBlanks.setBlanksAllowed(true);
@@ -61,8 +61,8 @@ class ColumnTest {
     }
 
     @Test
-    void setBlanksAllowed_IllegalCase() throws IllegalArgumentException {
-        assertThrows(IllegalArgumentException.class, () -> emailColumnEmptyDV.setBlanksAllowed(false));
+    void setBlanksAllowed_IllegalCase() throws java.lang.IllegalArgumentException {
+        assertThrows(java.lang.IllegalArgumentException.class, () -> emailColumnEmptyDV.setBlanksAllowed(false));
     }
 
     @Test
@@ -71,7 +71,7 @@ class ColumnTest {
     }
 
     @Test
-    void setDefaultValue_LegalCase() throws IllegalArgumentException {
+    void setDefaultValue_LegalCase() throws java.lang.IllegalArgumentException {
         boolColumn10.setDefaultValue("False");
         assertEquals("False", boolColumn10.getDefaultValue());
         boolColumn10.setDefaultValue("True");
@@ -87,13 +87,13 @@ class ColumnTest {
     }
 
     @Test
-    void setDefaultValue_IllegalCase() throws IllegalArgumentException {
-        assertThrows(IllegalArgumentException.class, () -> stringColumn0Values.setDefaultValue(null));
-        assertThrows(IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue(""));
-        assertThrows(IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue("abc"));
-        assertThrows(IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue("1.23"));
-        assertThrows(IllegalArgumentException.class, () -> emailColumnEmptyDV.setDefaultValue("test@Ku@Leuven.be"));
-        assertThrows(IllegalArgumentException.class, () -> boolColumn10.setDefaultValue("abc"));
+    void setDefaultValue_IllegalCase() throws java.lang.IllegalArgumentException {
+        assertThrows(java.lang.IllegalArgumentException.class, () -> stringColumn0Values.setDefaultValue(null));
+        assertThrows(java.lang.IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue(""));
+        assertThrows(java.lang.IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue("abc"));
+        assertThrows(java.lang.IllegalArgumentException.class, () -> intColumnNoBlanks.setDefaultValue("1.23"));
+        assertThrows(java.lang.IllegalArgumentException.class, () -> emailColumnEmptyDV.setDefaultValue("test@Ku@Leuven.be"));
+        assertThrows(java.lang.IllegalArgumentException.class, () -> boolColumn10.setDefaultValue("abc"));
     }
 
     @Test
@@ -120,7 +120,7 @@ class ColumnTest {
     }
 
     @Test
-    void addValueAt_LegalCase() throws IllegalArgumentException {
+    void addValueAt_LegalCase() throws java.lang.IllegalArgumentException {
         boolColumn10.addValueAt(5, "False");
         assertEquals(11, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {
@@ -132,7 +132,7 @@ class ColumnTest {
     }
 
     @Test
-    void addValue() throws IllegalArgumentException {
+    void addValue() throws java.lang.IllegalArgumentException {
         boolColumn10.addValue("False");
         assertEquals(11, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {
@@ -144,7 +144,7 @@ class ColumnTest {
     }
 
     @Test
-    void setValueAt() throws IllegalArgumentException {
+    void setValueAt() throws java.lang.IllegalArgumentException {
         boolColumn10.setValueAt(5, "False");
         assertEquals(10, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {

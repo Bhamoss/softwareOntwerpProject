@@ -25,7 +25,7 @@ public class IntegerColumn extends Column {
      *          | super(name, nbOfValues, defaultValue, blanksAllowed)
      */
     public IntegerColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
-            throws IllegalColumnException, IllegalArgumentException{
+            throws IllegalArgumentException{
         super(name, nbOfValues, defaultValue, blanksAllowed);
     }
 

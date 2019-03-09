@@ -26,7 +26,7 @@ public class BooleanColumn extends Column {
      *          | super(name, nbOfValues, defaultValue, blanksAllowed)
      */
     public BooleanColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
-            throws IllegalColumnException, IllegalArgumentException{
+            throws IllegalArgumentException{
         super(name, nbOfValues, defaultValue, blanksAllowed);
     }
 

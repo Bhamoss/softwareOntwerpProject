@@ -67,13 +67,13 @@ public abstract class Column {
      *          The new name for this column.
      * @post    The new name of this column is equal to the given name
      *          | new.getName() == name
-     * @throws IllegalColumnException
+     * @throws  IllegalArgumentException
      *          The given name is not a valid name for this column
      *          | !canHaveAsName(name)
      */
-    public void setName(String name) throws IllegalColumnException {
+    public void setName(String name) throws IllegalArgumentException {
         if (!canHaveAsName(name)) {
-            throw new IllegalColumnException();
+            throw new IllegalArgumentException();
         }
         this.name = name;
     }
@@ -162,7 +162,7 @@ public abstract class Column {
      *          Otherwise, true.
      *          | result == true
      */
-    protected boolean isValueBlank(String value) {
+    private boolean isValueBlank(String value) {
         return (value.equals(""));
     }
 
@@ -355,7 +355,9 @@ public abstract class Column {
     public void setValueAt(int index, String value) throws IllegalArgumentException {
         if (!canHaveAsValueAt(index, value))
             throw new IllegalArgumentException("Invalid value");
-        values.set(index, value);
+        if (index > getNbValues())
+            throw new IllegalArgumentException("Invalid value");
+        values.set(index - 1, value);
     }
 
     /**
