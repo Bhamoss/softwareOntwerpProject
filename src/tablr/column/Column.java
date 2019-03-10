@@ -40,7 +40,7 @@ public abstract class Column {
     protected Column(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
             throws IllegalColumnException, IllegalArgumentException {
         setName(name);
-        setBlanksAllowed(blanksAllowed);
+        this.blanksAllowed = blanksAllowed;
         setDefaultValue(defaultValue);
         for (int i = 0; i < nbOfValues; i++){
             addValue(getDefaultValue());
@@ -143,10 +143,10 @@ public abstract class Column {
         if (!blanksAllowed) {
             if (isValueBlank(getDefaultValue()))
                 return false;
-            // else
-            //      check all the cells in this column if blanks are allowed
-            //      isValueEmpty(value) --> in each subclass this method,
-            //                              with different object type as param
+            else
+                for (int i = 1; i <= getNbValues(); i++)
+                    if (isValueBlank(getValueAt(i)))
+                        return false;
         }
         return true;
     }
