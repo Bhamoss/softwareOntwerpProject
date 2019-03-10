@@ -2,6 +2,7 @@ package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
 import tablr.column.Column;
+import tablr.column.StringColumn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,30 +15,14 @@ import java.util.List;
  *
  * @Invar   The name of the table is always valid.
  *          | isValidName(getName())
- * @Invar   All columns of the table have an equal amount of cells.
- *          | for each I in 2..getNbColumns():
- *          |   getColumnAt(I).getNbValues() == getColumnAt(1).getNbValues()
+ * @Invar   All columns of the table have an equal amount of values.
+ *          | for each I in 1..getNbColumns():
+ *          |   getColumnAt(I).getNbValues() == getNbRows()
  * @Invar   Columns is always effective.
  *          | columns != null
  */
 public class Table {
 
-    /**
-     *
-     * @throws IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
-     *  | if(!isValidName(name) throw IllegalArgumentException
-     */
-    @Raw
-    public Table(Integer n) throws IllegalArgumentException{
-        setName("table" + n);
-
-        // deze lijjn is nodig omdat je alles moet initialiseren.
-        this.columns = new ArrayList<Column>();
-
-        /*
-            TODO: CR86 make at least one constructor which initialises Table with 0 Columns
-         */
-    }
 
     /**
      * Returns the name of the table.
@@ -85,6 +70,24 @@ public class Table {
     private String name = "newTable";
 
     /**
+     * Returns the number of rows.
+     *
+     * @return  0 if there are no columns in this table.
+     *          | if (getNbColumns() == 0)
+     *          |   result == 0
+     *          Otherwise, the number of values (rows) of the first column of this table.
+     *          | else
+     *          |   result == getColumnAt(1).getNbValues()
+     */
+    public int getNbRows() {
+
+        if(getNbColumns() == 0)
+            return 0;
+        else    // there should always be a column at one if there are columns.
+            return getColumnAt(1).getNbValues();
+    }
+
+    /**
      * List of collecting references to the columns of this table
      *
      * @Invar   The list of columns is effective
@@ -123,24 +126,24 @@ public class Table {
      *
      * @param   column
      *          The column to be checked.
-     * @return  False if the given column is not effective.
+     * @return  False if the given column is not effective or the given column is terminated.
      *          | result ==
-     *          |   ( column == null )
+     *          |   ( column == null || column.isTerminated() )
      *          Otherwise, false if the the name of the given column already
      *          exists in the list of columns or the number of values of the given column
      *          is the not same as the number of values of the other columns in the list columns.
      *          | result ==
      *          |   for each c in columns:
-     *          |       column.getName() == c.getName() ||
-     *          |           column.getNbValues() != c.getNbValues()
+     *          |       ( column.getName() == c.getName() ||
+     *          |           column.getNbValues() != getNbRows() )
      */
     private boolean canHaveAsColumn(Column column) {
-        if (column == null)
+        if (column == null || column.isTerminated())
             return false;
         else
             for (int i = 1; i <= getNbColumns(); i++)
                 if (column.getName().equals(getColumnAt(i).getName()) ||
-                        column.getNbValues() != getColumnAt(i).getNbValues())
+                        column.getNbValues() != getNbRows())
                     return false;
         return true;
     }
@@ -190,124 +193,138 @@ public class Table {
     }
 
     /**
+     * Add a new column as a column for this table at the given index
      *
-     * Inserts a new column with default values at the index and shifts the other columns to the right.
-     *
-     * CR 85
-     *
-     * @param index the index at which the new column should be inserted.
-     *
-     * @pre index is not larger then the amount of columns plus one and strictly positive.
-     *  | 0 < index =< getNbColumns() + 1
-     *
-     *
-     * @effect the new column will be inserted at the given index
-     *  | getColumnAt(index) = new column
-     *
-     * @effect the index of the columns with index equal or larger then index has incremented.
-     *  | for (index <= i <= old.getNbColumns) {new.getColumnAt(i + 1) = new.getColumnAt(i)}
-     *
-     * @effect the number of columns is raised by one.
-     *  | old.getNbColumns() + 1 = new.getNbColumns()
-     *
-     * @effect the new column has 0 cells if the table was empty, and the same number of cells as the other columns if not
-     *  | if(getNbOfColumns() = 0) {newColumn.getNbCells() = 0}
-     *  | else {getNbRows() = newColumn.getNbCells()}
-     *
-     * @throws IllegalArgumentException if the index is larger then the columns plus one.
-     *  | index > getNbColumns() + 1
-     *
+     * @param   index
+     *          The index at which the new column should be inserted.
+     * @effect  A new column is added to the list of columns at the given index.
+     *          The new column is created with:
+     *              type            a string column is created
+     *              name            equals to "ColumnN" with N the number of columns
+     *                              after this column is added
+     *              nbValues        equals to the number of rows in this table
+     *              defaultValue    the blank value ("")
+     *              blanksAllowed   true
+     *          | addColumnAt(index, new StringColumn("ColumnN", getNbRows(), "", true))
      */
-    public void addColumnAt(int index) throws IllegalStateException
+    public void addColumnAt(int index) throws IllegalArgumentException
     {
-
-        //Column newColumn = new Column("Column" + getNbColumns(), getNbRows());
-
-        //addColumnAt(index, newColumn);
-
+        addColumnAt(index, new StringColumn("Column" + getNbColumns() + 1, getNbRows(), "", true));
     }
-
 
     /**
      *
-     * Appends a new column at the end of the table.
+     * Add the given column as a column for this table at the given index
      *
+     * @param   index
+     *          The index at which the new column should be inserted.
+     * @param   column
+     *          The column which should be inserted.
+     * @post    A new column will be inserted at the given index
+     *          | getColumnAt(index) = new column
+     * @post    The index of the columns with an index equal or larger then index has incremented.
+     *          | for each I in index...getNbColumns():
+     *          |   new.getColumnAt(I + 1) == getColumnAt(I)
+     * @post    The number of columns is raised by one.
+     *          | new.getNbColumns() == getNbColumns() + 1
+     * @post    The new column has the same number of values as the other columns
+     *          | new.getColumnAt(index) == getNbRows()
+     * @throws  IllegalArgumentException if the given index or column is invalid.
+     *          | !canHaveAsColumn(index, column)
      *
-     * @effect A new column is added at the end of the table.
-     *  | addColumnAt(getNbColumns() + 1)
+     */
+    private void addColumnAt(int index, Column column) throws IllegalArgumentException
+    {
+        if (!canHaveAsColumnAt(index,column))
+            throw new IllegalArgumentException("Illegal index or column");
+        columns.add(index, column);
+    }
+
+    /**
+     * Add a new column as a column for this table at the end of the columns list
      *
+     * @effect  A new column is added at the end of the table.
+     *          | addColumnAt(getNbColumns() + 1)
      */
     public void addColumn()
+            throws IllegalArgumentException
     {
-
         addColumnAt(getNbColumns() + 1);
-
     }
 
     /**
-     * CR 85
-     * @param index
+     * Remove the column of this table at the given index.
+     * @param   index
+     *          The index of the column to be removed.
+     * @post    The column at the given index will be terminated.
+     *          | getColumnAt(index).isTerminated()
+     * @post    This table no longer has the column at the given index as one of its columns
+     *          | ! hasAsColumn(getColumnAt(index))
+     * @post    All columns associated with this table that have an index exceeding the
+     *          the given index, are registered as column at one index lower.
+     *          | for each I in 1..getNbColumns():
+     *          |   (new.getColumnAt(I - 1) == getColumnAt(I)
+     * @throws  IndexOutOfBoundsException
+     *          The given index is not positive or it exceeds the
+     *          number of values in this column.
+     *          | (index < 1) || (index > getNbColumns())
      */
     public void removeColumnAt(int index)
+            throws IndexOutOfBoundsException
     {
-
-    }
-
-
-
-
-
-    /**
-     *
-     * Inserts a new column with default values at the index and shifts the other columns to the right.
-     *
-     * CR 85
-     *
-     * @param index the index at which the new column should be inserted.
-     *
-     * @param column the column which should be inserted.
-     *
-     * @pre the given index and column should be valid.
-     *  | canHaveAsColumnAt(index, column)
-     *
-     *
-     * @effect the new column will be inserted at the given index
-     *  | getColumnAt(index) = new column
-     *
-     * @effect the index of the columns with index equal or larger then index has incremented.
-     *  | for (index <= i <= old.getNbColumns) {new.getColumnAt(i + 1) = new.getColumnAt(i)}
-     *
-     * @effect the number of columns is raised by one.
-     *  | old.getNbColumns() + 1 = new.getNbColumns()
-     *
-     * @effect the new column has 0 cells if the table was empty, and the same number of cells as the other columns if not
-     *  | if(getNbOfColumns() = 0) {newColumn.getNbCells() = 0}
-     *  | else {getNbRows() = newColumn.getNbCells()}
-     *
-     * @throws IllegalArgumentException if the given index or column is invalid.
-     *  | !canHaveAsColumn(index, column)
-     *
-     */
-    @Model
-    private void addColumnAt(int index, Column column) throws IllegalStateException
-    {
-        if (!canHaveAsColumnAt(index,column)) throw new IllegalArgumentException("Illegal index or column");
-
-            columns.add(index, column);
+        if ((index < 1) || (index > getNbColumns()))
+            throw new IndexOutOfBoundsException();
+        getColumnAt(index).terminate();
+        columns.remove(index);
     }
 
     /**
-     * CR 83
-     * I don't know what we should do with this.
-     * It is here for coding rule 83
-     *
-     * @param nb
-     *
-     * @post
+     * Remove the column of this table with the given column name
+     * @param   name
+     *          The name of the column to be removed.
+     * @effect  The column which has the given name, will be removed from the list columns.
+     *          | removeColumnAt(getColumnIndex(name))
+     * @throws  IllegalColumnException
+     *          The given name is not a name of a column in this table.
      */
-    private void setNbColumns(int nb)
+    public void removeColumnAt(String name)
+            throws IndexOutOfBoundsException
     {
+        removeColumnAt(getColumnIndex(name));
+    }
 
+    /**
+     * Returns the index of the column which has the given name as name.
+     *
+     * @param   name
+     *          The name of the column of which the index is needed.
+     * @return  The index of the column which has the given name.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    private int getColumnIndex(String name) {
+        for (int i = 1; i <= getNbColumns(); i++)
+            if (getColumnAt(i).getName().equals(name))
+                return i;
+        throw new IllegalColumnException();
+    }
+
+    /**
+     * Returns the column with the given column name
+     * @param   columnName
+     *          The name of the column to return.
+     * @return  The column of this table with the given columnName.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    private Column getColumn(String columnName) {
+        for (Column c : columns) {
+            if (c.getName().equals(columnName))
+                return c;
+        }
+        throw new IllegalColumnException();
     }
 
     /**
@@ -351,7 +368,7 @@ public class Table {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
-        //getColumn(column).changeType();
+        //getColumn(column).changeType(); //TODO: verder aanvullen MICHIEL J
     }
 
     /**
@@ -370,7 +387,7 @@ public class Table {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
-        //getColumn(column).changeBlanks();
+        //getColumn(column).changeBlanks(); //TODO: verder aanvullen MICHIEL J
     }
 
     /**
@@ -388,29 +405,11 @@ public class Table {
      *          | !isAlreadyUsedColumnName(column)
      */
     public void setColumnDefaultValue(String column, String dv)
-            throws IllegalColumnException {
+            throws IllegalColumnException, IllegalArgumentException {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
         getColumn(column).setDefaultValue(dv);
-    }
-
-
-    /**
-     * Returns the columns with the given column name
-     * @param   columnName
-     *          The name of the column to return.
-     * @return  The column of this table with the given columnName.
-     * @throws  IllegalColumnException
-     *          There isn't a column with the given columnName in this table.
-     *          | !!isAlreadyUsedColumnName(columnName)
-     */
-    private Column getColumn(String columnName) {
-        for (Column c : columns) {
-            if (c.getName().equals(columnName))
-                return c;
-        }
-        throw new IllegalColumnException();
     }
 
     /**
@@ -428,66 +427,13 @@ public class Table {
         return false;
     }
 
-
-    // TODO: ITERATE WITH for(Column column : columns)
-    // for very complicated loops, use loop invariants (CR 61)
-
-    //TODO: make a destructor for decoupling the columns when the table terminates (CR87)
-
-
-    /**
-     * Returns the number of rows.
-     *
-     *
-     *
-     * @return If the table has no columns 0, otherwise the amount of rows of this table.
-     * | if(getNbColumns() == 0) {return = 0}
-     * | else { for (0 < i =< getNbColumns()) {return == getColumnAt(i).getNbCells()}}
-     *
-     */
-    public int getNbRows() {
-
-        if(getNbColumns() == 0)
-        {
-            return 0;
-        }
-        else
-        {
-            // there should always be a column at one if there are columns.
-            return getColumnAt(1).getNbValues();
-        }
-    }
-
-
-    /**
-     * This methods returns a string containing the table in human-readable form.
-     * (CODING RULE 72)
-     *
-     * @return A string representing the table (specify format here later)
-     *  | result = getName()
-     */
-    @Override
-    public String toString()
-    {
-        /*
-         Dit is tijdelijk en moet nog deftig worden aangepast
-         Je kan bvb letterlijk met veel enters enzo de table en
-         zijn cellen en collommen printen
-        */
-        return getName();
-    }
-
-
     /**
      * Variable registering whether this table is terminated.
      */
     private boolean isTerminated = false;
 
 
-    public boolean canTerminate()
-    {
-        return true;
-    }
+
 
     /**
      * Check whether this table is terminated.
@@ -496,6 +442,7 @@ public class Table {
     public boolean isTerminated() {
         return isTerminated;
     }
+
     /**
      * Terminate this table.
      *
@@ -511,4 +458,69 @@ public class Table {
             }
         }
     }
+
+    /*******************************************
+     * ALLES VAN HIERBOVEN IS NORMAAL GEZIEN AF, BEHALVE DE TODO's VAN MICHIEL J
+     * TESTS MOETEN NOG GESCHREVEN WORDEN
+     */
+
+
+
+
+
+
+
+
+
+
+
+
+    //TODO: make a destructor for decoupling the columns when the table terminates (CR87)
+
+
+    /**
+     *
+     * @throws IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
+     *  | if(!isValidName(name) throw IllegalArgumentException
+     */
+    @Raw
+    public Table(Integer n) throws IllegalArgumentException{
+        setName("table" + n);
+
+        // deze lijjn is nodig omdat je alles moet initialiseren.
+        this.columns = new ArrayList<Column>();
+
+        /*
+            TODO: CR86 make at least one constructor which initialises Table with 0 Columns
+         */
+    }
+
+
+
+
+    /**
+     * This methods returns a string containing the table in human-readable form.
+     * (CODING RULE 72)
+     *
+     * @return A string representing the table (specify format here later)
+     *  | result = getName()
+     */
+    @Override
+    public String toString()
+    {
+        /*
+         Dit is tijdelijk en moet nog deftig worden aangepast
+         Je kan bvb letterlijk met veel enters enzo de table en
+         zijn cellen en collommen printen //TODO: verder schrijven MICHIEL J
+        */
+        return getName();
+    }
+
+    //TODO: wat moet deze functie returnen? ale waarop moet gechecked worden?
+    public boolean canBeTerminated()
+    {
+        return true;
+    }
+
+
 }

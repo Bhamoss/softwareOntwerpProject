@@ -42,7 +42,7 @@ public abstract class Column {
         setName(name);
         this.blanksAllowed = blanksAllowed;
         setDefaultValue(defaultValue);
-        for (int i = 0; i < nbOfValues; i++){
+        for (int i = 1; i <= nbOfValues; i++){
             addValue(getDefaultValue());
         }
     }

@@ -2,7 +2,6 @@ package tablr;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
-import be.kuleuven.cs.som.taglet.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -565,14 +564,14 @@ public class TableManager {
      * Returns whether the tablemanager can terminate.
      *
      * @return true if the currentTable and all tables in tables can terminate, false otherwise.
-     *  | return == (getCurrentTable().canTerminate() && for all i: 0 < i < getNbTables(): getTableAt(i).canTerminate())
+     *  | return == (getCurrentTable().canBeTerminated() && for all i: 0 < i < getNbTables(): getTableAt(i).canBeTerminated())
      */
     public boolean canTerminate()
     {
-        if(!getCurrentTable().canTerminate()) {return false;}
+        if(!getCurrentTable().canBeTerminated()) {return false;}
         for (Table table:tables)
         {
-            if(!table.canTerminate()) {return false;}
+            if(!table.canBeTerminated()) {return false;}
         }
         return true;
     }
@@ -588,12 +587,12 @@ public class TableManager {
      *
      * @post if this can be terminated, all tables are terminated an removed from tables and the current
      * table is set to null.
-     *  | if(canTerminate()){
+     *  | if(canBeTerminated()){
      *  | tables are terminated...
      *  |getCurrentTable() = null && getNbTables()== 0}
      *
      * @throws IllegalStateException if this can not be terminated.
-     *  | canTerminate()
+     *  | canBeTerminated()
      *
      */
     public void terminate() throws IllegalStateException
