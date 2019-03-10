@@ -24,6 +24,259 @@ import java.util.List;
 public class Table {
 
 
+/*
+************************************************************************************************************************
+*                                                   TableDesignHandler interface functions
+************************************************************************************************************************
+*/
+    /**
+     *
+     * @return
+     */
+    public ArrayList<String> getColumnNames()
+    {
+        return null;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public String getColumnType(String columnName) throws IllegalColumnException
+    {
+        return null;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public boolean getColumnAllowBlank(String columnName) throws IllegalColumnException
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public String getColumnDefaultValue(String columnName) throws IllegalColumnException
+    {
+        return null;
+    }
+
+
+    /**
+     *
+     * @param columnName
+     * @param newName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public boolean canHaveAsColumnName(String columnName, String newName) throws IllegalColumnException
+    {
+        return false;
+    }
+
+
+    /**
+     *
+     * @param columnName
+     * @param type
+     * @return
+     * @throws IllegalColumnException
+     */
+    public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException
+    {
+        return false;
+    }
+
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newDefaultValue
+     * @return
+     * @throws IllegalColumnException
+     */
+    public boolean canHaveAsDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newColumnName
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     *
+     */
+    public void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException
+    {
+
+    }
+
+    /**
+     *
+     * @param columName
+     * @param type
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     */
+    public void setColumnType(String columName, String type) throws IllegalColumnException, IllegalArgumentException
+    {
+
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param blanks
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     */
+    public void setColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalArgumentException
+    {
+
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newDefaultValue
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     */
+    public void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException
+    {
+
+    }
+
+    /**
+     *
+     */
+    public void addColumn()
+    {
+
+    }
+
+
+    //TODO: checker if can delete?
+
+    /**
+     *
+     * @param columnName
+     * @throws IllegalArgumentException
+     */
+    public void removeColumn(String columnName) throws IllegalArgumentException
+    {
+
+    }
+
+/*
+************************************************************************************************************************
+*                                                   TableRowsHandler interface functions
+************************************************************************************************************************
+*/
+
+
+    /**
+     *
+     * @param columnName
+     * @param Row
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     */
+    public String getCellValue(String columnName, int Row) throws IllegalColumnException, IllegalRowException
+    {
+        return null; // placeholder
+    }
+
+
+
+
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param value
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     */
+    public boolean canHaveAsCellValue(String columnName, int row, String value)
+            throws IllegalColumnException, IllegalRowException
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param newValue
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    public void setCellValue(String columnName, int row, String newValue)
+            throws IllegalColumnException, IllegalRowException, IllegalArgumentException
+    {
+
+    }
+
+
+    /**
+     *
+     */
+    public void addRow()
+    {
+
+    }
+
+    // TODO: delete checker?
+
+    /**
+     *
+     * @param row
+     * @throws IllegalRowException
+     */
+    public void removeRow(int row) throws IllegalRowException
+    {
+
+    }
+
+
+
+
+/*
+************************************************************************************************************************
+*                                                       Name
+************************************************************************************************************************
+*/
+
     /**
      * Returns the name of the table.
      */
@@ -480,12 +733,14 @@ public class Table {
 
     /**
      *
+     * @param name the name this table will have.
+     *
      * @throws IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
      *  | if(!isValidName(name) throw IllegalArgumentException
      */
     @Raw
-    public Table(Integer n) throws IllegalArgumentException{
-        setName("table" + n);
+    public Table(String name) throws IllegalArgumentException{
+        setName(name);
 
         // deze lijjn is nodig omdat je alles moet initialiseren.
         this.columns = new ArrayList<Column>();

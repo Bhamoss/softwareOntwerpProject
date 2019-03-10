@@ -1,6 +1,7 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class TableManager {
     public TableManager()
     {
 
+        setCurrentTable(null);
         this.tables =  new LinkedList<Table>();
         this.isTerminated = false;
     }
@@ -124,6 +126,7 @@ public class TableManager {
      * @throws TerminatedException if this is terminated.
      * | isTerminated()
      */
+    @Model
     boolean canHaveAsName(String tableName, String newTableName) throws IllegalTableException
     {
         if(isTerminated()){throw new TerminatedException();}
@@ -142,36 +145,422 @@ public class TableManager {
         return Table.isValidName(newTableName);
     }
 
+
+    /**
+     * Returns the name of the current open table or null if there is no open table.
+     * TODO: I have no idea how to write this in formal comments
+     */
+    String getOpenTable()
+    {
+        if (getCurrentTable() == null){return null;}
+        else {return getCurrentTable().getName();}
+    }
+
+
+    /**
+     *
+     * Sets the tablename of the table with tableName to newName if there is such a table and newname is valid.
+     *
+     * @param tableName the name of the table whos name is to be changed.
+     *
+     * @param newName the new name of the table.
+     *
+     * @effect if both names are valid, the table with tableName now has newName as name.
+     *  | if(hasAsTable(tableName) && canHaveAsName(tableName, newName){
+     *  |   old.getTable(tableName) == new.getTable(newName)
+     *  |}
+     *
+     * @throws IllegalTableException if there is no table with tableName.
+     *  | !hasAsTable(tableName)
+     *
+     * @throws IllegalArgumentException if the new name is not valid for the given table.
+     *  | !canHaveAsName(tableName, newName)
+     */
     void setTableName(String tableName, String newName) throws IllegalTableException, IllegalArgumentException
     {
+        if(!hasAsTable(tableName)){throw new IllegalTableException();}
+        if(!canHaveAsName(tableName, newName)){throw new IllegalArgumentException("The new name is not valid.");}
+        getTable(tableName).setName(newName);
 
     }
 
+    /**
+     *
+     * Adds a new table to the front of tables with name TableN,
+     * with N the smallest strictly positive integer
+     * such that there is no other table with name TableN.
+     *
+     * @effect adds a new table.
+     * | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
+     *
+     */
     void addTable()
     {
+        int i = 0;
+        String name = "";
+        ArrayList<String> l = getTableNames();
+        boolean found = false;
 
+        // Up i until the name TableI is not in use.
+        while(!found)
+        {
+            i++;
+            name = "Table" + Integer.toString(i);
+            if(!l.contains(name)){found = true;}
+        }
+        Table t = new Table(name);
+        insertAtFrontTable(t);
     }
 
+    /**
+     * Removes the table with the given name if it exists.
+     *
+     * @param tableName the name of the table to be removed.
+     *
+     * @effect if the table exists, it is removed.
+     * | if(getTableNames().contains(tableName)){
+     * |    new.getTableNames.contains(tableName == false &&
+     * |    old.getNbTables() + 1 == new.getNbTables()
+     * |}
+     *
+     * @throws IllegalTableException if there is no table with the given name.
+     * | !getTableNames().contains("tableName")
+     */
     void removeTable(String tableName) throws IllegalTableException
     {
+        if(!hasAsTable(tableName)){throw new IllegalTableException();}
+        removeTable(tableName);
 
     }
 
+    /**
+     * Sets the open table to tableName if the table exists.
+     *
+     * @param tableName the name of the table to be opened.
+     *
+     * @effect if the table exists, the open table will be the table.
+     *  | if(getTableNames().contains(tableName)){getOpenTable() == tableName}
+     *
+     * @throws IllegalTableException if there is no table with tableName.
+     *  | !getTableNames().contains(tableName)
+     */
     void openTable(String tableName) throws  IllegalTableException
     {
-
+        setCurrentTable(getTable(tableName));
     }
 /*
 ************************************************************************************************************************
 *                                                   TableDesignHandler interface functions
 ************************************************************************************************************************
 */
+    /**
+     *
+     * @return
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    ArrayList<String> getColumnNames() throws IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getColumnNames();
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getColumnType(columnName);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    boolean getColumnAllowBlank(String columnName) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getColumnAllowBlank(columnName);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    String getColumnDefaultValue(String columnName) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getColumnDefaultValue(columnName);
+    }
+
+
+    /**
+     *
+     * @param columnName
+     * @param newName
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    boolean canHaveAsColumnName(String columnName, String newName) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().canHaveAsColumnName(columnName, newName);
+    }
+
+    // Dit kan enum type zijn of string
+
+    /**
+     *
+     * @param columnName
+     * @param type
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().canHaveAsColumnType(columnName, type);
+    }
+
+
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().canHaveAsColumnAllowBlanks(columnName);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newDefaultValue
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    boolean canHaveAsDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().canHaveAsDefaultValue(columnName, newDefaultValue);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newColumnName
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     *
+     */
+    void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().setColumnName(columnName, newColumnName);
+
+    }
+
+    /**
+     *
+     * @param columName
+     * @param type
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    void setColumnType(String columName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().setColumnType(columName, type);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param blanks
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    void setColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().setColumnAllowBlanks(columnName, blanks);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param newDefaultValue
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().setColumnDefaultValue(columnName, newDefaultValue);
+    }
+
+    /**
+     *
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    void addColumn() throws IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().addColumn();
+    }
+
+
+    //TODO: checker if can delete?
+
+    /**
+     *
+     * @param columnName
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null.
+     */
+    void removeColumn(String columnName) throws IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().removeColumn(columnName);
+    }
 
 /*
 ************************************************************************************************************************
 *                                                   TableRowHandler interface functions
 ************************************************************************************************************************
 */
+    /**
+     *
+     * @param columnName
+     * @param Row
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     * @throws IllegalTableException
+     * If there is no open table.
+     * | getOpenTable() == null
+     */
+    String getCellValue(String columnName, int Row) throws IllegalColumnException, IllegalRowException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getCellValue(columnName, Row); // placeholder
+    }
+
+
+
+
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param value
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    boolean canHaveAsCellValue(String columnName, int row, String value)
+            throws IllegalColumnException, IllegalRowException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().canHaveAsCellValue(columnName,row,value);
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param newValue
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    void setCellValue(String columnName, int row, String newValue)
+            throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().setCellValue(columnName, row, newValue);
+    }
+
+    // should always work
+
+    /**
+     *
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    void addRow() throws IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().addRow();
+    }
+
+    // TODO: delete checker?
+
+    /**
+     *
+     * @param row
+     * @throws IllegalRowException
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    void removeRow(int row) throws IllegalRowException, IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        getCurrentTable().removeRow(row);
+    }
 
 
 /*
@@ -209,6 +598,7 @@ public class TableManager {
      * @throws TerminatedException if this is terminated.
      *  | isTerminated()
      */
+    @Model
     private boolean hasAsTable(Table table)
     {
         if (isTerminated()) {throw new TerminatedException();}
@@ -410,9 +800,11 @@ public class TableManager {
      * @param index the index of the table to be removed
      *
      * @post if this is not terminated and the index is strictly positive and
-     * not larger than the amount of tables, the table is terminated and removed.
+     * not larger than the amount of tables, the table is terminated and removed
+     * and if the table was the currentTable, the currentTable is set to null.
      * | if(!isTerminated && 0 < i =< getNbTables()){
      * |    table.isTerminated == true && hasAsTable(table) == false
+     * |    if(getCurrentTable() == table){setCurrentTable(null)}
      * |}
      *
      * @throws IllegalArgumentException if the index is not strictly positive or larger then
@@ -431,6 +823,7 @@ public class TableManager {
             throw new IllegalArgumentException("Illegal index.");
         }
         Table t = getTableAt(index);
+        if(getCurrentTable() == t) {setCurrentTable(null);}
         t.terminate();
         tables.remove(index);
 
@@ -537,17 +930,50 @@ public class TableManager {
     /**
      * Returns the current table.
      */
+    @Basic @Raw
     private Table getCurrentTable()
     {
         return this.currentTable;
+    }
+
+    /**
+     * Returns whether the given table can be the currentTable.
+     *
+     * @param table the table to be checked.
+     *
+     * @return true if and only if the table is in tables or is null.
+     * | return == (tables.contains(Table) || table == null)
+     */
+    private boolean canHaveAsCurrentTable(Table table)
+    {
+        return tables.contains(table) || table == null;
+    }
+
+    /**
+     * Sets the current table to the table.
+     *
+     * @param table the table to be set to current table.
+     *
+     * @effect if the table is valid as currentTable, the current table will be table.
+     *  | if(canHaveAsCurrentTable()){
+     *  |    new.getCurrentTable() == table
+     *  |}
+     *
+     * @throws IllegalTableException if the table is not valid.
+     *  | !canHaveAsCurrentTable()
+     */
+    private void setCurrentTable(Table table) throws IllegalTableException
+    {
+        if(!canHaveAsCurrentTable(table)){throw new IllegalTableException();}
+        this.currentTable = table;
     }
 
 
     /**
      * The current open table.
      *
-     * @invar the table is an element of the tables list.
-     *  | isElementOfTables(currentTable.getName()) == true
+     * @invar the table is an element of the tables list or null.
+     *  | (isElementOfTables(currentTable.getName()) || currentTable == null) == true
      *
      */
     private Table currentTable;
