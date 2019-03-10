@@ -71,6 +71,10 @@ __Responsibility__
 
 }
 
+class TableManager{
+tables : List<Table>
+}
+
 class Table{
     name : string = "newTable"
     <<constructor>> Table(String) {exception IllegalArgumentException}

@@ -7,7 +7,7 @@ class Widget{
     handleMouseEvent(int, int ,int): boolean
     isBlocking(): boolean
 }
-UIWindowHandler "1" <--> "0...*" Widget: has
+UIWindowHandler "1" --> "0...*" Widget: has
 
 
 
@@ -51,14 +51,24 @@ UIWindowHandler "1" --> "1" TablesWindow: manages
 UIWindowHandler "1" --> "1" TableDesignWindow: manages
 UIWindowHandler "1" --> "1" TableRowsWindow: manages
 
-TablesWindow "1" <--> "0...*" Widget: has
-TableDesignWindow "1" <--> "0...*" Widget: has
-TableRowsWindow "1" <--> "0...*" Widget: has
+TablesWindow "1" --> "0...*" Widget: has
+TableDesignWindow "1" --> "0...*" Widget: has
+TableRowsWindow "1" --> "0...*" Widget: has
 
-UIWindowHandler "1" --> "1" TableHandler:  communicates
-UIWindowHandler "1" --> "1" TableDesignHandler:  communicates
-UIWindowHandler "1" --> "1" TableRowsHandler:  communicates
+TablesWindow "1" --> "1" TableHandler:  communicates
+TableDesignWindow "1" --> "1" TableDesignHandler:  communicates
+TableRowsWindow "1" --> "1" TableRowsHandler:  communicates
 
+class TableManager{
+__Responsibility__
+manage tables and manage access to tables
+}
+
+Table "0..*" <-- "1" TableManager
+TableHandler "0..*" <-- "1" TableManager
+TableDesignHandler "0..*" <-- "1" TableManager
+TableRowsHandler "0..*" <-- "1" TableManager
+UIWindowHandler "1" --> "1" TableManager:  communicates
 
 class TableHandler{
     width : int
@@ -67,7 +77,7 @@ class TableHandler{
     editTableName(String)
     openTable(Table): Table
     __Responsibilities__
-    managing tables
+    managing access to tables
 }
 TableHandler "1" --> "0..*" Table
 TableDesignHandler "1" --> "1" Table
@@ -75,13 +85,22 @@ TableRowsHandler "1" --> "1" Table
 
 
 class TableDesignHandler{
-    getColumnTypes():ArrayList(Type,Column)
-__Responsibility__
+    width : int
+    create() : Column
+    destroy(Column)
+    editColumnName(String)
+    __Responsibilities__
+    managing access to columns
+
 }
 
 class TableRowsHandler{
-    Layout
-__Responsibility__
+    width : int
+    create() : Row
+    destroy(Row)
+    editRowName(String)
+    __Responsibilities__
+    managing access to rows
 
 }
 
@@ -107,51 +126,71 @@ __Responsibility__
 manage Column
 }
 
+package "column" {
 
+    Column <|-- BooleanColumn
+    Column <|-- IntegerColumn
+    Column <|-- EmailColumn
+    Column <|-- StringColumn
 
-class Cell{
-editValue(value): {abstract}
-isValid(value): {abstract}
-__Responsibility__
-Know:
-maintain data
-}
-Cell <|-- BooleanCell
-Cell <|-- IntegerCell
-Cell <|-- EmailCell
-Cell <|-- StringCell
+    class Column{
+        -name:String
+        -allowsBlanks: boolean
+        -defaultValue: String = ""
+        -values : List<String>
+        -isTerminated: boolean
+        __
+        +getName(): String
+        +setName(String) {exception IllegalArgumentException}
+        -canHaveAsName(String): boolean
+        +getType(): String
+        +setBlankAllowed(boolean) {exception IllegalArgumentException}
+        -canHaveBlanksAllowed(boolean): boolean
+        -isValueBlank(String): boolean
+        +getDefaultValue(): String
+        +setDefaultValue(String) {exception IllegalArgumentException}
+        +getNbValues(): int
+        +getValueAt(int): String {exception IndexOutOfBoundsException}
+        #canHaveAsValue(String): boolean
+        -canHaveAsValueAt(int, String): boolean
+        +hasProperValues(): boolean
+        +addValueAt(int String) {exception IllegalArgumentException}
+        +addValue(String) {exception IllegalArgumentException}
+        +setValueAt(int String) {exception IllegalArgumentException}
+        +removeValueAt(int) {exception IllegalArgumentException}
+        +isTerminated(): boolean
+        +terminate()
 
-class Column{
-name:String
-allowsBlanks:Boolean
-cells : ArrayList<Cell>
+    __Responsibility__
+    Manage list with correct entries
+    }
 
-__Responsibility__
-Know: column
-manage Cells
+    Table *-- "0..*" Column
+
+    class BooleanColumn{
+        -type: String = "Boolean"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class StringColumn{
+        -type: String = "String"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class EmailColumn{
+        -type: String = "Email"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
+    class IntegerColumn{
+        -type: String = "Integer"
+        __
+        +getType(): String
+        +canHaveAsValue(String): boolean
+    }
 }
 
-Table "1" *-- "0..*" Column
-Column "1" *-- "0..*" Cell: has
-
-class BooleanCell{
-value : Boolean
-editValue(Boolean)
-isValid(Boolean): Boolean
-}
-class StringCell{
-value : String
-editValue(String)
-isValid(String): Boolean
-}
-class EmailCell{
-value : String
-editValue(String)
-isValid(String): Boolean
-}
-class IntegerCell{
-value : Integer
-editValue(Integer)
-isValid(Integer): Boolean
-}
 @enduml
