@@ -9,29 +9,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class TablesWindow extends ModeWindow{
+public class TablesWindow {
 
-    private TableHandler tableHandler;
-
-    private String selectedTable;
-
-    public TablesWindow(TableHandler tableHandler){
-        this.tableHandler = tableHandler;
-
+    public TablesWindow(UIWindowHandler uiWindowHandler){
+        this.uiWindowHandler = uiWindowHandler;
     }
 
-    public List<Widget> getLayout(){
-        List<Widget> layout = new LinkedList<>();
+    private final UIWindowHandler uiWindowHandler;
+
+    public UIWindowHandler getUIWindowController() {
+        return uiWindowHandler;
+    }
+
+    public LinkedList<Widget> getLayout(TableHandler tableHandler){
+        LinkedList<Widget> layout = new LinkedList<>();
         int y = 0;
         for(String tableName : tableHandler.getTableNames()){
             int x = 0;
             layout.add(new ButtonWidget(x,y,25,25,true, "",(Integer clickCount) ->{
                 if(clickCount == 1) {
-                    if(getSelectedTable() != tableName){
-                        setSelectedTable(tableName);
-                    } else {
-                        setSelectedTable(null);
-                    }
+                    getUIWindowController().changeSelectedItem(tableName);
                 }
             }));//empty
             x +=25;
@@ -40,19 +37,12 @@ public class TablesWindow extends ModeWindow{
                     tableHandler.openTable(tableName);
                 }
             }));
-            //layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.isValidText(string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
+            layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.canHaveAsName(tableName,string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
             y += 25;
         }
         //layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)tableHandler.createTable();}));
 
         return layout;
-    }
-
-    private void setSelectedTable(String selectedTable){
-        this.selectedTable = selectedTable;
-    }
-    private String getSelectedTable(){
-        return selectedTable;
     }
 
 }
