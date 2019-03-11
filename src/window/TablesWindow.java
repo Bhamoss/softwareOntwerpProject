@@ -36,6 +36,7 @@ public class TablesWindow {
             layout.add(new ButtonWidget(x,y,80,25,true,"",(Integer clickCount) ->{
                 if(clickCount == 2) {
                     tableHandler.openTable(tableName);
+                    // TODO: switch mode
                 }
             }));
             layout.add(new EditorWidget(x,y,80,25,true, tableName, (String oldName, String newName) -> tableHandler.canHaveAsName(oldName,newName),(String oldName, String newName) -> {tableHandler.setTableName(oldName,newName);}));//edit name

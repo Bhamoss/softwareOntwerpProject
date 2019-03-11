@@ -133,21 +133,19 @@ public class UIWindowHandler extends CanvasWindow{
         changeSelectedItem(null);
     }
 
-    /*
+
     public void loadTableDesignWindow(String tableName){
-        TableDesignHandler tableDesignHandler = getTableManager().getTableDesignHandler(tableName);
         setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
-        setOnDelete((String columnName) -> tableDesignHandler.remove(columnName));
+        setOnDelete((String columnName) -> tableDesignHandler.removeColumn(columnName));
         changeSelectedItem(null);
     }
 
     public void loadTableRowsWindow(String tableName){
-        TableRowsHandler tableRowsHandler = getTableManager().getTableRowsHandler(tableName);
         setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
         setOnDelete((String rowNumber) -> tableRowsHandler.removeRow(Integer.parseInt(rowNumber)));
         changeSelectedItem(null);
     }
-    */
+
 
     /**
      * Called to allow you to paint on the canvas.
