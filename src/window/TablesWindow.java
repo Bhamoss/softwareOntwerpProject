@@ -1,6 +1,7 @@
 package window;
 
 import tablr.TableHandler;
+import tablr.TableManager;
 import window.widget.ButtonWidget;
 import window.widget.EditorWidget;
 import window.widget.Widget;
@@ -23,9 +24,9 @@ public class TablesWindow {
 
     public LinkedList<Widget> getLayout(TableHandler tableHandler){
         LinkedList<Widget> layout = new LinkedList<>();
-        int y = 0;
+        int y = 10;
         for(String tableName : tableHandler.getTableNames()){
-            int x = 0;
+            int x = 20;
             layout.add(new ButtonWidget(x,y,25,25,true, "",(Integer clickCount) ->{
                 if(clickCount == 1) {
                     getUIWindowController().changeSelectedItem(tableName);
@@ -35,13 +36,18 @@ public class TablesWindow {
             layout.add(new ButtonWidget(x,y,80,25,true,"",(Integer clickCount) ->{
                 if(clickCount == 2) {
                     tableHandler.openTable(tableName);
+                    // TODO: switch mode
                 }
             }));
-            layout.add(new EditorWidget(x,y,80,25,true, tableName, (String string) -> tableHandler.canHaveAsName(tableName,string),(String string) -> tableHandler.setTableName(tableName,string)));//edit name
+            layout.add(new EditorWidget(x,y,80,25,true, tableName, (String oldName, String newName) -> tableHandler.canHaveAsName(oldName,newName),(String oldName, String newName) -> {tableHandler.setTableName(oldName,newName);}));//edit name
             y += 25;
         }
-        //layout.add(new ButtonWidget(0,y,500,500,true,"",(Integer clickCount) -> {if(clickCount == 2)tableHandler.createTable();}));
-
+        layout.add(new ButtonWidget(20,y+5,105,30,true,"Create table",(Integer clickCount) -> {
+            if(clickCount == 2) {
+                tableHandler.addTable();
+                getUIWindowController().loadTablesWindow();
+            }}));
+        System.out.println(layout);
         return layout;
     }
 
