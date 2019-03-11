@@ -129,10 +129,10 @@ public class Table {
      * @throws IllegalArgumentException
      *
      */
-    public void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException
-    {
+    //public void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException
+    //{
 
-    }
+    //}
 
     /**
      *
@@ -165,18 +165,18 @@ public class Table {
      * @throws IllegalColumnException
      * @throws IllegalArgumentException
      */
-    public void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException
-    {
+    //public void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException
+    //{
 
-    }
+    //}
 
     /**
      *
      */
-    public void addColumn()
-    {
+    //public void addColumn()
+    //{
 
-    }
+    //}
 
 
     //TODO: checker if can delete?

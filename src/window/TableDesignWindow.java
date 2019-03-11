@@ -22,6 +22,7 @@ public class TableDesignWindow{
         return uiWindowHandler;
     }
 
+    /*
     public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler){
         LinkedList<Widget> layout = new LinkedList<>();
         int y = 0;
@@ -51,7 +52,7 @@ public class TableDesignWindow{
             layout.add(new CheckBoxWidget(x,y,(Boolean bool)->tableDesignHandler.setColumnAllowBlanks(columnName,bool),(bool) ->tableDesignHandler.canHaveAsColumnAllowBlanks(columnName)));//TODO correcte canHaveAs
             x +=25;
             if(tableDesignHandler.getColumnType(columnName).toString().equals("Boolean")){
-                layout.add()
+                layout.add();
             }else {
 
             }
@@ -61,5 +62,6 @@ public class TableDesignWindow{
 
         return layout;
     }
+    */
 
 }

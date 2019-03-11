@@ -15,6 +15,30 @@ import java.util.function.Consumer;
  * A class representing the UI handler.
  */
 public class UIWindowHandler extends CanvasWindow{
+    private TableHandler tableHandler;
+    private TableDesignHandler tableDesignHandler;
+    private TableRowsHandler tableRowsHandler;
+
+    /**
+     * Creates a new UI window with given tableManager.
+     * @Effect loads tables window.
+     */
+    public UIWindowHandler(){
+        super("Tablr");
+        this.tableHandler = new TableHandler();
+        this.tableDesignHandler = tableHandler.createTableDesignHandler();
+        this.tableRowsHandler = tableHandler.createTableRowsHandler();
+        this.tableDesignWindow = new TableDesignWindow(this);
+        this.tablesWindow = new TablesWindow(this);
+        this.tableRowsWindow = new TableRowsWindow(this);
+
+        this.selectedItem = null;
+        tableHandler.addTable();
+        tableHandler.addTable();
+        tableHandler.addTable();
+        tableHandler.addTable();
+        loadTablesWindow();
+    }
     /**
      * Creates a new UI window with given tableDesignWindow, tablesWindow, tableRowsWindow and tableManager.
      * @param tableDesignWindow
@@ -22,7 +46,7 @@ public class UIWindowHandler extends CanvasWindow{
      * @param tableRowsWindow
      * @param tableManager
      * @Effect loads tables window.
-     */
+
     public UIWindowHandler(TableDesignWindow tableDesignWindow, TablesWindow tablesWindow, TableRowsWindow tableRowsWindow, TableManager tableManager){
         super("Tablr");
         this.tableDesignWindow = tableDesignWindow;
@@ -32,20 +56,7 @@ public class UIWindowHandler extends CanvasWindow{
 
         loadTablesWindow();
     }
-    /**
-     * Creates a new UI window with given tableManager.
-     * @param tableManager
-     * @Effect loads tables window.
      */
-    public UIWindowHandler(TableManager tableManager){
-        super("Tablr");
-        this.tableDesignWindow = new TableDesignWindow(this);
-        this.tablesWindow = new TablesWindow(this);
-        this.tableRowsWindow = new TableRowsWindow(this);
-        this.tableManager = tableManager;
-
-        loadTablesWindow();
-    }
 
     /**
      * The tableDesignWindow.
@@ -78,11 +89,7 @@ public class UIWindowHandler extends CanvasWindow{
         return tableRowsWindow;
     }
 
-    private final TableManager tableManager;
 
-    public TableManager getTableManager() {
-        return tableManager;
-    }
 
     private LinkedList<Widget> widgets;
 
@@ -97,7 +104,7 @@ public class UIWindowHandler extends CanvasWindow{
     private String selectedItem;
 
     public void changeSelectedItem(String selectedItem) {
-        if (getSelectedItem() != null || getSelectedItem().equals(selectedItem)){
+        if (getSelectedItem() != null && getSelectedItem().equals(selectedItem)){
             this.selectedItem = null;
         }
         else{
@@ -121,12 +128,12 @@ public class UIWindowHandler extends CanvasWindow{
     }
 
     public void loadTablesWindow(){
-        TableHandler tableHandler = getTableManager().getTableHandler();
         setWidgets(tablesWindow.getLayout(tableHandler));
         setOnDelete((String tableName) -> tableHandler.removeTable(tableName));
         changeSelectedItem(null);
     }
 
+    /*
     public void loadTableDesignWindow(String tableName){
         TableDesignHandler tableDesignHandler = getTableManager().getTableDesignHandler(tableName);
         setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
@@ -140,6 +147,7 @@ public class UIWindowHandler extends CanvasWindow{
         setOnDelete((String rowNumber) -> tableRowsHandler.removeRow(Integer.parseInt(rowNumber)));
         changeSelectedItem(null);
     }
+    */
 
     /**
      * Called to allow you to paint on the canvas.

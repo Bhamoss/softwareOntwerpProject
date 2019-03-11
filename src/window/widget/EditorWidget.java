@@ -3,27 +3,29 @@ package window.widget;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class EditorWidget extends LabelWidget {
 
-    private Function<String, Boolean> isValidText;
-    private Consumer<String> pushText;
+    private BiFunction<String, String, Boolean> isValidText;
+    private BiConsumer<String, String> pushText;
     private boolean selected;
     private boolean blocked;
+    private String oldText;
 
 
-    public EditorWidget(int x, int y, int width, int height, boolean border,String text, Function<String, Boolean> isValidText, Consumer<String> pushText) {
+    public EditorWidget(int x, int y, int width, int height, boolean border,String text, BiFunction<String, String, Boolean> isValidText, BiConsumer<String,String> pushText) {
         super(x, y, width, height, border, "");
         this.isValidText = isValidText;
         this.pushText = pushText;
-        if(isValidText.apply(text)){
-            setText(text);
-        }
 
         this.blocked = false;
         this.selected = false;
+        oldText = text;
+        setText(text);
 
     }
 
@@ -46,6 +48,7 @@ public class EditorWidget extends LabelWidget {
 
         // text
         super.paint(g);
+        g.setColor(Color.black);
     }
 
     public boolean isSelected() {
@@ -59,7 +62,8 @@ public class EditorWidget extends LabelWidget {
     public boolean attemptDeselect() {
         if (!isBlocking()) {
             selected = false;
-            pushText.accept(getText());
+            pushText.accept(oldText, getText());
+            oldText = text;
             return true;
         }
         return false;
@@ -76,9 +80,13 @@ public class EditorWidget extends LabelWidget {
     }
 
 
+    private boolean canHaveAsText(String s) {
+        return isValidText.apply(oldText, s);
+    }
+
     public void setText(String t) {
         text = t;
-        setBlocking(!isValidText.apply(t));
+        setBlocking(!canHaveAsText(t));
     }
 
     @Override
@@ -97,7 +105,7 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
         if (selected && id == KeyEvent.KEY_PRESSED) {
-            if (keyCode >= 65) { // Alphanumerical key
+            if (keyCode >= 48) { // Alphanumerical key
                 setText(text + keyChar);
                 return true;
             } else if (keyCode == KeyEvent.VK_BACK_SPACE && text.length() > 0) {
