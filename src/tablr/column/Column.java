@@ -88,7 +88,7 @@ public abstract class Column {
      *          |   ( (name == null)
      *          |       || (name == "") )
      */
-    private boolean canHaveAsName(String name) {
+    public boolean canHaveAsName(String name) {
         return !(name == null || name.equals(""));
     }
 
@@ -259,6 +259,17 @@ public abstract class Column {
     }
 
     /**
+     * Check whether this column can have the given default value as his default value.
+     *
+     * @param   defaultValue
+     *          The default value to be checked.
+     * @return
+     */
+    public boolean canHaveAsDefaultValue(String defaultValue) {
+        return canHaveAsValue(defaultValue);
+    }
+
+    /**
      * Check whether this column can have the given value as one of its values at the given index.
      *
      * @param   index
@@ -339,6 +350,17 @@ public abstract class Column {
     }
 
     /**
+     * Add the default value as a value for this column at the end of the list values
+     *
+     * @effect  This column has the default value as one of its values at the end of the list values and
+     *          the number of values of this column is incremented by 1.
+     *          | addValueAt(getNbValues() + 1, getDefaultValue())
+     */
+    public void addValue() throws IllegalArgumentException {
+        addValueAt(getNbValues() + 1, getDefaultValue());
+    }
+
+    /**
      * Set the given value as value for the value at the given index for this column.
      *
      * @param   index
@@ -375,7 +397,7 @@ public abstract class Column {
      *          number of values in this column.
      *          | (index < 1) || (index > getNbValues())
      */
-    public void removeCellAt(int index) throws IndexOutOfBoundsException {
+    public void removeValueAt(int index) throws IndexOutOfBoundsException {
         values.remove(index - 1);
     }
 

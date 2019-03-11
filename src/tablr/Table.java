@@ -29,167 +29,23 @@ public class Table {
 *                                                   TableDesignHandler interface functions
 ************************************************************************************************************************
 */
-    /**
-     *
-     * @return
-     */
-    public ArrayList<String> getColumnNames()
-    {
-        return null;
-    }
-
-    /**
-     *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
-     */
-    public String getColumnType(String columnName) throws IllegalColumnException
-    {
-        return null;
-    }
-
-    /**
-     *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
-     */
-    public boolean getColumnAllowBlank(String columnName) throws IllegalColumnException
-    {
-        return false;
-    }
-
-    /**
-     *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
-     */
-    public String getColumnDefaultValue(String columnName) throws IllegalColumnException
-    {
-        return null;
-    }
 
 
-    /**
-     *
-     * @param columnName
-     * @param newName
-     * @return
-     * @throws IllegalColumnException
-     */
-    public boolean canHaveAsColumnName(String columnName, String newName) throws IllegalColumnException
-    {
-        return false;
-    }
 
 
-    /**
-     *
-     * @param columnName
-     * @param type
-     * @return
-     * @throws IllegalColumnException
-     */
-    public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException
-    {
-        return false;
-    }
 
 
-    /**
-     *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
-     */
-    public boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException
-    {
-        return false;
-    }
 
-    /**
-     *
-     * @param columnName
-     * @param newDefaultValue
-     * @return
-     * @throws IllegalColumnException
-     */
-    public boolean canHaveAsDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException
-    {
-        return false;
-    }
 
-    /**
-     *
-     * @param columnName
-     * @param newColumnName
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
-     *
-     */
-    public void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException
-    {
 
-    }
 
-    /**
-     *
-     * @param columName
-     * @param type
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
-     */
-    public void setColumnType(String columName, String type) throws IllegalColumnException, IllegalArgumentException
-    {
 
-    }
 
-    /**
-     *
-     * @param columnName
-     * @param blanks
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
-     */
-    public void setColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalArgumentException
-    {
-
-    }
-
-    /**
-     *
-     * @param columnName
-     * @param newDefaultValue
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
-     */
-    public void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException
-    {
-
-    }
-
-    /**
-     *
-     */
-    public void addColumn()
-    {
-
-    }
 
 
     //TODO: checker if can delete?
 
-    /**
-     *
-     * @param columnName
-     * @throws IllegalArgumentException
-     */
-    public void removeColumn(String columnName) throws IllegalArgumentException
-    {
 
-    }
 
 /*
 ************************************************************************************************************************
@@ -198,75 +54,7 @@ public class Table {
 */
 
 
-    /**
-     *
-     * @param columnName
-     * @param Row
-     * @return
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
-     */
-    public String getCellValue(String columnName, int Row) throws IllegalColumnException, IllegalRowException
-    {
-        return null; // placeholder
-    }
 
-
-
-
-
-    /**
-     *
-     * @param columnName
-     * @param row
-     * @param value
-     * @return
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
-     */
-    public boolean canHaveAsCellValue(String columnName, int row, String value)
-            throws IllegalColumnException, IllegalRowException
-    {
-        return false;
-    }
-
-    /**
-     *
-     * @param columnName
-     * @param row
-     * @param newValue
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
-     * @throws IllegalArgumentException
-     * @throws IllegalTableException
-     * | getOpenTable() == null
-     */
-    public void setCellValue(String columnName, int row, String newValue)
-            throws IllegalColumnException, IllegalRowException, IllegalArgumentException
-    {
-
-    }
-
-
-    /**
-     *
-     */
-    public void addRow()
-    {
-
-    }
-
-    // TODO: delete checker?
-
-    /**
-     *
-     * @param row
-     * @throws IllegalRowException
-     */
-    public void removeRow(int row) throws IllegalRowException
-    {
-
-    }
 
 
 
@@ -322,6 +110,12 @@ public class Table {
      */
     private String name = "newTable";
 
+/*
+ ************************************************************************************************************************
+ *                                                       rows
+ ************************************************************************************************************************
+ */
+
     /**
      * Returns the number of rows.
      *
@@ -339,6 +133,101 @@ public class Table {
         else    // there should always be a column at one if there are columns.
             return getColumnAt(1).getNbValues();
     }
+
+    /**
+     * Adds a row at the end of this table.
+     *
+     * @effect  For each column in this table, a new row is added at the end of the column.
+     *          | for each I in 1..getNbColumns():
+     *          |   getColumnAt(I).addValue();
+     */
+    public void addRow()
+            throws IllegalArgumentException
+    {
+        for (int i = 1; i <= getNbColumns(); i++) {
+            getColumnAt(i).addValue();
+        }
+    }
+
+    /**
+     * Remove the given row of this table.
+     * @param   row
+     *          The row to be deleted.
+     * @effect  For each column in this table, the given row is removed from the column.
+     *          | for each I in 1..getNbColumns():
+     *          |   getColumnAt(I).removeValue(row);
+     * @throws  IllegalRowException
+     *          The row doesn't exists.
+     *          | row > getNbRows() || row < 1
+     */
+    public void removeRow(int row) throws IllegalRowException
+    {
+        if (row < 1 || row > getNbRows())
+            throw new IllegalRowException();
+        for (int i = 1; i <= getNbColumns(); i++) {
+            getColumnAt(i).removeValueAt(row);
+        }
+
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param Row
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     */
+    public String getCellValue(String columnName, int Row) throws IllegalColumnException, IllegalRowException
+    {
+        return null; // placeholder
+    }
+
+
+
+
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param value
+     * @return
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     */
+    public boolean canHaveAsCellValue(String columnName, int row, String value)
+            throws IllegalColumnException, IllegalRowException
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param row
+     * @param newValue
+     * @throws IllegalColumnException
+     * @throws IllegalRowException
+     * @throws IllegalArgumentException
+     * @throws IllegalTableException
+     * | getOpenTable() == null
+     */
+    public void setCellValue(String columnName, int row, String newValue)
+            throws IllegalColumnException, IllegalRowException, IllegalArgumentException
+    {
+
+    }
+
+
+
+
+
+/*
+ ************************************************************************************************************************
+ *                                                       columns
+ ************************************************************************************************************************
+ */
 
     /**
      * List of collecting references to the columns of this table
@@ -359,6 +248,7 @@ public class Table {
     public int getNbColumns() {
         return this.columns.size();
     }
+
 
     /**
      * Return the column of this table at the given index.
@@ -444,6 +334,48 @@ public class Table {
         }
         return true;
     }
+
+
+    /**
+     * Returns the index of the column which has the given name as name.
+     *
+     * @param   name
+     *          The name of the column of which the index is needed.
+     * @return  The index of the column which has the given name.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    private int getColumnIndex(String name) {
+        for (int i = 1; i <= getNbColumns(); i++)
+            if (getColumnAt(i).getName().equals(name))
+                return i;
+        throw new IllegalColumnException();
+    }
+
+    /**
+     * Returns the column with the given column name
+     *
+     * @param   columnName
+     *          The name of the column to return.
+     * @return  The column of this table with the given columnName.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    private Column getColumn(String columnName) {
+        for (Column c : columns) {
+            if (c.getName().equals(columnName))
+                return c;
+        }
+        throw new IllegalColumnException();
+    }
+
+/*
+ ************************************************************************************************************************
+ *                                                       Add or remove column
+ ************************************************************************************************************************
+ */
 
     /**
      * Add a new column as a column for this table at the given index
@@ -540,44 +472,50 @@ public class Table {
      * @throws  IllegalColumnException
      *          The given name is not a name of a column in this table.
      */
-    public void removeColumnAt(String name)
-            throws IndexOutOfBoundsException
+    public void removeColumn(String name)
+            throws IllegalColumnException, IndexOutOfBoundsException
     {
         removeColumnAt(getColumnIndex(name));
     }
 
+
+
+
+
+/*
+ ************************************************************************************************************************
+ *                                                       columnName
+ ************************************************************************************************************************
+ */
+
     /**
-     * Returns the index of the column which has the given name as name.
+     * Checks whether the given columnName is a name of a column in this table.
      *
      * @param   name
-     *          The name of the column of which the index is needed.
-     * @return  The index of the column which has the given name.
-     * @throws  IllegalColumnException
-     *          There isn't a column with the given columnName in this table.
-     *          | !isAlreadyUsedColumnName(columnName)
+     *          The name to be checked
+     * @return  True if and only if the given name is a name
+     *          of a column in this table.
      */
-    private int getColumnIndex(String name) {
-        for (int i = 1; i <= getNbColumns(); i++)
-            if (getColumnAt(i).getName().equals(name))
-                return i;
-        throw new IllegalColumnException();
+    private boolean isAlreadyUsedColumnName(String name) {
+        for (Column c : columns) {
+            if (c.getName().equals(name))
+                return true;
+        }
+        return false;
     }
 
     /**
-     * Returns the column with the given column name
-     * @param   columnName
-     *          The name of the column to return.
-     * @return  The column of this table with the given columnName.
-     * @throws  IllegalColumnException
-     *          There isn't a column with the given columnName in this table.
-     *          | !isAlreadyUsedColumnName(columnName)
+     * Returns a new list of strings with all the names of the columns in it.
+     *
+     * @return  List of all the column names of all the columns in this table.
      */
-    private Column getColumn(String columnName) {
-        for (Column c : columns) {
-            if (c.getName().equals(columnName))
-                return c;
+    public ArrayList<String> getColumnNames()
+    {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 1; i <= getNbColumns(); i++){
+            result.add(getColumnAt(i).getName());
         }
-        throw new IllegalColumnException();
+        return result;
     }
 
     /**
@@ -589,21 +527,83 @@ public class Table {
      *          The new name of the given column
      * @effect  The name of the given column is set to the given name.
      *          | getColumn(column).setName(name)
-     * @throws  IllegalColumnException
+     * @throws  IllegalArgumentException
      *          The given name is already used for another column in this table.
      *          | isAlreadyUsedColumnName(name)
      * @throws  IllegalColumnException
      *          The given column doesn't exist in this table.
      *          | !isAlreadyUsedColumnName(column)
      */
-    public void setColumnName(String column, String name) throws IllegalColumnException {
+    public void setColumnName(String column, String name)
+            throws IllegalColumnException, IllegalArgumentException {
         // check of deze column wel in de table zit
         if (!isAlreadyUsedColumnName(column))
             throw new IllegalColumnException();
         // check of deze naam al bestaat in deze table
         if (isAlreadyUsedColumnName(name))
-            throw new IllegalColumnException();
+            throw new IllegalArgumentException();
         getColumn(column).setName(name);
+    }
+
+    /**
+     * Check whether the column with given column name can have the given name.
+     *
+     * @param   columnName
+     *          The name of the column of which the given name should be checked.
+     * @param   name
+     *          The name to be checked
+     * @return  True if and only if the column can accept the given name and
+     *              if the name is not already used in this table, if it is already used
+     *              and the name is the same as the given columnName, then the name is also acceptable.
+     *          |   if (getColumn(columnName).canHaveAsName(name))
+     *          |       then result == ( isAlreadyUsedColumnName(name) && !columnName.equals(name) )
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    protected boolean canHaveAsColumnName(String columnName, String name) throws IllegalColumnException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        if (getColumn(columnName).canHaveAsName(name))
+            return isAlreadyUsedColumnName(name) && !columnName.equals(name);
+        return false;
+    }
+
+
+    /*
+ ************************************************************************************************************************
+ *                                                       columnType
+ ************************************************************************************************************************
+ */
+
+    /**
+     *
+     * @param columName
+     * @param type
+     * @throws IllegalColumnException
+     * @throws IllegalArgumentException
+     */
+    public void setColumnType(String columName, String type) throws IllegalColumnException, IllegalArgumentException
+    {
+
+    }
+
+    /**
+     * Returns the type of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the type should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    public String getColumnType(String columnName) throws IllegalColumnException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        return getColumn(columnName).getType();
     }
 
     /**
@@ -625,24 +625,27 @@ public class Table {
     }
 
     /**
-     * Change the possibility of using blanks or not
+     * Check whether the column with given column name can have the given type.
      *
-     * @param   column
-     *          The column of which the blanks must be changed.
-     * @effect  The blanks of the given column are changed.
-     *          | getColumn(column).changeBlanks()
+     * @param   columnName
+     *          The name of the column of which the given type should be checked.
+     * @param   type
+     *          The type to be checked
+     * @return
      * @throws  IllegalColumnException
-     *          The given column doesn't exists in this table.
-     *          | !isAlreadyUsedColumnName(column)
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
      */
-    public void changeColumnBlanks(String column)
-            throws IllegalColumnException {
-        // check of deze column wel in de table zit
-        if (!isAlreadyUsedColumnName(column))
-            throw new IllegalColumnException();
-        //getColumn(column).changeBlanks(); //TODO: verder aanvullen MICHIEL J
+    public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException
+    {
+        return false; //TODO
     }
 
+/*
+ ************************************************************************************************************************
+ *                                                       columnDV
+ ************************************************************************************************************************
+ */
     /**
      * Sets the default value of the given column to the given
      * default value.
@@ -666,27 +669,138 @@ public class Table {
     }
 
     /**
-     * Checks whether the given columnName is a name of a column in this table.
+     * Returns the default value of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the default value should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    public String getColumnDefaultValue(String columnName) throws IllegalColumnException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        return getColumn(columnName).getDefaultValue();
+    }
+
+    /**
+     * Check whether the column with given column name can have the given default value.
+     *
+     * @param   columnName
+     *          The name of the column of which the given default value should be checked.
+     * @param   defaultValue
+     *          The default value to be checked
+     * @return
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    public boolean canHaveAsDefaultValue(String columnName, String defaultValue) throws IllegalColumnException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        return getColumn(columnName).canHaveAsDefaultValue(defaultValue);
+    }
+
+
+    /*
+ ************************************************************************************************************************
+ *                                                       Column blanks
+ ************************************************************************************************************************
+ */
+
+    /**
+     * Change the possibility of using blanks or not
+     *
+     * @param   column
+     *          The column of which the blanks must be changed.
+     * @effect  The blanks of the given column are changed.
+     *          | getColumn(column).changeBlanks()
+     * @throws  IllegalColumnException
+     *          The given column doesn't exists in this table.
+     *          | !isAlreadyUsedColumnName(column)
+     */
+    public void changeColumnBlanks(String column)
+            throws IllegalColumnException {
+        // check of deze column wel in de table zit
+        if (!isAlreadyUsedColumnName(column))
+            throw new IllegalColumnException();
+        //getColumn(column).changeBlanks(); //TODO: verder aanvullen MICHIEL J
+    }
+
+
+    /**
+     * Returns the blanks allowed of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the blanks allowed should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    public boolean getColumnAllowBlank(String columnName) throws IllegalColumnException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        return getColumn(columnName).isBlanksAllowed();
+    }
+
+
+
+
+    /**
+     * Check whether the column with given column name can have the given name.
+     * @param   columnName
+     *          The name of the column of which the given name should be checked.
      * @param   name
      *          The name to be checked
-     * @return  True if and only if the given name is a name
-     *          of a column in this table.
+     * @return
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
      */
-    private boolean isAlreadyUsedColumnName(String name) {
-        for (Column c : columns) {
-            if (c.getName().equals(name))
-                return true;
-        }
-        return false;
+    public boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException
+    {
+        return false; //TODO: na verduidelijking van thomas
     }
+
+    /**
+     * Set the blanks allowed of the column with the given column name to the given blanks.
+     *
+     * @param   columnName
+     *          The name of the column of which the allow blanks should be set.
+     * @param   blanks
+     *          The blanks to be set.
+     * @effect  The blanks of the column with the given column name are set to the given blanks.
+     *          | getColumn(columnName).setBlanksAllowed(blanks)
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !isAlreadyUsedColumnName(columnName)
+     */
+    public void setColumnAllowBlanks(String columnName, boolean blanks)
+            throws IllegalColumnException, IllegalArgumentException
+    {
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        getColumn(columnName).setBlanksAllowed(blanks);
+    }
+
+
+
+/*
+ ************************************************************************************************************************
+ *                                                       terminate
+ ************************************************************************************************************************
+ */
+
 
     /**
      * Variable registering whether this table is terminated.
      */
     private boolean isTerminated = false;
-
-
-
 
     /**
      * Check whether this table is terminated.
