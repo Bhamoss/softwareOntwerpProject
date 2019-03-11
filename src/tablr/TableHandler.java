@@ -45,6 +45,24 @@ public class TableHandler {
 
 
     /**
+     *
+     * Return whether or not the table with name name is a table.
+     *
+     * @param name
+     *      The name of the table to check.
+     *
+     * @return true if the name of there is a table with the name name, otherwise false.
+     *  | return == getTableNames().contains(name)
+     *
+     */
+    boolean hasAsTable(String name)
+    {
+
+        return getTableManager().hasAsTable(name);
+    }
+
+
+    /**
      * Returns a list with the names of the tables in the tablemanager.
      *
      * @return a list with the names of the tables in the tablemanager.
@@ -190,6 +208,7 @@ public class TableHandler {
     {
         return this.terminated;
     }
+
 
     /**
      * An indicator whether or not

@@ -45,7 +45,7 @@ public class TableManager {
 
         setCurrentTable(null);
         this.tables =  new LinkedList<Table>();
-        this.isTerminated = false;
+        this.terminated = false;
     }
 
 
@@ -868,7 +868,7 @@ public class TableManager {
      * @throws TerminatedException if this is terminated.
      * | isTerminated()
      */
-    private void appendTable(Table table)
+    private void appendTable(Table table) throws  IllegalArgumentException
     {
         if(isTerminated()){throw new TerminatedException();}
         if(!canHaveAsTable(table)){throw new IllegalArgumentException("Invalid table");}
@@ -892,7 +892,7 @@ public class TableManager {
      * @throws TerminatedException if this is terminated.
      * | isTerminated()
      */
-    private void insertAtFrontTable(Table table)
+    private void insertAtFrontTable(Table table) throws  IllegalArgumentException
     {
         if(isTerminated()){throw new TerminatedException();}
         if(!canHaveAsTable(table)){throw new IllegalArgumentException("Invalid table");}
@@ -976,7 +976,7 @@ public class TableManager {
      *  | (isElementOfTables(currentTable.getName()) || currentTable == null) == true
      *
      */
-    private Table currentTable;
+    private Table currentTable = null;
 
 
 /*
@@ -992,7 +992,7 @@ public class TableManager {
      * @return true if the currentTable and all tables in tables can terminate, false otherwise.
      *  | return == (getCurrentTable().canBeTerminated() && for all i: 0 < i < getNbTables(): getTableAt(i).canBeTerminated())
      */
-    public boolean canTerminate()
+    boolean canTerminate()
     {
         if(!getCurrentTable().canBeTerminated()) {return false;}
         for (Table table:tables)
@@ -1006,7 +1006,7 @@ public class TableManager {
      * Returns whether or not this table is terminated
      */
     @Basic @Raw
-    public boolean isTerminated() {return isTerminated;}
+    boolean isTerminated() {return terminated;}
 
     /**
      * Terminates this object and all tables.
@@ -1021,7 +1021,7 @@ public class TableManager {
      *  | canBeTerminated()
      *
      */
-    public void terminate() throws IllegalStateException
+    void terminate() throws IllegalStateException
     {
         if(!canTerminate()) throw new IllegalStateException();
        int i;
@@ -1040,5 +1040,5 @@ public class TableManager {
     /**
      * Variable registering whether this table manager is terminated.
      */
-    private boolean isTerminated = false;
+    private boolean terminated = false;
 }

@@ -59,50 +59,166 @@ TablesWindow "1" --> "1" TableHandler:  communicates
 TableDesignWindow "1" --> "1" TableDesignHandler:  communicates
 TableRowsWindow "1" --> "1" TableRowsHandler:  communicates
 
-class TableManager{
-__Responsibility__
-manage tables and manage access to tables
-}
 
-Table "0..*" <-- "1" TableManager
-TableHandler "0..*" <-- "1" TableManager
-TableDesignHandler "0..*" <-- "1" TableManager
-TableRowsHandler "0..*" <-- "1" TableManager
-UIWindowHandler "1" --> "1" TableManager:  communicates
+
+
+
+
+
 
 class TableHandler{
-    width : int
-    create() : Table
-    destroy(Table)
-    editTableName(String)
-    openTable(Table): Table
+    tableManager : TableManager {readOnly}
+    terminated : boolean
+    __Inspector__
+    getNbTables() : int
+    hasAsTable(name : String) : boolean
+    getTableNames() : ArrayList<String>
+    canHaveAsName(tableName : String, newTableName: String) : boolean {exception IllegalTableException}
+    getOpenTable() : String
+    isTerminated() : boolean
+    createTableDesignHandler() : TableDesignHandler
+    createTableRowsHandler() : TableRowsHandler
+
+    __Mutator__
+    <<constructor>> TableHandler()
+    setTableName(tableName : String, newName : String) : void {exception IllegalTableException, IllegalArgumentException}
+    addTable() : void
+    removeTable(tableName : String): void {exception IllegalTableException}
+    openTable(tableName : String): void  {exception IllegalTableException}
+    - getTableManager() : TableManager
+    - canHaveAsTableManager(tableManager : TableManager) : boolean
+
     __Responsibilities__
-    managing access to tables
+    providing a controller for table mode
 }
-TableHandler "1" --> "0..*" Table
-TableDesignHandler "1" --> "1" Table
-TableRowsHandler "1" --> "1" Table
 
 
 class TableDesignHandler{
-    width : int
-    create() : Column
-    destroy(Column)
-    editColumnName(String)
+    tableManager : TableManager {readOnly}
+    terminated : boolean
+    __Inspector__
+    getOpenTable() : String
+    getColumnNames() : ArrayList<String> {exception IllegalTableException}
+    getColumnType(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
+    getColumnAllowBlank(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+    getColumnDefaultValue(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
+    canHaveAsColumnName(columnName : String, newName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+    canHaveAsColumnType(columnName : String, type : String) : boolean {exception IllegalColumnException, IllegalTableException}
+    canHaveAsColumnAllowBlanks(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+    canHaveAsDefaultValue(columnName : String, newDefaultValue : String) : boolean {exception IllegalColumnException, IllegalTableException}
+    isTerminated() : boolean
+    - canHaveAsTableManager(tableManager : TableManager) : boolean
+
+    __Mutator__
+    <<constructor>> TableDesignHandler(mng : TableManager) : TableDesignHandler {exception IllegalArgumentException}
+    setColumnName(columnName : String, newColumnName : String) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+    setColumnType(columName : String, type : String) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+    setColumnAllowBlanks(columnName : String, blanks : boolean) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+    setColumnDefaultValue(columnName : String, newDefaultValue : String) : void {IllegalColumnException, IllegalArgumentException, IllegalTableException}
+    addColumn() : void {exception IllegalTableException}
+    removeColumn(columnName : String) : void {exception IllegalArgumentException, IllegalTableException}
+
+
     __Responsibilities__
     managing access to columns
 
 }
 
 class TableRowsHandler{
-    width : int
-    create() : Row
-    destroy(Row)
-    editRowName(String)
+    tableManager : TableManager {readOnly}
+    terminated : boolean
+    __Inspector__
+    getOpenTable() : String
+    getColumnNames() : ArrayList<String> {exception IllegalTableException}
+    getColumnType(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
+    canHaveAsCellValue(columnName : String, row : int, value : String) : boolean {exception IllegalColumnException, IllegalRowException, IllegalTableException}
+    getCellValue(columnName : String, Row : int) : String {exception IllegalColumnException, IllegalRowException, IllegalTableException}
+    isTerminated() : boolean
+    - canHaveAsTableManager(tableManager : TableManager) : boolean
+
+    __Mutator__
+    setCellValue(columnName : String, row : int, newValue : String) : void {exception IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException}
+    addRow() : void {exception IllegalTableException}
+    removeRow(row : int) : void {exception IllegalRowException, IllegalTableException}
+
     __Responsibilities__
     managing access to rows
 
 }
+
+
+
+
+
+
+
+
+
+class TableManager{
+tables : List<Table> [*] = new LinkedList<Table>
+currentTable : Table [0...1] = null
+terminated : boolean = false
+__Inspectors__
+~ hasAsTable(name : String) : boolean
+~ getTableNames() : ArrayList<String>
+~ canHaveAsName(tableName : String, newTableName: String) : boolean {exception IllegalTableException}
+~ getOpenTable() : String
+~ getColumnNames() : ArrayList<String> {exception IllegalTableException}
+~ getColumnType(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
+~ getColumnAllowBlank(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+~ getColumnDefaultValue(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
+~ canHaveAsColumnName(columnName : String, newName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+~ canHaveAsColumnType(columnName : String, type : String) : boolean {exception IllegalColumnException, IllegalTableException}
+~ canHaveAsColumnAllowBlanks(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+~ canHaveAsDefaultValue(columnName : String, newDefaultValue : String) : boolean {exception IllegalColumnException, IllegalTableException}
+~ getCellValue(columnName : String, Row : int) : String {exception IllegalColumnException, IllegalRowException, IllegalTableException}
+~ canHaveAsCellValue(columnName : String, row : int, value : String) : boolean {exception IllegalColumnException, IllegalRowException, IllegalTableException}
+~ canTerminate() : boolean
+~ isTerminated() : boolean
+- getNbTables() : int
+- hasAsTable(table : Table) : boolean
+- getTableAt(index : int) : Table {exception IllegalArgumentException}
+- getTable(name : String) : Table {exception IllegalTableException}
+- canHaveAsTable(table : Table) : boolean
+- canHaveAsTableAt(index : int,table : Table) : boolean
+- getTableIndex(table : Table) : int {exception IllegalArgumentException}
+- hasProperTables() : boolean
+- getCurrentTable() : Table
+- canHaveAsCurrentTable(table : Table) : boolean
+
+__Mutators__
+~ <<constructor>> TableManager()
+~ setTableName(tableName : String, newName : String) : void {exception IllegalTableException, IllegalArgumentException}
+~ addTable() : void
+~ removeTable(tableName : String): void {exception IllegalTableException}
+~ openTable(tableName : String): void  {exception IllegalTableException}
+~ setColumnName(columnName : String, newColumnName : String) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+~ setColumnType(columName : String, type : String) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+~ setColumnAllowBlanks(columnName : String, blanks : boolean) : void {exception IllegalColumnException, IllegalArgumentException, IllegalTableException}
+~ setColumnDefaultValue(columnName : String, newDefaultValue : String) : void {IllegalColumnException, IllegalArgumentException, IllegalTableException}
+~ addColumn() : void {exception IllegalTableException}
+~ removeColumn(columnName : String) : void {exception IllegalArgumentException, IllegalTableException}
+~ setCellValue(columnName : String, row : int, newValue : String) : void {exception IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException}
+~ addRow() : void {exception IllegalTableException}
+~ removeRow(row : int) : void {exception IllegalRowException, IllegalTableException}
+~ terminate() : void {exception IllegalStateException}
+- addTableAt(index : int, table : Table) : void {exception IllegalArgumentException}
+- removeTableAt(index : int) : void {exception IllegalArgumentException}
+- removeTable(table : Table) : void {exception IllegalArgumentException}
+- appendTable(table : Table) : void {exception IllegalArgumentException}
+- insertAtFrontTable(table : Table) : void {exception IllegalArgumentException}
+- setCurrentTable(table : Table) : void {exception IllegalTableException}
+
+__Responsibility__
+manage tables and manage access to tables
+}
+
+Table "0..*" <-- TableManager
+TableHandler --> "1" TableManager
+TableDesignHandler --> "1" TableManager
+TableRowsHandler --> "1" TableManager
+
+
 
 class Table{
     name : string = "newTable"
