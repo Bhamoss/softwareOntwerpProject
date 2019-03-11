@@ -5,6 +5,20 @@ import be.kuleuven.cs.som.annotate.Basic;
 public class BooleanColumn extends Column {
 
     /**
+     * Checks whether this column could have the given type as his type.
+     *
+     * @param   type
+     *          The type to be checked.
+     * @return  True if the given type is Boolean, Integer or String.
+     *          | result ==
+     *          |   type.equals("Boolean") || type.equals("Integer") || type.equals("String")
+     */
+    @Override
+    public boolean canHaveAsType(String type) {
+        return type.equals("Boolean") || type.equals("Integer") || type.equals("String");
+    }
+
+    /**
      * Variable registering the type of this column
      */
     private final static String type = "Boolean";

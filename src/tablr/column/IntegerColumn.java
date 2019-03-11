@@ -42,6 +42,37 @@ public class IntegerColumn extends Column {
     }
 
     /**
+     * Checks whether this column could have the given type as his type.
+     *
+     * @param   type
+     *          The type to be checked.
+     * @return  True if the given type is Integer and String, also if the type is Boolean
+     *          the result will be true if and only if all the values of this column are 0 or 1.
+     *          | result ==
+     *          |   type.equals("Integer") || type.equals("String") ||
+     *          |       ( type.equals("Boolean") && (
+     *          |           for each I in 1..getNbValues():
+     *          |               getValueAt(I).equals("0") || getValueAt(I).equals("1") )
+     *          |       )
+     */
+    @Override
+    public boolean canHaveAsType(String type) {
+        if (type.equals("Integer") || type.equals("String"))
+            return true;
+        else if (type.equals("Boolean")) {
+            boolean result = true;
+            for (int i = 1; i <= getNbValues(); i++) {
+                if (!getValueAt(i).equals("0") && !getValueAt(i).equals("1")) {
+                    result = !isBlanksAllowed() || getValueAt(i).equals("");
+                }
+                else result = true;
+            }
+            return result;
+        }
+        return false;
+    }
+
+    /**
      * Check whether this integer column can have the given value as one of its values
      *
      * @param   value

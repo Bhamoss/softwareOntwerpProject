@@ -99,6 +99,27 @@ public abstract class Column {
     public abstract String getType();
 
     /**
+     * Returns a new list of all the possible types of columns.
+     */
+    @Basic
+    public static ArrayList<String> getAllTypes() {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 1; i <= allTypes.size(); i++)
+            result.add(allTypes.get(i - 1));
+        return result;
+    }
+
+    /**
+     * Static final list registering all the possible types that are possible for a column.
+     */
+    private static final ArrayList<String> allTypes = new ArrayList<>() {{
+        add("String");
+        add("Email");
+        add("Boolean");
+        add("Integer");
+    }};
+
+    /**
      * Returns whether blanks are allowed in this column or not.
      */
     @Basic
@@ -285,7 +306,7 @@ public abstract class Column {
      *          |           || ( index > getNbValues() + 1) )
      *          |   then result == false
      */
-    private boolean canHaveAsValueAt(int index, String value)
+    public boolean canHaveAsValueAt(int index, String value)
     {
         if (!canHaveAsValue(value))
             return false;
@@ -361,7 +382,7 @@ public abstract class Column {
     }
 
     /**
-     * Set the given value as value for the value at the given index for this column.
+     * Set the given value as value for the values at the given index for this column.
      *
      * @param   index
      *          The index at which the new value should be set.
@@ -426,4 +447,10 @@ public abstract class Column {
         this.isTerminated = false;
     }
 
+    /**
+     * Checks whether this column could have the given type as his type.
+     * @param   type
+     *          The type to be checked.
+     */
+    public abstract boolean canHaveAsType(String type);
 }

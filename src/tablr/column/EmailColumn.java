@@ -42,6 +42,20 @@ public class EmailColumn extends Column {
     }
 
     /**
+     * Checks whether this column could have the given type as his type.
+     *
+     * @param   type
+     *          The type to be checked.
+     * @return  True if the given type is Email or String.
+     *          | result ==
+     *          |   type.equals("Email") || type.equals("String")
+     */
+    @Override
+    public boolean canHaveAsType(String type) {
+        return type.equals("Email") || type.equals("String");
+    }
+
+    /**
      * Check whether this email column can have the given value as one of its values
      *
      * @param   value
