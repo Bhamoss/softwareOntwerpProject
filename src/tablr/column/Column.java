@@ -422,7 +422,7 @@ public abstract class Column {
      */
     public void terminate() throws IllegalStateException {
         for (int i = 1; i <= getNbValues(); i++)
-            removeCellAt(i);
+            removeValueAt(i);
         this.isTerminated = false;
     }
 

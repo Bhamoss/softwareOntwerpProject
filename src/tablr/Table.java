@@ -755,7 +755,7 @@ public class Table {
      * Check whether the column with given column name can have the given name.
      * @param   columnName
      *          The name of the column of which the given name should be checked.
-     * @param   name
+     *
      *          The name to be checked
      * @return
      * @throws  IllegalColumnException
