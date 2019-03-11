@@ -12,6 +12,61 @@ public class StringColumn extends Column {
 
 
     /**
+     * Checks whether this column could have the given type as his type.
+     *
+     * @param   type
+     *          The type to be checked.
+     * @return  True if the given type is String,
+     *              if the type is Boolean then result is true only if
+     *                  all the values of this column are "True", "False" or "" (if blanks are allowed)
+     *              if the type is Integer then result is true only if
+     *                  all the values of this column are integers or "" (if blanks are allowed)
+     *              if the type is Email then result is true only if
+     *                  all the values of this column contain exact one "@" or are "" (if blanks are allowed)
+     *          | if (
+     */
+    @Override
+    public boolean canHaveAsType(String type) {
+        boolean result = false;
+        switch (type) {
+            case "String":
+                result = true;
+                break;
+            case "Boolean":
+                if (getDefaultValue().equals("True") ||
+                        getDefaultValue().equals("False") ||
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
+                    for (int i = 1; i <= getNbValues(); i++) {
+                        if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
+                            result = !isBlanksAllowed() || getValueAt(i).equals("");
+                        } else result = true;
+                    }
+                break;
+            case "Integer":
+                if (IntegerColumn.isInteger(getDefaultValue()) ||
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
+                    for (int i = 1; i <= getNbValues(); i++) {
+                        if (IntegerColumn.isInteger(getValueAt(i))) {
+                            result = !isBlanksAllowed() || getValueAt(i).equals("");
+                        }
+                        else result = true;
+                    }
+                break;
+            case "Email":
+                if (EmailColumn.isEmail(getDefaultValue()) ||
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
+                    for (int i = 1; i <= getNbValues(); i++) {
+                        if (EmailColumn.isEmail(getValueAt(i))) {
+                            result = !isBlanksAllowed() || getValueAt(i).equals("");
+                        }
+                        else result = true;
+                    }
+                break;
+        }
+        return result;
+    }
+
+    /**
      * Initialize this new string column with given name, given number of values, given default value and
      *  given blanks allowed.
      *

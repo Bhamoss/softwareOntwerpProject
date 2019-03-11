@@ -64,8 +64,10 @@ public class IntegerColumn extends Column {
             for (int i = 1; i <= getNbValues(); i++) {
                 if (!getValueAt(i).equals("0") && !getValueAt(i).equals("1")) {
                     result = !isBlanksAllowed() || getValueAt(i).equals("");
+                    if (!result) {
+                        break;
+                    }
                 }
-                else result = true;
             }
             return result;
         }

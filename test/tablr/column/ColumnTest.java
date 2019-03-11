@@ -24,6 +24,7 @@ class ColumnTest {
     void tearDown() {
     }
 
+
     @Test
     void getName() {
         assertEquals("booleanColumn10", boolColumn10.getName());
@@ -43,6 +44,32 @@ class ColumnTest {
     @Test
     void setName_IllegalCase_emptyString() throws IllegalArgumentException {
         assertThrows(IllegalArgumentException.class, () -> boolColumn10.setName(""));
+    }
+
+    @Test
+    void canHaveAsType() {
+        assertTrue(boolColumn10.canHaveAsType("String"));
+        assertTrue(boolColumn10.canHaveAsType("Boolean"));
+        assertTrue(boolColumn10.canHaveAsType("Integer"));
+        assertFalse(boolColumn10.canHaveAsType("Email"));
+
+        assertTrue(emailColumnEmptyDV.canHaveAsType("Email"));
+        assertTrue(emailColumnEmptyDV.canHaveAsType("String"));
+        assertFalse(emailColumnEmptyDV.canHaveAsType("Integer"));
+        assertFalse(emailColumnEmptyDV.canHaveAsType("Boolean"));
+
+        assertTrue(intColumnNoBlanks.canHaveAsType("Integer"));
+        assertTrue(intColumnNoBlanks.canHaveAsType("String"));
+        assertFalse(intColumnNoBlanks.canHaveAsType("Boolean"));
+        Column c = new IntegerColumn("columnTest", 10, "0", false);
+        assertTrue(c.canHaveAsType("Boolean"));
+        c.setValueAt(5, "1");
+        assertTrue(c.canHaveAsType("Boolean"));
+        c.setBlanksAllowed(true);
+        c.setValueAt(7, "");
+        assertTrue(c.canHaveAsType("Boolean"));
+
+        //TODO: tests voor stringColumn canHaveAsType
     }
 
     @Test
@@ -159,7 +186,7 @@ class ColumnTest {
 
     @Test
     void removeCellAt_LegalCase() throws IndexOutOfBoundsException {
-        boolColumn10.removeCellAt(5);
+        boolColumn10.removeValueAt(5);
         assertEquals(9, boolColumn10.getNbValues());
     }
 

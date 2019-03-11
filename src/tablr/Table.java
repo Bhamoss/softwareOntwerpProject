@@ -22,6 +22,22 @@ import java.util.List;
  */
 public class Table {
 
+    /**
+     *
+     * @param   name
+     *          The name this table will have.
+     *
+     * @throws  IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
+     *  | if(!isValidName(name) throw IllegalArgumentException
+     */
+    @Raw
+    public Table(String name) throws IllegalArgumentException{
+        setName(name);
+
+        // deze lijjn is nodig omdat je alles moet initialiseren.
+        this.columns = new ArrayList<Column>();
+    }
+
 /*
 ************************************************************************************************************************
 *                                                       Name
@@ -638,20 +654,26 @@ public class Table {
             throw new IllegalArgumentException();
         Column column = getColumn(columnName);
         Column newColumn;
-        if ("String".equals(type)) {
-            newColumn = new StringColumn(column.getName(), column.getNbValues(),
-                    column.getDefaultValue(), column.isBlanksAllowed());
-        } else if ("Email".equals(type)) {
-            newColumn = new EmailColumn(column.getName(), column.getNbValues(),
-                    column.getDefaultValue(), column.isBlanksAllowed());
-        } else if ("Boolean".equals(type)) {
-            newColumn = new BooleanColumn(column.getName(), column.getNbValues(),
-                    column.getDefaultValue(), column.isBlanksAllowed());
-        } else if ("Integer".equals(type)) {
-            newColumn = new IntegerColumn(column.getName(), column.getNbValues(),
-                    column.getDefaultValue(), column.isBlanksAllowed());
-        } else
-            throw new IllegalArgumentException();
+        switch (type) {
+            case "String":
+                newColumn = new StringColumn(column.getName(), column.getNbValues(),
+                        column.getDefaultValue(), column.isBlanksAllowed());
+                break;
+            case "Email":
+                newColumn = new EmailColumn(column.getName(), column.getNbValues(),
+                        column.getDefaultValue(), column.isBlanksAllowed());
+                break;
+            case "Boolean":
+                newColumn = new BooleanColumn(column.getName(), column.getNbValues(),
+                        column.getDefaultValue(), column.isBlanksAllowed());
+                break;
+            case "Integer":
+                newColumn = new IntegerColumn(column.getName(), column.getNbValues(),
+                        column.getDefaultValue(), column.isBlanksAllowed());
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
         for (int i = 1; i <= column.getNbValues(); i++){
             newColumn.setValueAt(i, column.getValueAt(i));
         }
@@ -747,25 +769,6 @@ public class Table {
  ************************************************************************************************************************
  */
 
-    /**
-     * Change the possibility of using blanks or not
-     *
-     * @param   column
-     *          The column of which the blanks must be changed.
-     * @effect  The blanks of the given column are changed.
-     *          | getColumn(column).changeBlanks()
-     * @throws  IllegalColumnException
-     *          The given column doesn't exists in this table.
-     *          | !isAlreadyUsedColumnName(column)
-     */
-    public void changeColumnBlanks(String column)
-            throws IllegalColumnException {
-        // check of deze column wel in de table zit
-        if (!isAlreadyUsedColumnName(column))
-            throw new IllegalColumnException();
-        //getColumn(column).changeBlanks(); //TODO: verder aanvullen MICHIEL J
-    }
-
 
     /**
      * Returns the blanks allowed of the column in this table with the given column name.
@@ -790,17 +793,20 @@ public class Table {
     /**
      * Check whether the column with given column name can have the given name.
      * @param   columnName
-     *          The name of the column of which the given name should be checked.
-     *
-     *          The name to be checked
-     * @return
+     *          The name of the column of which the given blanks allowed should be checked.
+     * @param   blanksAllowed
+     *          The blanks allowed to be checked.
+     * @return  Returns whether this column can have the given blanks allowed.
      * @throws  IllegalColumnException
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
-    public boolean canHaveAsColumnAllowBlanks(String columnName /*, boolean blanksAllowed*/) throws IllegalColumnException
+    public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanksAllowed)
+            throws IllegalColumnException
     {
-        return false; //TODO: na verduidelijking van thomas
+        if (!isAlreadyUsedColumnName(columnName))
+            throw new IllegalColumnException();
+        return getColumn(columnName).canHaveBlanksAllowed(blanksAllowed);
     }
 
     /**
@@ -878,20 +884,7 @@ public class Table {
 
 
 
-    /**
-     *
-     * @param name the name this table will have.
-     *
-     * @throws IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
-     *  | if(!isValidName(name) throw IllegalArgumentException
-     */
-    @Raw
-    public Table(String name) throws IllegalArgumentException{
-        setName(name);
 
-        // deze lijjn is nodig omdat je alles moet initialiseren.
-        this.columns = new ArrayList<Column>();
-    }
 
 
 

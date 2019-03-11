@@ -159,7 +159,7 @@ public abstract class Column {
      *          | if ( !blanksAllowed && isValueBlank(getDefaultValue()))
      *          |   then result == false
      */
-    private boolean canHaveBlanksAllowed(boolean blanksAllowed)
+    public boolean canHaveBlanksAllowed(boolean blanksAllowed)
     {
         if (!blanksAllowed) {
             if (isValueBlank(getDefaultValue()))
