@@ -5,14 +5,17 @@ import java.awt.*;
 public class Widget {
 
     private int x, y, width, height;
-    private boolean border;
+    private final boolean border;
 
     public Widget(int x, int y, int width, int height, boolean border) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        setPosition(x,y);
+        setWidth(width);
+        setHeight(height);
         this.border = border;
+    }
+
+    public Widget(int width, int height, boolean border) {
+        this(0,0,width,height,border);
     }
 
     public int getX() {
@@ -31,6 +34,19 @@ public class Widget {
         return  height;
     }
 
+    protected void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    protected void setWidth(int w) {
+        this.width = w;
+    }
+
+    protected void setHeight(int h) {
+        this.height = h;
+    }
+
     /**
      * Paints screen.
      *
@@ -38,6 +54,7 @@ public class Widget {
      *          methods that allow you to paint on the canvas
      */
     public void paint(Graphics g) {
+        g.setClip(x,y,width+1,height+1);
         if (border)
             g.drawRect(x, y, width, height);
     }

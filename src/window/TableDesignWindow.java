@@ -34,7 +34,7 @@ public class TableDesignWindow{
                 }
             }));//empty
             x +=25;
-
+            /*
             layout.add(new EditorWidget(x,y,80,25,true, columnName, (String string) -> tableDesignHandler.canHaveAsColumnName(columnName,string),(String string) -> tableDesignHandler.setColumnName(columnName,string)));//edit name
             x +=80;
             ButtonWidget typeButton = new ButtonWidget(x,y,80,25,true,tableDesignHandler.getColumnType(columnName).getName());
@@ -49,7 +49,7 @@ public class TableDesignWindow{
 
                 }});
             layout.add(typeButton);
-
+            */
             x +=80;
             layout.add(new CheckBoxWidget(x,y,(Boolean bool)->tableDesignHandler.setColumnAllowBlanks(columnName,bool),(bool) ->tableDesignHandler.canHaveAsColumnAllowBlanks(columnName)));//TODO correcte canHaveAs
             x +=25;

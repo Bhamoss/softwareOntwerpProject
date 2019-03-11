@@ -8,11 +8,7 @@ import java.util.function.Function;
 public class CheckBoxWidget extends Widget {
 
     private boolean checked;
-    private int x;
 
-    private  int y;
-
-    private boolean blocked;
     private Consumer<Boolean> toggleHandler;
 
     public Consumer<Boolean> getToggleHandler(){
@@ -20,11 +16,8 @@ public class CheckBoxWidget extends Widget {
     }
     private Function<Boolean, Boolean> isValidToggle;
 
-    public Function<Boolean, Boolean> getIsValidToggle(){
-        return isValidToggle;
-    }
 
-    private static int SIZE = 15;
+    private static int SIZE = 25;
 
 
     /**
@@ -38,11 +31,12 @@ public class CheckBoxWidget extends Widget {
     public CheckBoxWidget(int x, int y, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
         this.checked = false;
-        this.x = x;
-        this.y = y;
         this.toggleHandler = toggleHandler;
         this.isValidToggle = isValidToggle;
-        this.blocked = false;
+    }
+
+    public CheckBoxWidget(Consumer<Boolean> toggleHandler) {
+        this(0,0,toggleHandler,(Boolean b) -> true);
     }
 
 
@@ -51,31 +45,21 @@ public class CheckBoxWidget extends Widget {
     }
 
     public void setChecked(boolean checked) {
+        getToggleHandler().accept(isChecked());
         this.checked = checked;
-        if(getIsValidToggle().apply(isChecked())) {
-            setBlocking(false);
-            getToggleHandler().accept(isChecked());
-
-        }
-        else
-            setBlocking(true);
     }
 
-    @Override
-    public boolean isBlocking() {
-        return blocked;
+    public void forceUncheck() {
+        this.checked = false;
     }
 
-    private void setBlocking(boolean b) {
-        blocked = b;
-    }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         if (isChecked()) {
-            g.drawLine(x,y,x+SIZE, y+SIZE);
-            g.drawLine(x,y+SIZE,x+SIZE, y);
+            g.drawLine(getX(),getY(),getX()+SIZE, getY()+SIZE);
+            g.drawLine(getX(),getY()+SIZE,getX()+SIZE, getY());
         }
     }
 

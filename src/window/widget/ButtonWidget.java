@@ -13,10 +13,15 @@ public class ButtonWidget extends LabelWidget {
         this.onClick = onClick;
     }
 
+    public ButtonWidget(boolean border, String text, Consumer<Integer> onClick) {
+        this(0,0,0,25,border,text,onClick);
+    }
+
     public ButtonWidget(int x, int y, int width, int height, boolean border, String text) {
         this(x, y, width, height, border, text, (integer) -> {});
     }
 
+    //TODO: remove?
     public void setOnClick(Consumer<Integer> onClick) {
         this.onClick = onClick;
     }

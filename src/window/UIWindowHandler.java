@@ -2,14 +2,11 @@ package window;
 
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
-import tablr.TableManager;
 import tablr.TableRowsHandler;
 import window.widget.Widget;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 
 /**
  * A class representing the UI handler.
@@ -37,7 +34,10 @@ public class UIWindowHandler extends CanvasWindow{
         tableHandler.addTable();
         tableHandler.addTable();
         tableHandler.addTable();
-        loadTablesWindow();
+
+        tableModeWidth = 80;
+
+
     }
     /**
      * Creates a new UI window with given tableDesignWindow, tablesWindow, tableRowsWindow and tableManager.
@@ -117,32 +117,28 @@ public class UIWindowHandler extends CanvasWindow{
         return selectedItem;
     }
 
-    private Consumer<String> onDelete;
+    int tableModeWidth;
 
-    public Consumer<String> getOnDelete() {
-        return onDelete;
-    }
-
-    private void setOnDelete(Consumer<String> onDelete){
-        this.onDelete = onDelete;
+    public void setTableModeWidth(int n) {
+        tableModeWidth = n;
     }
 
     public void loadTablesWindow(){
-        setWidgets(tablesWindow.getLayout(tableHandler));
-        setOnDelete((String tableName) -> tableHandler.removeTable(tableName));
+        super.setTitle("Tablr - Tables");
+        setWidgets(tablesWindow.getLayout(tableHandler, tableModeWidth));
         changeSelectedItem(null);
     }
 
 
     public void loadTableDesignWindow(String tableName){
+        super.setTitle("Tablr - Designing \""+ tableName + "\"");
         setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
-        setOnDelete((String columnName) -> tableDesignHandler.removeColumn(columnName));
         changeSelectedItem(null);
     }
 
     public void loadTableRowsWindow(String tableName){
+        super.setTitle("Tablr - Editing \""+ tableName + "\"");
         setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
-        setOnDelete((String rowNumber) -> tableRowsHandler.removeRow(Integer.parseInt(rowNumber)));
         changeSelectedItem(null);
     }
 
@@ -173,9 +169,6 @@ public class UIWindowHandler extends CanvasWindow{
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         boolean paintflag = false;
-        if (keyCode == KeyEvent.VK_DELETE && getSelectedItem() != null){
-            getOnDelete().accept(getSelectedItem());
-        }
         for(Widget w : getWidgets()) {
             paintflag |= w.handleKeyEvent(id, keyCode, keyChar);
         }

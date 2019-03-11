@@ -2,10 +2,9 @@ package window;
 
 import tablr.TableHandler;
 import tablr.TableManager;
-import window.widget.ButtonWidget;
-import window.widget.EditorWidget;
-import window.widget.Widget;
+import window.widget.*;
 
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class TablesWindow {
     }
 
     private final UIWindowHandler uiWindowHandler;
+    private LinkedList<CheckBoxWidget> checkBoxes;
 
     public UIWindowHandler getUIWindowController() {
         return uiWindowHandler;
@@ -34,53 +34,81 @@ public class TablesWindow {
      * @param tableHandler handle to the backend
      * @return list of all widgets needed in table mode
      */
-    public LinkedList<Widget> getLayout(TableHandler tableHandler){
-        LinkedList<Widget> layout = new LinkedList<>();
-        int y = 10;
+    public LinkedList<Widget> getLayout(TableHandler tableHandler, int tableWidth){
+        LinkedList<Widget> layout = new LinkedList();
+        checkBoxes = new LinkedList();
+        ColumnWidget tablesColumn = new ColumnWidget(45, 10, tableWidth, 500, "Tables", true);
+        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S", false);
+        ColumnWidget openingColumn = new ColumnWidget(45,10, tableWidth, 500, "", true);
 
         for(String tableName : tableHandler.getTableNames()){
             // Create the editor window
             EditorWidget editor = new EditorWidget(
-                    45, y, 80, 25, true, tableName,
+                    true, tableName,
                     (String oldName, String newName) -> tableHandler.canHaveAsName(oldName,newName),
                     (String oldName, String newName) -> tableHandler.setTableName(oldName,newName)
             );
-            layout.add(editor);
+            tablesColumn.addWidget(editor);
 
             // Create a button left of the editor to select it
-            ButtonWidget selectButton = new ButtonWidget(
-                    20,y,25,25,true, "",
-                    (Integer clickCount) ->{
-                        if(clickCount == 1)
-                            getUIWindowController().changeSelectedItem(editor.getText());
+            CheckBoxWidget selectButton = new CheckBoxWidget(
+                    (Boolean toggle) ->{
+                        unselectAllBoxes();
+                        getUIWindowController().changeSelectedItem(editor.getStoredText());
             });
-            layout.add(selectButton);
+            selectedColumn.addWidget(selectButton);
+            checkBoxes.add(selectButton);
 
             // Create a button ontop of the editor to handle double-clicks
             ButtonWidget openButton = new ButtonWidget(
-                    45,y,80,25,false,"",
+                    false,"",
                     (Integer clickCount) ->{
                         if(clickCount == 2) {
-                            tableHandler.openTable(editor.getText());
-                            if (tableHandler.isTableEmpty(editor.getText()))
-                                getUIWindowController().loadTableDesignWindow(editor.getText());
+                            tableHandler.openTable(editor.getStoredText());
+                            System.out.println("OPENING TABLE");
+                            getUIWindowController().loadTableDesignWindow(editor.getStoredText());
+                            // TODO
+                            /*
+                            if (tableHandler.isTableEmpty(editor.getStoredText()))
+                                getUIWindowController().loadTableDesignWindow(editor.getStoredText());
                             else
-                                getUIWindowController().loadTableRowsWindow(editor.getText());
+                                getUIWindowController().loadTableRowsWindow(editor.getStoredText());
+                            */
+                            getUIWindowController().repaint();
                         }
-            });
-            layout.add(openButton);
-            y += 25;
+                    });
+            openingColumn.addWidget(openButton);
+
         }
+        layout.add(tablesColumn);
+        layout.add(openingColumn);
+        layout.add(selectedColumn);
         // Create button at the buttom to add new tables
         layout.add(new ButtonWidget(
-                20,y+5,105,30,true,"Create table",
+                20,openingColumn.getY()+openingColumn.getHeight()+5,105,30,
+                true,"Create table",
                 (Integer clickCount) -> {
                     if(clickCount == 2) {
                         tableHandler.addTable();
+                        getUIWindowController().setTableModeWidth(tablesColumn.getWidth());
                         getUIWindowController().loadTablesWindow();
                     }}
                     ));
+
+        layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
+            if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null) {
+                tableHandler.removeTable(getUIWindowController().getSelectedItem());
+                return true;
+            }
+            return false;
+        }));
         return layout;
+    }
+
+    private void unselectAllBoxes() {
+        for (CheckBoxWidget w : checkBoxes) {
+            w.forceUncheck();
+        }
     }
 
 }

@@ -3,6 +3,7 @@ package window.widget;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.security.Key;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -26,8 +27,12 @@ public class EditorWidget extends LabelWidget {
         this.selected = false;
         oldText = text;
         setText(text);
-
     }
+
+    public EditorWidget(boolean border,String text, BiFunction<String, String, Boolean> isValidText, BiConsumer<String,String> pushText) {
+        this(0,0,0,25,border,text,isValidText,pushText);
+    }
+
 
 
 
@@ -37,17 +42,18 @@ public class EditorWidget extends LabelWidget {
         // background color
         if (isSelected()) {
             g.setColor(Color.lightGray);
-            g.fillRect(getX(), getY(), getWidth(), getHeight());
+            //g.fillRect(0, 0, 500, 500);
         }
 
         // red border if invalid
-        if (isBlocking())
-            g.setColor(Color.red);
-        else
-            g.setColor(Color.black);
+        g.setColor(isBlocking()? Color.red : Color.black);
 
         // text
+        if (isSelected())
+            text += "ⵊ";
         super.paint(g);
+        if (isSelected())
+            text = text.substring(0,text.length()-1);
         g.setColor(Color.black);
     }
 
@@ -89,9 +95,13 @@ public class EditorWidget extends LabelWidget {
         setBlocking(!canHaveAsText(t));
     }
 
+    public String getStoredText() {
+        return oldText;
+    }
+
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED) {
+        if (id == MouseEvent.MOUSE_CLICKED && clickCount == 1) {
             if (this.containsPoint(x,y)) {
                 setSelected();
                 return true;
@@ -112,6 +122,9 @@ public class EditorWidget extends LabelWidget {
                 setText(text.substring(0, text.length()-1));
                 return true;
             } else if (keyCode == KeyEvent.VK_ENTER) {
+                return attemptDeselect();
+            } else if (keyCode == KeyEvent.VK_ESCAPE) {
+                setText(oldText);
                 return attemptDeselect();
             }
         }
