@@ -14,7 +14,6 @@ public class CheckBoxWidget extends Widget {
     public Consumer<Boolean> getToggleHandler(){
         return toggleHandler;
     }
-    private Function<Boolean, Boolean> isValidToggle;
 
 
     private static int SIZE = 25;
@@ -28,15 +27,14 @@ public class CheckBoxWidget extends Widget {
      * @param toggleHandler function handler, called
      *                      when checkbox gets toggled
      */
-    public CheckBoxWidget(int x, int y, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
+    public CheckBoxWidget(int x, int y, Consumer<Boolean> toggleHandler) {
         super(x,y,SIZE,SIZE,true);
         this.checked = false;
         this.toggleHandler = toggleHandler;
-        this.isValidToggle = isValidToggle;
     }
 
     public CheckBoxWidget(Consumer<Boolean> toggleHandler) {
-        this(0,0,toggleHandler,(Boolean b) -> true);
+        this(0,0,toggleHandler);
     }
 
 

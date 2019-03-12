@@ -7,6 +7,7 @@ import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -69,6 +70,18 @@ public class TableDesignHandler {
     public String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
     {
         return getTableManager().getColumnType(columnName);
+    }
+
+    /**
+     * Returns the possible types for a column.
+     * @return [String, Email, Boolean, Integer]
+     *
+     * Note: order is significant (gui needs to show them in specific order)
+     */
+    public static List<String> getAvailableColumnTypes()
+    {
+        // TODO: implement
+        return new ArrayList();
     }
 
     /**

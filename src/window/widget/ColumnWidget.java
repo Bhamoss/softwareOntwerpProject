@@ -3,24 +3,32 @@ package window.widget;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
 public class ColumnWidget extends Widget {
 
     private LinkedList<Widget> widgets;
     private int occupancy;
     private boolean resizing, resizable;
+    private Consumer<Integer> onResize;
 
-    public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable) {
+    public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, Consumer<Integer> onResize) {
         super(x, y, width, height, false);
         assert(height>=25);
         widgets = new LinkedList();
         occupancy = 0;
         resizing = false;
         this.resizable = resizable;
+        this.onResize = onResize;
 
         LabelWidget topLabel = new LabelWidget(x,y,width,25,true,name);
         this.addWidget(topLabel);
     }
+
+    public ColumnWidget(int x, int y, int width, int height, String name) {
+        this(x,y,width,height,name,false,(Integer n) -> {});
+    }
+
 
     public void addWidget(Widget w) {
         if (occupancy+w.getHeight() > this.getHeight())
@@ -36,8 +44,18 @@ public class ColumnWidget extends Widget {
         if (!resizable)
             return;
         this.setWidth(x);
+        this.onResize.accept(x);
         for (Widget w: widgets) {
             w.setWidth(x);
+        }
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+        if (widgets == null) return;
+        for(Widget w: widgets) {
+            w.setX(x);
         }
     }
 

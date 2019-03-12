@@ -35,18 +35,22 @@ public class TablesWindow {
      * @return list of all widgets needed in table mode
      */
     public LinkedList<Widget> getLayout(TableHandler tableHandler, int tableWidth){
-        LinkedList<Widget> layout = new LinkedList();
-        checkBoxes = new LinkedList();
-        ColumnWidget tablesColumn = new ColumnWidget(45, 10, tableWidth, 500, "Tables", true);
-        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S", false);
-        ColumnWidget openingColumn = new ColumnWidget(45,10, tableWidth, 500, "", true);
+        LinkedList<Widget> layout = new LinkedList<>();
+        checkBoxes = new LinkedList<>();
+        ColumnWidget tablesColumn = new ColumnWidget(
+                45, 10, tableWidth, 500, "Tables", true,
+                (Integer w) -> getUIWindowController().setTableModeWidth(w));
+        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
+        ColumnWidget openingColumn = new ColumnWidget(
+                45,10, tableWidth, 500, "", true, (Integer n)->{}
+                );
 
         for(String tableName : tableHandler.getTableNames()){
             // Create the editor window
             EditorWidget editor = new EditorWidget(
                     true, tableName,
-                    (String oldName, String newName) -> tableHandler.canHaveAsName(oldName,newName),
-                    (String oldName, String newName) -> tableHandler.setTableName(oldName,newName)
+                    tableHandler::canHaveAsName,
+                    tableHandler::setTableName
             );
             tablesColumn.addWidget(editor);
 
@@ -65,15 +69,10 @@ public class TablesWindow {
                     (Integer clickCount) ->{
                         if(clickCount == 2) {
                             tableHandler.openTable(editor.getStoredText());
-                            System.out.println("OPENING TABLE");
-                            getUIWindowController().loadTableDesignWindow(editor.getStoredText());
-                            // TODO
-                            /*
                             if (tableHandler.isTableEmpty(editor.getStoredText()))
                                 getUIWindowController().loadTableDesignWindow(editor.getStoredText());
                             else
                                 getUIWindowController().loadTableRowsWindow(editor.getStoredText());
-                            */
                             getUIWindowController().repaint();
                         }
                     });
@@ -90,7 +89,6 @@ public class TablesWindow {
                 (Integer clickCount) -> {
                     if(clickCount == 2) {
                         tableHandler.addTable();
-                        getUIWindowController().setTableModeWidth(tablesColumn.getWidth());
                         getUIWindowController().loadTablesWindow();
                     }}
                     ));

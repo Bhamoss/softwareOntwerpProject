@@ -71,6 +71,18 @@ public class TableRowsHandler {
     }
 
 
+    /**
+     *
+     * @param columnName
+     * @return
+     * @throws IllegalColumnException
+     */
+    public int getNbRows(String columnName) throws IllegalColumnException
+    {
+        // TODO: implement
+        return 0;
+    }
+
 
     /**
      *

@@ -113,7 +113,7 @@ public abstract class Column {
     /**
      * Static final list registering all the possible types that are possible for a column.
      */
-    private static final ArrayList<String> allTypes = new ArrayList<>() {{
+    private static final ArrayList<String> allTypes = new ArrayList<String>() {{
         add("String");
         add("Email");
         add("Boolean");
