@@ -60,7 +60,7 @@ public class Table {
      * @return  False if the name is null or empty
      *          | return name == null || name.equals("")
      */
-    public boolean isValidName(String name)
+    public static boolean isValidName(String name)
     {
         return name != null && !name.equals("");
     }
