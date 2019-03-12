@@ -6,6 +6,7 @@ import tablr.TableRowsHandler;
 import window.widget.Widget;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -29,11 +30,16 @@ public class UIWindowHandler extends CanvasWindow{
         this.tablesWindow = new TablesWindow(this);
         this.tableRowsWindow = new TableRowsWindow(this);
 
+        tableDesignWidths = new HashMap();
+
         this.selectedItem = null;
         tableHandler.addTable();
         tableHandler.addTable();
         tableHandler.addTable();
         tableHandler.addTable();
+
+        tableHandler.openTable("Table1");
+        tableDesignHandler.addColumn();
 
         tableModeWidth = 80;
 
@@ -123,16 +129,18 @@ public class UIWindowHandler extends CanvasWindow{
         tableModeWidth = n;
     }
 
+
     public void loadTablesWindow(){
         super.setTitle("Tablr - Tables");
         setWidgets(tablesWindow.getLayout(tableHandler, tableModeWidth));
         changeSelectedItem(null);
     }
 
+    HashMap<String, Integer> tableDesignWidths;
 
     public void loadTableDesignWindow(String tableName){
         super.setTitle("Tablr - Designing \""+ tableName + "\"");
-        setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
+        setWidgets(tableDesignWindow.getLayout(tableDesignHandler, tableDesignWidths.getOrDefault(tableName, 80)));
         changeSelectedItem(null);
     }
 
