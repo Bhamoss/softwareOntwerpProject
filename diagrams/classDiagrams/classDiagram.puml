@@ -107,7 +107,7 @@ package "tablr" {
         getColumnDefaultValue(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
         canHaveAsColumnName(columnName : String, newName : String) : boolean {exception IllegalColumnException, IllegalTableException}
         canHaveAsColumnType(columnName : String, type : String) : boolean {exception IllegalColumnException, IllegalTableException}
-        canHaveAsColumnAllowBlanks(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+        canHaveAsColumnAllowBlanks(columnName : String, blanks : boolean) : boolean {exception IllegalColumnException, IllegalTableException}
         canHaveAsDefaultValue(columnName : String, newDefaultValue : String) : boolean {exception IllegalColumnException, IllegalTableException}
         isTerminated() : boolean
         - canHaveAsTableManager(tableManager : TableManager) : boolean
@@ -165,7 +165,7 @@ package "tablr" {
         ~ getColumnDefaultValue(columnName : String) : String {exception IllegalColumnException, IllegalTableException}
         ~ canHaveAsColumnName(columnName : String, newName : String) : boolean {exception IllegalColumnException, IllegalTableException}
         ~ canHaveAsColumnType(columnName : String, type : String) : boolean {exception IllegalColumnException, IllegalTableException}
-        ~ canHaveAsColumnAllowBlanks(columnName : String) : boolean {exception IllegalColumnException, IllegalTableException}
+        ~ canHaveAsColumnAllowBlanks(columnName : String, blanks : boolean) : boolean {exception IllegalColumnException, IllegalTableException}
         ~ canHaveAsDefaultValue(columnName : String, newDefaultValue : String) : boolean {exception IllegalColumnException, IllegalTableException}
         ~ getCellValue(columnName : String, Row : int) : String {exception IllegalColumnException, IllegalRowException, IllegalTableException}
         ~ canHaveAsCellValue(columnName : String, row : int, value : String) : boolean {exception IllegalColumnException, IllegalRowException, IllegalTableException}

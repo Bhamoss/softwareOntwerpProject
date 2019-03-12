@@ -137,15 +137,16 @@ public class TableDesignHandler {
     /**
      *
      * @param columnName
+     * @param blanks
      * @return
      * @throws IllegalColumnException
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnAllowBlanks(columnName);
+        return getTableManager().canHaveAsColumnAllowBlanks(columnName, blanks);
     }
 
     /**

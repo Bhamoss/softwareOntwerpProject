@@ -63,19 +63,15 @@ public class TableManager {
      * @param name
      *      The name of the table to check.
      *
-     * @return if this is not terminated, true if the name of there is a table with the name name, otherwise false.
-     *  | if(!isTerminated){
+     * @return  true if the name of there is a table with the name name, otherwise false.
      *  |return = false
      *  |for(table in table){
      *  |     if(table.getName() ==  name) {return = true;}
-     *  |}}
+     *  |}
      *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      */
-    boolean hasAsTable(String name) throws TerminatedException
+    boolean hasAsTable(String name)
     {
-        if (isTerminated()) {throw new TerminatedException();}
         for (Table table: tables)
         {
             if(table.getName().equals(name)){ return true;}
@@ -87,18 +83,13 @@ public class TableManager {
      *
      * Get the names of the tables.
      *
-     * @return if this is not terminated, a list containing the names of the tables.
-     * | if(!isTerminated()){
+     * @return a list containing the names of the tables.
      * | return == ArrayList<String>
      * | && ∀table in tables: ∃! i: ArrayList<String>.get(i).equals(table.getName())
-     * |}
      *
-     * @throws TerminatedException if this is terminated.
-     * | isTerminated()
      */
-    ArrayList<String> getTableNames() throws TerminatedException
+    ArrayList<String> getTableNames()
     {
-        if(isTerminated()){throw new TerminatedException();}
         ArrayList<String> list = new ArrayList<String>();
         for(Table table: tables)
         {
@@ -115,21 +106,17 @@ public class TableManager {
      * @param newTableName
      *  the name you want to check on.
      *
-     * @return of this is not terminated, true if the table with tableName exist, no other table has that name and the name is valid.
-     *  | if(!isTerminated()):
+     * @return true if the table with tableName exist, no other table has that name and the name is valid.
      *  | if(tableName in getTableNames()) {result == (tableName == newTableName
      *  | || (newTableName not in getTableName() && Table.isValidName(newTableName)))}
      *
      * @throws IllegalTableException if the table with that tableName does not exist.
      *  | ∀strings in getTableNames(): strings != tableName
      *
-     * @throws TerminatedException if this is terminated.
-     * | isTerminated()
      */
     @Model
-    boolean canHaveAsName(String tableName, String newTableName) throws IllegalTableException
+    boolean canHaveAsName(String tableName, String newTableName)
     {
-        if(isTerminated()){throw new TerminatedException();}
         if(!hasAsTable(tableName)){throw new IllegalTableException();}
         Table t = getTable(tableName);
 
@@ -355,10 +342,10 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    boolean canHaveAsColumnAllowBlanks(String columnName) throws IllegalColumnException, IllegalTableException
+    boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
-        return getCurrentTable().canHaveAsColumnAllowBlanks(columnName);
+        return getCurrentTable().canHaveAsColumnAllowBlanks(columnName, blanks);
     }
 
     /**
@@ -590,18 +577,13 @@ public class TableManager {
      * @param table
      *  The table to be checked.
      *
-     * @return if this is not terminated, true if the table is in tables, false otherwise.
-     *  | if(!isTerminated()){
+     * @return true if the table is in tables, false otherwise.
      *  | return == (∃t in tables: t == table)
-     *  |}
      *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      */
     @Model
     private boolean hasAsTable(Table table)
     {
-        if (isTerminated()) {throw new TerminatedException();}
         for (Table t: tables)
         {
             if (t == table) {return true;}
@@ -617,17 +599,14 @@ public class TableManager {
      *
      * @return
      * if the index is not larger then the number tables and the index is strictly positive,
-     * and this is not terminated, the table.
-     *  | if(index <= getNbTables() && index >0 && !isTerminated() ) {return ==  tables[index-1]}
+     * the table.
+     *  | if(index <= getNbTables() && index >0 ) {return ==  tables[index-1]}
      *
      * @throws IllegalArgumentException if index is larger than the amount of tables or smaller then 1.
      *  | if(index > getNbTables() || index < 1)
-     * @throws TerminatedException
-     *  | isTerminated()
      */
     private Table getTableAt(int index) throws IllegalArgumentException
     {
-        if (isTerminated()) {throw new TerminatedException();}
         if (index > getNbTables() || index < 1) {throw new IllegalArgumentException("Index table out of bounds");}
         return tables.get(index);
     }
@@ -691,12 +670,10 @@ public class TableManager {
      * @return
      *  true if the table is not null and there is no other table with the same name
      *  and the table is not in tables already
-     *  and the table is not terminated and this is not terminated.
      *  and index is greater then 0 and smaller then the amount
      *  of tables + 1, false otherwise.
      *  | return == (
      *  |   table != null &&
-     *  |   !table.isTerminated() && !isTerminated
      *  |   for(tableY in tables) { tableY.getName() != table.getName() }
      *  |   && index > 0
      *  |   && index <= getNbTables() + 1
@@ -707,7 +684,7 @@ public class TableManager {
     private boolean canHaveAsTableAt(int index,Table table)
     {
         if (index < 1 || index > getNbTables() + 1) {return false;}
-        if (table == null || table.isTerminated() || isTerminated())
+        if (table == null)
         {
            return false;
         }
@@ -727,18 +704,14 @@ public class TableManager {
      * @param table the table to be checked.
      *
      * @return the index of the table if the table is in tables.
-     *  | if(hasAsTable(table) && !isTerminated()) return == i:getTableAt(i) == table
+     *  | if(hasAsTable(table)) return == i:getTableAt(i) == table
      *
      * @throws IllegalArgumentException if the table is not in tables.
      *  | !hasAsTable(table)
      *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      */
     private int getTableIndex(Table table) throws IllegalArgumentException
     {
-
-        if (isTerminated()) {throw new TerminatedException();}
         if(!hasAsTable(table)) throw new IllegalArgumentException("table is not in tables");
         for (int i = 1; i < getNbTables(); i++) {
             if (getTableAt(i) == table) {return i;}
@@ -754,7 +727,6 @@ public class TableManager {
      */
     private boolean hasProperTables()
     {
-        //TODO; wat doen met isTerminated hier?
         for (int i = 1; i < getNbTables(); i++) {
             if(!canHaveAsTableAt(i,getTableAt(i))) {return false;}
         }
@@ -770,20 +742,16 @@ public class TableManager {
      * @param table the table to add
      *
      * @post if the table is is valid at that index, the table is inserted and all other tables get an index higher
-     *  | if(canHaveAsTableAt(index, table) && !isTerminated()):
+     *  | if(canHaveAsTableAt(index, table)):
      *  | table == getTableAt(index)
      *  | && ∀i: getNbTables() >= i > index: old.getTableAt(i) == new.getTableAt(i+1)
      *
      *
      * @throws IllegalArgumentException if the table is not valid at that index.
      *  | !canHaveAsTableAt(index,table)
-     *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      */
     private void addTableAt(int index, Table table) throws IllegalArgumentException
     {
-        if (isTerminated()) {throw new TerminatedException();}
         if(!canHaveAsTableAt(index, table)) throw new IllegalArgumentException("The table cannot be placed at that index.");
         if(index <= getNbTables()) {
             tables.add(index - 1, table);
@@ -799,10 +767,10 @@ public class TableManager {
      *
      * @param index the index of the table to be removed
      *
-     * @post if this is not terminated and the index is strictly positive and
+     * @post if the index is strictly positive and
      * not larger than the amount of tables, the table is terminated and removed
      * and if the table was the currentTable, the currentTable is set to null.
-     * | if(!isTerminated && 0 < i =< getNbTables()){
+     * | if( 0 < i =< getNbTables()){
      * |    table.isTerminated == true && hasAsTable(table) == false
      * |    if(getCurrentTable() == table){setCurrentTable(null)}
      * |}
@@ -811,13 +779,9 @@ public class TableManager {
      *  the amount of tables.
      *  | 1 > i || i > getNbTables()
      *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      */
     private void removeTableAt(int index) throws IllegalArgumentException
     {
-
-        if (isTerminated()) {throw new TerminatedException();}
         if ( 1 > index || index > getNbTables())
         {
             throw new IllegalArgumentException("Illegal index.");
@@ -842,13 +806,10 @@ public class TableManager {
      * @throws IllegalArgumentException table is not in tables.
      *  | !hasAsTable()
      *
-     * @throws TerminatedException if this is terminated.
-     *  | isTerminated()
      *
      */
-    private void removeTable(Table table) throws IllegalArgumentException, TerminatedException
+    private void removeTable(Table table) throws IllegalArgumentException
     {
-        if (isTerminated()) {throw new TerminatedException();}
         removeTableAt(getTableIndex(table));
     }
 
@@ -857,20 +818,17 @@ public class TableManager {
      *
      * @param table the table to be appended.
      *
-     * @effect if this is not terminated and table is valid for the index getNbTables + 1.
-     * | if(!isTerminated() && canHaveAsTable(table)){
+     * @effect if table is valid for the index getNbTables + 1.
+     * | if( canHaveAsTable(table)){
      * |    addTableAt(getNbTables+1, table)
      * |}
      *
      * @throws IllegalArgumentException if table is not valid for index getNbTables +1.
      * | !canHaveAsTable(table)
      *
-     * @throws TerminatedException if this is terminated.
-     * | isTerminated()
      */
     private void appendTable(Table table) throws  IllegalArgumentException
     {
-        if(isTerminated()){throw new TerminatedException();}
         if(!canHaveAsTable(table)){throw new IllegalArgumentException("Invalid table");}
         addTableAt(getNbTables() + 1, table);
     }
@@ -881,20 +839,17 @@ public class TableManager {
      *
      * @param table the table to be inserted in the front.
      *
-     * @effect if this is not terminated and table is valid for the index getNbTables + 1.
-     * | if(!isTerminated() && canHaveAsTable(table)){
+     * @effect if table is valid for the index getNbTables + 1.
+     * | if(canHaveAsTable(table)){
      * |    addTableAt(1, table)
      * |}
      *
      * @throws IllegalArgumentException if table is not valid for index getNbTables +1.
      * | !canHaveAsTable(table)
      *
-     * @throws TerminatedException if this is terminated.
-     * | isTerminated()
      */
     private void insertAtFrontTable(Table table) throws  IllegalArgumentException
     {
-        if(isTerminated()){throw new TerminatedException();}
         if(!canHaveAsTable(table)){throw new IllegalArgumentException("Invalid table");}
         addTableAt(1, table);
     }
