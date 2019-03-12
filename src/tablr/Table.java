@@ -272,7 +272,7 @@ public class Table {
      *          the index exceeds the number of columns in this table
      *          | ( index < 1 || index > getNbColumns() )
      */
-    private Column getColumnAt(int index) throws IndexOutOfBoundsException {
+    public Column getColumnAt(int index) throws IndexOutOfBoundsException {
         return columns.get(index - 1);
     }
 
@@ -608,8 +608,8 @@ public class Table {
      * Returns the column name of the column at the given index.
      */
     public String getColumnName(int index) throws IndexOutOfBoundsException {
-        if (index < 1 || index > getNbColumns())
-            throw new IndexOutOfBoundsException();
+        if (index < 1 || index > getNbColumns() + 1)
+            throw new IndexOutOfBoundsException(index);
         return getColumnAt(index).getName();
     }
 
@@ -684,8 +684,36 @@ public class Table {
                 throw new IllegalArgumentException();
         }
         for (int i = 1; i <= column.getNbValues(); i++){
-            newColumn.setValueAt(i, column.getValueAt(i));
+            if (type.equals("Boolean") && column.getType().equals("Integer")) {
+                switch (column.getValueAt(i)) {
+                    case "0":
+                        newColumn.setValueAt(i, "False");
+                        break;
+                    case "1":
+                        newColumn.setValueAt(i, "True");
+                        break;
+                    case "":
+                        newColumn.setValueAt(i, "");
+                        break;
+                }
+            }
+            else if (type.equals("Integer") && column.getType().equals("Boolean")){
+                switch (column.getValueAt(i)) {
+                    case "True":
+                        newColumn.setValueAt(i, "1");
+                        break;
+                    case "False":
+                        newColumn.setValueAt(i, "0");
+                        break;
+                    case "":
+                        newColumn.setValueAt(i, "");
+                        break;
+                }
+            } else {
+                newColumn.setValueAt(i, column.getValueAt(i));
+            }
         }
+
         setColumnAt(getColumnIndex(columnName), newColumn);
     }
 

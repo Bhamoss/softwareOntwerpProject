@@ -20,10 +20,10 @@ class TableTest {
     void setUp() {
         emptyTable = new Table("Table0");
         tenTable = new Table("Table10");
-        for (int i = 1; 1 <= 10; i++)
+        for (int i = 1; i <= 10; i++)
             tenTable.addColumn();
-        //for (int i = 1; 1 <= 10; i++)
-        //    tenTable.addRow();
+        for (int i = 1; i <= 10; i++)
+            tenTable.addRow();
 
     }
 
@@ -61,17 +61,18 @@ class TableTest {
     @Test
     void addRow() {
         tenTable.addRow();
-        for (int i = 1; i <= tenTable.getNbColumns(); i++)
-            for (int j = 1; j <= tenTable.getNbRows(); i++)
-                assertEquals("", tenTable.getCellValue(tenTable.getColumnName(i), j));
         assertEquals(11, tenTable.getNbRows());
+        assertEquals(11, tenTable.getColumnAt(10).getNbValues());
+        for (int i = 1; i <= tenTable.getNbColumns(); i++)
+            for (int j = 1; j <= tenTable.getNbRows(); j++)
+                assertEquals("", tenTable.getCellValue(tenTable.getColumnName(i), j));
     }
 
     @Test
     void removeRow() {
         tenTable.removeRow(7);
         assertEquals(9, tenTable.getNbRows());
-        //assertThrows(IllegalRowException.class, () -> emptyTable.removeRow());
+        assertThrows(IllegalRowException.class, () -> emptyTable.removeRow(1));
     }
 
     @Test

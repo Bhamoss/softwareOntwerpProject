@@ -60,19 +60,16 @@ public class IntegerColumn extends Column {
         if (type.equals("Integer") || type.equals("String"))
             return true;
         else if (type.equals("Boolean")) {
-            boolean result = true;
             for (int i = 1; i <= getNbValues(); i++) {
-                if (!getValueAt(i).equals("0") && !getValueAt(i).equals("1")) {
-                    result = !isBlanksAllowed() || getValueAt(i).equals("");
-                    if (!result) {
-                        break;
-                    }
+                if (!getValueAt(i).equals("0") && !getValueAt(i).equals("1") && !getValueAt(i).equals("")) {
+                    return false;
                 }
             }
-            return result;
+            return true;
         }
         return false;
     }
+
 
     /**
      * Check whether this integer column can have the given value as one of its values
@@ -106,7 +103,8 @@ public class IntegerColumn extends Column {
      */
     public static boolean isInteger(String value) {
         try {
-            Integer.parseInt(value);
+            if (!value.equals(""))
+                Integer.parseInt(value);
         } catch(NumberFormatException | NullPointerException e) {
             return false;
         }
