@@ -1,6 +1,7 @@
 package tablr.column;
 
 import be.kuleuven.cs.som.annotate.*;
+import be.kuleuven.cs.som.taglet.*;
 import tablr.IllegalColumnException;
 
 import java.util.ArrayList;

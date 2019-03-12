@@ -272,7 +272,7 @@ public class Table {
      *          the index exceeds the number of columns in this table
      *          | ( index < 1 || index > getNbColumns() )
      */
-    public Column getColumnAt(int index) throws IndexOutOfBoundsException {
+    private Column getColumnAt(int index) throws IndexOutOfBoundsException {
         return columns.get(index - 1);
     }
 
@@ -434,7 +434,7 @@ public class Table {
     {
         if (!canHaveAsColumnAt(index,column))
             throw new IllegalArgumentException("Illegal index or column");
-        columns.add(index, column);
+        columns.add(index - 1, column);
     }
 
     /**
@@ -602,6 +602,15 @@ public class Table {
         if (getColumn(columnName).canHaveAsName(name))
             return isAlreadyUsedColumnName(name) && !columnName.equals(name);
         return false;
+    }
+
+    /**
+     * Returns the column name of the column at the given index.
+     */
+    public String getColumnName(int index) throws IndexOutOfBoundsException {
+        if (index < 1 || index > getNbColumns())
+            throw new IndexOutOfBoundsException();
+        return getColumnAt(index).getName();
     }
 
 

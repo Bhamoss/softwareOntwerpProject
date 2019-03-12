@@ -13,15 +13,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TableTest {
 
-    private Table testTable;
     private Table emptyTable;
     private Table tenTable;
 
     @BeforeEach
     void setUp() {
-        emptyTable = new Table(0);
-        testTable = new Table(1);
-        tenTable = new Table(2);
+        emptyTable = new Table("Table0");
+        tenTable = new Table("Table10");
+        for (int i = 1; 1 <= 10; i++)
+            tenTable.addColumn();
+        for (int i = 1; 1 <= 10; i++)
+            tenTable.addRow();
+
     }
 
     @AfterEach
@@ -29,144 +32,141 @@ class TableTest {
     }
 
 
-    /**
-     * CONSTRUCTOR
-     * ********************************************************************
-     * nogal overbodig als je naar usecase 1 kijkt ;)
-     */
-
-//    @Test
-//    @DisplayName("Create table with null name")
-//    void createTableNameNull() {
-//        assertThrows(IllegalArgumentException.class, () -> new Table(null));
-//    }
-//
-//
-//    @Test
-//    @DisplayName("Create table with empty name")
-//    void createTableNameEmpyt() {
-//        assertThrows(IllegalArgumentException.class, () -> new Table(""));
-//    }
-
-
-    /**
-     * *********************************************************************
-     * *********************************************************************
-     *
-     *                      NAME
-     *
-     * *********************************************************************
-     * *********************************************************************
-     *
-     */
-
-
-
-    /**
-     * getName
-     * *******************************************************************
-     */
-
     @Test
-    @DisplayName("The only getName() test.")
     void getName() {
-        assertEquals("table1", testTable.getName());
-    }
-
-    /**
-     * isValidName
-     * ********************************************************************
-     */
-
-    @Test
-    @DisplayName("Is valid name success scenario")
-    void isValidNameSuccess() {
-        assertTrue(Table.isValidName("newName"));
+        assertEquals("Table10", tenTable.getName());
     }
 
     @Test
-    @DisplayName("Is valid name null scenario")
-    void isValidNameNull() {
-        assertFalse(Table.isValidName(null));
+    void isValidName() {
+        assertFalse(tenTable.isValidName(null));
+        assertFalse(tenTable.isValidName(""));
+        assertTrue(tenTable.isValidName("table"));
     }
 
     @Test
-    @DisplayName("Is valid name empty string scenario")
-    void isValidNameEmpty() {
-        assertFalse(Table.isValidName(""));
-    }
-
-    /**
-     * setName
-     * ***************************************************************************
-     */
-
-    @Test
-    @DisplayName("Succesfull case")
     void setName() {
-        testTable.setName("newName");
-        assertEquals("newName",testTable.getName());
+        tenTable.setName("table");
+        assertEquals("table", tenTable.getName());
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setName(null));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setName(""));
     }
 
     @Test
-    @DisplayName("Null pointer name")
-    void setNameToNull() {
-        assertThrows(IllegalArgumentException.class, () -> testTable.setName(null));
+    void getNbRows() {
+        assertEquals(10, tenTable.getNbRows());
+        assertEquals(0, emptyTable.getNbRows());
     }
 
     @Test
-    @DisplayName("Set name to empty string")
-    void setNameToEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> testTable.setName(""));
+    void addRow() {
+        tenTable.addRow();
+        for (int i = 1; i <= tenTable.getNbColumns(); i++)
+            for (int j = 1; j <= tenTable.getNbRows(); i++)
+                assertEquals("", tenTable.getCellValue(tenTable.getColumnName(i), j));
+        assertEquals(11, tenTable.getNbRows());
     }
-
-
-
-    /**
-     * *********************************************************************
-     * *********************************************************************
-     *
-     *                      Columns
-     *
-     * *********************************************************************
-     * *********************************************************************
-     *
-     */
-
-
-    /**
-     * setNbColumns
-     * *************************************************************************
-     */
 
     @Test
-    @DisplayName("Number of columns for empty table")
-    void getNbColumnsEmpty()
-    {
-        assertEquals(0, emptyTable.getNbColumns());
+    void removeRow() {
+        tenTable.removeRow(7);
+        assertEquals(9, tenTable.getNbRows());
+        assertThrows(IllegalRowException.class, () -> emptyTable.removeRow())
     }
-
 
     @Test
-    @DisplayName("Number of columns for empty table")
-    void getNbColumnsTen()
-    {
-        assertEquals(10, tenTable.getNbColumns());
+    void getCellValue() {
     }
 
-    /**
-     * getColumnAt
-     * ************************************************************************************
-     */
-
-
-    void getColumnAt()
-    {
-
+    @Test
+    void canHaveAsCellValue() {
     }
 
+    @Test
+    void setCellValue() {
+    }
 
+    @Test
+    void getNbColumns() {
+    }
 
+    @Test
+    void getColumnAt() {
+    }
 
+    @Test
+    void hasProperColumns() {
+    }
 
+    @Test
+    void addColumnAt() {
+    }
+
+    @Test
+    void addColumn() {
+    }
+
+    @Test
+    void removeColumnAt() {
+    }
+
+    @Test
+    void removeColumn() {
+    }
+
+    @Test
+    void getColumnNames() {
+    }
+
+    @Test
+    void setColumnName() {
+    }
+
+    @Test
+    void canHaveAsColumnName() {
+    }
+
+    @Test
+    void getColumnType() {
+    }
+
+    @Test
+    void setColumnType() {
+    }
+
+    @Test
+    void canHaveAsColumnType() {
+    }
+
+    @Test
+    void setColumnDefaultValue() {
+    }
+
+    @Test
+    void getColumnDefaultValue() {
+    }
+
+    @Test
+    void canHaveAsDefaultValue() {
+    }
+
+    @Test
+    void getColumnAllowBlank() {
+    }
+
+    @Test
+    void canHaveAsColumnAllowBlanks() {
+    }
+
+    @Test
+    void setColumnAllowBlanks() {
+    }
+
+    @Test
+    void isTerminated() {
+    }
+
+    @Test
+    void terminate() {
+    }
 }
