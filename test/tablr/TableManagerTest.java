@@ -2,23 +2,55 @@ package tablr;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TableManagerTest {
 
+    /**
+     * See the following link later to have tests display more verbose.
+     *
+     * https://junit.org/junit5/docs/current/user-guide/#writing-tests-display-name-generator
+     *
+     */
+
+    private TableManager emptyTM;
+
     @BeforeEach
     void setUp() {
+        // empty table manager
+        TableManager emptyTM = new TableManager();
     }
 
     @AfterEach
     void tearDown() {
     }
 
+    /*
+    ************************************************
+    *           boolean hasAsTable(String name)
+    ************************************************
+    */
+
     @Test
-    void hasAsTable() {
+    @DisplayName("hasAsTable(String name) true case")
+    void hasAsTableTrue() {
+        // test true case
     }
+
+    @Test
+    @DisplayName("hasAsTable(String name) false case")
+    void hasAsTableFalse() {
+        // test false case
+    }
+
+    /*
+     ************************************************
+     *           ArrayList<String> getTableNames()
+     ************************************************
+     */
 
     @Test
     void getTableNames() {

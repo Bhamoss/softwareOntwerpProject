@@ -18,7 +18,7 @@ softwareOntwerpProject/doc
 -taglet be.kuleuven.cs.som.taglet.ReturnTaglet  
 -taglet be.kuleuven.cs.som.taglet.ThrowsTaglet  
 -taglet be.kuleuven.cs.som.taglet.NoteTaglet  
--tagletpath AnnotationsDoclets.jar  
+-tagletpath *Jouw FULL pad naar*/AnnotationsDoclets.jar  
 -link http://download.oracle.com/javase/8/docs/api/  
 -link http://java.sun.com/j2se/1.4.2/docs/api  
 -Xdoclint:none  
