@@ -17,8 +17,8 @@ public class ButtonWidget extends LabelWidget {
         this(0,0,0,25,border,text,onClick);
     }
 
-    public ButtonWidget(int x, int y, int width, int height, boolean border, String text) {
-        this(x, y, width, height, border, text, (integer) -> {});
+    public ButtonWidget(boolean border, String text) {
+        this(border, text, (integer) -> {});
     }
 
     //TODO: remove?

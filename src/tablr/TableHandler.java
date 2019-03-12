@@ -104,6 +104,19 @@ public class TableHandler {
         return getTableManager().getOpenTable();
     }
 
+
+    /**
+     *
+     * @param tableName
+     * @return True if the given table has no columns, else false.
+     * @throws IllegalTableException
+     */
+    public boolean isTableEmpty(String tableName) throws IllegalTableException {
+        // TODO: implement
+        return false;
+    }
+
+
     /**
      *
      * Sets the tablename of the table with tableName to newName if there is such a table and newname is valid.

@@ -63,12 +63,12 @@ public class TableDesignWindow{
             namesColumn.addWidget(editor);
 
             // TYPE
-            /*
+
             // TODO: add custom widget?
-            ButtonWidget typeButton = new ButtonWidget(true,tableDesignHandler.getColumnType(columnName).getName());
+            ButtonWidget typeButton = new ButtonWidget(true,tableDesignHandler.getColumnType(columnName));
             typeButton.setOnClick((Integer clickCount) ->{
                 if(clickCount == 1){
-                    typeButton.setText(tableDesignHandler.getNextColumnType(columnName).toString());
+                    typeButton.setText(tableDesignHandler.getNextColumnType(typeButton.getText()).toString());
                     if(tableDesignHandler.canHaveAsColumnType(columnName,tableDesignHandler.getNextColumnType(columnName))){
 
                     }else{
@@ -77,7 +77,7 @@ public class TableDesignWindow{
 
                 }});
             typeColumn.addWidget(typeButton);
-            */
+
 
             // BLANKS ALLOWED
             //TODO correcte canHaveAs

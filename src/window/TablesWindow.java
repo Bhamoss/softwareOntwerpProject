@@ -69,14 +69,10 @@ public class TablesWindow {
                     (Integer clickCount) ->{
                         if(clickCount == 2) {
                             tableHandler.openTable(editor.getStoredText());
-                            getUIWindowController().loadTableDesignWindow(editor.getStoredText());
-                            // TODO
-                            /*
                             if (tableHandler.isTableEmpty(editor.getStoredText()))
                                 getUIWindowController().loadTableDesignWindow(editor.getStoredText());
                             else
                                 getUIWindowController().loadTableRowsWindow(editor.getStoredText());
-                            */
                             getUIWindowController().repaint();
                         }
                     });

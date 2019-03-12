@@ -72,6 +72,19 @@ public class TableDesignHandler {
     }
 
     /**
+     * Returns the next type to switch to.
+     * Order: String, Email, Boolean, Integer
+     * @param type
+     * @return
+     */
+    public static String getNextType(String type)
+    {
+        // TODO: implement
+
+        return "";
+    }
+
+    /**
      *
      * @param columnName
      * @return
