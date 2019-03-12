@@ -1,6 +1,7 @@
 package window;
 
 import sun.awt.image.ImageWatched;
+import tablr.TableDesignHandler;
 import tablr.TableRowsHandler;
 import window.widget.*;
 
@@ -25,7 +26,7 @@ public class TableRowsWindow {
         return uiWindowHandler;
     }
 
-    public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler){
+    public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler, List<Integer> columnWidths){
         LinkedList<Widget> layout = new LinkedList<>();
 
 
@@ -38,14 +39,19 @@ public class TableRowsWindow {
         ArrayList<String> columnNames = tableRowsHandler.getColumnNames();
         LinkedList<ColumnWidget> traversedColumns = new LinkedList<>();
         Collections.reverse(columnNames);
-
+        int ci = 0;
+        int nbColumns = tableRowsHandler.getColumnNames().size();
         for(String columnName : columnNames) {
             List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
-            column = new ColumnWidget(calcPos(columnName), 10, 80, 500, columnName, true,
+
+            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, columnWidths.get(nbColumns-ci-1), 500, columnName, true,
                     (Integer w) -> {
+                        int cj = 0;
                         for( ColumnWidget cw : currentTraversed ) {
-                            cw.setX(calcPos(cw));
+                            cw.setX(calcPos(cj, tableRowsHandler));
+                            cj++;
                         }
+                        getUiWindowHandler().tableRowsWidths.get(tableRowsHandler.getOpenTable()).set(nbColumns-cj-1, w);
                 });
             traversedColumns.add(column);
 
@@ -59,10 +65,11 @@ public class TableRowsWindow {
                 column.addWidget(editor);
             }
             layout.add(column);
+            ci++;
 
         }
 
-        for (int i = 0; i<tableRowsHandler.getNbRows(tableRowsHandler.getColumnNames().get(0)); i++) {
+        for (int i = 0; i<nbColumns; i++) {
             // Create a button left of the editor to select it
             Integer row = i;
             CheckBoxWidget selectButton = new CheckBoxWidget(
@@ -78,6 +85,9 @@ public class TableRowsWindow {
             if (keyCode == KeyEvent.VK_DELETE && getUiWindowHandler().getSelectedItem() != null) {
                 tableRowsHandler.removeRow(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
                 return true;
+            } else if (keyCode == KeyEvent.VK_ALT) {
+                getUiWindowHandler().loadTableDesignWindow(tableRowsHandler.getOpenTable());
+                getUiWindowHandler().repaint();
             }
             return false;
         }));
@@ -91,6 +101,14 @@ public class TableRowsWindow {
         for (CheckBoxWidget w : checkBoxes) {
             w.forceUncheck();
         }
+    }
+
+    private int calcPos(int index, TableRowsHandler tableHandler) {
+        int columnIndex = tableHandler.getColumnNames().size() - index - 1;
+        int x = 45;
+        for (int i=0; i<columnIndex;i++)
+            x += getUiWindowHandler().tableRowsWidths.get(tableHandler.getOpenTable()).get(i);
+        return x;
     }
 
 }

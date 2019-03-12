@@ -1,5 +1,6 @@
 package window;
 
+import sun.awt.image.ImageWatched;
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;
@@ -22,7 +23,7 @@ public class UIWindowHandler extends CanvasWindow{
      * @Effect loads tables window.
      */
     public UIWindowHandler(){
-        super("Tablr");
+        super("Tablr starting...");
         this.tableHandler = new TableHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
@@ -30,7 +31,8 @@ public class UIWindowHandler extends CanvasWindow{
         this.tablesWindow = new TablesWindow(this);
         this.tableRowsWindow = new TableRowsWindow(this);
 
-        tableDesignWidths = new HashMap();
+        tableDesignWidths = new HashMap<>();
+        tableRowsWidths = new HashMap<>();
 
         this.selectedItem = null;
         tableHandler.addTable();
@@ -144,15 +146,13 @@ public class UIWindowHandler extends CanvasWindow{
         changeSelectedItem(null);
     }
 
+    HashMap<String, LinkedList<Integer>> tableRowsWidths;
+
     public void loadTableRowsWindow(String tableName){
         super.setTitle("Tablr - Editing \""+ tableName + "\"");
-        setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
+        LinkedList<Integer> def = new LinkedList<>();
+        setWidgets(tableRowsWindow.getLayout(tableRowsHandler, tableRowsWidths.getOrDefault(tableName, def)));
         changeSelectedItem(null);
-    }
-
-    public void reloadWidgets() {
-        // TODO
-        loadTablesWindow();
     }
 
 
@@ -198,13 +198,12 @@ public class UIWindowHandler extends CanvasWindow{
         for (Widget w: getWidgets()) {
             blocked |= w.isBlocking();
         }
-        if (blocked)
-            return;
 
         // Handle all mouse events and repaint if necessary
         boolean paintflag = false;
         for(Widget w: getWidgets()) {
-            paintflag |= w.handleMouseEvent(id, x, y, clickCount);
+            if (!blocked || w.isBlocking())
+                paintflag |= w.handleMouseEvent(id, x, y, clickCount);
         }
         if (paintflag) {
             repaint();

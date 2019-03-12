@@ -63,20 +63,11 @@ public class TableDesignWindow{
             namesColumn.addWidget(editor);
 
             // TYPE
-
-            // TODO: add custom widget?
-            ButtonWidget typeButton = new ButtonWidget(true,tableDesignHandler.getColumnType(columnName));
-            typeButton.setOnClick((Integer clickCount) ->{
-                if(clickCount == 1){
-                    typeButton.setText(tableDesignHandler.getNextType(typeButton.getText()));
-                    if(tableDesignHandler.canHaveAsColumnType(columnName,tableDesignHandler.getNextType(typeButton.getText()))){
-
-                    } else {
-
-                    }
-
-                }});
-            typeColumn.addWidget(typeButton);
+            SwitchBoxWidget typeBox = new SwitchBoxWidget(true,tableDesignHandler.getAvailableColumnTypes(),
+                    (String type) -> tableDesignHandler.canHaveAsColumnType(editor.getStoredText(), type),
+                    (String type) -> tableDesignHandler.setColumnType(editor.getStoredText(), type)
+            );
+            typeColumn.addWidget(typeBox);
 
 
             // BLANKS ALLOWED
@@ -115,6 +106,9 @@ public class TableDesignWindow{
                 return true;
             } else if (keyCode == KeyEvent.VK_DELETE) {
                 tableDesignHandler.removeColumn(getUiWindowHandler().getSelectedItem());
+            } else if (keyCode == KeyEvent.VK_ALT) {
+                getUiWindowHandler().loadTableRowsWindow(tableDesignHandler.getOpenTable());
+                getUiWindowHandler().repaint();
             }
             return false;
         }));

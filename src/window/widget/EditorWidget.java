@@ -38,23 +38,12 @@ public class EditorWidget extends LabelWidget {
 
     @Override
     public void paint(Graphics g) {
-
-        // background color
-        if (isSelected()) {
-            g.setColor(Color.lightGray);
-            //g.fillRect(0, 0, 500, 500);
-        }
-
-        // red border if invalid
-        g.setColor(isBlocking()? Color.red : Color.black);
-
-        // text
         if (isSelected())
             text += "ⵊ";
         super.paint(g);
         if (isSelected())
             text = text.substring(0,text.length()-1);
-        g.setColor(Color.black);
+
     }
 
     public boolean isSelected() {
