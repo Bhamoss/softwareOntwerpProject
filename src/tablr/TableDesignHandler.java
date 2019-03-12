@@ -7,6 +7,7 @@ import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -72,16 +73,15 @@ public class TableDesignHandler {
     }
 
     /**
-     * Returns the next type to switch to.
-     * Order: String, Email, Boolean, Integer
-     * @param type
-     * @return
+     * Returns the possible types for a column.
+     * @return [String, Email, Boolean, Integer]
+     *
+     * Note: order is significant (gui needs to show them in specific order)
      */
-    public static String getNextType(String type)
+    public static List<String> getAvailableColumnTypes()
     {
         // TODO: implement
-
-        return "";
+        return new ArrayList();
     }
 
     /**

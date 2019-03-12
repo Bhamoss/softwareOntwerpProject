@@ -68,10 +68,10 @@ public class TableDesignWindow{
             ButtonWidget typeButton = new ButtonWidget(true,tableDesignHandler.getColumnType(columnName));
             typeButton.setOnClick((Integer clickCount) ->{
                 if(clickCount == 1){
-                    typeButton.setText(tableDesignHandler.getNextColumnType(typeButton.getText()).toString());
-                    if(tableDesignHandler.canHaveAsColumnType(columnName,tableDesignHandler.getNextColumnType(columnName))){
+                    typeButton.setText(tableDesignHandler.getNextType(typeButton.getText()));
+                    if(tableDesignHandler.canHaveAsColumnType(columnName,tableDesignHandler.getNextType(typeButton.getText()))){
 
-                    }else{
+                    } else {
 
                     }
 
