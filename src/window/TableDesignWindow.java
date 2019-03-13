@@ -23,17 +23,17 @@ public class TableDesignWindow{
     }
 
 
-    public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler, int nameWidth){
+    public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler){
         LinkedList<Widget> layout = new LinkedList<>();
 
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        ColumnWidget typeColumn = new ColumnWidget(45+nameWidth,10,45,500, "Type");
-        ColumnWidget blanksColumn = new ColumnWidget(90+nameWidth,10,45,500,"Blank");
-        ColumnWidget defaultColumn = new ColumnWidget(105+nameWidth,10,45,500,"Default");
+        ColumnWidget typeColumn = new ColumnWidget(45+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500, "Type");
+        ColumnWidget blanksColumn = new ColumnWidget(90+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500,"Blank");
+        ColumnWidget defaultColumn = new ColumnWidget(105+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500,"Default");
         ColumnWidget namesColumn = new ColumnWidget(
-                45, 10, nameWidth, 500, "Names", true,
+                45, 10, getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()), 500, "Names", true,
                 (Integer w) -> {
-                    getUiWindowHandler().tableDesignWidths.put(tableDesignHandler.getOpenTable(), w);
+                    getUiWindowHandler().putTableDesignWidth(tableDesignHandler.getOpenTable(), w);
                     typeColumn.setX(45+w);
                     blanksColumn.setX(90+w);
                     defaultColumn.setX(105+w);

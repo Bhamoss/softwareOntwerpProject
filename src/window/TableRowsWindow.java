@@ -26,7 +26,7 @@ public class TableRowsWindow {
         return uiWindowHandler;
     }
 
-    public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler, List<Integer> columnWidths){
+    public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler){
         LinkedList<Widget> layout = new LinkedList<>();
 
 
@@ -44,14 +44,16 @@ public class TableRowsWindow {
         for(String columnName : columnNames) {
             List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
 
-            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, columnWidths.get(nbColumns-ci-1), 500, columnName, true,
+            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable()).get(nbColumns-ci-1), 500, columnName, true,
                     (Integer w) -> {
                         int cj = 0;
                         for( ColumnWidget cw : currentTraversed ) {
                             cw.setX(calcPos(cj, tableRowsHandler));
                             cj++;
                         }
-                        getUiWindowHandler().tableRowsWidths.get(tableRowsHandler.getOpenTable()).set(nbColumns-cj-1, w);
+                        LinkedList<Integer> newColumnWidth = getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable());
+                        newColumnWidth.set(nbColumns-cj-1, w);
+                        getUiWindowHandler().putTableRowsWidth(tableRowsHandler.getOpenTable(),newColumnWidth);
                 });
             traversedColumns.add(column);
 
@@ -84,6 +86,10 @@ public class TableRowsWindow {
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUiWindowHandler().getSelectedItem() != null) {
                 tableRowsHandler.removeRow(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
+                LinkedList<Integer> newColumnWidth = getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable());
+                newColumnWidth.remove(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
+                getUiWindowHandler().putTableRowsWidth(tableRowsHandler.getOpenTable(),newColumnWidth);
+
                 return true;
             } else if (keyCode == KeyEvent.VK_ALT) {
                 getUiWindowHandler().loadTableDesignWindow(tableRowsHandler.getOpenTable());
@@ -107,7 +113,7 @@ public class TableRowsWindow {
         int columnIndex = tableHandler.getColumnNames().size() - index - 1;
         int x = 45;
         for (int i=0; i<columnIndex;i++)
-            x += getUiWindowHandler().tableRowsWidths.get(tableHandler.getOpenTable()).get(i);
+            x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable()).get(i);
         return x;
     }
 

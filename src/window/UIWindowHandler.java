@@ -125,33 +125,65 @@ public class UIWindowHandler extends CanvasWindow{
         return selectedItem;
     }
 
-    int tableModeWidth;
+    private int tableModeWidth;
 
     public void setTableModeWidth(int n) {
         tableModeWidth = n;
     }
 
+    public int getTableModeWidth() {
+        return tableModeWidth;
+    }
 
     public void loadTablesWindow(){
         super.setTitle("Tablr - Tables");
-        setWidgets(tablesWindow.getLayout(tableHandler, tableModeWidth));
+        setWidgets(tablesWindow.getLayout(tableHandler));
         changeSelectedItem(null);
     }
 
-    HashMap<String, Integer> tableDesignWidths;
+    private HashMap<String, Integer> tableDesignWidths;
+
+    private final static Integer defaultTableDesignWidth = 80;
+
+    public Integer getDefaultTableDesignWidth() {
+        return defaultTableDesignWidth;
+    }
+
+    public Integer getTableDesignWidth(String string){
+        if(tableDesignWidths.keySet().contains(string))
+            return tableDesignWidths.get(string);
+        else
+            return getDefaultTableDesignWidth();
+    }
+
+    public void putTableDesignWidth(String string, Integer width){
+        tableDesignWidths.put(string,width);
+    }
 
     public void loadTableDesignWindow(String tableName){
         super.setTitle("Tablr - Designing \""+ tableName + "\"");
-        setWidgets(tableDesignWindow.getLayout(tableDesignHandler, tableDesignWidths.getOrDefault(tableName, 80)));
+        setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
         changeSelectedItem(null);
     }
 
-    HashMap<String, LinkedList<Integer>> tableRowsWidths;
+    private HashMap<String, LinkedList<Integer>> tableRowsWidths;
+
+    public LinkedList<Integer> getTableRowsWidth(String string){
+        if(tableRowsWidths.keySet().contains(string))
+            return tableRowsWidths.get(string);
+        else
+            return new LinkedList<>();
+    }
+
+    public void putTableRowsWidth(String string, LinkedList<Integer> width){
+        tableRowsWidths.put(string,width);
+    }
+
+
 
     public void loadTableRowsWindow(String tableName){
         super.setTitle("Tablr - Editing \""+ tableName + "\"");
-        LinkedList<Integer> def = new LinkedList<>();
-        setWidgets(tableRowsWindow.getLayout(tableRowsHandler, tableRowsWidths.getOrDefault(tableName, def)));
+        setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
         changeSelectedItem(null);
     }
 
