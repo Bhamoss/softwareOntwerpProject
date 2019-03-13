@@ -272,7 +272,7 @@ public class Table {
      *          the index exceeds the number of columns in this table
      *          | ( index < 1 || index > getNbColumns() )
      */
-    public Column getColumnAt(int index) throws IndexOutOfBoundsException {
+    private Column getColumnAt(int index) throws IndexOutOfBoundsException {
         return columns.get(index - 1);
     }
 
@@ -404,7 +404,7 @@ public class Table {
      *              blanksAllowed   true
      *          | addColumnAt(index, new StringColumn("ColumnN", getNbRows(), "", true))
      */
-    public void addColumnAt(int index) throws IllegalArgumentException
+    private void addColumnAt(int index) throws IllegalArgumentException
     {
         addColumnAt(index, new StringColumn("Column" + getNbColumns() + 1, getNbRows(), "", true));
     }
@@ -494,7 +494,7 @@ public class Table {
         if ((index < 1) || (index > getNbColumns()))
             throw new IndexOutOfBoundsException();
         getColumnAt(index).terminate();
-        columns.remove(index);
+        columns.remove(index - 1);
     }
 
     /**
@@ -685,6 +685,17 @@ public class Table {
         }
         for (int i = 1; i <= column.getNbValues(); i++){
             if (type.equals("Boolean") && column.getType().equals("Integer")) {
+                switch (column.getDefaultValue()) {
+                    case "0":
+                        newColumn.setDefaultValue("False");
+                        break;
+                    case "1":
+                        newColumn.setDefaultValue("True");
+                        break;
+                    case "":
+                        newColumn.setDefaultValue("");
+                        break;
+                }
                 switch (column.getValueAt(i)) {
                     case "0":
                         newColumn.setValueAt(i, "False");
@@ -698,6 +709,17 @@ public class Table {
                 }
             }
             else if (type.equals("Integer") && column.getType().equals("Boolean")){
+                switch (column.getDefaultValue()) {
+                    case "True":
+                        newColumn.setDefaultValue("1");
+                        break;
+                    case "False":
+                        newColumn.setDefaultValue("0");
+                        break;
+                    case "":
+                        newColumn.setDefaultValue("");
+                        break;
+                }
                 switch (column.getValueAt(i)) {
                     case "True":
                         newColumn.setValueAt(i, "1");
@@ -713,6 +735,8 @@ public class Table {
                 newColumn.setValueAt(i, column.getValueAt(i));
             }
         }
+
+
 
         setColumnAt(getColumnIndex(columnName), newColumn);
     }
