@@ -41,7 +41,9 @@ public class StringColumn extends Column {
                     } else {
                         for (int i = 1; i <= getNbValues(); i++) {
                             if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
-                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                                //result = !isBlanksAllowed() || getValueAt(i).equals("");
+                                // TODO: bedoel je dit?
+                                result = isBlanksAllowed() && getValueAt(i).equals("");
                             } else result = true;
                         }
                     }

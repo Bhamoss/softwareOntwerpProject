@@ -1,6 +1,6 @@
 package window;
 
-import sun.awt.image.ImageWatched;
+//import sun.awt.image.ImageWatched;
 import tablr.TableDesignHandler;
 import tablr.TableRowsHandler;
 import window.widget.*;
@@ -57,7 +57,7 @@ public class TableRowsWindow {
                 });
             traversedColumns.add(column);
 
-            for (int i = 0; i<tableRowsHandler.getNbRows(columnName); i++) {
+            for (int i = 0; i<tableRowsHandler.getNbRows(); i++) {
                 int row = i;
                 editor = new EditorWidget(true, tableRowsHandler.getCellValue(columnName,i),
                         (String oldName, String newName) -> tableRowsHandler.canHaveAsCellValue(columnName,row,newName),

@@ -1,6 +1,6 @@
 package window;
 
-import sun.awt.image.ImageWatched;
+//import sun.awt.image.ImageWatched;
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;

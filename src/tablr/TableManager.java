@@ -215,7 +215,7 @@ public class TableManager {
     void removeTable(String tableName) throws IllegalTableException
     {
         if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        removeTable(tableName);
+        removeTable(getTable(tableName));
 
     }
 
@@ -546,6 +546,18 @@ public class TableManager {
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
         getCurrentTable().removeRow(row);
+    }
+
+
+    /**
+     *
+     * @return
+     * @throws IllegalTableException
+     */
+    public int getNbRows() throws IllegalTableException
+    {
+        if(getOpenTable() == null){throw new IllegalTableException();}
+        return getCurrentTable().getNbRows();
     }
 
 
