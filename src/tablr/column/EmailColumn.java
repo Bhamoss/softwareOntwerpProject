@@ -75,7 +75,7 @@ public class EmailColumn extends Column {
     {
         if (!super.canHaveAsValue(value))
             return false;
-        return isEmail(value);
+        return isEmail(value) || value.equals("");
     }
 
     /**

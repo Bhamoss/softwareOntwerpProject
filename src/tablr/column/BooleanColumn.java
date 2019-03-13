@@ -78,7 +78,7 @@ public class BooleanColumn extends Column {
             return false;
         else
             return ( value.equals("True") ||
-                        value.equals("False") );
+                        value.equals("False") || value.equals(""));
     }
 
 }

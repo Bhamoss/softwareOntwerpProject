@@ -24,6 +24,9 @@ class TableTest {
         tenTable = new Table("Table10");
         for (int i = 1; i <= 10; i++)
             tenTable.addColumn();
+        for (int i = 1; i <= 10; i++)
+            tenTable.addRow();
+
         // elke column andere type geven, met wat waarden, hier initialiseren
 
         // boolean column with blanks, first value is True, second one False, default empty
@@ -74,8 +77,6 @@ class TableTest {
         tenTable.setColumnAllowBlanks("Column8", false);
 
 
-        for (int i = 1; i <= 10; i++)
-            tenTable.addRow();
 
 
     }
@@ -115,9 +116,8 @@ class TableTest {
     void addRow() {
         tenTable.addRow();
         assertEquals(11, tenTable.getNbRows());
-        for (int i = 1; i <= tenTable.getNbColumns(); i++)
-            for (int j = 1; j <= tenTable.getNbRows(); j++)
-                assertEquals("", tenTable.getCellValue(tenTable.getColumnName(i), j));
+        for (int i = 1; i <= tenTable.getNbRows(); i++)
+            assertEquals("", tenTable.getCellValue(tenTable.getColumnName(10), i));
     }
 
     @Test
@@ -240,8 +240,8 @@ class TableTest {
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column3", "Boolean"));
         tenTable.setColumnType("Column4", "Boolean");
         assertEquals("Boolean", tenTable.getColumnType("Column4"));
-        assertEquals("1", tenTable.getCellValue("Column4", 2));
-        assertEquals("0", tenTable.getColumnDefaultValue("Column4"));
+        assertEquals("True", tenTable.getCellValue("Column4", 2));
+        assertEquals("False", tenTable.getColumnDefaultValue("Column4"));
 
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column5", "Boolean"));
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column6", "Boolean"));
