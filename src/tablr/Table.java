@@ -723,7 +723,7 @@ public class Table {
                     }
                 }
                 newColumn = new IntegerColumn(column.getName(), column.getNbValues(),
-                        column.getDefaultValue(), column.isBlanksAllowed());
+                        dv, column.isBlanksAllowed());
                 break;
             default:
                 throw new IllegalArgumentException();

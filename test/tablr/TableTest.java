@@ -66,15 +66,19 @@ class TableTest {
         tenTable.setColumnDefaultValue("Column6", "defualt@test.be");
         tenTable.setColumnAllowBlanks("Column6", false);
 
-        // string column with blanks, first value Kapstok, second value apestaartje, default empty
-        tenTable.setCellValue("Column7", 1, "Kapstok");
-        tenTable.setCellValue("Column7", 2, "apestaartje");
+        // string column with blanks, first value 700, second value 705, default empty
+        tenTable.setCellValue("Column7", 1, "700");
+        tenTable.setCellValue("Column7", 2, "705");
 
         //string column no blanks, all values cantor1..10, default zweetkelder
         for (int i = 1; i <= tenTable.getNbRows(); i++)
             tenTable.setCellValue("Column8", i, "cantor" + i);
         tenTable.setColumnDefaultValue("Column8", "zweetkelder");
         tenTable.setColumnAllowBlanks("Column8", false);
+
+        // string column with blanks and emails
+        tenTable.setCellValue("Column9", 1, "test@");
+        tenTable.setCellValue("Column9", 2, "blub@be.be");
 
 
 
@@ -257,47 +261,69 @@ class TableTest {
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column3", "Email"));
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column4", "Email"));
 
+        tenTable.setColumnType("Column5", "Email");
+        assertEquals("Email", tenTable.getColumnType("Column5"));
 
+        tenTable.setColumnType("Column9", "Email");
+        assertEquals("Email", tenTable.getColumnType("Column9"));
     }
 
     @Test
     void setColumnType_Integer() {
+        tenTable.setColumnType("Column2", "Integer");
+        assertEquals("Integer", tenTable.getColumnType("Column2"));
+        assertEquals("1", tenTable.getCellValue("Column2", 2));
 
+        tenTable.setColumnType("Column3", "Integer");
+        assertEquals("Integer", tenTable.getColumnType("Column3"));
+
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column5", "Integer"));
+
+        tenTable.setColumnType("Column7", "Integer");
+        assertEquals("Integer", tenTable.getColumnType("Column7"));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column8", "Integer"));
     }
 
-    @Test
-    void canHaveAsColumnType() {
-    }
-
-    @Test
-    void setColumnDefaultValue() {
-    }
 
     @Test
     void getColumnDefaultValue() {
-    }
-
-    @Test
-    void canHaveAsDefaultValue() {
+        assertEquals("", tenTable.getColumnDefaultValue("Column1"));
+        assertEquals("True", tenTable.getColumnDefaultValue("Column2"));
+        assertEquals("", tenTable.getColumnDefaultValue("Column3"));
+        assertEquals("0", tenTable.getColumnDefaultValue("Column4"));
+        assertEquals("", tenTable.getColumnDefaultValue("Column5"));
+        assertEquals("defualt@test.be", tenTable.getColumnDefaultValue("Column6"));
+        assertEquals("", tenTable.getColumnDefaultValue("Column7"));
+        assertEquals("zweetkelder", tenTable.getColumnDefaultValue("Column8"));
+        assertEquals("", tenTable.getColumnDefaultValue("Column9"));
     }
 
     @Test
     void getColumnAllowBlank() {
+        assertTrue(tenTable.getColumnAllowBlank("Column1"));
+        assertFalse(tenTable.getColumnAllowBlank("Column2"));
+        assertTrue(tenTable.getColumnAllowBlank("Column3"));
+        assertFalse(tenTable.getColumnAllowBlank("Column4"));
+        assertTrue(tenTable.getColumnAllowBlank("Column5"));
+        assertFalse(tenTable.getColumnAllowBlank("Column6"));
+        assertTrue(tenTable.getColumnAllowBlank("Column7"));
+        assertFalse(tenTable.getColumnAllowBlank("Column8"));
+        assertTrue(tenTable.getColumnAllowBlank("Column9"));
     }
 
+    // legal cases al in setUp "getest"
     @Test
-    void canHaveAsColumnAllowBlanks() {
-    }
+    void setColumnAllowBlanks_Illegal() {
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnAllowBlanks("Column1", false));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnAllowBlanks("Column3", false));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnAllowBlanks("Column5", false));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnAllowBlanks("Column7", false));
 
-    @Test
-    void setColumnAllowBlanks() {
-    }
-
-    @Test
-    void isTerminated() {
     }
 
     @Test
     void terminate() {
+        tenTable.terminate();
+        assertTrue(tenTable.isTerminated());
     }
 }
