@@ -347,24 +347,100 @@ class TableManagerTest {
 
 
     @Test
-    void getColumnNames() {
+    @DisplayName("getColumnName no open table")
+    void getColumnNamesNoOpenTable() {
+        assertThrows( IllegalTableException.class, () -> emptyTM.getColumnNames());
+    }
+
+    @Test
+    @DisplayName("getColumnName success")
+    void getColumnNamesSuccess() {
+        // next line is not necessary as it is opened by default
+        c2r2.openTable("firstTable");
+        ArrayList<String> c = c2r2.getColumnNames();
+        assertEquals(2, c.size());
+        assertEquals("Column1", c.get(0));
+        assertEquals("column2", c.get(1));
     }
 
 
+    /*
+     ************************************************
+     *           String getColumnType(String columnName)
+     *           throws IllegalColumnException, IllegalTableException
+     ************************************************
+     */
 
 
 
     @Test
-    void getColumnType() {
+    @DisplayName("getColumnType Illegal table exception")
+    void getColumnTypeIllegalTable() {
+        assertThrows( IllegalTableException.class, () -> emptyTM.getColumnType("d"));
     }
 
     @Test
-    void getColumnAllowBlank() {
+    @DisplayName("getColumnType Illegal column exception")
+    void getColumnTypeIllegalColumn() {
+        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnType("d"));
     }
+
+    @Test
+    @DisplayName("getColumnType success")
+    void getColumnTypeSuccess()
+    {
+        assertEquals("String", c2r2.getColumnType("Column1"));
+    }
+
+    /*
+     ************************************************
+     *           boolean getColumnAllowBlank(String columnName)
+     *           throws IllegalColumnException, IllegalTableException
+     ************************************************
+     */
+
+
+    @Test
+    @DisplayName("getColumnAllowBlank Illegal table exception")
+    void getColumnAllowBlankIllegalTable() {
+        assertThrows( IllegalTableException.class, () -> emptyTM.getColumnAllowBlank("d"));
+    }
+
+    @Test
+    @DisplayName("getColumnAllowBlank Illegal column exception")
+    void getColumnAllowBlankIllegalColumn() {
+        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnAllowBlank("d"));
+    }
+
+    @Test
+    @DisplayName("getColumnAllowBlank success")
+    void getColumnAllowBlankSuccess()
+    {
+        assertTrue( c2r2.getColumnAllowBlank("Column1"));
+    }
+
+
+    /*
+     ************************************************
+     *           String getColumnDefaultValue(String columnName)
+     *           throws IllegalColumnException, IllegalTableException
+     ************************************************
+     */
+
+
 
     @Test
     void getColumnDefaultValue() {
     }
+
+
+    /*
+     ************************************************
+     *           boolean canHaveAsColumnName(String columnName, String newName)
+     *           throws IllegalColumnException, IllegalTableException
+     ************************************************
+     */
+
 
     @Test
     void canHaveAsColumnName() {
