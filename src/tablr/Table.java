@@ -272,7 +272,7 @@ public class Table {
      *          the index exceeds the number of columns in this table
      *          | ( index < 1 || index > getNbColumns() )
      */
-    public Column getColumnAt(int index) throws IndexOutOfBoundsException {
+    private Column getColumnAt(int index) throws IndexOutOfBoundsException {
         return columns.get(index - 1);
     }
 
@@ -297,7 +297,7 @@ public class Table {
             return false;
         else
             for (int i = 1; i <= getNbColumns(); i++)
-                if (column.getName().equals(getColumnAt(i).getName()) ||
+                if (column.getName().equals(getColumnAt(i).getName()) &&
                         column.getNbValues() != getNbRows())
                     return false;
         return true;
@@ -404,9 +404,21 @@ public class Table {
      *              blanksAllowed   true
      *          | addColumnAt(index, new StringColumn("ColumnN", getNbRows(), "", true))
      */
-    public void addColumnAt(int index) throws IllegalArgumentException
+    private void addColumnAt(int index) throws IllegalArgumentException
     {
-        addColumnAt(index, new StringColumn("Column" + getNbColumns() + 1, getNbRows(), "", true));
+        int i = 0;
+        String name = "";
+        ArrayList<String> l = getColumnNames();
+        boolean found = false;
+
+        // Up i until the name TableI is not in use.
+        while(!found)
+        {
+            i++;
+            name = "Column" + Integer.toString(i);
+            if(!l.contains(name)){found = true;}
+        }
+        addColumnAt(index, new StringColumn(name, getNbRows(), "", true));
     }
 
     /**
@@ -494,7 +506,7 @@ public class Table {
         if ((index < 1) || (index > getNbColumns()))
             throw new IndexOutOfBoundsException();
         getColumnAt(index).terminate();
-        columns.remove(index);
+        columns.remove(index - 1);
     }
 
     /**
@@ -600,7 +612,11 @@ public class Table {
         if (!isAlreadyUsedColumnName(columnName))
             throw new IllegalColumnException();
         if (getColumn(columnName).canHaveAsName(name))
-            return isAlreadyUsedColumnName(name) && !columnName.equals(name);
+            if (columnName.equals(name))
+                return true;
+            else {
+                return (!isAlreadyUsedColumnName(name));
+            }
         return false;
     }
 
@@ -663,6 +679,7 @@ public class Table {
             throw new IllegalArgumentException();
         Column column = getColumn(columnName);
         Column newColumn;
+        String dv;
         switch (type) {
             case "String":
                 newColumn = new StringColumn(column.getName(), column.getNbValues(),
@@ -673,10 +690,38 @@ public class Table {
                         column.getDefaultValue(), column.isBlanksAllowed());
                 break;
             case "Boolean":
+                dv = column.getDefaultValue();
+                if (column.getType().equals("Integer")) {
+                    switch (column.getDefaultValue()) {
+                        case "0":
+                            dv = "False";
+                            break;
+                        case "1":
+                            dv = "True";
+                            break;
+                        case "":
+                            dv = "";
+                            break;
+                    }
+                }
                 newColumn = new BooleanColumn(column.getName(), column.getNbValues(),
-                        column.getDefaultValue(), column.isBlanksAllowed());
+                        dv, column.isBlanksAllowed());
                 break;
             case "Integer":
+                dv = column.getDefaultValue();
+                if (column.getType().equals("Boolean")) {
+                    switch (column.getDefaultValue()) {
+                        case "True":
+                            dv ="1";
+                            break;
+                        case "False":
+                            dv ="0";
+                            break;
+                        case "":
+                            dv ="";
+                            break;
+                    }
+                }
                 newColumn = new IntegerColumn(column.getName(), column.getNbValues(),
                         column.getDefaultValue(), column.isBlanksAllowed());
                 break;
@@ -713,6 +758,8 @@ public class Table {
                 newColumn.setValueAt(i, column.getValueAt(i));
             }
         }
+
+
 
         setColumnAt(getColumnIndex(columnName), newColumn);
     }

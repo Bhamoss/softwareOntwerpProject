@@ -35,32 +35,45 @@ public class StringColumn extends Column {
             case "Boolean":
                 if (getDefaultValue().equals("True") ||
                         getDefaultValue().equals("False") ||
-                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
-                    for (int i = 1; i <= getNbValues(); i++) {
-                        if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
-                            result = !isBlanksAllowed() || getValueAt(i).equals("");
-                        } else result = true;
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) ) {
+                    if (getNbValues() == 0) {
+                        result = true;
+                    } else {
+                        for (int i = 1; i <= getNbValues(); i++) {
+                            if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
+                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                            } else result = true;
+                        }
                     }
+                }
                 break;
             case "Integer":
                 if (IntegerColumn.isInteger(getDefaultValue()) ||
-                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
-                    for (int i = 1; i <= getNbValues(); i++) {
-                        if (IntegerColumn.isInteger(getValueAt(i))) {
-                            result = !isBlanksAllowed() || getValueAt(i).equals("");
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) ) {
+                    if (getNbValues() == 0) {
+                        result = true;
+                    } else {
+                        for (int i = 1; i <= getNbValues(); i++) {
+                            if (IntegerColumn.isInteger(getValueAt(i))) {
+                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                            } else result = true;
                         }
-                        else result = true;
                     }
+                }
                 break;
             case "Email":
                 if (EmailColumn.isEmail(getDefaultValue()) ||
-                        ( getDefaultValue().equals("") && isBlanksAllowed()) )
-                    for (int i = 1; i <= getNbValues(); i++) {
-                        if (EmailColumn.isEmail(getValueAt(i))) {
-                            result = !isBlanksAllowed() || getValueAt(i).equals("");
+                        ( getDefaultValue().equals("") && isBlanksAllowed()) ) {
+                    if (getNbValues() == 0) {
+                        result = true;
+                    } else {
+                        for (int i = 1; i <= getNbValues(); i++) {
+                            if (EmailColumn.isEmail(getValueAt(i))) {
+                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                            } else result = true;
                         }
-                        else result = true;
                     }
+                }
                 break;
         }
         return result;
