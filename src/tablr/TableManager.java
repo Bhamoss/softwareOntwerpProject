@@ -115,11 +115,10 @@ public class TableManager {
      *
      */
     @Model
-    boolean canHaveAsName(String tableName, String newTableName)
+    boolean canHaveAsName(String tableName, String newTableName) throws  IllegalTableException
     {
         if(!hasAsTable(tableName)){throw new IllegalTableException();}
         Table t = getTable(tableName);
-
         // checking wether there already is a table with that name.
         for(Table table: this.tables)
         {
