@@ -23,17 +23,17 @@ public class TableDesignWindow{
     }
 
 
-    public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler, int nameWidth){
+    public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler){
         LinkedList<Widget> layout = new LinkedList<>();
 
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        ColumnWidget typeColumn = new ColumnWidget(45+nameWidth,10,45,500, "Type");
-        ColumnWidget blanksColumn = new ColumnWidget(90+nameWidth,10,45,500,"Blank");
-        ColumnWidget defaultColumn = new ColumnWidget(105+nameWidth,10,45,500,"Default");
+        ColumnWidget typeColumn = new ColumnWidget(45+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500, "Type");
+        ColumnWidget blanksColumn = new ColumnWidget(90+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500,"Blank");
+        ColumnWidget defaultColumn = new ColumnWidget(105+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,45,500,"Default");
         ColumnWidget namesColumn = new ColumnWidget(
-                45, 10, nameWidth, 500, "Names", true,
+                45, 10, getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()), 500, "Names", true,
                 (Integer w) -> {
-                    getUiWindowHandler().tableDesignWidths.put(tableDesignHandler.getOpenTable(), w);
+                    getUiWindowHandler().putTableDesignWidth(tableDesignHandler.getOpenTable(), w);
                     typeColumn.setX(45+w);
                     blanksColumn.setX(90+w);
                     defaultColumn.setX(105+w);
@@ -63,20 +63,11 @@ public class TableDesignWindow{
             namesColumn.addWidget(editor);
 
             // TYPE
-
-            // TODO: add custom widget?
-            ButtonWidget typeButton = new ButtonWidget(true,tableDesignHandler.getColumnType(columnName));
-            typeButton.setOnClick((Integer clickCount) ->{
-                if(clickCount == 1){
-                    typeButton.setText(tableDesignHandler.getNextType(typeButton.getText()));
-                    if(tableDesignHandler.canHaveAsColumnType(columnName,tableDesignHandler.getNextType(typeButton.getText()))){
-
-                    } else {
-
-                    }
-
-                }});
-            typeColumn.addWidget(typeButton);
+            SwitchBoxWidget typeBox = new SwitchBoxWidget(true,tableDesignHandler.getAvailableColumnTypes(),
+                    (String type) -> tableDesignHandler.canHaveAsColumnType(editor.getStoredText(), type),
+                    (String type) -> tableDesignHandler.setColumnType(editor.getStoredText(), type)
+            );
+            typeColumn.addWidget(typeBox);
 
 
             // BLANKS ALLOWED
@@ -115,6 +106,9 @@ public class TableDesignWindow{
                 return true;
             } else if (keyCode == KeyEvent.VK_DELETE) {
                 tableDesignHandler.removeColumn(getUiWindowHandler().getSelectedItem());
+            } else if (keyCode == KeyEvent.VK_ALT) {
+                getUiWindowHandler().loadTableRowsWindow(tableDesignHandler.getOpenTable());
+                getUiWindowHandler().repaint();
             }
             return false;
         }));

@@ -34,15 +34,15 @@ public class TablesWindow {
      * @param tableHandler handle to the backend
      * @return list of all widgets needed in table mode
      */
-    public LinkedList<Widget> getLayout(TableHandler tableHandler, int tableWidth){
+    public LinkedList<Widget> getLayout(TableHandler tableHandler){
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
         ColumnWidget tablesColumn = new ColumnWidget(
-                45, 10, tableWidth, 500, "Tables", true,
+                45, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true,
                 (Integer w) -> getUIWindowController().setTableModeWidth(w));
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         ColumnWidget openingColumn = new ColumnWidget(
-                45,10, tableWidth, 500, "", true, (Integer n)->{}
+                45,10, getUIWindowController().getTableModeWidth(), 500, "", true, (Integer n)->{getUIWindowController().setTableModeWidth(n);}
                 );
 
         for(String tableName : tableHandler.getTableNames()){
@@ -82,7 +82,7 @@ public class TablesWindow {
         layout.add(tablesColumn);
         layout.add(openingColumn);
         layout.add(selectedColumn);
-        // Create button at the buttom to add new tables
+        // Create button at the bottom to add new tables
         layout.add(new ButtonWidget(
                 20,openingColumn.getY()+openingColumn.getHeight()+5,105,30,
                 true,"Create table",

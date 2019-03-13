@@ -63,9 +63,13 @@ public class Widget {
      */
     public void paint(Graphics g) {
         g.setClip(x,y,width+1,height+1);
+        if (isBlocking())
+            g.setColor(Color.red);
         if (border)
             g.drawRect(x, y, width, height);
+        g.setColor(Color.black);
     }
+
 
     /**
      * Event handler for keyboard events

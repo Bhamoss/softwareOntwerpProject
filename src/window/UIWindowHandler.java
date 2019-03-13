@@ -1,5 +1,6 @@
 package window;
 
+import sun.awt.image.ImageWatched;
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;
@@ -22,7 +23,7 @@ public class UIWindowHandler extends CanvasWindow{
      * @Effect loads tables window.
      */
     public UIWindowHandler(){
-        super("Tablr");
+        super("Tablr starting...");
         this.tableHandler = new TableHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
@@ -30,7 +31,8 @@ public class UIWindowHandler extends CanvasWindow{
         this.tablesWindow = new TablesWindow(this);
         this.tableRowsWindow = new TableRowsWindow(this);
 
-        tableDesignWidths = new HashMap();
+        tableDesignWidths = new HashMap<>();
+        tableRowsWidths = new HashMap<>();
 
         this.selectedItem = null;
         tableHandler.addTable();
@@ -123,36 +125,66 @@ public class UIWindowHandler extends CanvasWindow{
         return selectedItem;
     }
 
-    int tableModeWidth;
+    private int tableModeWidth;
 
     public void setTableModeWidth(int n) {
         tableModeWidth = n;
     }
 
+    public int getTableModeWidth() {
+        return tableModeWidth;
+    }
 
     public void loadTablesWindow(){
         super.setTitle("Tablr - Tables");
-        setWidgets(tablesWindow.getLayout(tableHandler, tableModeWidth));
+        setWidgets(tablesWindow.getLayout(tableHandler));
         changeSelectedItem(null);
     }
 
-    HashMap<String, Integer> tableDesignWidths;
+    private HashMap<String, Integer> tableDesignWidths;
+
+    private final static Integer defaultTableDesignWidth = 80;
+
+    public Integer getDefaultTableDesignWidth() {
+        return defaultTableDesignWidth;
+    }
+
+    public Integer getTableDesignWidth(String string){
+        if(tableDesignWidths.keySet().contains(string))
+            return tableDesignWidths.get(string);
+        else
+            return getDefaultTableDesignWidth();
+    }
+
+    public void putTableDesignWidth(String string, Integer width){
+        tableDesignWidths.put(string,width);
+    }
 
     public void loadTableDesignWindow(String tableName){
         super.setTitle("Tablr - Designing \""+ tableName + "\"");
-        setWidgets(tableDesignWindow.getLayout(tableDesignHandler, tableDesignWidths.getOrDefault(tableName, 80)));
+        setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
         changeSelectedItem(null);
     }
+
+    private HashMap<String, LinkedList<Integer>> tableRowsWidths;
+
+    public LinkedList<Integer> getTableRowsWidth(String string){
+        if(tableRowsWidths.keySet().contains(string))
+            return tableRowsWidths.get(string);
+        else
+            return new LinkedList<>();
+    }
+
+    public void putTableRowsWidth(String string, LinkedList<Integer> width){
+        tableRowsWidths.put(string,width);
+    }
+
+
 
     public void loadTableRowsWindow(String tableName){
         super.setTitle("Tablr - Editing \""+ tableName + "\"");
         setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
         changeSelectedItem(null);
-    }
-
-    public void reloadWidgets() {
-        // TODO
-        loadTablesWindow();
     }
 
 
@@ -198,13 +230,12 @@ public class UIWindowHandler extends CanvasWindow{
         for (Widget w: getWidgets()) {
             blocked |= w.isBlocking();
         }
-        if (blocked)
-            return;
 
         // Handle all mouse events and repaint if necessary
         boolean paintflag = false;
         for(Widget w: getWidgets()) {
-            paintflag |= w.handleMouseEvent(id, x, y, clickCount);
+            if (!blocked || w.isBlocking())
+                paintflag |= w.handleMouseEvent(id, x, y, clickCount);
         }
         if (paintflag) {
             repaint();
