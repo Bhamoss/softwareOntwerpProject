@@ -36,13 +36,12 @@ public class TableDesignHandler {
     }
 
     /**
+     * Returns a new list of strings with all the names of the columns in it.
      *
-     * @return
-     *
-     *
+     * @return  List of all the column names of all the columns in this table.
      * @throws IllegalTableException
-     * If there is no open table.
-     * | getOpenTable() == null.
+     * if there is no open table
+     * | getOpenTable() == null
      */
     public ArrayList<String> getColumnNames() throws IllegalTableException
     {
@@ -51,7 +50,6 @@ public class TableDesignHandler {
 
     /**
      * Returns the name of the current open table or null if there is no open table.
-     * TODO: I have no idea how to write this in formal comments
      */
     public String getOpenTable()
     {
@@ -60,9 +58,14 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
+     * Returns the type of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the type should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -76,7 +79,7 @@ public class TableDesignHandler {
      * Returns the possible types for a column.
      * @return [String, Email, Boolean, Integer]
      *
-     * Note: order is significant (gui needs to show them in specific order)
+     * @Note: order is significant (gui needs to show them in specific order)
      */
     public static List<String> getAvailableColumnTypes()
     {
@@ -85,9 +88,14 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
+     * Returns the blanks allowed of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the blanks allowed should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -99,9 +107,11 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
+     * Returns the default value of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the default value should be returned.
+     * @return  The type of the given column.
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -114,10 +124,20 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @param newName
-     * @return
-     * @throws IllegalColumnException
+     * Check whether the column with given column name can have the given name.
+     *
+     * @param   columnName
+     *          The name of the column of which the given name should be checked.
+     * @param   newName
+     *          The name to be checked
+     * @return  True if and only if the column can accept the given name and
+     *              if the name is not already used in this table, if it is already used
+     *              and the name is the same as the given columnName, then the name is also acceptable.
+     *          |   if (getCurrentTable().getColumn(columnName).canHaveAsName(newName))
+     *          |       then result == ( getCurrentTable().isAlreadyUsedColumnName(newName) && !columnName.equals(newName) )
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -131,10 +151,16 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @param type
+     * Check whether the column with given column name can have the given type.
+     *
+     * @param   columnName
+     *          The name of the column of which the given type should be checked.
+     * @param   type
+     *          The type to be checked
      * @return
-     * @throws IllegalColumnException
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -148,25 +174,36 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @param blanks
-     * @return
-     * @throws IllegalColumnException
+     * Check whether the column with given column name can have the given name.
+     * @param   columnName
+     *          The name of the column of which the given blanks allowed should be checked.
+     * @param   blanksAllowed
+     *          The blanks allowed to be checked.
+     * @return  Returns whether this column can have the given blanks allowed.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnAllowBlanks(columnName, blanks);
+        return getTableManager().canHaveAsColumnAllowBlanks(columnName, blanksAllowed);
     }
 
     /**
      *
-     * @param columnName
-     * @param newDefaultValue
+     * Check whether the column with given column name can have the given default value.
+     *
+     * @param   columnName
+     *          The name of the column of which the given default value should be checked.
+     * @param   newDefaultValue
+     *          The default value to be checked
      * @return
-     * @throws IllegalColumnException
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -178,10 +215,20 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columnName
-     * @param newColumnName
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
+     * Set the name of the given columnName to the given name.
+     *
+     * @param   columnName
+     *          The columnName of which the name must be changed.
+     * @param   newColumnName
+     *          The new name of the given columnName
+     * @effect  The name of the given columnName is set to the given name.
+     *          | getColumn(columnName).setName(newColumnName)
+     * @throws  IllegalArgumentException
+     *          The given newColumnName is already used for another columnName in this table.
+     *          | getCurrentTable().isAlreadyUsedColumnName(newColumnName)
+     * @throws  IllegalColumnException
+     *          The given columnName doesn't exist in this table.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
@@ -194,50 +241,79 @@ public class TableDesignHandler {
 
     /**
      *
-     * @param columName
-     * @param type
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
+     * Set the type of the given column to the given type.
+     *
+     * @param   columnName
+     *          The column of which the type must be set.
+     * @param   type
+     *          The new type to be set.
+     * @effect  The given type is set as the type of the given column.
+     *
+     * @throws  IllegalColumnException
+     *          The given column doesn't exists in this table.
+     *          | !getTableManager().getCurrentTable().isAlreadyUsedColumnName(column)
+     * @throws  IllegalArgumentException
+     *          The given type cannot be a type of the given table.
+     *          | !getTableManager().getCurrentTable().canHaveAsColumnType(columnName, type)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public void setColumnType(String columName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnType(String columnName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnType(columName, type);
+        getTableManager().setColumnType(columnName, type);
     }
 
     /**
      *
-     * @param columnName
-     * @param blanks
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
+     * Set the blanksAllowed allowed of the column with the given column name to the given blanksAllowed.
+     *
+     * @param   columnName
+     *          The name of the column of which the allow blanksAllowed should be set.
+     * @param   blanksAllowed
+     *          The blanksAllowed to be set.
+     * @effect  The blanksAllowed of the column with the given column name are set to the given blanksAllowed.
+     *          | getCurrentTable().getColumn(columnName).setBlanksAllowed(blanksAllowed)
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public void setColumnAllowBlanks(String columnName, boolean blanks) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnAllowBlanks(columnName, blanks);
+        getTableManager().setColumnAllowBlanks(columnName, blanksAllowed);
     }
 
     /**
      *
-     * @param columnName
-     * @param newDefaultValue
-     * @throws IllegalColumnException
-     * @throws IllegalArgumentException
+     * Sets the default value of the given columnName to the given
+     * default value.
+     *
+     * @param   columnName
+     *          The columnName of which the default value must be changed.
+     * @param   defaultValue
+     *          The new default value for the given columnName
+     * @effect  The default value of the given columnName is set to the given value.
+     *          | getCurrentTable().getColumn(columnName).setDefaultValue(defaultValue);
+     * @throws  IllegalColumnException
+     *          The given columnName doesn't exists in this table.
+     *          | !getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public void setColumnDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnDefaultValue(String columnName, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnDefaultValue(columnName, newDefaultValue);
+        getTableManager().setColumnDefaultValue(columnName, defaultValue);
     }
 
     /**
+     * Add a new column as a column for this table at the end of the columns list
+     *
+     * @effect  A new column is added at the end of the table.
+     *          | getCurrentTable().addColumnAt(getNbColumns() + 1)
      *
      * @throws IllegalTableException
      * If there is no open table.
@@ -249,19 +325,22 @@ public class TableDesignHandler {
     }
 
 
-    //TODO: checker if can delete?
-
     /**
      *
-     * @param columnName
-     * @throws IllegalArgumentException
+     * Remove the column of this table with the given column name
+     * @param   name
+     *          The name of the column to be removed.
+     * @effect  The column which has the given name, will be removed from the list columns.
+     *          | getCurrentTable().removeColumnAt(getColumnIndex(name))
+     * @throws  IllegalColumnException
+     *          The given name is not a name of a column in this table.
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null.
      */
-    public void removeColumn(String columnName) throws IllegalArgumentException, IllegalTableException
+    public void removeColumn(String name) throws IllegalArgumentException, IllegalTableException
     {
-        removeColumn(columnName);
+        removeColumn(name);
     }
 
     //private final TableManager tableManager;

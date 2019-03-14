@@ -625,7 +625,7 @@ public class Table {
      */
     public String getColumnName(int index) throws IndexOutOfBoundsException {
         if (index < 1 || index > getNbColumns() + 1)
-            throw new IndexOutOfBoundsException(index);
+            throw new IndexOutOfBoundsException(Integer.toString(index));
         return getColumnAt(index).getName();
     }
 
