@@ -76,7 +76,7 @@ public class EditorWidget extends LabelWidget {
 
 
     private boolean canHaveAsText(String s) {
-        return isValidText.apply(oldText, s);
+        return isValidText.apply(getStoredText(), s);
     }
 
     public void setText(String t) {

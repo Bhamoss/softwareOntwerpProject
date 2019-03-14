@@ -1,6 +1,5 @@
 package tablr;
 
-import be.kuleuven.cs.som.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Model;
@@ -261,6 +260,7 @@ public class TableDesignHandler {
      */
     public void setColumnType(String columnName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
+        System.out.println("SETTING COLUMN TYPE");
         getTableManager().setColumnType(columnName, type);
     }
 

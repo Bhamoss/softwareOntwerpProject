@@ -460,7 +460,7 @@ public abstract class Column {
      * ["String", "Email", "Boolean", "Integer"]
      */
     public static ArrayList<String> getColumnTypes() {
-        return new ArrayList<>() {{
+        return new ArrayList<String>() {{
             add("String");
             add("Email");
             add("Boolean");

@@ -12,7 +12,7 @@ public class ColumnWidget extends Widget {
     private boolean resizing, resizable;
     private Consumer<Integer> onResize;
 
-    public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, Consumer<Integer> onResize) {
+    public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
         super(x, y, width, height, false);
         assert(height>=25);
         widgets = new LinkedList();
@@ -21,13 +21,18 @@ public class ColumnWidget extends Widget {
         this.resizable = resizable;
         this.onResize = onResize;
 
-        LabelWidget topLabel = new LabelWidget(x,y,width,25,true,name);
+        LabelWidget topLabel = new LabelWidget(x,y,width,25,visible,name);
         this.addWidget(topLabel);
     }
 
     public ColumnWidget(int x, int y, int width, int height, String name) {
-        this(x,y,width,height,name,false,(Integer n) -> {});
+        this(x,y,width,height,name,false, true,(Integer n) -> {});
     }
+
+    public ColumnWidget(int x, int y, int width, int height, String name, Consumer<Integer> onResize) {
+        this(x,y,width,height,name,true,true,onResize);
+    }
+
 
 
     public void addWidget(Widget w) {
@@ -37,6 +42,8 @@ public class ColumnWidget extends Widget {
         w.setPosition(getX(),getY()+occupancy);
         w.setWidth(getWidth());
         occupancy += w.getHeight();
+        // 1 pixel margin so borders don't overlap
+        occupancy += 1;
         widgets.add(w);
     }
 

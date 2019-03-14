@@ -43,7 +43,7 @@ public class TableRowsWindow {
         int nbColumns = tableRowsHandler.getColumnNames().size();
         for(String columnName : columnNames) {
             List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
-            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-ci-1), 500, columnName, true,
+            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-ci-1), 500, columnName, true, true,
                     (Integer w) -> {
                         int cj = 0;
                         for( ColumnWidget cw : currentTraversed ) {
@@ -85,6 +85,7 @@ public class TableRowsWindow {
                 tableRowsHandler.addRow();
                 getUiWindowHandler().loadTableRowsWindow(tableRowsHandler.getOpenTable());
             }
+            return false;
         });
 
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {

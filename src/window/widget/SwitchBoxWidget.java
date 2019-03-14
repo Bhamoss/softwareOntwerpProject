@@ -14,18 +14,18 @@ public class SwitchBoxWidget extends LabelWidget {
     int optionIndex;
     boolean blocked;
 
-    public SwitchBoxWidget(int x, int y, int width, int height, boolean border, List<String> options, Function<String, Boolean> isValidOption, Consumer<String> setOption) {
+    public SwitchBoxWidget(int x, int y, int width, int height, boolean border, List<String> options, String initialOption, Function<String, Boolean> isValidOption, Consumer<String> setOption) {
         super(x, y, width, height, border, "");
         assert(options != null);
         assert(options.size() > 0);
         this.options = options;
         this.isValidOption = isValidOption;
         this.setOption = setOption;
-        setOption(0);
+        setOption(options.indexOf(initialOption));
     }
 
-    public SwitchBoxWidget(boolean border, List<String> options, Function<String, Boolean> isValidOption, Consumer<String> setOption) {
-        this(0,0,0,25,border,options,isValidOption,setOption);
+    public SwitchBoxWidget(boolean border, List<String> options, String initialOption, Function<String, Boolean> isValidOption, Consumer<String> setOption) {
+        this(0,0,0,25,border,options,initialOption, isValidOption,setOption);
     }
 
 

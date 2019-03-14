@@ -37,13 +37,13 @@ public class TablesWindow {
     public LinkedList<Widget> getLayout(TableHandler tableHandler){
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
+
         ColumnWidget tablesColumn = new ColumnWidget(
-                45, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true,
+                46, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true, true,
                 (Integer w) -> getUIWindowController().setTableModeWidth(w));
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         ColumnWidget openingColumn = new ColumnWidget(
-                45,10, getUIWindowController().getTableModeWidth(), 500, "", true, (Integer n)->{getUIWindowController().setTableModeWidth(n);}
-                );
+                45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
 
         for(String tableName : tableHandler.getTableNames()){
             // Create the editor window
@@ -73,7 +73,9 @@ public class TablesWindow {
                                 getUIWindowController().loadTableDesignWindow(editor.getStoredText());
                             else
                                 getUIWindowController().loadTableRowsWindow(editor.getStoredText());
-                            getUIWindowController().repaint();
+                            return true;
+                        } else {
+                            return false;
                         }
                     });
             openingColumn.addWidget(openButton);
@@ -90,12 +92,15 @@ public class TablesWindow {
                     if(clickCount == 2) {
                         tableHandler.addTable();
                         getUIWindowController().loadTablesWindow();
-                    }}
-                    ));
+                        return true;
+                    } else {
+                        return false;}
+                }));
 
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null) {
                 tableHandler.removeTable(getUIWindowController().getSelectedItem());
+                getUIWindowController().loadTablesWindow();
                 return true;
             }
             return false;
