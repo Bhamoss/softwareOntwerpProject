@@ -254,4 +254,7 @@ public class UIWindowHandler extends CanvasWindow{
             repaint();
         }
     }
+
+    public void load(String absolutePath) {
+    }
 }

@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.*;
+import window.UIWindowHandler;
 
+
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,9 +20,11 @@ public class UseCases {
 
     @BeforeEach
     void setUp() {
-        ui = new UIWindowHandler();
-        ui.show();
-        ui.loadTablesWindow();
+        java.awt.EventQueue.invokeLater(() -> {
+            ui = new UIWindowHandler();
+            ui.show();
+            ui.loadTablesWindow();
+        });
     }
 
     @BeforeAll
@@ -43,11 +48,12 @@ public class UseCases {
 
     @Test
     @DisplayName("Create Table MSS")
-    void creatTableMSS()
+    void createTableMSS()
     {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("CreateTable.txt").getFile());
         ui.load(file.getAbsolutePath());
+        assertTrue(true);
     }
 
 }
