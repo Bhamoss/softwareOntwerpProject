@@ -52,7 +52,8 @@ public class EmailColumn extends Column {
      */
     @Override
     public boolean canHaveAsType(String type) {
-        return type.equals("Email") || type.equals("String");
+        // TODO: review + update commentaar
+        return type.equals("Email") || type.equals("String") || (getDefaultValue().equals("") && getNbValues()==0);
     }
 
     /**
@@ -88,12 +89,17 @@ public class EmailColumn extends Column {
      *          if the given value contains 2 or more times the character '@'.
      */
     public static boolean isEmail(String value) {
+        // TODO: review
+        // Semi hacky manier, maar werkt wel in tegenstelling to de shit in comments
+        return 1 == (value.length() - value.replace("@", "").length());
+        /*
         int i = value.indexOf('@');
         if (i > -1) {
             if (value.indexOf('@', i + 1) > -1)
                 return false;
         }
         return true;
+        */
     }
 
 }

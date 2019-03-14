@@ -106,13 +106,12 @@ public class TableHandler {
 
 
     /**
-     *
-     * @param tableName
+     * Returns whether the given table is empty.
      * @return True if the given table has no columns, else false.
      * @throws IllegalTableException
      */
     public boolean isTableEmpty(String tableName) throws IllegalTableException {
-        return false;
+        return getTableManager().isTableEmpty(tableName);
     }
 
 

@@ -2,9 +2,11 @@ package window;
 
 import tablr.TableDesignHandler;
 import tablr.column.Column;
+import tablr.column.EmailColumn;
 import window.widget.*;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,8 +72,12 @@ public class TableDesignWindow{
             SwitchBoxWidget typeBox = new SwitchBoxWidget(true,
                     tableDesignHandler.getAvailableColumnTypes(),
                     tableDesignHandler.getColumnType(columnName),
-                    (String type) -> tableDesignHandler.canHaveAsColumnType(editor.getStoredText(), type),
-                    (String type) -> tableDesignHandler.setColumnType(editor.getStoredText(), type)
+                    (String type) ->
+                            tableDesignHandler.canHaveAsColumnType(editor.getStoredText(), type),
+                    (String type) -> {
+                            tableDesignHandler.setColumnType(editor.getStoredText(), type);
+                            reload(tableDesignHandler);
+                    }
             );
             typeColumn.addWidget(typeBox);
 
@@ -80,7 +86,7 @@ public class TableDesignWindow{
             CheckBoxWidget blanksBox = new CheckBoxWidget(
                     tableDesignHandler.getColumnAllowBlank(editor.getStoredText()),
                     (Boolean toggle)->
-                        tableDesignHandler.setColumnAllowBlanks(editor.getStoredText(),toggle),
+                            tableDesignHandler.setColumnAllowBlanks(editor.getStoredText(),toggle),
                     (Boolean toggle)->
                             tableDesignHandler.canHaveAsColumnAllowBlanks(editor.getStoredText(),toggle)
 
@@ -89,9 +95,17 @@ public class TableDesignWindow{
 
             // DEFAULT VALUE
             Widget defaultWidget;
-            if(tableDesignHandler.getColumnType(columnName).equals("Boolean")){
-                defaultWidget = new CheckBoxWidget((Boolean toggle)->{
-                    tableDesignHandler.setColumnDefaultValue(editor.getStoredText(),toggle.toString());
+            if(tableDesignHandler.getColumnType(columnName).equals("Boolean")) {
+                LinkedList<String> options = new LinkedList<>();
+                options.add("true");
+                options.add("false");
+                if (tableDesignHandler.getColumnAllowBlank(editor.getStoredText()))
+                    options.add("");
+                defaultWidget = new SwitchBoxWidget(true, options,
+                        tableDesignHandler.getColumnDefaultValue(editor.getStoredText()),
+                        (String option) -> true,
+                        (String option)->{
+                    tableDesignHandler.setColumnDefaultValue(editor.getStoredText(),option);
                 });
             }else {
                 defaultWidget = new EditorWidget(true,
@@ -105,6 +119,7 @@ public class TableDesignWindow{
             defaultColumn.addWidget(defaultWidget);
         }
 
+        // CREATE COLUMN BUTTON
         layout.add(new ButtonWidget(
                 20,500,105,30,true,"Create column",
                 (Integer clickCount) -> {
@@ -116,13 +131,15 @@ public class TableDesignWindow{
                     return false;
                 }));
 
+        // KEY EVENTS
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_ESCAPE) {
                 getUiWindowHandler().loadTablesWindow();
                 return true;
-            } else if (keyCode == KeyEvent.VK_DELETE) {
+            } else if (keyCode == KeyEvent.VK_DELETE && getUiWindowHandler().getSelectedItem() != null) {
                 tableDesignHandler.removeColumn(getUiWindowHandler().getSelectedItem());
                 getUiWindowHandler().loadTableDesignWindow(tableDesignHandler.getOpenTable());
+                getUiWindowHandler().removeTableRowsEntry(tableDesignHandler.getOpenTable(), getUiWindowHandler().getSelectedItem());
                 return true;
             } else if (keyCode == KeyEvent.VK_CONTROL) {
                 getUiWindowHandler().loadTableRowsWindow(tableDesignHandler.getOpenTable());
@@ -138,6 +155,10 @@ public class TableDesignWindow{
         for (CheckBoxWidget w : checkBoxes) {
             w.forceUncheck();
         }
+    }
+
+    private void reload(TableDesignHandler handler) {
+        getUiWindowHandler().loadTableDesignWindow(handler.getOpenTable());
     }
 
 

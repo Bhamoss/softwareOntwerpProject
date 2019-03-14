@@ -20,8 +20,9 @@ public class SwitchBoxWidget extends LabelWidget {
         assert(options.size() > 0);
         this.options = options;
         this.isValidOption = isValidOption;
-        this.setOption = setOption;
+        this.setOption = n -> {};
         setOption(options.indexOf(initialOption));
+        this.setOption = setOption;
     }
 
     public SwitchBoxWidget(boolean border, List<String> options, String initialOption, Function<String, Boolean> isValidOption, Consumer<String> setOption) {

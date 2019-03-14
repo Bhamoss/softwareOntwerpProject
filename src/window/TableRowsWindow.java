@@ -28,7 +28,7 @@ public class TableRowsWindow {
     public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler){
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
-
+        String tableName = tableRowsHandler.getOpenTable();
 
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         layout.add(selectedColumn);
@@ -39,24 +39,24 @@ public class TableRowsWindow {
         ArrayList<String> columnNames = tableRowsHandler.getColumnNames();
         LinkedList<ColumnWidget> traversedColumns = new LinkedList<>();
         Collections.reverse(columnNames);
-        int ci = 0;
-        int nbColumns = tableRowsHandler.getColumnNames().size();
+        int ci = 1;
         for(String columnName : columnNames) {
             List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
-            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-ci-1), 500, columnName, true, true,
+            if (!getUiWindowHandler().containsTableRowEntry(tableName,columnName)) {
+                getUiWindowHandler().addTableRowsEntry(tableName,columnName,80);
+            }
+            column = new ColumnWidget(calcPos(columnName, tableRowsHandler.getColumnNames(), tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),columnName), 500, columnName, true, true,
                     (Integer w) -> {
-                        int cj = 0;
                         for( ColumnWidget cw : currentTraversed ) {
-                            cw.setX(calcPos(cj, tableRowsHandler));
-                            cj++;
+                            cw.setX(calcPos(columnName, tableRowsHandler.getColumnNames(), tableRowsHandler));
                         }
-                        getUiWindowHandler().addTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-cj-1, w);
+                        getUiWindowHandler().addTableRowsEntry(tableName, columnName, w);
                 });
             traversedColumns.add(column);
 
-            for (int i = 0; i<tableRowsHandler.getNbRows(); i++) {
+            for (int i = 1; i<=tableRowsHandler.getNbRows(); i++) {
                 int row = i;
-                editor = new EditorWidget(true, tableRowsHandler.getCellValue(columnName,i),
+                editor = new EditorWidget(true, tableRowsHandler.getCellValue(columnName,ci),
                         (String oldName, String newName) -> tableRowsHandler.canHaveAsCellValue(columnName,row,newName),
                         (String oldName, String newName) -> tableRowsHandler.setCellValue(columnName,row,newName)
                         );
@@ -68,7 +68,7 @@ public class TableRowsWindow {
 
         }
 
-        for (int i = 0; i<nbColumns; i++) {
+        for (int i = 1; i<=tableRowsHandler.getNbRows(); i++) {
             // Create a button left of the editor to select it
             Integer row = i;
             CheckBoxWidget selectButton = new CheckBoxWidget(
@@ -80,19 +80,22 @@ public class TableRowsWindow {
             checkBoxes.add(selectButton);
         }
 
-        ButtonWidget createButton = new ButtonWidget(true,"",(Integer clickCount) ->{
-            if(clickCount == 2){
-                tableRowsHandler.addRow();
-                getUiWindowHandler().loadTableRowsWindow(tableRowsHandler.getOpenTable());
-            }
-            return false;
+        ButtonWidget createButton = new ButtonWidget(20,500,105,30,true,"Create Row",
+                (Integer clickCount) ->{
+                    if(clickCount == 2){
+                        tableRowsHandler.addRow();
+                        getUiWindowHandler().loadTableRowsWindow(tableRowsHandler.getOpenTable());
+                        return true;
+                    }
+                    return false;
         });
+        layout.add(createButton);
 
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUiWindowHandler().getSelectedItem() != null) {
                 tableRowsHandler.removeRow(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
-                getUiWindowHandler().removeTableRowsWidth(tableRowsHandler.getOpenTable(),Integer.valueOf(getUiWindowHandler().getSelectedItem()));
-
+                //getUiWindowHandler().removeTableRowsWidth(tableRowsHandler.getOpenTable(),Integer.valueOf(getUiWindowHandler().getSelectedItem()));
+                getUiWindowHandler().loadTableRowsWindow(tableRowsHandler.getOpenTable());
                 return true;
             } else if (keyCode == KeyEvent.VK_CONTROL) {
                 getUiWindowHandler().loadTableDesignWindow(tableRowsHandler.getOpenTable());
@@ -115,11 +118,14 @@ public class TableRowsWindow {
         }
     }
 
-    private int calcPos(int index, TableRowsHandler tableHandler) {
-        int columnIndex = tableHandler.getColumnNames().size() - index - 1;
+    private int calcPos(String columnName, List<String> names, TableRowsHandler tableHandler) {
         int x = 45;
-        for (int i=0; i<columnIndex;i++)
-            x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable(),i);
+        for (String name : names) {
+            if (name == columnName)
+                break;
+            System.out.println(getUiWindowHandler());
+            x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable(),name);
+        }
         return x;
     }
 

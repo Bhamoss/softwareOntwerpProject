@@ -15,6 +15,11 @@ public class BooleanColumn extends Column {
      */
     @Override
     public boolean canHaveAsType(String type) {
+        // TODO: this is wrong
+        /*
+        Als je van boolean naar integer gaat (de enige mogelijk transitie vanuit boolean in de gui)
+        is die enkel valid als de default+values blanks zijn && blanks toegelaten zijn
+         */
         return type.equals("Boolean") || type.equals("Integer") || type.equals("String");
     }
 
@@ -77,8 +82,8 @@ public class BooleanColumn extends Column {
         if (!super.canHaveAsValue(value))
             return false;
         else
-            return ( value.equals("True") ||
-                        value.equals("False") || value.equals(""));
+            return ( value.equals("true") ||
+                        value.equals("false") || value.equals(""));
     }
 
 }

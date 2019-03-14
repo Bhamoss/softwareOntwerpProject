@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import be.kuleuven.cs.som.*;
 
 
 /**

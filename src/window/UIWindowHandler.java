@@ -7,8 +7,10 @@ import tablr.TableRowsHandler;
 import window.widget.Widget;
 
 import java.awt.*;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * A class representing the UI handler.
@@ -161,41 +163,35 @@ public class UIWindowHandler extends CanvasWindow{
     }
 
     public void loadTableDesignWindow(String tableName){
-        super.setTitle("Tablr - Designing \""+ tableName + "\"");
+        super.setTitle("Tablr - Designing "+ tableName);
         setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
         changeSelectedItem(null);
     }
 
-    private HashMap<String, LinkedList<Integer>> tableRowsWidths;
+    private HashMap<String, HashMap<String, Integer>> tableRowsWidths;
 
-    public Integer getTableRowsWidth(String tableName, Integer columnIndex){
-        if(tableRowsWidths.keySet().contains(tableName) && tableRowsWidths.get(tableName).size() > columnIndex)
-            return tableRowsWidths.get(tableName).get(columnIndex);
-        else
-            return 80;
+    public Integer getTableRowsWidth(String tableName, String columnName){
+        return tableRowsWidths.get(tableName).get(columnName);
     }
 
-    public void addTableRowsWidth(String string, Integer columnIndex, Integer width){
-        LinkedList<Integer> newWidths = tableRowsWidths.get(string);
-        while(newWidths.size() < columnIndex){
-            newWidths.add(80);
-        }
-        newWidths.add(columnIndex,width);
-        tableRowsWidths.put(string,newWidths);
+    public boolean containsTableRowEntry(String tableName, String columnName) {
+        if (!tableRowsWidths.containsKey(tableName))
+            tableRowsWidths.put(tableName, new HashMap<>());
+        return tableRowsWidths.get(tableName).containsKey(columnName);
     }
 
-    public void removeTableRowsWidth(String string, Integer columnIndex){
-        LinkedList<Integer> newWidths = tableRowsWidths.get(string);
-        if(columnIndex < newWidths.size()){
-            newWidths.remove(columnIndex);
-        }
-        tableRowsWidths.put(string,newWidths);
+    public void addTableRowsEntry(String tableName, String columnName, int w) {
+        tableRowsWidths.get(tableName).put(columnName, w);
+    }
+
+    public void removeTableRowsEntry(String tableName, String columnName){
+        tableRowsWidths.get(tableName).remove(columnName);
     }
 
 
 
     public void loadTableRowsWindow(String tableName){
-        super.setTitle("Tablr - Editing \""+ tableName + "\"");
+        super.setTitle("Tablr - Editing "+ tableName);
         setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
         changeSelectedItem(null);
     }

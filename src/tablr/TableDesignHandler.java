@@ -47,6 +47,19 @@ public class TableDesignHandler {
         return getTableManager().getColumnNames();
     }
 
+
+    /**
+     * Returns the amount of columns in the opened table.
+     * @return  Amount of all the columns in this table.
+     * @throws IllegalTableException
+     * if there is no open table
+     * | getOpenTable() == null
+     */
+    public int getNbColumns() throws IllegalTableException
+    {
+        return getColumnNames().size();
+    }
+
     /**
      * Returns the name of the current open table or null if there is no open table.
      */
@@ -166,6 +179,7 @@ public class TableDesignHandler {
      */
     public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException, IllegalTableException
     {
+        System.out.println();
         return getTableManager().canHaveAsColumnType(columnName, type);
     }
 

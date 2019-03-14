@@ -141,6 +141,15 @@ public class TableManager {
         else {return getCurrentTable().getName();}
     }
 
+    /**
+     * Returns if the current open table is empty.
+     * @return true if the current table has columns else false.
+     */
+    boolean isTableEmpty(String tableName)
+    {
+        return getTable(tableName).getNbColumns() == 0;
+    }
+
 
     /**
      *
