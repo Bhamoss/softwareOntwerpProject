@@ -112,7 +112,6 @@ public class TableHandler {
      * @throws IllegalTableException
      */
     public boolean isTableEmpty(String tableName) throws IllegalTableException {
-        // TODO: implement
         return false;
     }
 

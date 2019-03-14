@@ -586,8 +586,8 @@ public class Table {
         if (!isAlreadyUsedColumnName(columnName))
             throw new IllegalColumnException();
         // check of deze naam al bestaat in deze table
-        //if (isAlreadyUsedColumnName(name))
-        //    throw new IllegalArgumentException();
+        if (isAlreadyUsedColumnName(name) && !name.equals(columnName))
+            throw new IllegalArgumentException();
         getColumn(columnName).setName(name);
     }
 
