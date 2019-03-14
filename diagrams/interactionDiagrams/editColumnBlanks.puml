@@ -5,18 +5,19 @@ Actor User
 
 User -> TableDesignHandler: changeColumnBlanks(column)
 activate TableDesignHandler
-TableDesignHandler -> Table: changeColumnBlanks(column)
+TableDesignHandler -> TableManager: setColumnDV(column, value)
+activate TableManager
+TableManager -> Table: setColumnAllowBlanks(column, value)
 activate Table
-Table -> Column: changeBlanks()
+Table -> Column: setBlanksAllowed(value)
 activate Column
-alt changeOfBlanksAllowed()
-    Column -> Column: b = areBlanksAllowed()
-    Column -> Column: setBlanks(!b)
-else
+opt !canHaveAsColumnAllowBlanks(value)
     Column -> Table: ERROR
     deactivate Column
-    Table -> TableDesignHandler: ERROR
+    Table -> TableManager: ERROR
     deactivate Table
+    TableManager -> TableDesignHandler: ERROR
+    deactivate TableManager
     TableDesignHandler -> User: ERROR
     deactivate TableDesignHandler
 end

@@ -467,4 +467,88 @@ public abstract class Column {
             add("Integer");
         }};
     }
+
+    public  Column setColumnType(String type) {
+        Column newColumn;
+        String dv;
+        switch (type) {
+            case "String":
+                newColumn = new StringColumn(getName(), getNbValues(),
+                        getDefaultValue(), isBlanksAllowed());
+                break;
+            case "Email":
+                newColumn = new EmailColumn(getName(), getNbValues(),
+                        getDefaultValue(), isBlanksAllowed());
+                break;
+            case "Boolean":
+                dv = getDefaultValue();
+                if (getType().equals("Integer")) {
+                    switch (getDefaultValue()) {
+                        case "0":
+                            dv = "False";
+                            break;
+                        case "1":
+                            dv = "True";
+                            break;
+                        case "":
+                            dv = "";
+                            break;
+                    }
+                }
+                newColumn = new BooleanColumn(getName(), getNbValues(),
+                        dv, isBlanksAllowed());
+                break;
+            case "Integer":
+                dv = getDefaultValue();
+                if (getType().equals("Boolean")) {
+                    switch (getDefaultValue()) {
+                        case "True":
+                            dv ="1";
+                            break;
+                        case "False":
+                            dv ="0";
+                            break;
+                        case "":
+                            dv ="";
+                            break;
+                    }
+                }
+                newColumn = new IntegerColumn(getName(), getNbValues(),
+                        dv, isBlanksAllowed());
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        for (int i = 1; i <= getNbValues(); i++){
+            if (type.equals("Boolean") && getType().equals("Integer")) {
+                switch (getValueAt(i)) {
+                    case "0":
+                        newColumn.setValueAt(i, "False");
+                        break;
+                    case "1":
+                        newColumn.setValueAt(i, "True");
+                        break;
+                    case "":
+                        newColumn.setValueAt(i, "");
+                        break;
+                }
+            }
+            else if (type.equals("Integer") && getType().equals("Boolean")){
+                switch (getValueAt(i)) {
+                    case "True":
+                        newColumn.setValueAt(i, "1");
+                        break;
+                    case "False":
+                        newColumn.setValueAt(i, "0");
+                        break;
+                    case "":
+                        newColumn.setValueAt(i, "");
+                        break;
+                }
+            } else {
+                newColumn.setValueAt(i, getValueAt(i));
+            }
+        }
+        return newColumn;
+    }
 }

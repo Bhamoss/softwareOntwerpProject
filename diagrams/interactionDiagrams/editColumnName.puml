@@ -5,19 +5,22 @@ Actor User
 
 User -> TableDesignHandler: setColumnName(column, name)
 activate TableDesignHandler
-TableDesignHandler -> Table: setColumnName(column, name)
+TableDesignHandler -> TableManager: setColumnName(column, name)
+activate TableManager
+TableManager -> Table: setColumnName(column, name)
+
 activate Table
 alt !isAllReadyUsedColumnName(name)
-    Table -> Column: isEmpty = isEmptyName(name)
+    Table -> Column: setName(name)
     activate Column
-    deactivate Column
-    alt !isEmpty
-        Table -> Column: setName(name)
-        activate Column
+
+    opt !canHaveAsName(name)
+        Column -> Table: ERROR
         deactivate Column
-    else
-        Table -> TableDesignHandler: ERROR
+        Table -> TableManager: ERROR
         deactivate Table
+        TableManager -> TableDesignHandler: ERROR
+        deactivate TableManager
         TableDesignHandler -> User: ERROR
     end
 else
