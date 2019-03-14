@@ -865,7 +865,7 @@ public class TableManager {
     private int getTableIndex(Table table) throws IllegalArgumentException
     {
         if(!hasAsTable(table)) throw new IllegalArgumentException("table is not in tables");
-        for (int i = 1; i < getNbTables(); i++) {
+        for (int i = 1; i <= getNbTables(); i++) {
             if (getTableAt(i) == table) {return i;}
         }
         return -1;
@@ -941,7 +941,7 @@ public class TableManager {
         Table t = getTableAt(index);
         if(getCurrentTable() == t) {setCurrentTable(null);}
         t.terminate();
-        tables.remove(index-1);
+        tables.remove(index);
 
 
     }
