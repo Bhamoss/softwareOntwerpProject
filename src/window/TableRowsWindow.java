@@ -1,7 +1,6 @@
 package window;
 
 //import sun.awt.image.ImageWatched;
-import tablr.TableDesignHandler;
 import tablr.TableRowsHandler;
 import window.widget.*;
 
@@ -28,6 +27,7 @@ public class TableRowsWindow {
 
     public LinkedList<Widget> getLayout(TableRowsHandler tableRowsHandler){
         LinkedList<Widget> layout = new LinkedList<>();
+        checkBoxes = new LinkedList<>();
 
 
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
@@ -43,17 +43,14 @@ public class TableRowsWindow {
         int nbColumns = tableRowsHandler.getColumnNames().size();
         for(String columnName : columnNames) {
             List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
-
-            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable()).get(nbColumns-ci-1), 500, columnName, true,
+            column = new ColumnWidget(calcPos(ci, tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-ci-1), 500, columnName, true,
                     (Integer w) -> {
                         int cj = 0;
                         for( ColumnWidget cw : currentTraversed ) {
                             cw.setX(calcPos(cj, tableRowsHandler));
                             cj++;
                         }
-                        LinkedList<Integer> newColumnWidth = getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable());
-                        newColumnWidth.set(nbColumns-cj-1, w);
-                        getUiWindowHandler().putTableRowsWidth(tableRowsHandler.getOpenTable(),newColumnWidth);
+                        getUiWindowHandler().addTableRowsWidth(tableRowsHandler.getOpenTable(),nbColumns-cj-1, w);
                 });
             traversedColumns.add(column);
 
@@ -83,16 +80,24 @@ public class TableRowsWindow {
             checkBoxes.add(selectButton);
         }
 
+        ButtonWidget createButton = new ButtonWidget(true,"",(Integer clickCount) ->{
+            if(clickCount == 2){
+                tableRowsHandler.addRow();
+                getUiWindowHandler().loadTableRowsWindow(tableRowsHandler.getOpenTable());
+            }
+        });
+
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUiWindowHandler().getSelectedItem() != null) {
                 tableRowsHandler.removeRow(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
-                LinkedList<Integer> newColumnWidth = getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable());
-                newColumnWidth.remove(Integer.valueOf(getUiWindowHandler().getSelectedItem()));
-                getUiWindowHandler().putTableRowsWidth(tableRowsHandler.getOpenTable(),newColumnWidth);
+                getUiWindowHandler().removeTableRowsWidth(tableRowsHandler.getOpenTable(),Integer.valueOf(getUiWindowHandler().getSelectedItem()));
 
                 return true;
-            } else if (keyCode == KeyEvent.VK_ALT) {
+            } else if (keyCode == KeyEvent.VK_CONTROL) {
                 getUiWindowHandler().loadTableDesignWindow(tableRowsHandler.getOpenTable());
+                getUiWindowHandler().repaint();
+            }else if (keyCode == KeyEvent.VK_ESCAPE) {
+                getUiWindowHandler().loadTablesWindow();
                 getUiWindowHandler().repaint();
             }
             return false;
@@ -113,7 +118,7 @@ public class TableRowsWindow {
         int columnIndex = tableHandler.getColumnNames().size() - index - 1;
         int x = 45;
         for (int i=0; i<columnIndex;i++)
-            x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable()).get(i);
+            x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable(),i);
         return x;
     }
 

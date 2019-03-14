@@ -58,6 +58,7 @@ public class TableDesignWindow{
                     (String oldName, String newName) ->
                             true,
                             //tableDesignHandler.canHaveAsColumnName(oldName,newName),
+
                     tableDesignHandler::setColumnName
             );
             namesColumn.addWidget(editor);

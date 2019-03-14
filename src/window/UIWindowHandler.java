@@ -168,15 +168,28 @@ public class UIWindowHandler extends CanvasWindow{
 
     private HashMap<String, LinkedList<Integer>> tableRowsWidths;
 
-    public LinkedList<Integer> getTableRowsWidth(String string){
-        if(tableRowsWidths.keySet().contains(string))
-            return tableRowsWidths.get(string);
+    public Integer getTableRowsWidth(String tableName, Integer columnIndex){
+        if(tableRowsWidths.keySet().contains(tableName) && tableRowsWidths.get(tableName).size() > columnIndex)
+            return tableRowsWidths.get(tableName).get(columnIndex);
         else
-            return new LinkedList<>();
+            return 80;
     }
 
-    public void putTableRowsWidth(String string, LinkedList<Integer> width){
-        tableRowsWidths.put(string,width);
+    public void addTableRowsWidth(String string, Integer columnIndex, Integer width){
+        LinkedList<Integer> newWidths = tableRowsWidths.get(string);
+        while(newWidths.size() < columnIndex){
+            newWidths.add(80);
+        }
+        newWidths.add(columnIndex,width);
+        tableRowsWidths.put(string,newWidths);
+    }
+
+    public void removeTableRowsWidth(String string, Integer columnIndex){
+        LinkedList<Integer> newWidths = tableRowsWidths.get(string);
+        if(columnIndex < newWidths.size()){
+            newWidths.remove(columnIndex);
+        }
+        tableRowsWidths.put(string,newWidths);
     }
 
 
@@ -234,7 +247,7 @@ public class UIWindowHandler extends CanvasWindow{
         // Handle all mouse events and repaint if necessary
         boolean paintflag = false;
         for(Widget w: getWidgets()) {
-            if (!blocked || w.isBlocking())
+            if (!blocked)
                 paintflag |= w.handleMouseEvent(id, x, y, clickCount);
         }
         if (paintflag) {
