@@ -8,9 +8,10 @@ import java.util.function.Consumer;
 public class ColumnWidget extends Widget {
 
     private LinkedList<Widget> widgets;
+    private final String name;
     private int occupancy;
     private boolean resizing, resizable;
-    private Consumer<Integer> onResize;
+    private final Consumer<Integer> onResize;
 
     public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
         super(x, y, width, height, false);
@@ -20,6 +21,7 @@ public class ColumnWidget extends Widget {
         resizing = false;
         this.resizable = resizable;
         this.onResize = onResize;
+        this.name = name;
 
         LabelWidget topLabel = new LabelWidget(x,y,width,25,visible,name);
         this.addWidget(topLabel);
@@ -47,13 +49,15 @@ public class ColumnWidget extends Widget {
         widgets.add(w);
     }
 
-    private void resize(int x) {
+    private void resize(int w) {
+        if (w <= 5)
+            return;
         if (!resizable)
             return;
-        this.setWidth(x);
-        this.onResize.accept(x);
-        for (Widget w: widgets) {
-            w.setWidth(x);
+        this.setWidth(w);
+        this.onResize.accept(w);
+        for (Widget wg: widgets) {
+            wg.setWidth(w);
         }
     }
 
@@ -64,6 +68,10 @@ public class ColumnWidget extends Widget {
         for(Widget w: widgets) {
             w.setX(x);
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

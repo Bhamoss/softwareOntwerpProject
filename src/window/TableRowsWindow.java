@@ -39,16 +39,19 @@ public class TableRowsWindow {
         ArrayList<String> columnNames = tableRowsHandler.getColumnNames();
         LinkedList<ColumnWidget> traversedColumns = new LinkedList<>();
         Collections.reverse(columnNames);
-        int ci = 1;
-        for(String columnName : columnNames) {
-            List<ColumnWidget> currentTraversed = traversedColumns.subList(0,traversedColumns.size());
+
+        for (String columnName : columnNames) {
             if (!getUiWindowHandler().containsTableRowEntry(tableName,columnName)) {
                 getUiWindowHandler().addTableRowsEntry(tableName,columnName,80);
             }
+        }
+
+        for(String columnName : columnNames) {
+            ColumnWidget[] currentTraversed = traversedColumns.stream().toArray(ColumnWidget[]::new);
             column = new ColumnWidget(calcPos(columnName, tableRowsHandler.getColumnNames(), tableRowsHandler), 10, getUiWindowHandler().getTableRowsWidth(tableRowsHandler.getOpenTable(),columnName), 500, columnName, true, true,
                     (Integer w) -> {
                         for( ColumnWidget cw : currentTraversed ) {
-                            cw.setX(calcPos(columnName, tableRowsHandler.getColumnNames(), tableRowsHandler));
+                            cw.setX(calcPos(cw.getName(), tableRowsHandler.getColumnNames(), tableRowsHandler));
                         }
                         getUiWindowHandler().addTableRowsEntry(tableName, columnName, w);
                 });
@@ -56,7 +59,7 @@ public class TableRowsWindow {
 
             for (int i = 1; i<=tableRowsHandler.getNbRows(); i++) {
                 int row = i;
-                editor = new EditorWidget(true, tableRowsHandler.getCellValue(columnName,ci),
+                editor = new EditorWidget(true, tableRowsHandler.getCellValue(columnName,i),
                         (String oldName, String newName) -> tableRowsHandler.canHaveAsCellValue(columnName,row,newName),
                         (String oldName, String newName) -> tableRowsHandler.setCellValue(columnName,row,newName)
                         );
@@ -64,7 +67,6 @@ public class TableRowsWindow {
                 column.addWidget(editor);
             }
             layout.add(column);
-            ci++;
 
         }
 
@@ -123,7 +125,7 @@ public class TableRowsWindow {
         for (String name : names) {
             if (name == columnName)
                 break;
-            System.out.println(getUiWindowHandler());
+            System.out.println();
             x += getUiWindowHandler().getTableRowsWidth(tableHandler.getOpenTable(),name);
         }
         return x;
