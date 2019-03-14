@@ -103,7 +103,8 @@ public class ColumnWidget extends Widget {
         }
         boolean r = false;
         for (Widget w: widgets) {
-            r |= w.handleMouseEvent(id, x, y, clickCount);
+            if (!isBlocking() || w.isBlocking())
+                r |= w.handleMouseEvent(id, x, y, clickCount);
         }
         return r;
     }

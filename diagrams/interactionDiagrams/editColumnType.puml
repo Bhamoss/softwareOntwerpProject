@@ -4,26 +4,26 @@ Actor User
 
 
 
-User -> TableDesignHandler: setColumnType(column)
+User -> TableDesignHandler: setColumnType(column, type)
 activate TableDesignHandler
-TableDesignHandler -> Table: setColumnType(column)
+TableDesignHandler -> TableManager: setColumnType(column, type)
+activate TableManager
+TableManager -> Table: setColumnType(column, type)
 activate Table
-Table -> Column: changeType()
+Table -> Column: setType(type)
 activate Column
-Column -> Column: newType = getFollowingType()
-note left
-    Is dit correct?
-    method geeft volgende
-    type terug, gebaseerd
-    op huidige type
-end note
-alt isValidType(newType)
-    Column -> Column: setType(newType)
+
+alt canHaveAsType(newType)
+    create "newColumn : Column"
+    Column -> "newColumn : Column": create Column
+    Column --> Table: newColumn
 else
     Column -> Table: ERROR
     deactivate Column
-    Table -> TableDesignHandler: ERROR
+    Table -> TableManager: ERROR
     deactivate Table
+    TableManager -> TableDesignHandler: ERROR
+    deactivate TableManager
     TableDesignHandler -> User: ERROR
     deactivate TableDesignHandler
 end
