@@ -34,6 +34,7 @@ class ColumnTest {
     void setName_LegalCase() throws IllegalColumnException {
         boolColumn10.setName("newName");
         assertEquals("newName", boolColumn10.getName());
+        boolColumn10.setName("newName");
     }
 
     @Test

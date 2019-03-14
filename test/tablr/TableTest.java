@@ -206,6 +206,8 @@ class TableTest {
     void setColumnName() {
         tenTable.setColumnName("Column1", "Testtest");
         assertEquals("Testtest", tenTable.getColumnName(1));
+        tenTable.setColumnName("Testtest", "Testtest");
+        tenTable.setColumnName("Column5", "Column5");
     }
 
     @Test
