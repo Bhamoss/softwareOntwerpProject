@@ -247,7 +247,7 @@ public class UIWindowHandler extends CanvasWindow{
         // Handle all mouse events and repaint if necessary
         boolean paintflag = false;
         for(Widget w: getWidgets()) {
-            if (!blocked)
+            if (!blocked || w.isBlocking())
                 paintflag |= w.handleMouseEvent(id, x, y, clickCount);
         }
         if (paintflag) {

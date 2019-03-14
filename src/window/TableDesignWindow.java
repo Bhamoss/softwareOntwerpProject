@@ -16,6 +16,7 @@ public class TableDesignWindow{
     }
 
     private final UIWindowHandler uiWindowHandler;
+    private LinkedList<CheckBoxWidget> checkBoxes;
 
 
     public UIWindowHandler getUiWindowHandler() {
@@ -25,6 +26,8 @@ public class TableDesignWindow{
 
     public LinkedList<Widget> getLayout(TableDesignHandler tableDesignHandler){
         LinkedList<Widget> layout = new LinkedList<>();
+        checkBoxes = new LinkedList<>();
+
 
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         ColumnWidget typeColumn = new ColumnWidget(45+getUiWindowHandler().getTableDesignWidth(tableDesignHandler.getOpenTable()),10,55,500, "Type");
@@ -56,13 +59,16 @@ public class TableDesignWindow{
 
             // SELECTION
             CheckBoxWidget selectBox = new CheckBoxWidget((Boolean toggle) ->{
+                unselectAllBoxes();
                 getUiWindowHandler().changeSelectedItem(editor.getStoredText());
             });
             selectedColumn.addWidget(selectBox);
+            checkBoxes.add(selectBox);
 
 
             // TYPE
-            SwitchBoxWidget typeBox = new SwitchBoxWidget(true,tableDesignHandler.getAvailableColumnTypes(),
+            SwitchBoxWidget typeBox = new SwitchBoxWidget(true,
+                    tableDesignHandler.getAvailableColumnTypes(),
                     tableDesignHandler.getColumnType(columnName),
                     (String type) -> tableDesignHandler.canHaveAsColumnType(editor.getStoredText(), type),
                     (String type) -> tableDesignHandler.setColumnType(editor.getStoredText(), type)
@@ -71,8 +77,14 @@ public class TableDesignWindow{
 
 
             // BLANKS ALLOWED
-            //TODO correcte canHaveAs
-            CheckBoxWidget blanksBox = new CheckBoxWidget((Boolean toggle)->tableDesignHandler.setColumnAllowBlanks(editor.getStoredText(),toggle));
+            CheckBoxWidget blanksBox = new CheckBoxWidget(
+                    tableDesignHandler.getColumnAllowBlank(editor.getStoredText()),
+                    (Boolean toggle)->
+                        tableDesignHandler.setColumnAllowBlanks(editor.getStoredText(),toggle),
+                    (Boolean toggle)->
+                            tableDesignHandler.canHaveAsColumnAllowBlanks(editor.getStoredText(),toggle)
+
+            );
             blanksColumn.addWidget(blanksBox);
 
             // DEFAULT VALUE
@@ -121,6 +133,13 @@ public class TableDesignWindow{
 
         return layout;
     }
+
+    private void unselectAllBoxes() {
+        for (CheckBoxWidget w : checkBoxes) {
+            w.forceUncheck();
+        }
+    }
+
 
 
 }
