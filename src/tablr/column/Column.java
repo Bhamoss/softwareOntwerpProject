@@ -454,4 +454,17 @@ public abstract class Column {
      *          The type to be checked.
      */
     public abstract boolean canHaveAsType(String type);
+
+    /**
+     * returns an arraylist of all the possible types of columns
+     * ["String", "Email", "Boolean", "Integer"]
+     */
+    public static ArrayList<String> getColumnTypes() {
+        return new ArrayList<>() {{
+            add("String");
+            add("Email");
+            add("Boolean");
+            add("Integer");
+        }};
+    }
 }

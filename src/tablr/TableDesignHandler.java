@@ -80,8 +80,7 @@ public class TableDesignHandler {
      */
     public static List<String> getAvailableColumnTypes()
     {
-        // TODO: implement
-        return new ArrayList();
+        return TableManager.getColumnTypes();
     }
 
     /**
