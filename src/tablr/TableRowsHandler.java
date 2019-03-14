@@ -46,7 +46,7 @@ public class TableRowsHandler {
     /**
      *
      * @param columnName
-     * @param Row
+     * @param row
      * @return
      * @throws IllegalColumnException
      * @throws IllegalRowException
@@ -73,14 +73,12 @@ public class TableRowsHandler {
 
     /**
      *
-     * @param columnName
      * @return
-     * @throws IllegalColumnException
+     * @throws IllegalTableException
      */
-    public int getNbRows(String columnName) throws IllegalColumnException
+    public int getNbRows() throws IllegalTableException
     {
-        // TODO: implement
-        return 0;
+        return getTableManager().getNbRows();
     }
 
 
