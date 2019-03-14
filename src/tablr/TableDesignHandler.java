@@ -340,7 +340,7 @@ public class TableDesignHandler {
      */
     public void removeColumn(String name) throws IllegalArgumentException, IllegalTableException
     {
-        removeColumn(name);
+        getTableManager().removeColumn(name);
     }
 
     //private final TableManager tableManager;
