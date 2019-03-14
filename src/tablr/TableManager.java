@@ -941,7 +941,7 @@ public class TableManager {
         Table t = getTableAt(index);
         if(getCurrentTable() == t) {setCurrentTable(null);}
         t.terminate();
-        tables.remove(index);
+        tables.remove(index-1);
 
 
     }
