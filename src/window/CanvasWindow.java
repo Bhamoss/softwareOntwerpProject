@@ -300,8 +300,6 @@ public class CanvasWindow {
 
 	/**
 	 * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
-	 *
-	 * @param e
 	 */
 	protected void handleKeyEvent(int id, int keyCode, char keyChar) {
 	}
