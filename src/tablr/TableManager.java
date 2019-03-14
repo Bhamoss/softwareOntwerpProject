@@ -760,7 +760,7 @@ public class TableManager {
     private Table getTableAt(int index) throws IllegalArgumentException
     {
         if (index > getNbTables() || index < 1) {throw new IllegalArgumentException("Index table out of bounds");}
-        return tables.get(index);
+        return tables.get(index-1);
     }
 
 
@@ -941,7 +941,7 @@ public class TableManager {
         Table t = getTableAt(index);
         if(getCurrentTable() == t) {setCurrentTable(null);}
         t.terminate();
-        tables.remove(index);
+        tables.remove(index-1);
 
 
     }
