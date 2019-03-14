@@ -44,6 +44,11 @@ public class SwitchBoxWidget extends LabelWidget {
     }
 
     @Override
+    public boolean isBlocking() {
+        return blocked;
+    }
+
+    @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_PRESSED && clickCount == 1 && containsPoint(x,y)) {
             cycleOption();

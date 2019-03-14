@@ -2,18 +2,22 @@ package window.widget;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class CheckBoxWidget extends Widget {
 
     private boolean checked;
+    private boolean blocked;
 
-    private Consumer<Boolean> toggleHandler;
+    private final Consumer<Boolean> toggleHandler;
+    private final Function<Boolean, Boolean> isValidToggle;
 
     public Consumer<Boolean> getToggleHandler(){
         return toggleHandler;
     }
+    public Function<Boolean, Boolean> getValidHandler() {return isValidToggle;}
 
 
     private static int SIZE = 25;
@@ -27,14 +31,19 @@ public class CheckBoxWidget extends Widget {
      * @param toggleHandler function handler, called
      *                      when checkbox gets toggled
      */
-    public CheckBoxWidget(int x, int y, Consumer<Boolean> toggleHandler) {
+    public CheckBoxWidget(int x, int y, boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
-        this.checked = false;
         this.toggleHandler = toggleHandler;
+        this.isValidToggle = isValidToggle;
+        setChecked(checked);
+    }
+
+    public CheckBoxWidget(boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
+        this(0,0, checked, toggleHandler, isValidToggle);
     }
 
     public CheckBoxWidget(Consumer<Boolean> toggleHandler) {
-        this(0,0,toggleHandler);
+        this(false, toggleHandler, x -> true);
     }
 
 
@@ -43,7 +52,9 @@ public class CheckBoxWidget extends Widget {
     }
 
     public void setChecked(boolean checked) {
-        getToggleHandler().accept(isChecked());
+        this.blocked = !isValidToggle.apply(checked);
+        if (!blocked)
+            getToggleHandler().accept(checked);
         this.checked = checked;
     }
 
@@ -51,13 +62,17 @@ public class CheckBoxWidget extends Widget {
         this.checked = false;
     }
 
+    @Override
+    public boolean isBlocking() {
+        return blocked;
+    }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         if (isChecked()) {
-            g.drawLine(getX(),getY(),getX()+SIZE, getY()+SIZE);
-            g.drawLine(getX(),getY()+SIZE,getX()+SIZE, getY());
+            g.drawLine(getX(),getY(),getX()+getWidth(), getY()+getHeight());
+            g.drawLine(getX(),getY()+getHeight(),getX()+getWidth(), getY());
         }
     }
 
