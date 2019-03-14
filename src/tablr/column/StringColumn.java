@@ -41,9 +41,9 @@ public class StringColumn extends Column {
                     } else {
                         for (int i = 1; i <= getNbValues(); i++) {
                             if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
-                                //result = !isBlanksAllowed() || getValueAt(i).equals("");
-                                // TODO: bedoel je dit?
                                 result = isBlanksAllowed() && getValueAt(i).equals("");
+                                if (!result)
+                                    break;
                             } else result = true;
                         }
                     }
@@ -56,8 +56,10 @@ public class StringColumn extends Column {
                         result = true;
                     } else {
                         for (int i = 1; i <= getNbValues(); i++) {
-                            if (IntegerColumn.isInteger(getValueAt(i))) {
-                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                            if (!IntegerColumn.isInteger(getValueAt(i))) {
+                                result = isBlanksAllowed() && getValueAt(i).equals("");
+                                if (!result)
+                                    break;
                             } else result = true;
                         }
                     }
@@ -70,8 +72,10 @@ public class StringColumn extends Column {
                         result = true;
                     } else {
                         for (int i = 1; i <= getNbValues(); i++) {
-                            if (EmailColumn.isEmail(getValueAt(i))) {
-                                result = !isBlanksAllowed() || getValueAt(i).equals("");
+                            if (!EmailColumn.isEmail(getValueAt(i))) {
+                                result = isBlanksAllowed() && getValueAt(i).equals("");
+                                if (!result)
+                                    break;
                             } else result = true;
                         }
                     }

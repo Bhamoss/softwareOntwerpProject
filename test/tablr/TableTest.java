@@ -250,8 +250,8 @@ class TableTest {
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column5", "Boolean"));
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column6", "Boolean"));
 
-        tenTable.setColumnType("Column7", "String");
-        assertEquals("String", tenTable.getColumnType("Column7"));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column7", "Boolean"));
+
     }
 
     @Test
