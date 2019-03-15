@@ -13,10 +13,23 @@ public class ColumnWidget extends Widget {
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
+    /**
+     * Creates a container widget with resizable width,
+     * containing other widgets in a vertical fashion.
+     *
+     * @param x x-coordinate of top-left corner
+     * @param y y-coordinate of top-left corner
+     * @param width initial width of column
+     * @param height height of column, needs be at least 25
+     * @param name text to put at the top of the column
+     * @param resizable whether the column can be resized
+     * @param visible whether there is a top label
+     * @param onResize function called when column is resized
+     */
     public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
         super(x, y, width, height, false);
         assert(height>=25);
-        widgets = new LinkedList();
+        widgets = new LinkedList<>();
         occupancy = 0;
         resizing = false;
         this.resizable = resizable;
@@ -36,7 +49,16 @@ public class ColumnWidget extends Widget {
     }
 
 
-
+    /**
+     * Adds a widget to the bottom of the column.
+     *
+     * The widget only gets added if it's height
+     * can fit in the remaining space of the column.
+     * The width of the widget is rescaled to the
+     * width of the column.
+     *
+     * @param w widget to be added
+     */
     public void addWidget(Widget w) {
         if (occupancy+w.getHeight() > this.getHeight())
             return;
@@ -49,6 +71,10 @@ public class ColumnWidget extends Widget {
         widgets.add(w);
     }
 
+    /**
+     * Resizes the width of the column
+     * @param w new width, needs be at least 5.
+     */
     private void resize(int w) {
         if (w <= 5)
             return;

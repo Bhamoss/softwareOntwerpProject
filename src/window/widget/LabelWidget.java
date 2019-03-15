@@ -7,11 +7,15 @@ import java.lang.String;
 public class LabelWidget extends Widget{
 
     protected String text;
-    private static int OFFSET = 5;
+
+    /**
+     * Offset between the text of the label and the border.
+     */
+    private static final int OFFSET = 5;
 
 
     /**
-     * Widget for a static piece of text
+     * Widget displaying a static piece of text
      *
      * @param text the displayed string
      * @param x x-coordinate of text
@@ -26,7 +30,7 @@ public class LabelWidget extends Widget{
         return text;
     }
 
-    public void setText(String text) {
+    protected void setText(String text) {
         this.text = text;
     }
 

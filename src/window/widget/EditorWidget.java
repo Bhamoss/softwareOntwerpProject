@@ -17,7 +17,20 @@ public class EditorWidget extends LabelWidget {
     private boolean blocked;
     private String oldText;
 
-
+    /**
+     * Creates a widget with a editable text field.
+     *
+     * @param x x-coordinate of top-left corner
+     * @param y y-coordinate of top-left corner
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param border whether to draw a border
+     * @param text initial text content
+     * @param isValidText function determining if the
+     *                    text content is valid
+     * @param pushText function called when the textbox
+     *                 is deselected
+     */
     public EditorWidget(int x, int y, int width, int height, boolean border,String text, BiFunction<String, String, Boolean> isValidText, BiConsumer<String,String> pushText) {
         super(x, y, width, height, border, "");
         this.isValidText = isValidText;
@@ -35,17 +48,6 @@ public class EditorWidget extends LabelWidget {
 
 
 
-
-    @Override
-    public void paint(Graphics g) {
-        if (isSelected())
-            text += "ⵊ";
-        super.paint(g);
-        if (isSelected())
-            text = text.substring(0,text.length()-1);
-
-    }
-
     public boolean isSelected() {
         return selected;
     }
@@ -54,6 +56,14 @@ public class EditorWidget extends LabelWidget {
         selected = true;
     }
 
+    /**
+     * Attempts to deselect this widget.
+     * Succeeds if the text content is valid.
+     * If it succeeds the contents are pushed to
+     * the event handler.
+     *
+     * @return whether deselection succeeded
+     */
     public boolean attemptDeselect() {
         if (!isBlocking()) {
             selected = false;
@@ -64,6 +74,26 @@ public class EditorWidget extends LabelWidget {
         return false;
     }
 
+    private boolean canHaveAsText(String s) {
+        return isValidText.apply(getStoredText(), s);
+    }
+
+    /**
+     * Sets new text content of the editor
+     * @param t new text
+     */
+    public void setText(String t) {
+        text = t;
+        setBlocking(!canHaveAsText(t));
+    }
+
+    /**
+     *
+     * @return text content of the widget before editing began
+     */
+    public String getStoredText() {
+        return oldText;
+    }
 
     @Override
     public boolean isBlocking() {
@@ -75,18 +105,16 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    private boolean canHaveAsText(String s) {
-        return isValidText.apply(getStoredText(), s);
+    @Override
+    public void paint(Graphics g) {
+        if (isSelected())
+            text += "ⵊ";
+        super.paint(g);
+        if (isSelected())
+            text = text.substring(0,text.length()-1);
+
     }
 
-    public void setText(String t) {
-        text = t;
-        setBlocking(!canHaveAsText(t));
-    }
-
-    public String getStoredText() {
-        return oldText;
-    }
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
