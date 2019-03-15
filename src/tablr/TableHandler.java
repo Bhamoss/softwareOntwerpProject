@@ -8,17 +8,26 @@ import be.kuleuven.cs.som.annotate.Model;
 import java.util.ArrayList;
 
 /**
+ * @author Thomas Bamelis
+ * @version 1.0.0
  *
+ * A class accepting tasks which can be done in table mode, and thus providing a controller for it, which works on and creates a new TableManager.
  *
- * @invar the handler always has a tablemanager.
+ * @invar the handler always has a TableManager.
  *  | getTableManager() != null
  *
- * @resp provide a controller for the table mode.
+ * @resp provide a controller for the table mode and its use cases.
  */
 public class TableHandler {
 
     /**
-     * Call this method when you start the program, it will initialize the other handlers also
+     * Creates a tableHandler with the given tableManager.
+     *
+     * @post the tableManager for this is set to mng.
+     *  | if(canHaveAsTableManager(mng){getTableManager() == new TableManager()}
+     *
+     * @throws IllegalArgumentException if mng is invalid.
+     *  | !canHaveAsTableManager(mng)
      */
     public TableHandler()
     {

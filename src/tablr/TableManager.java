@@ -11,14 +11,23 @@ import java.util.List;
 /**
  *
  * @author Thomas Bamelis
- * @version 0.0.1
+ * @version 1.0.0
  *
- * This class has been made to improve cohesion and sacrifice Coupling,
- * mainly because TableHandler would be much more than a ontroller = bloated controller
+ * This class has been made to improve cohesion and sacrifice Coupling.
+ * Mainly because TableHandler would be much more than a controller = bloated controller
  * This is pure fabrication.
  *
  * However, coupling has also been much REDUCED because the handler do not communicate with each
  * other anymore.
+ *
+ * @invar there are never 2 table with the same name in the tables.
+ * | for each x,y in getTableNames():
+ * |    if x != y:
+ * |        !x.equals(y)
+ *
+ * @invar no table is ever null
+ * | for i in 0...getNbTables():
+ * |    getTableAt(i) != null
  *
  * @resp Manage the tables and the current table.
  *
@@ -38,6 +47,8 @@ public class TableManager {
      * This should not have any parameters because you start with a blank
      * slate on startup, so this should be the only constructor.
      *
+     * @effect there is no open table, no tables and this is not terminated
+     *  | getOpenTable() == null && getNbTables == 0 && isTerminated == false
      */
     @Raw
     public TableManager()
@@ -794,6 +805,7 @@ public class TableManager {
      * @throws IllegalArgumentException if index is larger than the amount of tables or smaller then 1.
      *  | if(index > getNbTables() || index < 1)
      */
+    @Model
     private Table getTableAt(int index) throws IllegalArgumentException
     {
         if (index > getNbTables() || index < 1) {throw new IllegalArgumentException("Index table out of bounds");}
@@ -1056,7 +1068,7 @@ public class TableManager {
      *  |    {
      *  |        if(tableX != tableY)
      *  |        {
-     *  |            tableX.name() != tableY.name()
+     *  |            tableX.name().equals( tableY.name())
      *  |        }
      *  |    }
      *  | }
@@ -1088,6 +1100,7 @@ public class TableManager {
      * @return true if and only if the table is in tables or is null.
      * | return == (tables.contains(Table) || table == null)
      */
+    @Model
     private boolean canHaveAsCurrentTable(Table table)
     {
         return tables.contains(table) || table == null;

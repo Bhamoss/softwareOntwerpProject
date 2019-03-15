@@ -14,8 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Thomas Bamelis
  *
- * @version 0.0.1
+ * @version 1.0.0
  *
+ * A test class for the TableManager class and indirectly for the handlers.
  *
  */
 class TableManagerTest {

@@ -8,20 +8,25 @@ import be.kuleuven.cs.som.annotate.Raw;
 import java.util.ArrayList;
 /**
  *
+ * @author Thomas Bamelis
+ * @version 1.0.0
  *
- * @invar the handler always has a tablemanager.
+ * A class accepting tasks which can be done in table rows mode, and thus providing a controller for it, for a given TableManager.
+ *
+ * @invar the handler always has a TableManager.
  *  | getTableManager() != null
  *
- * @resp provide a controller for the table rows mode.
+ * @resp provide a controller for the table rows mode and its use cases.
  */
 public class TableRowsHandler {
 
     /**
-     * Creates a tableDesignHandler with the given tableManager.
+     * Creates a tableRowHandler with the given tableManager.
      *
      * @param mng the tableManager this handler is created for.
      *
-     * @post TODO: wat moet ik hier schrijven?
+     * @post the tableManager for this is set to mng.
+     *  | if(canHaveAsTableManager(mng){getTableManager() == mng}
      *
      * @throws IllegalArgumentException if mng is invalid.
      *  | !canHaveAsTableManager(mng)
@@ -231,6 +236,7 @@ public class TableRowsHandler {
      *
      * @return true if tableManager is not null.
      */
+    @Model
     private boolean canHaveAsTableManager(TableManager tableManager)
     {
         return tableManager != null;

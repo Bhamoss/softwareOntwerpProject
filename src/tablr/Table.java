@@ -1,6 +1,7 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
+import be.kuleuven.cs.som.taglet.*;
 import tablr.column.*;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author Thomas Bamelis
  * @version 0.0.1
  *
- *
+ *  A table holding columns.
  *
  * @Invar   The name of the table is always valid.
  *          | isValidName(getName())
@@ -19,6 +20,8 @@ import java.util.List;
  *          |   getColumnAt(I).getNbValues() == getNbRows()
  * @Invar   Columns is always effective.
  *          | columns != null
+ *
+ * @resp Manage its columns and their names.
  */
 public class Table {
 

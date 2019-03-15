@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author Thomas Bamelis
+ * @version 1.0.0
  *
+ * A class accepting tasks which can be done in table design mode, and thus providing a controller for it, for a given TableManager.
+
  *
- *
- * @invar the handler always has a tablemanager.
+ * @invar the handler always has a TableManager.
  *  | getTableManager() != null
  *
- * @resp provide a controller for the table design mode.
+ * @resp provide a controller for the table design mode and its use cases.
  */
 public class TableDesignHandler {
 
@@ -24,7 +27,8 @@ public class TableDesignHandler {
      *
      * @param mng the tableManager this handler is created for.
      *
-     * @post TODO: wat moet ik hier schrijven?
+     * @post the tableManager for this is set to mng.
+     *  | if(canHaveAsTableManager(mng){getTableManager() == mng}
      *
      * @throws IllegalArgumentException if mng is invalid.
      *  | !canHaveAsTableManager(mng)
