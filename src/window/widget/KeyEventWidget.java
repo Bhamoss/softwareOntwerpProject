@@ -6,6 +6,11 @@ public class KeyEventWidget extends Widget {
 
     private final BiFunction<Integer, Integer, Boolean> keyHandler;
 
+    /**
+     * Invisible widget, handles global key events.
+     *
+     * @param keyHandler function to call on key press
+     */
     public KeyEventWidget(BiFunction<Integer, Integer, Boolean> keyHandler) {
         super(0,0,0,0,false);
         this.keyHandler = keyHandler;

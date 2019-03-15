@@ -30,6 +30,9 @@ public class CheckBoxWidget extends Widget {
      * @param y y-coordinate of top-left of box
      * @param toggleHandler function handler, called
      *                      when checkbox gets toggled
+     * @param isValidToggle function handler determining if
+     *                      the current state of the checkbox
+     *                      is legal
      */
     public CheckBoxWidget(int x, int y, boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
@@ -52,6 +55,13 @@ public class CheckBoxWidget extends Widget {
         return checked;
     }
 
+    /**
+     * Sets the state of the checkbox.
+     * If the new state is invalid, the checkbox becomes
+     * blocked. If not, the state is saved.
+     *
+     * @param checked the new state
+     */
     public void setChecked(boolean checked) {
         this.blocked = !isValidToggle.apply(checked);
         if (!blocked)
@@ -59,6 +69,10 @@ public class CheckBoxWidget extends Widget {
         this.checked = checked;
     }
 
+    /**
+     * Forces the checkbox to uncheck, no matter
+     * its content, or whether it is valid.
+     */
     public void forceUncheck() {
         this.checked = false;
     }

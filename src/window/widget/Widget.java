@@ -7,6 +7,18 @@ public class Widget {
     private int x, y, width, height;
     private final boolean border;
 
+    /**
+     * Construct a rectangular widget.
+     *
+     * Subclasses of widget implementing more specific
+     * behaviour can only draw within this rectangle.
+     *
+     * @param x x-coordinate of top-left corner
+     * @param y y-coordinate of top-left corner
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param border whether to draw a border
+     */
     public Widget(int x, int y, int width, int height, boolean border) {
         this.setPosition(x,y);
         setWidth(width);
@@ -14,6 +26,13 @@ public class Widget {
         this.border = border;
     }
 
+    /**
+     * Construct a rectangular widget at the origin.
+     *
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param border whether to draw a border
+     */
     public Widget(int width, int height, boolean border) {
         this(0,0,width,height,border);
     }
@@ -34,11 +53,6 @@ public class Widget {
         return  height;
     }
 
-    protected void setPosition(int x, int y) {
-        setX(x);
-        setY(y);
-    }
-
     public void setX(int x) {
         this.x = x;
     }
@@ -54,6 +68,15 @@ public class Widget {
     protected void setHeight(int h) {
         this.height = h;
     }
+
+    /**
+     * Sets x and y of top-left corner of widget.
+     */
+    protected void setPosition(int x, int y) {
+        setX(x);
+        setY(y);
+    }
+
 
     /**
      * Paints screen.
