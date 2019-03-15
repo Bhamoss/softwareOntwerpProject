@@ -6,16 +6,14 @@ name
 }
 
 
-class Row
-{
+class Row{
 name
 type
 allowsBlanks
 defaultValue
 }
 
-class Cell
-{
+class Cell{
 value
 }
 

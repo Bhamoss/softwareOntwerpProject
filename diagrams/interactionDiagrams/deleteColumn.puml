@@ -6,7 +6,7 @@ activate ButtonWidget
 ButtonWidget ->UIWindowHandler: getSelectedItem()
 activate UIWindowHandler
 ButtonWidget <-- UIWindowHandler: columnName
-deactivate
+deactivate UIWindowHandler
 ButtonWidget -> TableDesignHandler: deleteColumn(columnName)
 activate TableDesignHandler
 TableDesignHandler -> Table: deleteColumn(column)
@@ -23,10 +23,12 @@ end
 ButtonWidget -> UIWindowHandler: getOpenTable()
 activate UIWindowHandler
 ButtonWidget <-- UIWindowHandler: tableName
-deactivate
+deactivate UIWindowHandler
+
 ButtonWidget -> UIWindowHandler: removeTableRowsEntry(tableName,columnName)
 activate UIWindowHandler
-deactivate
+deactivate UIWindowHandler
+
 ButtonWidget -> UIWindowHandler: loadTableDesign(tableName)
 deactivate ButtonWidget
 activate UIWindowHandler

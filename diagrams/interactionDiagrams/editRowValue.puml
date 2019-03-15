@@ -5,7 +5,8 @@ Actor User
 User -> EditorWidget: changes column name
 activate EditorWidget
 EditorWidget -> TableRowsHandler: setCellValue(columnName,row,value)
-deactivate
+deactivate UIWindowHandler
+
 activate TableRowsHandler
 TableRowsHandler -> Table: isValidCell(cell, value)
 activate Table

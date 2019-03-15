@@ -6,7 +6,8 @@ activate ButtonWidget
 ButtonWidget ->UIWindowHandler: getSelectedItem()
 activate UIWindowHandler
 ButtonWidget <-- UIWindowHandler: rowIndex
-deactivate
+deactivate UIWindowHandler
+
 ButtonWidget -> TableRowsHandler: deleteRow(rowIndex)
 activate TableRowsHandler
 
@@ -26,10 +27,11 @@ deactivate TableRowsHandler
 ButtonWidget -> TableRowsHandler: getOpenTable()
 activate TableRowsHandler
 ButtonWidget <-- TableRowsHandler: tableName
-deactivate
+deactivate UIWindowHandler
 ButtonWidget -> UIWindowHandler: removeTableRowsEntry(tableName,rowIndex)
 activate UIWindowHandler
-deactivate
+deactivate UIWindowHandler
+
 ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
 
 activate UIWindowHandler

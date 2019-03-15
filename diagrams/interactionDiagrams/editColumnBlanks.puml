@@ -6,7 +6,8 @@ Actor User
 User->CheckBoxWidget: Presses checkbox
 activate CheckBoxWidget
 CheckBoxWidget -> TableDesignHandler: changeColumnBlanks(column)
-deactivate
+deactivate UIWindowHandler
+
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnDV(column, value)
 activate TableManager

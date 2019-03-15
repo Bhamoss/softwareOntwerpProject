@@ -20,8 +20,9 @@ deactivate TableDesignHandler
 ButtonWidget -> UIWindowHandler: getOpenTable()
 activate UIWindowHandler
 ButtonWidget <-- UIWindowHandler: tableName
-deactivate
+deactivate UIWindowHandler
 ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
 activate UIWindowHandler
+deactivate UIWindowHandler
 
 @enduml

@@ -6,7 +6,8 @@ Actor User
 User -> EditorWidget: changes column name
 activate EditorWidget
 EditorWidget -> TableDesignHandler: setColumnName(column, name)
-deactivate
+deactivate UIWindowHandler
+
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnName(column, name)
 activate TableManager

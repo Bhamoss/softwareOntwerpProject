@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="342px" preserveAspectRatio="none" style="width:267px;height:342px;" version="1.1" viewBox="0 0 267 342" width="267px" zoomAndPan="magnify"><defs><filter height="300%" id="f1nk9qyaxdqfk2" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="148" x="55.25" y="22.9951">Not allowed invalid</text><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="42" x2="42" y1="116.5938" y2="255.125"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="206.5" x2="206.5" y1="116.5938" y2="255.125"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="32" x="23" y="113.292">User</text><ellipse cx="42" cy="43.2969" fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,51.2969 L42,78.2969 M29,59.2969 L55,59.2969 M42,78.2969 L29,93.2969 M42,78.2969 L55,93.2969 " fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="32" x="23" y="267.1201">User</text><ellipse cx="42" cy="280.4219" fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M42,288.4219 L42,315.4219 M29,296.4219 L55,296.4219 M42,315.4219 L29,330.4219 M42,315.4219 L55,330.4219 " fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="51" x="178.5" y="113.292">System</text><path d="M186.5,72.2969 L186.5,96.2969 M186.5,84.2969 L203.5,84.2969 " fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" style="stroke: #A80036; stroke-width: 2.0;"/><ellipse cx="215.5" cy="84.2969" fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="51" x="178.5" y="267.1201">System</text><path d="M186.5,274.4219 L186.5,298.4219 M186.5,286.4219 L203.5,286.4219 " fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" style="stroke: #A80036; stroke-width: 2.0;"/><ellipse cx="215.5" cy="286.4219" fill="#FEFECE" filter="url(#f1nk9qyaxdqfk2)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #000000; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="3" x2="255.5" y1="127.5938" y2="127.5938"/><polygon fill="#A80036" points="195,145.5938,205,149.5938,195,153.5938,199,149.5938" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="42" x2="201" y1="149.5938" y2="149.5938"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="141" x="49" y="144.6606">setBlanks(notAllowed)</text><polygon fill="#A80036" points="53,174.7266,43,178.7266,53,182.7266,49,178.7266" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="47" x2="206" y1="178.7266" y2="178.7266"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="40" x="59" y="173.7935">invalid</text><polygon fill="#A80036" points="195,203.8594,205,207.8594,195,211.8594,199,207.8594" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="42" x2="201" y1="207.8594" y2="207.8594"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="119" x="49" y="202.9263">setBlanks(allowed)</text><polygon fill="#A80036" points="53,232.9922,43,236.9922,53,240.9922,49,236.9922" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="47" x2="206" y1="236.9922" y2="236.9922"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="29" x="59" y="232.0591">valid</text><!--
+@startuml
+title Edit column blanks \n \n Main Success Scenario
+Actor User
+Boundary System
+alt blanks == allowed
+    User -> System: setBlanks(notAllowed)
+else blanks == not allowed
+    User -> System: setBlanks(allowed)
+end
+System - -> User: valid
+newpage Not allowed invalid
+User -> System: setBlanks(notAllowed)
+System - -> User: invalid
+User -> System: setBlanks(allowed)
+System - -> User: valid
+@enduml
+
+PlantUML version 1.2017.15(Mon Jul 03 18:45:34 CEST 2017)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 10.0.2+13-Ubuntu-1ubuntu0.18.04.4
+Operating System: Linux
+OS Version: 4.15.0-46-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

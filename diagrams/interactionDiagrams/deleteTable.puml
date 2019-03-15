@@ -7,7 +7,8 @@ activate ButtonWidget
 ButtonWidget ->UIWindowHandler: getSelectedItem()
 activate UIWindowHandler
 ButtonWidget <-- UIWindowHandler: tableName
-deactivate
+deactivate UIWindowHandler
+
 ButtonWidget -> TablesHandler: deleteTable(tableName)
 alt is(Valid)Table(table)
 activate TablesHandler
