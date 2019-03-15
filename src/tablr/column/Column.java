@@ -8,8 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author  Michiel Jonckheere, Thomas Bamelis
+ * @version 1.0.0
+ *
  * @invar   The default value of a column is always effective.
  *          | defaultValue != null
+ * @invar   The list of values is always effective.
+ *          | values != null
+ * @invar   The name of the column is always effective
+ *          | name != null
+ *
+ * @resp    Holding the cells of a column.
  */
 public abstract class Column {
 

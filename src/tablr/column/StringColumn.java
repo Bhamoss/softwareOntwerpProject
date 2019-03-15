@@ -3,6 +3,17 @@ package tablr.column;
 import be.kuleuven.cs.som.annotate.Basic;
 
 
+/**
+ * @author  Michiel Jonckheere
+ * @version 1.0.0
+ *
+ * A column holding string values.
+ *
+ * @invar   The type of the column is always String
+ *          | getType().equals("String")
+ *
+ * @resp    Holding the cells of an string column.
+ */
 public class StringColumn extends Column {
 
     /**

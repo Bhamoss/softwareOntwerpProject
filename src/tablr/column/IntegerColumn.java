@@ -3,6 +3,17 @@ package tablr.column;
 import be.kuleuven.cs.som.annotate.Basic;
 
 
+/**
+ * @author  Michiel Jonckheere
+ * @version 1.0.0
+ *
+ * A column holding integer values.
+ *
+ * @invar   The type of the column is always Integer
+ *          | getType().equals("Integer")
+ *
+ * @resp    Holding the cells of an integer column.
+ */
 public class IntegerColumn extends Column {
 
     /**

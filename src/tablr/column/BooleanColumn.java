@@ -2,6 +2,17 @@ package tablr.column;
 
 import be.kuleuven.cs.som.annotate.Basic;
 
+/**
+ * @author  Michiel Jonckheere
+ * @version 1.0.0
+ *
+ * A column holding boolean values.
+ *
+ * @invar   The type of the column is always Boolean
+ *          | getType().equals("Boolean")
+ *
+ * @resp    Holding the cells of an boolean column.
+ */
 public class BooleanColumn extends Column {
 
     /**
@@ -20,7 +31,17 @@ public class BooleanColumn extends Column {
         Als je van boolean naar integer gaat (de enige mogelijk transitie vanuit boolean in de gui)
         is die enkel valid als de default+values blanks zijn && blanks toegelaten zijn
          */
-        return type.equals("Boolean") || type.equals("Integer") || type.equals("String");
+        if (type.equals("Integer")) {
+            if (isBlanksAllowed()) {
+                for (int i = 1; i <= getNbValues(); i++)
+                    if (!getValueAt(i).equals(""))
+                        return false;
+            } else {
+                return false;
+            }
+            return getDefaultValue().equals("");
+        }
+        return type.equals("Boolean") || type.equals("String");
     }
 
     /**

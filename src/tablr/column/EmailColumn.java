@@ -2,7 +2,17 @@ package tablr.column;
 
 import be.kuleuven.cs.som.annotate.Basic;
 
-
+/**
+ * @author  Michiel Jonckheere
+ * @version 1.0.0
+ *
+ * A column holding email values.
+ *
+ * @invar   The type of the column is always Email
+ *          | getType().equals("Email")
+ *
+ * @resp    Holding the cells of an email column.
+ */
 public class EmailColumn extends Column {
 
     /**
@@ -47,12 +57,23 @@ public class EmailColumn extends Column {
      * @param   type
      *          The type to be checked.
      * @return  True if the given type is Email or String.
-     *          | result ==
-     *          |   type.equals("Email") || type.equals("String")
+     *          | if ( type.equals("Email") || type.equals("String") )
+     *          |   result == true
+     *          Otherwise, true if the nb of values is 0 and the default value is empty.
+     *          | if ( getNbValues() == 0 && getDefaultValue().equals("") )
+     *          |   result == true
+     *          Otherwise, if all the values and the default value are empty and
+     *          blanks are allowed, then result is true
+     *          | if ( isBlanksAllowed() && getDefaultValue().equals(""))
+     *          |   then for each I in 1..getNbValues():
+     *          |       if ( !getValueAt(i).equals("")) )
+     *          |           then result == false
+     *          | else
+     *          |   result == false
+     *
      */
     @Override
     public boolean canHaveAsType(String type) {
-        // TODO: review + update commentaar
         if (type.equals("Email") || type.equals("String"))
             return true;
         if (getNbValues() == 0 && getDefaultValue().equals(""))
@@ -64,8 +85,7 @@ public class EmailColumn extends Column {
         } else {
             return false;
         }
-        return true;
-
+        return getDefaultValue().equals("");
     }
 
     /**
@@ -101,17 +121,7 @@ public class EmailColumn extends Column {
      *          if the given value contains 2 or more times the character '@'.
      */
     public static boolean isEmail(String value) {
-        // TODO: review
-        // Semi hacky manier, maar werkt wel in tegenstelling to de shit in comments
         return 1 == (value.length() - value.replace("@", "").length());
-        /*
-        int i = value.indexOf('@');
-        if (i > -1) {
-            if (value.indexOf('@', i + 1) > -1)
-                return false;
-        }
-        return true;
-        */
     }
 
 }

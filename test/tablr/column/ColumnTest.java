@@ -51,13 +51,13 @@ class ColumnTest {
     void canHaveAsType() {
         assertTrue(boolColumn10.canHaveAsType("String"));
         assertTrue(boolColumn10.canHaveAsType("Boolean"));
-        assertTrue(boolColumn10.canHaveAsType("Integer"));
+        assertFalse(boolColumn10.canHaveAsType("Integer"));
         assertFalse(boolColumn10.canHaveAsType("Email"));
 
         assertTrue(emailColumnEmptyDV.canHaveAsType("Email"));
         assertTrue(emailColumnEmptyDV.canHaveAsType("String"));
-        assertFalse(emailColumnEmptyDV.canHaveAsType("Integer"));
-        assertFalse(emailColumnEmptyDV.canHaveAsType("Boolean"));
+        assertTrue(emailColumnEmptyDV.canHaveAsType("Integer"));
+        assertTrue(emailColumnEmptyDV.canHaveAsType("Boolean"));
 
         assertTrue(intColumnNoBlanks.canHaveAsType("Integer"));
         assertTrue(intColumnNoBlanks.canHaveAsType("String"));
@@ -70,7 +70,6 @@ class ColumnTest {
         c.setValueAt(7, "");
         assertTrue(c.canHaveAsType("Boolean"));
 
-        //TODO: tests voor stringColumn canHaveAsType
     }
 
     @Test

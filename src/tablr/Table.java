@@ -902,7 +902,6 @@ public class Table {
 
     /**
      * This methods returns a string containing the table in human-readable form.
-     * (CODING RULE 72)
      *
      * @return A string representing the table (specify format here later)
      *  | result = getName()
@@ -910,11 +909,7 @@ public class Table {
     @Override
     public String toString()
     {
-        /*
-         Dit is tijdelijk en moet nog deftig worden aangepast
-         Je kan bvb letterlijk met veel enters enzo de table en
-         zijn cellen en collommen printen //TODO: verder schrijven MICHIEL J
-        */
+
         return getName();
     }
 
