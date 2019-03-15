@@ -3,7 +3,10 @@ title Edit Column Blanks
 Actor User
 
 
-User -> TableDesignHandler: changeColumnBlanks(column)
+User->CheckBoxWidget: Presses checkbox
+activate CheckBoxWidget
+CheckBoxWidget -> TableDesignHandler: changeColumnBlanks(column)
+deactivate
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnDV(column, value)
 activate TableManager

@@ -4,7 +4,10 @@ Actor User
 
 
 
-User -> TableDesignHandler: setColumnType(column, type)
+User -> SwitchBoxWidget: changes type
+activate SwitchBoxWidget
+SwitchBoxWidget -> TableDesignHandler: setColumnType(column, type)
+deactivate
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnType(column, type)
 activate TableManager

@@ -58,11 +58,12 @@ public class UseCases {
 
     @Test
     @DisplayName("Create Table MSS")
-    void createTableMSS()
-    {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("resources/CreateTable/CreateTable.txt").getFile());
-        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    void createTableMSS() throws InvocationTargetException, InterruptedException {
+        java.awt.EventQueue.invokeAndWait(() -> {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("resources/CreateTable/CreateTable.txt").getFile());
+            CanvasWindow.replayRecording(file.getAbsolutePath(), ui);
+        });
     }
 
     /*
@@ -73,29 +74,33 @@ public class UseCases {
 
     @Test
     @DisplayName("Edit Table Name MSS")
-    void editTableNameMSS()
-    {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("resources/EditTableNameMSS/EditTableNameMSS.txt").getFile());
-        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    void editTableNameMSS() throws InvocationTargetException, InterruptedException {
+        java.awt.EventQueue.invokeAndWait(() -> {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("resources/editTableNameMSS/editTableNameMSS.txt").getFile());
+            CanvasWindow.replayRecording(file.getAbsolutePath(), ui);
+        });
     }
 
     @Test
     @DisplayName("Edit Table Name 5a")
-    void editTableName5a()
-    {
+    void editTableName5a() throws InvocationTargetException, InterruptedException {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/EditTableName5a/EditTableName5a.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+            });
     }
 
     @Test
     @DisplayName("Edit Table Name 6a")
-    void editTableName6a()
+    void editTableName6a() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/EditTableName6a/EditTableName6a.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -106,11 +111,13 @@ public class UseCases {
 
     @Test
     @DisplayName("Delete Table MSS")
-    void deleteTableMSS()
+    void deleteTableMSS() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/DeleteTable/DeleteTable.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -121,17 +128,20 @@ public class UseCases {
 
     @Test
     @DisplayName("Open Table Empty")
-    void openTableEmpty()
+    void openTableEmpty() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/OpenTableEmpty/OpenTableEmpty.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     @Test
     @DisplayName("Open Table Not Empty")
-    void openTableNotEmpty()
+    void openTableNotEmpty() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupNotEmpty/SetupNotEmpty.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -139,6 +149,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/OpenTableNotEmpty/OpenTableNotEmpty.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -149,8 +160,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Add Column")
-    void addColumn()
+    void addColumn() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -158,6 +170,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/AddColumn/AddColumn.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -168,8 +181,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Edit Column Characteristics MSS")
-    void editColumnCharacteristicsMSS()
+    void editColumnCharacteristicsMSS() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -177,12 +191,14 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/EditColumnCharacteristicsMSS/EditColumnCharacteristicsMSS.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     @Test
     @DisplayName("Edit Column Characteristics 1a")
-    void editColumnCharacteristics1a()
+    void editColumnCharacteristics1a() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -190,12 +206,14 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/EditColumnCharacteristics1a/EditColumnCharacteristics1a.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     @Test
     @DisplayName("Edit Column Characteristics 1b")
-    void editColumnCharacteristics1b()
+    void editColumnCharacteristics1b() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -203,12 +221,14 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/EditColumnCharacteristics1b/EditColumnCharacteristics1b.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     @Test
     @DisplayName("Edit Column Characteristics 1c")
-    void editColumnCharacteristics1c()
+    void editColumnCharacteristics1c() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -216,6 +236,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/EditColumnCharacteristics1c/EditColumnCharacteristics1c.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -226,8 +247,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Delete Column")
-    void deleteColumn()
+    void deleteColumn() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -235,6 +257,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/DeleteColumn/DeleteColumn.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -245,8 +268,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Add Row")
-    void addRow()
+    void addRow() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -254,6 +278,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/AddRow/AddRow.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -264,8 +289,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Edit Row Value MSS")
-    void editRowValueMSS()
+    void editRowValueMSS() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -273,6 +299,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/EditRowValueMSS/EditRowValueMSS.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
     /*
@@ -283,8 +310,9 @@ public class UseCases {
 
     @Test
     @DisplayName("Delete Row")
-    void deleteRow()
+    void deleteRow() throws InvocationTargetException, InterruptedException
     {
+        java.awt.EventQueue.invokeAndWait(() -> {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
@@ -292,6 +320,7 @@ public class UseCases {
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/DeleteRow/DeleteRow.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+        });
     }
 
 

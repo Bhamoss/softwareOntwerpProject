@@ -2,9 +2,11 @@
 title Delete Row\nMSS
 Actor User
 
-User -> TableRowsHandler: editCell(cell, value)
+User -> EditorWidget: changes column name
+activate EditorWidget
+EditorWidget -> TableRowsHandler: setCellValue(columnName,row,value)
+deactivate
 activate TableRowsHandler
-
 TableRowsHandler -> Table: isValidCell(cell, value)
 activate Table
 TableRowsHandler -> Table: editCell(cell, value)

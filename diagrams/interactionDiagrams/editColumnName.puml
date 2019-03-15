@@ -3,7 +3,10 @@ title Edit Column Name
 Actor User
 
 
-User -> TableDesignHandler: setColumnName(column, name)
+User -> EditorWidget: changes column name
+activate EditorWidget
+EditorWidget -> TableDesignHandler: setColumnName(column, name)
+deactivate
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnName(column, name)
 activate TableManager

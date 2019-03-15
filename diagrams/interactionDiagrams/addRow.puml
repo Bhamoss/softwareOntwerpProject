@@ -2,7 +2,9 @@
 title Add row
 Actor User
 
-User -> TableDesignHandler: addRow()
+User->ButtonWidget: Presses button
+
+ButtonWidget -> TableDesignHandler: addRow()
 activate TableDesignHandler
 TableDesignHandler -> Table: addRow()
 activate Table
@@ -15,5 +17,11 @@ loop for all Columns
 end
 deactivate Table
 deactivate TableDesignHandler
+ButtonWidget -> UIWindowHandler: getOpenTable()
+activate UIWindowHandler
+ButtonWidget <-- UIWindowHandler: tableName
+deactivate
+ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
+activate UIWindowHandler
 
 @enduml

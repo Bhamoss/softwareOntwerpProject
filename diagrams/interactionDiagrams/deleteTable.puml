@@ -2,7 +2,13 @@
 title Delete Table\nMSS
 Actor User
 
-User -> TablesHandler: deleteTable(Table)
+User->ButtonWidget: Presses delete
+activate ButtonWidget
+ButtonWidget ->UIWindowHandler: getSelectedItem()
+activate UIWindowHandler
+ButtonWidget <-- UIWindowHandler: tableName
+deactivate
+ButtonWidget -> TablesHandler: deleteTable(tableName)
 alt is(Valid)Table(table)
 activate TablesHandler
 
@@ -10,7 +16,11 @@ TablesHandler -> Table: destroy()
 destroy Table
 else
 deactivate TablesHandler
-TablesHandler-> User : ERROR
+TablesHandler-> ButtonWidget : ERROR
 end
+ButtonWidget -> UIWindowHandler: loadTables()
+
+activate UIWindowHandler
+deactivate ButtonWidget
 
 @enduml

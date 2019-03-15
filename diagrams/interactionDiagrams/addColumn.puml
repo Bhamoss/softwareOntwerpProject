@@ -2,7 +2,8 @@
 title Add column
 Actor User
 
-User -> TableDesignHandler: addColumn()
+User->ButtonWidget: Presses button
+ButtonWidget -> TableDesignHandler: addColumn()
 activate TableDesignHandler
 TableDesignHandler -> Table: addColumn()
 activate Table
@@ -20,5 +21,12 @@ loop for all Rows
 end
 deactivate Table
 deactivate TableDesignHandler
+ButtonWidget -> UIWindowHandler: getOpenTable()
+activate UIWindowHandler
+ButtonWidget <-- UIWindowHandler: tableName
+deactivate
+ButtonWidget -> UIWindowHandler: loadTableDesign(tableName)
+
+activate UIWindowHandler
 
 @enduml

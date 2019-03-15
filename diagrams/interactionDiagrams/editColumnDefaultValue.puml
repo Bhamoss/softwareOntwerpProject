@@ -4,8 +4,10 @@ Actor User
 
 
 
-
-User -> TableDesignHandler: setColumnDV(column, value)
+User -> EditorWidget: changes default value
+activate EditorWidget
+EditorWidget -> TableDesignHandler: setColumnDV(column, value)
+deactivate
 activate TableDesignHandler
 TableDesignHandler -> TableManager: setColumnDV(column, value)
 activate TableManager
@@ -21,7 +23,7 @@ opt !canHaveAsValue(value)
     deactivate Table
     TableManager -> TableDesignHandler: ERROR
     deactivate TableManager
-    TableDesignHandler -> User: ERROR
+    TableDesignHandler -> EditorWidget: ERROR
     deactivate TableDesignHandler
 end
 

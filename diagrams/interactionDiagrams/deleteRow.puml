@@ -1,8 +1,13 @@
 @startuml
 title Delete Row\nMSS
 Actor User
-
-User -> TableRowsHandler: deleteRow(rowIndex)
+User->ButtonWidget: Presses delete
+activate ButtonWidget
+ButtonWidget ->UIWindowHandler: getSelectedItem()
+activate UIWindowHandler
+ButtonWidget <-- UIWindowHandler: rowIndex
+deactivate
+ButtonWidget -> TableRowsHandler: deleteRow(rowIndex)
 activate TableRowsHandler
 
 TableRowsHandler -> Table: isValidRowIndex(rowIndex)
@@ -17,6 +22,16 @@ loop
     destroy Cell
 end
 deactivate Table
-
 deactivate TableRowsHandler
+ButtonWidget -> TableRowsHandler: getOpenTable()
+activate TableRowsHandler
+ButtonWidget <-- TableRowsHandler: tableName
+deactivate
+ButtonWidget -> UIWindowHandler: removeTableRowsEntry(tableName,rowIndex)
+activate UIWindowHandler
+deactivate
+ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
+
+activate UIWindowHandler
+deactivate ButtonWidget
 @enduml

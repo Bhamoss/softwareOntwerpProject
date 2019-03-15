@@ -1,8 +1,10 @@
 @startuml
 actor User
 
+User->ButtonWidget: Presses button
 
-User -> TableHandler: createTable()
+ButtonWidget -> TableHandler: addTable()
+
 activate TableHandler
 create Table
 TableHandler -> Table: create Table(N)
@@ -10,5 +12,8 @@ activate Table
 Table -> Table: setName("TableN")
 return Table
 deactivate TableHandler
+
+activate UIWindowHandler
+ButtonWidget -> UIWindowHandler: loadTables()
 
 @enduml
