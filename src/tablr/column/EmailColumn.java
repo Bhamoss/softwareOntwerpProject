@@ -53,7 +53,19 @@ public class EmailColumn extends Column {
     @Override
     public boolean canHaveAsType(String type) {
         // TODO: review + update commentaar
-        return type.equals("Email") || type.equals("String") || (getDefaultValue().equals("") && getNbValues()==0);
+        if (type.equals("Email") || type.equals("String"))
+            return true;
+        if (getNbValues() == 0 && getDefaultValue().equals(""))
+            return true;
+        if (isBlanksAllowed()) {
+            for (int i = 1; i <= getNbValues(); i++)
+                if (!getValueAt(i).equals(""))
+                    return false;
+        } else {
+            return false;
+        }
+        return true;
+
     }
 
     /**

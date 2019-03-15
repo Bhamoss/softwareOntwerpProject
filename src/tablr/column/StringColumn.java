@@ -33,14 +33,14 @@ public class StringColumn extends Column {
                 result = true;
                 break;
             case "Boolean":
-                if (getDefaultValue().equals("True") ||
-                        getDefaultValue().equals("False") ||
+                if (getDefaultValue().equals("true") ||
+                        getDefaultValue().equals("false") ||
                         ( getDefaultValue().equals("") && isBlanksAllowed()) ) {
                     if (getNbValues() == 0) {
                         result = true;
                     } else {
                         for (int i = 1; i <= getNbValues(); i++) {
-                            if (!getValueAt(i).equals("True") && !getValueAt(i).equals("False")) {
+                            if (!getValueAt(i).equals("true") && !getValueAt(i).equals("false")) {
                                 result = isBlanksAllowed() && getValueAt(i).equals("");
                                 if (!result)
                                     break;
