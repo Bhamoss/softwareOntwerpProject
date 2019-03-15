@@ -70,6 +70,7 @@ public class TableManager {
      *  |}
      *
      */
+    @Model
     boolean hasAsTable(String name)
     {
         for (Table table: tables)
@@ -88,6 +89,7 @@ public class TableManager {
      * | && ∀table in tables: ∃! i: ArrayList<String>.get(i).equals(table.getName())
      *
      */
+    @Model
     ArrayList<String> getTableNames()
     {
         ArrayList<String> list = new ArrayList<String>();
@@ -135,6 +137,7 @@ public class TableManager {
     /**
      * Returns the name of the current open table or null if there is no open table.
      */
+    @Model
     String getOpenTable()
     {
         if (getCurrentTable() == null){return null;}
@@ -170,6 +173,7 @@ public class TableManager {
      * @throws IllegalArgumentException if the new name is not valid for the given table.
      *  | !canHaveAsName(tableName, newName)
      */
+    @Model
     void setTableName(String tableName, String newName) throws IllegalTableException, IllegalArgumentException
     {
         if(!hasAsTable(tableName)){throw new IllegalTableException();}
@@ -188,6 +192,7 @@ public class TableManager {
      * | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
      *
      */
+    @Model
     void addTable()
     {
         int i = 0;
@@ -220,6 +225,7 @@ public class TableManager {
      * @throws IllegalTableException if there is no table with the given name.
      * | !getTableNames().contains("tableName")
      */
+    @Model
     void removeTable(String tableName) throws IllegalTableException
     {
         if(!hasAsTable(tableName)){throw new IllegalTableException();}
@@ -238,6 +244,7 @@ public class TableManager {
      * @throws IllegalTableException if there is no table with tableName.
      *  | !getTableNames().contains(tableName)
      */
+    @Model
     void openTable(String tableName) throws  IllegalTableException
     {
         setCurrentTable(getTable(tableName));
@@ -255,6 +262,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     ArrayList<String> getColumnNames() throws IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -275,6 +283,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -284,6 +293,7 @@ public class TableManager {
     /**
      * return a list of all the possible column types
      */
+    @Model
     public static ArrayList<String> getColumnTypes() {return Table.getColumnTypes();}
 
     /**
@@ -300,6 +310,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     boolean getColumnAllowBlank(String columnName) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -317,6 +328,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     String getColumnDefaultValue(String columnName) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -344,6 +356,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     boolean canHaveAsColumnName(String columnName, String newName) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -368,6 +381,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -390,6 +404,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -412,6 +427,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     boolean canHaveAsDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -439,6 +455,7 @@ public class TableManager {
      * | getOpenTable() == null.
      *
      */
+    @Model
     void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -466,6 +483,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     void setColumnType(String columnName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -489,6 +507,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     void setColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -513,6 +532,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     void setColumnDefaultValue(String columnName, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -529,6 +549,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     void addColumn() throws IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -550,6 +571,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null.
      */
+    @Model
     void removeColumn(String name) throws IllegalArgumentException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -580,6 +602,7 @@ public class TableManager {
      * If there is no open table.
      * | getOpenTable() == null
      */
+    @Model
     String getCellValue(String columnName, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -612,6 +635,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     boolean canHaveAsCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
@@ -643,6 +667,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     void setCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
@@ -662,6 +687,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     void addRow() throws IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -684,6 +710,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     void removeRow(int row) throws IllegalRowException, IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}
@@ -704,6 +731,7 @@ public class TableManager {
      * if there is no open table
      * | getOpenTable() == null
      */
+    @Model
     public int getNbRows() throws IllegalTableException
     {
         if(getOpenTable() == null){throw new IllegalTableException();}

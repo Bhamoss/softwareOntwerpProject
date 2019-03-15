@@ -11,6 +11,8 @@ import java.util.ArrayList;
  *
  * @invar the handler always has a tablemanager.
  *  | getTableManager() != null
+ *
+ * @resp provide a controller for the table rows mode.
  */
 public class TableRowsHandler {
 
@@ -34,7 +36,6 @@ public class TableRowsHandler {
 
     /**
      * Returns the name of the current open table or null if there is no open table.
-     * TODO: I have no idea how to write this in formal comments
      */
     public String getOpenTable()
     {
@@ -44,24 +45,34 @@ public class TableRowsHandler {
 
     /**
      *
-     * @param columnName
-     * @param row
+     * Return the cell at the given row of the column with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the cell must be returned.
+     * @param   row
+     *          The row number of the row of the cell that must be returned.
      * @return
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !getTableManager().getCurrentTable().isAlreadyUsedColumnName(columnName)
+     * @throws  IllegalRowException
+     *          The row doesn't exists.
+     *          | row > getTableManager().getNbRows() || row < 1
      * @throws IllegalTableException
      * If there is no open table.
      * | getOpenTable() == null
      */
     public String getCellValue(String columnName, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        return getTableManager().getCellValue(columnName ,row); // placeholder
+        return getTableManager().getCellValue(columnName ,row);
     }
 
     /**
+     * Returns a new list of strings with all the names of the columns in it.
      *
-     * @return
+     * @return  List of all the column names of all the columns in this table.
      * @throws IllegalTableException
+     * if there is no open table
      * | getOpenTable() == null
      */
     public ArrayList<String> getColumnNames() throws IllegalTableException
@@ -71,9 +82,17 @@ public class TableRowsHandler {
 
 
     /**
+     * Returns the number of rows.
      *
-     * @return
+     * @return  0 if there are no columns in this table.
+     *          | if (getTableManager().getCurrentTable().getNbColumns() == 0)
+     *          |   result == 0
+     *          Otherwise, the number of values (rows) of the first column of this table.
+     *          | else
+     *          |   result == getTableManager().getCurrentTable().getColumnAt(1).getNbValues()
      * @throws IllegalTableException
+     * if there is no open table
+     * | getOpenTable() == null
      */
     public int getNbRows() throws IllegalTableException
     {
@@ -83,11 +102,17 @@ public class TableRowsHandler {
 
     /**
      *
-     * @param columnName
-     * @return
-     * @throws IllegalColumnException
+     * Returns the type of the column in this table with the given column name.
+     *
+     * @param   columnName
+     *          The name of the column of which the type should be returned.
+     * @return  The type of the given column.
+     * @throws  IllegalColumnException
+     *          There is no column in this table with the given column name.
+     *          | !getTableManager().getTableManager().getCurrentTable().isAlreadyUsedColumnName(columnName)
      * @throws IllegalTableException
-     * | getOpenTable() == null
+     * If there is no open table.
+     * | getOpenTable() == null.
      */
     public String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
     {
@@ -96,13 +121,24 @@ public class TableRowsHandler {
 
     /**
      *
-     * @param columnName
-     * @param row
-     * @param value
+     * Checks whether the given value can be the value for the cell
+     *  of the given column (given column name) at the given row.
+     *
+     * @param   columnName
+     *          The name of the column.
+     * @param   row
+     *          The row number of the row.
+     * @param   value
+     *          The value to be checked.
      * @return
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !getTableManager().getCurrentTable().isAlreadyUsedColumnName(columnName)
+     * @throws  IllegalRowException
+     *          The row doesn't exists.
+     *          | row > getTableManager().getCurrentTable().getNbRows() || row < 1
      * @throws IllegalTableException
+     * if there is no open table
      * | getOpenTable() == null
      */
     public boolean canHaveAsCellValue(String columnName, int row, String value)
@@ -113,26 +149,42 @@ public class TableRowsHandler {
 
     /**
      *
-     * @param columnName
-     * @param row
-     * @param newValue
-     * @throws IllegalColumnException
-     * @throws IllegalRowException
-     * @throws IllegalArgumentException
+     * Sets the given value as value for the cell
+     *  of the given column (given column name) at the given row.
+     *
+     * @param   columnName
+     *          The name of the column.
+     * @param   row
+     *          The row number of the row.
+     * @param   value
+     *          The value to be set.
+     * @effect  The value of the cell of the given column at the given row,
+     *          is set to the given value.
+     *          | getTableManager().getCurrentTable().getColumn(columnName).setValueAt(row, value)
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given columnName in this table.
+     *          | !getTableManager().getCurrentTable().isAlreadyUsedColumnName(columnName)
+     * @throws  IllegalRowException
+     *          The row doesn't exists.
+     *          | row > getTableManager().getCurrentTable().getNbRows() || row < 1
      * @throws IllegalTableException
+     * if there is no open table
      * | getOpenTable() == null
      */
-    public void setCellValue(String columnName, int row, String newValue)
+    public void setCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setCellValue(columnName, row, newValue);
+        getTableManager().setCellValue(columnName, row, value);
     }
 
-    // should always work
-
     /**
+     Adds a row at the end of this table.
      *
+     * @effect  For each column in this table, a new row is added at the end of the column.
+     *          | for each I in 1..getTableManager().getCurrentTable().getNbColumns():
+     *          |   getTableManager().getCurrentTable().getColumnAt(I).addValue();
      * @throws IllegalTableException
+     * if there is no open table
      * | getOpenTable() == null
      */
     public void addRow() throws IllegalTableException
@@ -140,13 +192,19 @@ public class TableRowsHandler {
         getTableManager().addRow();
     }
 
-    // TODO: delete checker?
-
     /**
      *
-     * @param row
-     * @throws IllegalRowException
+     * Remove the given row of this table.
+     * @param   row
+     *          The row to be deleted.
+     * @effect  For each column in this table, the given row is removed from the column.
+     *          | for each I in 1..getTableManager().getCurrentTable().getNbColumns():
+     *          |   getTableManager().getCurrentTable().getColumnAt(I).removeValue(row);
+     * @throws  IllegalRowException
+     *          The row doesn't exists.
+     *          | row > getTableManager().getCurrentTable().getNbRows() || row < 1
      * @throws IllegalTableException
+     * if there is no open table
      * | getOpenTable() == null
      */
     public void removeRow(int row) throws IllegalRowException, IllegalTableException
@@ -154,17 +212,6 @@ public class TableRowsHandler {
         getTableManager().removeRow(row);
     }
 
-    /**
-     * @invar tableRowsHandler and TableDesigHandler always point to the same table
-     */
-
-
-    /**
-     *
-     * @Invar this.currentTable == designHandler.currentTable
-     */
-
-    //private final TableManager tableManager;
 
     /**
      * Returns the tableManager.
