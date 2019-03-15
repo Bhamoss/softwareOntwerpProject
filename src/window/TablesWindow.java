@@ -16,11 +16,13 @@ public class TablesWindow {
      *
      * @param uiWindowHandler The ui handler controlling this window
      */
-    public TablesWindow(UIWindowHandler uiWindowHandler){
+    public TablesWindow(UIWindowHandler uiWindowHandler, TableHandler tableHandler){
         this.uiWindowHandler = uiWindowHandler;
+        this.tableHandler = tableHandler;
     }
 
     private final UIWindowHandler uiWindowHandler;
+    private final TableHandler tableHandler;
     private LinkedList<CheckBoxWidget> checkBoxes;
 
     public UIWindowHandler getUIWindowController() {
@@ -31,10 +33,9 @@ public class TablesWindow {
      * Constructs the widgets defining the window geometry
      * in the table mode
      *
-     * @param tableHandler handle to the backend
      * @return list of all widgets needed in table mode
      */
-    public LinkedList<Widget> getLayout(TableHandler tableHandler){
+    public LinkedList<Widget> getLayout(){
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
 

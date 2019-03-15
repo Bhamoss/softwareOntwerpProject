@@ -7,6 +7,7 @@ package "window" {
         handleKeyEvent(int, int, char): boolean
         handleMouseEvent(int, int ,int): boolean
         isBlocking(): boolean
+        containsPoint(int, int): boolean
     }
     UIWindowHandler "1" --> "0...*" Widget: has
 
@@ -28,6 +29,15 @@ package "window" {
     }
     ButtonWidget --|> LabelWidget
 
+
+    class SwitchBoxWidget{
+
+    }
+    SwitchBoxWidget --|> LabelWidget
+
+    class ColumnWidget{
+    }
+    ColumnWidget --|> Widget
 
 
     class UIWindowHandler{

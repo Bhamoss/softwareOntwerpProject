@@ -1,24 +1,23 @@
 package window;
 
-//import sun.awt.image.ImageWatched;
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;
 import window.widget.Widget;
 
 import java.awt.*;
-import java.util.AbstractMap;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * A class representing the UI handler.
  */
 public class UIWindowHandler extends CanvasWindow{
-    private TableHandler tableHandler;
-    private TableDesignHandler tableDesignHandler;
-    private TableRowsHandler tableRowsHandler;
+
+    private final TableHandler tableHandler;
+    private final TableDesignHandler tableDesignHandler;
+    private final TableRowsHandler tableRowsHandler;
 
     /**
      * Creates a new UI window with given tableManager.
@@ -29,78 +28,31 @@ public class UIWindowHandler extends CanvasWindow{
         this.tableHandler = new TableHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
-        this.tableDesignWindow = new TableDesignWindow(this);
-        this.tablesWindow = new TablesWindow(this);
-        this.tableRowsWindow = new TableRowsWindow(this);
+        this.tableDesignWindow = new TableDesignWindow(this, tableDesignHandler);
+        this.tablesWindow = new TablesWindow(this, tableHandler);
+        this.tableRowsWindow = new TableRowsWindow(this, tableRowsHandler);
 
         tableDesignWidths = new HashMap<>();
         tableRowsWidths = new HashMap<>();
 
+        this.tableModeWidth = 80;
+        this.ctrlActivated = false;
         this.selectedItem = null;
-        tableHandler.addTable();
-        tableHandler.addTable();
-        tableHandler.addTable();
-        tableHandler.addTable();
-
-        tableHandler.openTable("Table1");
-        tableDesignHandler.addColumn();
-
-        tableModeWidth = 80;
-
 
     }
-    /**
-     * Creates a new UI window with given tableDesignWindow, tablesWindow, tableRowsWindow and tableManager.
-     * @param tableDesignWindow
-     * @param tablesWindow
-     * @param tableRowsWindow
-     * @param tableManager
-     * @Effect loads tables window.
 
-    public UIWindowHandler(TableDesignWindow tableDesignWindow, TablesWindow tablesWindow, TableRowsWindow tableRowsWindow, TableManager tableManager){
-        super("Tablr");
-        this.tableDesignWindow = tableDesignWindow;
-        this.tablesWindow = tablesWindow;
-        this.tableRowsWindow = tableRowsWindow;
-        this.tableManager = tableManager;
-
-        loadTablesWindow();
-    }
-     */
 
     /**
-     * The tableDesignWindow.
+     * Windows
      */
     private final TableDesignWindow tableDesignWindow;
-
-    /**
-     * Gets the tableDesignWindow.
-     * @return the tableDesignWindow.
-     */
-    public TableDesignWindow getTableDesignWindow() {
-        return tableDesignWindow;
-    }
-    /**
-     * The tablesWindow.
-     */
     private final TablesWindow tablesWindow;
-
-    public TablesWindow getTablesWindow() {
-        return tablesWindow;
-    }
-
-
     private final TableRowsWindow tableRowsWindow;
+
+
     /**
-     * Gets the tableRowsWindow.
-     * @return the tableRowsWindow.
+     * Widgets
      */
-    public TableRowsWindow getTableRowsWindow() {
-        return tableRowsWindow;
-    }
-
-
-
     private LinkedList<Widget> widgets;
 
     public LinkedList<Widget> getWidgets() {
@@ -111,6 +63,9 @@ public class UIWindowHandler extends CanvasWindow{
         this.widgets = widgets;
     }
 
+    /**
+     * Selected item
+     */
     private String selectedItem;
 
     public void changeSelectedItem(String selectedItem) {
@@ -127,6 +82,9 @@ public class UIWindowHandler extends CanvasWindow{
         return selectedItem;
     }
 
+    /**
+     * Table Mode
+     */
     private int tableModeWidth;
 
     public void setTableModeWidth(int n) {
@@ -139,13 +97,16 @@ public class UIWindowHandler extends CanvasWindow{
 
     public void loadTablesWindow(){
         super.setTitle("Tablr - Tables");
-        setWidgets(tablesWindow.getLayout(tableHandler));
+        setWidgets(tablesWindow.getLayout());
         changeSelectedItem(null);
     }
 
-    private HashMap<String, Integer> tableDesignWidths;
+    /**
+     * Design Mode
+     */
 
-    private final static Integer defaultTableDesignWidth = 80;
+    private HashMap<String, Integer> tableDesignWidths;
+    public final static Integer defaultTableDesignWidth = 80;
 
     public Integer getDefaultTableDesignWidth() {
         return defaultTableDesignWidth;
@@ -164,11 +125,17 @@ public class UIWindowHandler extends CanvasWindow{
 
     public void loadTableDesignWindow(String tableName){
         super.setTitle("Tablr - Designing "+ tableName);
-        setWidgets(tableDesignWindow.getLayout(tableDesignHandler));
+        setWidgets(tableDesignWindow.getLayout());
         changeSelectedItem(null);
     }
 
+
+    /**
+     * Rows mode
+     */
+
     private HashMap<String, HashMap<String, Integer>> tableRowsWidths;
+    public final static int defaultTableRowsWidth = 80;
 
     public Integer getTableRowsWidth(String tableName, String columnName){
         return tableRowsWidths.get(tableName).get(columnName);
@@ -185,14 +152,14 @@ public class UIWindowHandler extends CanvasWindow{
     }
 
     public void removeTableRowsEntry(String tableName, String columnName){
-        tableRowsWidths.get(tableName).remove(columnName);
+        if (tableRowsWidths.containsKey(tableName))
+            tableRowsWidths.get(tableName).remove(columnName);
     }
-
 
 
     public void loadTableRowsWindow(String tableName){
         super.setTitle("Tablr - Editing "+ tableName);
-        setWidgets(tableRowsWindow.getLayout(tableRowsHandler));
+        setWidgets(tableRowsWindow.getLayout());
         changeSelectedItem(null);
     }
 
@@ -210,6 +177,7 @@ public class UIWindowHandler extends CanvasWindow{
         }
     }
 
+    private boolean ctrlActivated;
 
     /**
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
@@ -217,14 +185,21 @@ public class UIWindowHandler extends CanvasWindow{
      * @param id
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+        // special case for CTRL-ENTER
+        if (ctrlActivated && keyCode==KeyEvent.VK_ENTER)
+            keyCode = 13;
+
         boolean paintflag = false;
         for(Widget w : getWidgets()) {
             paintflag |= w.handleKeyEvent(id, keyCode, keyChar);
         }
 
+        // only repaint if a widget requested it
         if(paintflag) {
             repaint();
         }
+
+        ctrlActivated = keyCode == KeyEvent.VK_CONTROL;
     }
 
 
@@ -249,8 +224,5 @@ public class UIWindowHandler extends CanvasWindow{
         if (paintflag) {
             repaint();
         }
-    }
-
-    public void load(String absolutePath) {
     }
 }

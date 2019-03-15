@@ -33,9 +33,10 @@ public class CheckBoxWidget extends Widget {
      */
     public CheckBoxWidget(int x, int y, boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
-        this.toggleHandler = toggleHandler;
         this.isValidToggle = isValidToggle;
-        setChecked(checked);
+        this.toggleHandler = toggleHandler;
+        this.blocked = !isValidToggle.apply(checked);
+        this.checked = checked;
     }
 
     public CheckBoxWidget(boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
