@@ -76,7 +76,7 @@ public class UseCases {
     void editTableNameMSS()
     {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("resources/EditTableNameMSS/EditTableNameMSS.txt").getFile());
+        File file = new File(classLoader.getResource("resources/editTableNameMSS/editTableNameMSS.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
     }
 
