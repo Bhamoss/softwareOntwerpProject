@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Thomas Bamelis
- * @version 0.0.1
+ * @author Michiel Jonckheere, Thomas Bamelis
+ * @version 1.0.0
  *
  *  A table holding columns.
  *
