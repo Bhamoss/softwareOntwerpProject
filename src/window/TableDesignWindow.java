@@ -6,6 +6,14 @@ import window.widget.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
+/**
+ * @author  Michiel Provoost
+ * @version 1.0.0
+ *
+ * A window generating widgets defining the table design mode.
+ *
+ * @resp    Generating the window for the table design mode.
+ */
 public class TableDesignWindow{
 
     /**
@@ -19,11 +27,24 @@ public class TableDesignWindow{
 
     }
 
+    /**
+     * The UIWindowHandler managing this window.
+     */
     private final UIWindowHandler uiWindowHandler;
+    /**
+     * The TableDesignHandler to interface with.
+     */
     private TableDesignHandler tableHandler;
+
+    /**
+     * A list containing the checkboxes to select a column.
+     */
     private LinkedList<CheckBoxWidget> checkBoxes;
 
-
+    /**
+     * Gets the UIWindowHandler calling this window.
+     * @return The UIWindowHandler calling this window.
+     */
     public UIWindowHandler getUIHandler() {
         return uiWindowHandler;
     }

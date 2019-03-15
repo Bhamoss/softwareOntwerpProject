@@ -1,6 +1,5 @@
 package window;
 
-//import sun.awt.image.ImageWatched;
 import tablr.TableRowsHandler;
 import window.widget.*;
 
@@ -10,23 +9,56 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author  Michiel Provoost
+ * @version 1.0.0
+ *
+ * A window generating widgets defining the table rows mode.
+ *
+ * @resp    Generating the window for the table rows mode.
+ */
 public class TableRowsWindow {
 
+    /**
+     * A list containing the checkboxes to select a row.
+     */
     private LinkedList<CheckBoxWidget> checkBoxes;
 
+    /**
+     * Generates a tableRowsWindow with a given UIWindowHandler and TableRowsHandler.
+     * @param uiWindowHandler The master UI controller, managing this window.
+     * @param tableHandler The TableRowsHandler connecting the window to the backend.
+     */
     public TableRowsWindow(UIWindowHandler uiWindowHandler, TableRowsHandler tableHandler){
         this.uiWindowHandler = uiWindowHandler;
         this.tableHandler = tableHandler;
 
     }
 
+    /**
+     * The UIWindowHandler managing this window.
+     */
     private final UIWindowHandler uiWindowHandler;
+
+    /**
+     * The TableRowsHandler to interface with.
+     */
     private final TableRowsHandler tableHandler;
 
+    /**
+     * Gets the UIWindowHandler calling this window.
+     * @return The UIWindowHandler calling this window.
+     */
     public UIWindowHandler getUIHandler() {
         return uiWindowHandler;
     }
 
+    /**
+     * Constructs the UI for the rows window.
+     *
+     * @return A list of widgets, defining the geometry
+     *         of the window
+     */
     public LinkedList<Widget> getLayout(){
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
@@ -114,7 +146,9 @@ public class TableRowsWindow {
         return layout;
     }
 
-
+    /**
+     * Unselects all rows.
+     */
     private void unSelectAllBoxes() {
         for (CheckBoxWidget w : checkBoxes) {
             w.forceUncheck();

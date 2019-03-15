@@ -8,23 +8,45 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * @author  Michiel Provoost
+ * @version 1.0.0
+ *
+ * A window generating widgets defining the tables mode.
+ *
+ * @resp    Generating the window for the tables mode.
+ */
 public class TablesWindow {
 
     /**
-     * Creates a table window
-     *
-     * @param uiWindowHandler The ui handler controlling this window
+     * Create a window for the tables mode
+     * @param uiWindowHandler The master UI controller, managing this window.
+     * @param tableHandler The table handler connecting the window to the backend.
      */
     public TablesWindow(UIWindowHandler uiWindowHandler, TableHandler tableHandler){
         this.uiWindowHandler = uiWindowHandler;
         this.tableHandler = tableHandler;
     }
 
+    /**
+     * The UIWindowHandler managing this window.
+     */
     private final UIWindowHandler uiWindowHandler;
+
+    /**
+     * The TableHandler to interface with.
+     */
     private final TableHandler tableHandler;
+
+    /**
+     * A list containing the checkboxes to select a table.
+     */
     private LinkedList<CheckBoxWidget> checkBoxes;
 
+    /**
+     * Gets the UIWindowHandler calling this window.
+     * @return The UIWindowHandler calling this window.
+     */
     public UIWindowHandler getUIWindowController() {
         return uiWindowHandler;
     }
@@ -109,6 +131,10 @@ public class TablesWindow {
         return layout;
     }
 
+
+    /**
+     * Unselects all tables.
+     */
     private void unselectAllBoxes() {
         for (CheckBoxWidget w : checkBoxes) {
             w.forceUncheck();
