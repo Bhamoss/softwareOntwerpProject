@@ -48,7 +48,6 @@ public class UseCases {
 
     @AfterAll
     static void tearDownAll() {
-        // close window here
     }
 
     /*
@@ -158,6 +157,140 @@ public class UseCases {
 
         classLoader = getClass().getClassLoader();
         file = new File(classLoader.getResource("resources/AddColumn/AddColumn.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    /*
+     ************************************************
+     *      Use Case: Edit Column Characteristics
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("Edit Column Characteristics MSS")
+    void editColumnCharacteristicsMSS()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/EditColumnCharacteristicsMSS/EditColumnCharacteristicsMSS.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    @Test
+    @DisplayName("Edit Column Characteristics 1a")
+    void editColumnCharacteristics1a()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/EditColumnCharacteristics1a/EditColumnCharacteristics1a.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    @Test
+    @DisplayName("Edit Column Characteristics 1b")
+    void editColumnCharacteristics1b()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/EditColumnCharacteristics1b/EditColumnCharacteristics1b.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    @Test
+    @DisplayName("Edit Column Characteristics 1c")
+    void editColumnCharacteristics1c()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/EditColumnCharacteristics1c/EditColumnCharacteristics1c.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    /*
+     ************************************************
+     *           Use Case: Delete Column
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("Delete Column")
+    void deleteColumn()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupDesignMode/SetupDesignMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/DeleteColumn/DeleteColumn.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    /*
+     ************************************************
+     *           Use Case: Add Row
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("Add Row")
+    void addRow()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/AddRow/AddRow.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    /*
+     ************************************************
+     *           Use Case: Edit Row Value
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("Edit Row Value MSS")
+    void editRowValueMSS()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/EditRowValueMSS/EditRowValueMSS.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+    }
+
+    /*
+     ************************************************
+     *           Use Case: Delete Row
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("Delete Row")
+    void deleteRow()
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("resources/SetupRowsMode/SetupRowsMode.txt").getFile());
+        CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
+
+        classLoader = getClass().getClassLoader();
+        file = new File(classLoader.getResource("resources/DeleteRow/DeleteRow.txt").getFile());
         CanvasWindow.replayRecording(file.getAbsolutePath(),ui);
     }
 
