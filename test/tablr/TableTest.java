@@ -31,14 +31,14 @@ class TableTest {
 
         // boolean column with blanks, first value is True, second one False, default empty
         tenTable.setColumnType("Column1", "Boolean");
-        tenTable.setCellValue("Column1", 1, "True");
-        tenTable.setCellValue("Column1", 2, "False");
+        tenTable.setCellValue("Column1", 1, "true");
+        tenTable.setCellValue("Column1", 2, "false");
 
         // boolean column no blanks, all values True, also default
         tenTable.setColumnType("Column2", "Boolean");
         for (int i = 1; i <= tenTable.getNbRows(); i++)
-            tenTable.setCellValue("Column2", i, "True");
-        tenTable.setColumnDefaultValue("Column2", "True");
+            tenTable.setCellValue("Column2", i, "true");
+        tenTable.setColumnDefaultValue("Column2", "true");
         tenTable.setColumnAllowBlanks("Column2", false);
 
         // integer column with blanks, first value 12, second 4, default empty
@@ -133,7 +133,7 @@ class TableTest {
 
     @Test
     void getCellValue() {
-        assertEquals("True", tenTable.getCellValue("Column1", 1));
+        assertEquals("true", tenTable.getCellValue("Column1", 1));
     }
 
     @Test
@@ -146,12 +146,12 @@ class TableTest {
 
     @Test
     void setCellValue() {
-        tenTable.setCellValue("Column1", 1, "False");
-        assertEquals("False", tenTable.getCellValue("Column1", 1));
+        tenTable.setCellValue("Column1", 1, "false");
+        assertEquals("false", tenTable.getCellValue("Column1", 1));
         assertThrows(IllegalRowException.class,
                 () -> tenTable.setCellValue("Column1", 0, "True"));
         assertThrows(IllegalRowException.class,
-                () -> tenTable.setCellValue("Column1", tenTable.getNbRows() + 1, "False"));
+                () -> tenTable.setCellValue("Column1", tenTable.getNbRows() + 1, "false"));
     }
 
     @Test
@@ -184,7 +184,7 @@ class TableTest {
 
     @Test
     void getColumnNames() {
-        ArrayList<String> exp = new ArrayList<>() {{
+        ArrayList<String> exp = new ArrayList<String>() {{
             add("Column1");
             add("Column2");
             add("Column3");
@@ -244,10 +244,7 @@ class TableTest {
         assertEquals("Boolean", tenTable.getColumnType("Column1"));
 
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column3", "Boolean"));
-        tenTable.setColumnType("Column4", "Boolean");
-        assertEquals("Boolean", tenTable.getColumnType("Column4"));
-        assertEquals("True", tenTable.getCellValue("Column4", 2));
-        assertEquals("False", tenTable.getColumnDefaultValue("Column4"));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column4", "Boolean"));
 
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column5", "Boolean"));
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column6", "Boolean"));
@@ -272,9 +269,7 @@ class TableTest {
 
     @Test
     void setColumnType_Integer() {
-        tenTable.setColumnType("Column2", "Integer");
-        assertEquals("Integer", tenTable.getColumnType("Column2"));
-        assertEquals("1", tenTable.getCellValue("Column2", 2));
+        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType("Column2", "Integer"));
 
         tenTable.setColumnType("Column3", "Integer");
         assertEquals("Integer", tenTable.getColumnType("Column3"));
@@ -290,7 +285,7 @@ class TableTest {
     @Test
     void getColumnDefaultValue() {
         assertEquals("", tenTable.getColumnDefaultValue("Column1"));
-        assertEquals("True", tenTable.getColumnDefaultValue("Column2"));
+        assertEquals("true", tenTable.getColumnDefaultValue("Column2"));
         assertEquals("", tenTable.getColumnDefaultValue("Column3"));
         assertEquals("0", tenTable.getColumnDefaultValue("Column4"));
         assertEquals("", tenTable.getColumnDefaultValue("Column5"));

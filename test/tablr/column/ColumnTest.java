@@ -14,7 +14,7 @@ class ColumnTest {
 
     @BeforeEach
     void setUp() {
-        boolColumn10 = new BooleanColumn("booleanColumn10", 10, "True", true);
+        boolColumn10 = new BooleanColumn("booleanColumn10", 10, "true", true);
         intColumnNoBlanks = new IntegerColumn("intColumnNoBlanks", 10, "12", false);
         emailColumnEmptyDV = new EmailColumn("emailColumnEmptyDV", 10, "", true);
         stringColumn0Values = new StringColumn("stringColumn0Values", 0, "", true);
@@ -97,15 +97,15 @@ class ColumnTest {
 
     @Test
     void getDefaultValue() {
-        assertEquals("True", boolColumn10.getDefaultValue());
+        assertEquals("true", boolColumn10.getDefaultValue());
     }
 
     @Test
     void setDefaultValue_LegalCase() throws IllegalArgumentException {
-        boolColumn10.setDefaultValue("False");
-        assertEquals("False", boolColumn10.getDefaultValue());
-        boolColumn10.setDefaultValue("True");
-        assertEquals("True", boolColumn10.getDefaultValue());
+        boolColumn10.setDefaultValue("false");
+        assertEquals("false", boolColumn10.getDefaultValue());
+        boolColumn10.setDefaultValue("true");
+        assertEquals("true", boolColumn10.getDefaultValue());
         intColumnNoBlanks.setDefaultValue("123");
         assertEquals("123", intColumnNoBlanks.getDefaultValue());
         emailColumnEmptyDV.setDefaultValue("test@kuleuven.be");
@@ -134,8 +134,8 @@ class ColumnTest {
 
     @Test
     void getValueAt_LegalCase()throws IndexOutOfBoundsException {
-        assertEquals("True", boolColumn10.getValueAt(1));
-        assertEquals("True", boolColumn10.getValueAt(boolColumn10.getNbValues()));
+        assertEquals("true", boolColumn10.getValueAt(1));
+        assertEquals("true", boolColumn10.getValueAt(boolColumn10.getNbValues()));
     }
 
     @Test
@@ -151,37 +151,37 @@ class ColumnTest {
 
     @Test
     void addValueAt_LegalCase() throws IllegalArgumentException {
-        boolColumn10.addValueAt(5, "False");
+        boolColumn10.addValueAt(5, "false");
         assertEquals(11, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {
             if (i == 5)
-                assertEquals("False", boolColumn10.getValueAt(i));
+                assertEquals("false", boolColumn10.getValueAt(i));
             else
-                assertEquals("True", boolColumn10.getValueAt( i));
+                assertEquals("true", boolColumn10.getValueAt( i));
         }
     }
 
     @Test
     void addValue() throws IllegalArgumentException {
-        boolColumn10.addValue("False");
+        boolColumn10.addValue("false");
         assertEquals(11, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {
             if (i == boolColumn10.getNbValues())
-                assertEquals("False", boolColumn10.getValueAt(i));
+                assertEquals("false", boolColumn10.getValueAt(i));
             else
-                assertEquals("True", boolColumn10.getValueAt( i));
+                assertEquals("true", boolColumn10.getValueAt( i));
         }
     }
 
     @Test
     void setValueAt() throws IllegalArgumentException {
-        boolColumn10.setValueAt(5, "False");
+        boolColumn10.setValueAt(5, "false");
         assertEquals(10, boolColumn10.getNbValues());
         for (int i = 1; i <= boolColumn10.getNbValues(); i++) {
             if (i == 5)
-                assertEquals("False", boolColumn10.getValueAt(i));
+                assertEquals("false", boolColumn10.getValueAt(i));
             else
-                assertEquals("True", boolColumn10.getValueAt( i));
+                assertEquals("true", boolColumn10.getValueAt( i));
         }
     }
 
