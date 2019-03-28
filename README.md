@@ -3,13 +3,15 @@ De repo voor het project van softwareontwerp.
 
 
 
-## ToDo
+## ToDo (Commentaar eerste iteratie)
 
-- [x] Michy: ID: Delete Table, Open Table, Add Column
-- [x] Michiel: ID: Edit Column Characteristics (testcommit)
-- [x] Thomas: ID: delete column, add row --> ipv (Column) (column) meegeven als parameter
-- [x] Jaron: ID: Edit row value, Delete Row
-- [ ] Die graphics uitvogelen
+[ ] Currenttable uit TBM
+[ ] String Type column
+[ ] Table widths in UI -> Pure fabrication
+[ ] TableHandlers samenvoegen
+[ ] restricties modes?
+[ ] canHaveAsType(colomn)
+
 
 ## Vragen voor assistent
 
