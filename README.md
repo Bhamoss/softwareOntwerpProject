@@ -5,12 +5,12 @@ De repo voor het project van softwareontwerp.
 
 ## ToDo (Commentaar eerste iteratie)
 
-[ ] Currenttable uit TBM
-[ ] String Type column
-[ ] Table widths in UI -> Pure fabrication
-[ ] TableHandlers samenvoegen
-[ ] restricties modes?
-[ ] canHaveAsType(colomn)
+- [ ] Currenttable uit TBM
+- [ ] String Type column
+- [ ] Table widths in UI -> Pure fabrication
+- [ ] TableHandlers samenvoegen
+- [ ] restricties modes?
+- [ ] canHaveAsType(colomn)
 
 
 ## Vragen voor assistent
