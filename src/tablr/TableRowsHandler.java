@@ -45,7 +45,8 @@ public class TableRowsHandler {
      */
     public String getOpenTable()
     {
-        return getTableManager().getOpenTable();
+        //return getTableManager().getOpenTable();
+        return null; //placeholder
     }
 
 
@@ -70,7 +71,8 @@ public class TableRowsHandler {
      */
     public String getCellValue(String columnName, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        return getTableManager().getCellValue(columnName ,row);
+        //return getTableManager().getCellValue(columnName ,row);
+        return null; //placeholder
     }
 
     /**
@@ -83,7 +85,8 @@ public class TableRowsHandler {
      */
     public ArrayList<String> getColumnNames() throws IllegalTableException
     {
-        return getTableManager().getColumnNames();
+        //return getTableManager().getColumnNames();
+        return null; //placeholder
     }
 
 
@@ -102,7 +105,8 @@ public class TableRowsHandler {
      */
     public int getNbRows() throws IllegalTableException
     {
-        return getTableManager().getNbRows();
+        //return getTableManager().getNbRows();
+        return 0; //placeholder
     }
 
 
@@ -122,7 +126,8 @@ public class TableRowsHandler {
      */
     public String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnType(columnName);
+        //return getTableManager().getColumnType(columnName);
+        return null; //placeholder
     }
 
     /**
@@ -150,7 +155,8 @@ public class TableRowsHandler {
     public boolean canHaveAsCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        return getTableManager().canHaveAsCellValue(columnName, row, value);
+        //return getTableManager().canHaveAsCellValue(columnName, row, value);
+        return false; //placeholder
     }
 
     /**
@@ -180,7 +186,7 @@ public class TableRowsHandler {
     public void setCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setCellValue(columnName, row, value);
+        //getTableManager().setCellValue(columnName, row, value);
     }
 
     /**
@@ -195,7 +201,7 @@ public class TableRowsHandler {
      */
     public void addRow() throws IllegalTableException
     {
-        getTableManager().addRow();
+        //getTableManager().addRow();
     }
 
     /**
@@ -215,7 +221,7 @@ public class TableRowsHandler {
      */
     public void removeRow(int row) throws IllegalRowException, IllegalTableException
     {
-        getTableManager().removeRow(row);
+        //getTableManager().removeRow(row);
     }
 
 

@@ -111,7 +111,8 @@ public class TableHandler {
      */
     public String getOpenTable()
     {
-        return getTableManager().getOpenTable();
+        //return getTableManager().getOpenTable();
+        return null; //placeholder
     }
 
 
@@ -195,7 +196,7 @@ public class TableHandler {
      */
     public void openTable(String tableName) throws  IllegalTableException
     {
-        getTableManager().openTable(tableName);
+        //getTableManager().openTable(tableName);
     }
 
 

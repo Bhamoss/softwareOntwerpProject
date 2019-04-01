@@ -5,11 +5,11 @@ De repo voor het project van softwareontwerp.
 
 ## ToDo (Commentaar eerste iteratie)
 
-- [ ] Currenttable uit TBM
+- [x] Currenttable uit TBM
 - [ ] String Type column
 - [ ] Table widths in UI -> Pure fabrication
-- [ ] TableHandlers samenvoegen
-- [ ] restricties modes?
+- [x] TableHandlers samenvoegen
+- [x] restricties modes?
 - [ ] canHaveAsType(colomn)
 - [ ] configure fonts to be consistent accross OS's
 - [ ] Bugfix: update selection on rename table

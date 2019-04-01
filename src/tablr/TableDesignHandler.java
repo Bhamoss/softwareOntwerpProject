@@ -51,7 +51,8 @@ public class TableDesignHandler {
      */
     public ArrayList<String> getColumnNames() throws IllegalTableException
     {
-        return getTableManager().getColumnNames();
+        //return getTableManager().getColumnNames();
+        return null;
     }
 
 
@@ -72,7 +73,8 @@ public class TableDesignHandler {
      */
     public String getOpenTable()
     {
-        return getTableManager().getOpenTable();
+        //return getTableManager().getOpenTable();
+        return null; //placeholder
     }
 
     /**
@@ -91,7 +93,8 @@ public class TableDesignHandler {
      */
     public String getColumnType(String columnName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnType(columnName);
+        //return getTableManager().getColumnType(columnName);
+        return null; //placeholder
     }
 
     /**
@@ -102,7 +105,8 @@ public class TableDesignHandler {
      */
     public static List<String> getAvailableColumnTypes()
     {
-        return TableManager.getColumnTypes();
+        //return TableManager.getColumnTypes();
+        return null; //placeholder
     }
 
     /**
@@ -121,7 +125,8 @@ public class TableDesignHandler {
      */
     public boolean getColumnAllowBlank(String columnName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnAllowBlank(columnName);
+        //return getTableManager().getColumnAllowBlank(columnName);
+        return false; //placeholder
     }
 
     /**
@@ -137,7 +142,8 @@ public class TableDesignHandler {
      */
     public String getColumnDefaultValue(String columnName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnDefaultValue(columnName);
+        //return getTableManager().getColumnDefaultValue(columnName);
+        return null; //placeholder
     }
 
 
@@ -163,7 +169,8 @@ public class TableDesignHandler {
      */
     public boolean canHaveAsColumnName(String columnName, String newName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnName(columnName, newName);
+        //return getTableManager().canHaveAsColumnName(columnName, newName);
+        return false; //placeholder
     }
 
     // Dit kan enum type zijn of string
@@ -187,7 +194,8 @@ public class TableDesignHandler {
     public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException, IllegalTableException
     {
         System.out.println();
-        return getTableManager().canHaveAsColumnType(columnName, type);
+        //return getTableManager().canHaveAsColumnType(columnName, type);
+        return false; //placeholder
     }
 
     // TODO: we can make a canToggle() function if you want
@@ -209,7 +217,8 @@ public class TableDesignHandler {
      */
     public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnAllowBlanks(columnName, blanksAllowed);
+        //return getTableManager().canHaveAsColumnAllowBlanks(columnName, blanksAllowed);
+        return false; //placeholder
     }
 
     /**
@@ -230,7 +239,8 @@ public class TableDesignHandler {
      */
     public boolean canHaveAsDefaultValue(String columnName, String newDefaultValue) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsDefaultValue(columnName, newDefaultValue);
+        //return getTableManager().canHaveAsDefaultValue(columnName, newDefaultValue);
+        return false; //placeholder
     }
 
     /**
@@ -256,7 +266,7 @@ public class TableDesignHandler {
      */
     public void setColumnName(String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnName(columnName, newColumnName);
+        //getTableManager().setColumnName(columnName, newColumnName);
     }
 
     /**
@@ -282,7 +292,7 @@ public class TableDesignHandler {
     public void setColumnType(String columnName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         System.out.println("SETTING COLUMN TYPE");
-        getTableManager().setColumnType(columnName, type);
+        //getTableManager().setColumnType(columnName, type);
     }
 
     /**
@@ -304,7 +314,7 @@ public class TableDesignHandler {
      */
     public void setColumnAllowBlanks(String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnAllowBlanks(columnName, blanksAllowed);
+        //getTableManager().setColumnAllowBlanks(columnName, blanksAllowed);
     }
 
     /**
@@ -327,7 +337,7 @@ public class TableDesignHandler {
      */
     public void setColumnDefaultValue(String columnName, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnDefaultValue(columnName, defaultValue);
+        //getTableManager().setColumnDefaultValue(columnName, defaultValue);
     }
 
     /**
@@ -342,7 +352,7 @@ public class TableDesignHandler {
      */
     public void addColumn() throws IllegalTableException
     {
-        getTableManager().addColumn();
+        //getTableManager().addColumn();
     }
 
 
@@ -361,7 +371,7 @@ public class TableDesignHandler {
      */
     public void removeColumn(String name) throws IllegalArgumentException, IllegalTableException
     {
-        getTableManager().removeColumn(name);
+        //getTableManager().removeColumn(name);
     }
 
     //private final TableManager tableManager;
