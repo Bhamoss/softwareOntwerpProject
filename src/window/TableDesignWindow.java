@@ -96,7 +96,11 @@ public class TableDesignWindow{
             EditorWidget editor = new EditorWidget(
                     true, columnName,
                     tableHandler::canHaveAsColumnName,
-                    tableHandler::setColumnName
+                    (String oldColumnName,String newColumnName) ->{
+                        tableHandler.setColumnName(oldColumnName,newColumnName);
+                        getUIHandler().changeSelectedItem("");
+                        unSelectAllBoxes();
+                    }
             );
             namesColumn.addWidget(editor);
 
@@ -129,6 +133,7 @@ public class TableDesignWindow{
                     (Boolean toggle)-> {
                             tableHandler.setColumnAllowBlanks(editor.getStoredText(),toggle);
                             reload();
+                            //TODO Pretty code here huh? "No repaints, design is supreme" #ikfixdawel
                             getUIHandler().repaint();
                     },
                     (Boolean toggle)->

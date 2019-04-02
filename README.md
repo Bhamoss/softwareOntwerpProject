@@ -11,8 +11,8 @@ De repo voor het project van softwareontwerp.
 - [x] TableHandlers samenvoegen
 - [x] restricties modes?
 - [ ] canHaveAsType(colomn)
-- [ ] configure fonts to be consistent accross OS's
-- [ ] Bugfix: update selection on rename table
+- [x] configure fonts to be consistent accross OS's (checked and seems impossible, tot op de pixel correct kan nooit, nieuwe manier om te testen?)
+- [x] Bugfix: update selection on rename table
 
 
 ## Vragen voor assistent

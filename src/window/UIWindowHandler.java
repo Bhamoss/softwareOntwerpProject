@@ -3,6 +3,7 @@ package window;
 import tablr.TableDesignHandler;
 import tablr.TableHandler;
 import tablr.TableRowsHandler;
+import tablr.TablesHandler;
 import window.widget.Widget;
 import be.kuleuven.cs.som.taglet.*;
 
@@ -21,6 +22,7 @@ import java.util.LinkedList;
  */
 public class UIWindowHandler extends CanvasWindow{
 
+    private final TablesHandler tablesHandler;
     private final TableHandler tableHandler;
     private final TableDesignHandler tableDesignHandler;
     private final TableRowsHandler tableRowsHandler;
@@ -32,10 +34,11 @@ public class UIWindowHandler extends CanvasWindow{
     public UIWindowHandler(){
         super("Tablr starting...");
         this.tableHandler = new TableHandler();
+        this.tablesHandler = new TablesHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
         this.tableDesignWindow = new TableDesignWindow(this, tableDesignHandler);
-        this.tablesWindow = new TablesWindow(this, tableHandler);
+        this.tablesWindow = new TablesWindow(this, tablesHandler);
         this.tableRowsWindow = new TableRowsWindow(this, tableRowsHandler);
 
         tableDesignWidths = new HashMap<>();

@@ -5,6 +5,8 @@ import java.awt.*;
 import java.lang.String;
 import be.kuleuven.cs.som.taglet.*;
 
+import javax.swing.plaf.FontUIResource;
+
 public class LabelWidget extends Widget{
 
     protected String text;
