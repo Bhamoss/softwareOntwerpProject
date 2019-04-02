@@ -95,8 +95,12 @@ public class TableRowsWindow {
                 int row = i;
                 editor = new EditorWidget(true, tableHandler.getCellValue(columnName,i),
                         (String oldName, String newName) -> tableHandler.canHaveAsCellValue(columnName,row,newName),
-                        (String oldName, String newName) -> tableHandler.setCellValue(columnName,row,newName)
-                        );
+                        (String oldName, String newName) -> {
+                            tableHandler.setCellValue(columnName, row, newName);
+                            getUIHandler().changeSelectedItem("");
+                            unSelectAllBoxes();
+                        }
+                );
 
                 column.addWidget(editor);
             }

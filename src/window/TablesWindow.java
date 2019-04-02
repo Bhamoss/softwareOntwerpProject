@@ -2,6 +2,7 @@ package window;
 
 import tablr.TableHandler;
 import tablr.TableManager;
+import tablr.TablesHandler;
 import window.widget.*;
 import be.kuleuven.cs.som.taglet.*;
 
@@ -22,11 +23,11 @@ public class TablesWindow {
     /**
      * Create a window for the tables mode
      * @param uiWindowHandler The master UI controller, managing this window.
-     * @param tableHandler The table handler connecting the window to the backend.
+     * @param tablesHandler The table handler connecting the window to the backend.
      */
-    public TablesWindow(UIWindowHandler uiWindowHandler, TableHandler tableHandler){
+    public TablesWindow(UIWindowHandler uiWindowHandler, TablesHandler tablesHandler){
         this.uiWindowHandler = uiWindowHandler;
-        this.tableHandler = tableHandler;
+        this.tablesHandler = tablesHandler;
     }
 
     /**
@@ -37,7 +38,7 @@ public class TablesWindow {
     /**
      * The TableHandler to interface with.
      */
-    private final TableHandler tableHandler;
+    private final TablesHandler tablesHandler;
 
     /**
      * A list containing the checkboxes to select a table.
@@ -69,12 +70,16 @@ public class TablesWindow {
         ColumnWidget openingColumn = new ColumnWidget(
                 45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
 
-        for(String tableName : tableHandler.getTableNames()){
+        for(String tableName : tablesHandler.getTableNames()){
             // Create the editor window
             EditorWidget editor = new EditorWidget(
                     true, tableName,
-                    tableHandler::canHaveAsName,
-                    tableHandler::setTableName
+                    tablesHandler::canHaveAsName,
+                    (String oldTableName,String newTableName) ->{
+                        tablesHandler.setTableName(oldTableName,newTableName);
+                        getUIWindowController().changeSelectedItem("");
+                        unselectAllBoxes();
+                    }
             );
             tablesColumn.addWidget(editor);
 
@@ -92,8 +97,7 @@ public class TablesWindow {
                     false,"",
                     (Integer clickCount) ->{
                         if(clickCount == 2) {
-                            tableHandler.openTable(editor.getStoredText());
-                            if (tableHandler.isTableEmpty(editor.getStoredText()))
+                            if (tablesHandler.isTableEmpty(editor.getStoredText()))
                                 getUIWindowController().loadTableDesignWindow(editor.getStoredText());
                             else
                                 getUIWindowController().loadTableRowsWindow(editor.getStoredText());
@@ -114,7 +118,7 @@ public class TablesWindow {
                 true,"Create table",
                 (Integer clickCount) -> {
                     if(clickCount == 2) {
-                        tableHandler.addTable();
+                        tablesHandler.addTable();
                         getUIWindowController().loadTablesWindow();
                         return true;
                     } else {
@@ -123,7 +127,7 @@ public class TablesWindow {
 
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null) {
-                tableHandler.removeTable(getUIWindowController().getSelectedItem());
+                tablesHandler.removeTable(getUIWindowController().getSelectedItem());
                 getUIWindowController().loadTablesWindow();
                 return true;
             }

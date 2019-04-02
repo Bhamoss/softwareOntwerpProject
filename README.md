@@ -3,13 +3,17 @@ De repo voor het project van softwareontwerp.
 
 
 
-## ToDo
+## ToDo (Commentaar eerste iteratie)
 
-- [x] Michy: ID: Delete Table, Open Table, Add Column
-- [x] Michiel: ID: Edit Column Characteristics (testcommit)
-- [x] Thomas: ID: delete column, add row --> ipv (Column) (column) meegeven als parameter
-- [x] Jaron: ID: Edit row value, Delete Row
-- [ ] Die graphics uitvogelen
+- [x] Currenttable uit TBM
+- [ ] String Type column
+- [ ] Table widths in UI -> Pure fabrication
+- [x] TableHandlers samenvoegen
+- [x] restricties modes?
+- [ ] canHaveAsType(colomn)
+- [x] configure fonts to be consistent accross OS's (checked and seems impossible, tot op de pixel correct kan nooit, nieuwe manier om te testen?)
+- [x] Bugfix: update selection on rename table
+
 
 ## Vragen voor assistent
 
