@@ -2,6 +2,7 @@ package window.widget;
 
 import java.awt.*;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.TablesHandler;
 
 public class Widget {
 
@@ -148,5 +149,12 @@ public class Widget {
      */
     public boolean containsPoint(int px, int py) {
         return (x <= px) && (px <= x+width) && (y <= py) && (py <= y+height);
+    }
+
+    /**
+     * Refreshes the widget's state from the backend
+     */
+    public void update() {
+
     }
 }

@@ -133,7 +133,6 @@ public class TableDesignWindow{
                     (Boolean toggle)-> {
                             tableHandler.setColumnAllowBlanks(editor.getStoredText(),toggle);
                             reload();
-                            //TODO Pretty code here huh? "No repaints, design is supreme" #ikfixdawel
                             getUIHandler().repaint();
                     },
                     (Boolean toggle)->

@@ -6,6 +6,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.TablesHandler;
 
 public class CheckBoxWidget extends Widget {
 
@@ -100,9 +101,5 @@ public class CheckBoxWidget extends Widget {
         }
         return false;
     }
-
-
-
-
 
 }
