@@ -63,10 +63,13 @@ public class TablesWindow {
         LinkedList<Widget> layout = new LinkedList<>();
         checkBoxes = new LinkedList<>();
 
+        // create the column containing the names of the tables
         ColumnWidget tablesColumn = new ColumnWidget(
                 46, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true, true,
                 (Integer w) -> getUIWindowController().setTableModeWidth(w));
+        // create the column for selecting a table
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
+        // vraag: welke column is dit?
         ColumnWidget openingColumn = new ColumnWidget(
                 45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
 

@@ -33,22 +33,30 @@ public class UIWindowHandler extends CanvasWindow{
      */
     public UIWindowHandler(){
         super("Tablr starting...");
+
+        // create handler(s) (for all modes)
         this.tableHandler = new TableHandler();
+        // the facade controller
         this.tablesHandler = new TablesHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
+
+        // create a window for all modes
         this.tableDesignWindow = new TableDesignWindow(this, tableDesignHandler);
         this.tablesWindow = new TablesWindow(this, tablesHandler);
         this.tableRowsWindow = new TableRowsWindow(this, tableRowsHandler);
 
+        // initialize dictionaries for widths per mode
         tableDesignWidths = new HashMap<>();
         tableRowsWidths = new HashMap<>();
+
 
         this.tableModeWidth = 80;
         this.ctrlActivated = false;
         this.selectedItem = null;
 
     }
+
 
 
     /**
@@ -138,7 +146,9 @@ public class UIWindowHandler extends CanvasWindow{
      * @Effect Changes the selected item to null.
      */
     public void loadTablesWindow(){
+        // set the title of the window
         super.setTitle("Tablr - Tables");
+        //
         setWidgets(tablesWindow.getLayout());
         changeSelectedItem(null);
     }
