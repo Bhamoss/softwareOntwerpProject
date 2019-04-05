@@ -53,6 +53,8 @@ public class TablesWindow {
         return uiWindowHandler;
     }
 
+
+    // TODO: delete uiwindowHandler variable and let uiwindowhandler give itself as a parameter to getLayout()
     /**
      * Constructs the widgets defining the window geometry
      * in the table mode
@@ -60,30 +62,42 @@ public class TablesWindow {
      * @return list of all widgets needed in table mode
      */
     public LinkedList<Widget> getLayout(){
+        // list you will return
         LinkedList<Widget> layout = new LinkedList<>();
+
         checkBoxes = new LinkedList<>();
 
         // create the column containing the names of the tables
         ColumnWidget tablesColumn = new ColumnWidget(
                 46, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true, true,
-                (Integer w) -> getUIWindowController().setTableModeWidth(w));
+                (Integer w) -> getUIWindowController().setTableModeWidth(w)); // lambda die wordt opgeroepen bij resizen
+
         // create the column for selecting a table
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        // vraag: welke column is dit?
+
+        // This is a column you paint over the column with table names, which contains buttons
+        // The button over a tablename will later be given a lambda which opens the that table in the valid mode
         ColumnWidget openingColumn = new ColumnWidget(
                 45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
 
+        // fill all 3 columns with corresponding widgets
         for(String tableName : tablesHandler.getTableNames()){
-            // Create the editor window
+            // Create the editor widgets which holds the names for the tables and is able to change those names
             EditorWidget editor = new EditorWidget(
                     true, tableName,
+                    // used for checking when editing the name if the name is valid or not (red box)
                     tablesHandler::canHaveAsName,
+                    // used for setting the table names when editing and enter is pressed
                     (String oldTableName,String newTableName) ->{
                         tablesHandler.setTableName(oldTableName,newTableName);
+                        // TODO: jaron wants to select the new name in the following line
                         getUIWindowController().changeSelectedItem("");
+                        // deselect because some problems Thomas doesn't yet understand
+                        // TODO: delete this and put it in the proper place (as discussed in meeting 05/04
                         unselectAllBoxes();
                     }
             );
+            // this implicitly sets the order of the name
             tablesColumn.addWidget(editor);
 
             // Create a button left of the editor to select it
@@ -95,14 +109,17 @@ public class TablesWindow {
             selectedColumn.addWidget(selectButton);
             checkBoxes.add(selectButton);
 
-            // Create a button ontop of the editor to handle double-clicks
+
+            // Create a button ontop of the editor to handle double-clicks to select it and change mode
             ButtonWidget openButton = new ButtonWidget(
+                    // this is an example of a to long lambda function
                     false,"",
                     (Integer clickCount) ->{
                         if(clickCount == 2) {
+                            // if the table is empty, open the table in design mode
                             if (tablesHandler.isTableEmpty(editor.getStoredText()))
                                 getUIWindowController().loadTableDesignWindow(editor.getStoredText());
-                            else
+                            else // if the table is not empty, open the table in rows mode
                                 getUIWindowController().loadTableRowsWindow(editor.getStoredText());
                             return true;
                         } else {
@@ -115,7 +132,7 @@ public class TablesWindow {
         layout.add(tablesColumn);
         layout.add(openingColumn);
         layout.add(selectedColumn);
-        // Create button at the bottom to add new tables
+        // Create button at the bottom to add new tables on the bottom left
         layout.add(new ButtonWidget(
                 20,openingColumn.getY()+openingColumn.getHeight()+5,105,30,
                 true,"Create table",
@@ -128,14 +145,24 @@ public class TablesWindow {
                         return false;}
                 }));
 
-        layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
-            if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null) {
-                tablesHandler.removeTable(getUIWindowController().getSelectedItem());
-                getUIWindowController().loadTablesWindow();
-                return true;
+        // is an invisible widget which listens for key events
+        layout.add(new
+                KeyEventWidget(
+                        // key event gets a lambda function which tells what to do when which button is pressed
+                        (Integer id, Integer keyCode) ->
+            {
+                // when delete is pressed and there is a table selected, delete that table
+                if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null)
+                    {
+                        tablesHandler.removeTable(getUIWindowController().getSelectedItem());
+                        // load: reconstruct all widgets according to info from the tablesHander (also paints)
+                        getUIWindowController().loadTablesWindow();
+                        return true;
+                    }
+                return false;
             }
-            return false;
-        }));
+            )
+        );
         return layout;
     }
 

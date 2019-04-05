@@ -52,7 +52,13 @@ public class UIWindowHandler extends CanvasWindow{
 
 
         this.tableModeWidth = 80;
+
+        // hack for control press
         this.ctrlActivated = false;
+
+        // the selected object
+        // you can only select one at a time (in the checkbox)
+        // only used for checkbox
         this.selectedItem = null;
 
     }
@@ -99,9 +105,11 @@ public class UIWindowHandler extends CanvasWindow{
      * @param selectedItem The item to select
      */
     public void changeSelectedItem(String selectedItem) {
+        // Deselect when already selected
         if (getSelectedItem() != null && getSelectedItem().equals(selectedItem)){
             this.selectedItem = null;
         }
+        // select a previously unselected
         else{
             this.selectedItem = selectedItem;
         }
@@ -147,6 +155,7 @@ public class UIWindowHandler extends CanvasWindow{
      */
     public void loadTablesWindow(){
         // set the title of the window
+        // super is CanvasWindow
         super.setTitle("Tablr - Tables");
         //
         setWidgets(tablesWindow.getLayout());
