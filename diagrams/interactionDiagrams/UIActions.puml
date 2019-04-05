@@ -1,0 +1,18 @@
+@startuml
+Widget -> UIActions : setTableName(oldName,newName)
+UIActions -> SubWindow : update()
+SubWindow -> ColumnWidget : update()
+ColumnWidget -> OtherWidgets : update()
+UIActions -> TablesHandler : setTableName(oldName,newName)
+
+newpage
+
+Widget -> UIActions : deleteTable()
+UIActions -> UIActions : getSelectedItem()
+return selectedItem
+UIActions -> TablesHandler : deleteTable(selectedItem)
+UIActions -> UIController : reload()
+UIController -> Composite : reload()
+Composite -> SubWindowWidget : reload()
+SubWindowWidget -> ModeBuilder : rebuild()
+@enduml
