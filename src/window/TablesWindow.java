@@ -1,5 +1,6 @@
 package window;
 
+import sun.swing.UIAction;
 import tablr.TableHandler;
 import tablr.TableManager;
 import tablr.TablesHandler;
@@ -67,102 +68,45 @@ public class TablesWindow {
 
         checkBoxes = new LinkedList<>();
 
-        // create the column containing the names of the tables
-        ColumnWidget tablesColumn = new ColumnWidget(
-                46, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true, true,
-                (Integer w) -> getUIWindowController().setTableModeWidth(w)); // lambda die wordt opgeroepen bij resizen
+        TableWidget tableWidget = new TableWidget(20, 10, 200, 500);
+        tableWidget.addColumn(25,false,"S");
+        tableWidget.addColumn(getUIWindowController().getTableModeWidth(), true, "Tables");
 
-        // create the column for selecting a table
-        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-
-        // This is a column you paint over the column with table names, which contains buttons
-        // The button over a tablename will later be given a lambda which opens the that table in the valid mode
-        ColumnWidget openingColumn = new ColumnWidget(
-                45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
+        layout.add(tableWidget);
 
         // fill all 3 columns with corresponding widgets
-        for(String tableName : tablesHandler.getTableNames()){
+        for(Integer tableID : UIActions.getTableIDs()){
             // Create the editor widgets which holds the names for the tables and is able to change those names
-            EditorWidget editor = new EditorWidget(
-                    true, tableName,
-                    // used for checking when editing the name if the name is valid or not (red box)
-                    tablesHandler::canHaveAsName,
-                    // used for setting the table names when editing and enter is pressed
-                    (String oldTableName,String newTableName) ->{
-                        tablesHandler.setTableName(oldTableName,newTableName);
-                        // TODO: jaron wants to select the new name in the following line
-                        getUIWindowController().changeSelectedItem("");
-                        // deselect because some problems Thomas doesn't yet understand
-                        // TODO: delete this and put it in the proper place (as discussed in meeting 05/04
-                        unselectAllBoxes();
-                    }
-            );
-            // this implicitly sets the order of the name
-            tablesColumn.addWidget(editor);
+            EditorWidget editor = new EditorWidget(true, tableID);
+
+            editor.setValidHandler(UIActions::canHaveAsName);
+            editor.setGetHandler(UIActions::getTableName);
+            editor.setPushHandler(UIActions::setTableName);
+            editor.setClickHandler(UIActions::openTable);
 
             // Create a button left of the editor to select it
             CheckBoxWidget selectButton = new CheckBoxWidget(
                     (Boolean toggle) ->{
                         unselectAllBoxes();
-                        getUIWindowController().changeSelectedItem(editor.getStoredText());
+                        getUIWindowController().changeSelectedItem(tableID.toString());
             });
-            selectedColumn.addWidget(selectButton);
+
             checkBoxes.add(selectButton);
 
-
-            // Create a button ontop of the editor to handle double-clicks to select it and change mode
-            ButtonWidget openButton = new ButtonWidget(
-                    // this is an example of a to long lambda function
-                    false,"",
-                    (Integer clickCount) ->{
-                        if(clickCount == 2) {
-                            // if the table is empty, open the table in design mode
-                            if (tablesHandler.isTableEmpty(editor.getStoredText()))
-                                getUIWindowController().loadTableDesignWindow(editor.getStoredText());
-                            else // if the table is not empty, open the table in rows mode
-                                getUIWindowController().loadTableRowsWindow(editor.getStoredText());
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-            openingColumn.addWidget(openButton);
+            // add widgets to the table (note that order matters)
+            tableWidget.addEntry(selectButton);
+            tableWidget.addEntry(editor);
 
         }
-        layout.add(tablesColumn);
-        layout.add(openingColumn);
-        layout.add(selectedColumn);
+
         // Create button at the bottom to add new tables on the bottom left
         layout.add(new ButtonWidget(
-                20,openingColumn.getY()+openingColumn.getHeight()+5,105,30,
-                true,"Create table",
-                (Integer clickCount) -> {
-                    if(clickCount == 2) {
-                        tablesHandler.addTable();
-                        getUIWindowController().loadTablesWindow();
-                        return true;
-                    } else {
-                        return false;}
-                }));
+                20,tableWidget.getY()+tableWidget.getHeight()+5,105,30,
+                true,"Create table", UIActions::addTable
+                ));
 
         // is an invisible widget which listens for key events
-        layout.add(new
-                KeyEventWidget(
-                        // key event gets a lambda function which tells what to do when which button is pressed
-                        (Integer id, Integer keyCode) ->
-            {
-                // when delete is pressed and there is a table selected, delete that table
-                if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null)
-                    {
-                        tablesHandler.removeTable(getUIWindowController().getSelectedItem());
-                        // load: reconstruct all widgets according to info from the tablesHander (also paints)
-                        getUIWindowController().loadTablesWindow();
-                        return true;
-                    }
-                return false;
-            }
-            )
-        );
+        layout.add(new KeyEventWidget(UIActions::deleteSelectedTable));
         return layout;
     }
 

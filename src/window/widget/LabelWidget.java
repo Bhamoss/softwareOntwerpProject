@@ -3,6 +3,8 @@ package window.widget;
 
 import java.awt.*;
 import java.lang.String;
+import java.util.function.Function;
+
 import be.kuleuven.cs.som.taglet.*;
 
 import javax.swing.plaf.FontUIResource;
@@ -10,6 +12,9 @@ import javax.swing.plaf.FontUIResource;
 public class LabelWidget extends Widget{
 
     protected String text;
+    protected Integer id;
+    protected Function<Integer, String> refreshText;
+
 
     /**
      * Offset between the text of the label and the border.
@@ -29,6 +34,13 @@ public class LabelWidget extends Widget{
         this.text = text;
     }
 
+    public LabelWidget(int x, int y, int width, int height, boolean border, Integer id) {
+        super(x,y,width,height,border);
+        this.id = id;
+        this.update();
+    }
+
+
     public String getText() {
         return text;
     }
@@ -37,9 +49,22 @@ public class LabelWidget extends Widget{
         this.text = text;
     }
 
+    public void setGetHandler(Function<Integer, String> refreshText) {
+        assert(this.id != null);
+        this.refreshText = refreshText;
+    }
+
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.drawString(text, getX() + OFFSET, getY()+getHeight() - OFFSET);
+    }
+
+    @Override
+    public void update() {
+        if (refreshText != null) {
+            setText(refreshText.apply(id));
+        }
     }
 }

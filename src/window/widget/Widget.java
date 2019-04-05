@@ -8,6 +8,7 @@ public class Widget {
 
     private int x, y, width, height;
     private final boolean border;
+    protected boolean blocked;
 
     /**
      * Construct a rectangular widget.
@@ -26,6 +27,7 @@ public class Widget {
         this.setWidth(width);
         this.setHeight(height);
         this.border = border;
+        this.blocked = false;
     }
 
     /**
@@ -135,7 +137,7 @@ public class Widget {
      * @return true if widget is blocking, else false
      */
     public boolean isBlocking() {
-        return false;
+        return blocked;
     }
 
     /**

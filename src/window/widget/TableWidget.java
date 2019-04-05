@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 public class TableWidget extends CompositeWidget {
 
     private int occupancy;
+    private int lastAdded;
     protected LinkedList<ColumnWidget> widgets;
 
 
@@ -16,6 +17,7 @@ public class TableWidget extends CompositeWidget {
         assert(height>=25);
         assert(width>=25);
         occupancy = 0;
+        lastAdded = 0;
     }
 
     public void addColumn(int width, boolean resizable, String name) {
@@ -36,7 +38,8 @@ public class TableWidget extends CompositeWidget {
     }
 
     public void addEntry(Widget w) {
-        widgets.getLast().addWidget(w);
+        widgets.get(lastAdded).addWidget(w);
+        lastAdded = (lastAdded + 1) % widgets.size();
     }
 
     private void resizedColumn() {
