@@ -23,8 +23,8 @@ public class Widget {
      */
     public Widget(int x, int y, int width, int height, boolean border) {
         this.setPosition(x,y);
-        setWidth(width);
-        setHeight(height);
+        this.setWidth(width);
+        this.setHeight(height);
         this.border = border;
     }
 
