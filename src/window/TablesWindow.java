@@ -1,5 +1,6 @@
 package window;
 
+import sun.swing.UIAction;
 import tablr.TableHandler;
 import tablr.TableManager;
 import tablr.TablesHandler;
@@ -53,6 +54,8 @@ public class TablesWindow {
         return uiWindowHandler;
     }
 
+
+    // TODO: delete uiwindowHandler variable and let uiwindowhandler give itself as a parameter to getLayout()
     /**
      * Constructs the widgets defining the window geometry
      * in the table mode
@@ -60,79 +63,50 @@ public class TablesWindow {
      * @return list of all widgets needed in table mode
      */
     public LinkedList<Widget> getLayout(){
+        // list you will return
         LinkedList<Widget> layout = new LinkedList<>();
+
         checkBoxes = new LinkedList<>();
 
-        ColumnWidget tablesColumn = new ColumnWidget(
-                46, 10, getUIWindowController().getTableModeWidth(), 500, "Tables", true, true,
-                (Integer w) -> getUIWindowController().setTableModeWidth(w));
-        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        ColumnWidget openingColumn = new ColumnWidget(
-                45,10, getUIWindowController().getTableModeWidth(), 500, "", true, false, w->{});
+        TableWidget tableWidget = new TableWidget(20, 10, 200, 500);
+        tableWidget.addColumn(25,false,"S");
+        tableWidget.addColumn(getUIWindowController().getTableModeWidth(), true, "Tables");
 
-        for(String tableName : tablesHandler.getTableNames()){
-            // Create the editor window
-            EditorWidget editor = new EditorWidget(
-                    true, tableName,
-                    tablesHandler::canHaveAsName,
-                    (String oldTableName,String newTableName) ->{
-                        tablesHandler.setTableName(oldTableName,newTableName);
-                        getUIWindowController().changeSelectedItem("");
-                        unselectAllBoxes();
-                    }
-            );
-            tablesColumn.addWidget(editor);
+        layout.add(tableWidget);
+
+        // fill all 3 columns with corresponding widgets
+        for(Integer tableID : UIActions.getTableIDs()){
+            // Create the editor widgets which holds the names for the tables and is able to change those names
+            EditorWidget editor = new EditorWidget(true, tableID);
+
+            editor.setValidHandler(UIActions::canHaveAsName);
+            editor.setGetHandler(UIActions::getTableName);
+            editor.setPushHandler(UIActions::setTableName);
+            editor.setClickHandler(UIActions::openTable);
 
             // Create a button left of the editor to select it
             CheckBoxWidget selectButton = new CheckBoxWidget(
                     (Boolean toggle) ->{
                         unselectAllBoxes();
-                        getUIWindowController().changeSelectedItem(editor.getStoredText());
+                        getUIWindowController().changeSelectedItem(tableID.toString());
             });
-            selectedColumn.addWidget(selectButton);
+
             checkBoxes.add(selectButton);
 
-            // Create a button ontop of the editor to handle double-clicks
-            ButtonWidget openButton = new ButtonWidget(
-                    false,"",
-                    (Integer clickCount) ->{
-                        if(clickCount == 2) {
-                            if (tablesHandler.isTableEmpty(editor.getStoredText()))
-                                getUIWindowController().loadTableDesignWindow(editor.getStoredText());
-                            else
-                                getUIWindowController().loadTableRowsWindow(editor.getStoredText());
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-            openingColumn.addWidget(openButton);
+            // add widgets to the table (note that order matters)
+            tableWidget.addEntry(selectButton);
+            tableWidget.addEntry(editor);
 
         }
-        layout.add(tablesColumn);
-        layout.add(openingColumn);
-        layout.add(selectedColumn);
-        // Create button at the bottom to add new tables
-        layout.add(new ButtonWidget(
-                20,openingColumn.getY()+openingColumn.getHeight()+5,105,30,
-                true,"Create table",
-                (Integer clickCount) -> {
-                    if(clickCount == 2) {
-                        tablesHandler.addTable();
-                        getUIWindowController().loadTablesWindow();
-                        return true;
-                    } else {
-                        return false;}
-                }));
 
-        layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
-            if (keyCode == KeyEvent.VK_DELETE && getUIWindowController().getSelectedItem() != null) {
-                tablesHandler.removeTable(getUIWindowController().getSelectedItem());
-                getUIWindowController().loadTablesWindow();
-                return true;
-            }
-            return false;
-        }));
+        // Create button at the bottom to add new tables on the bottom left
+        layout.add(new ButtonWidget(
+                20,tableWidget.getY()+tableWidget.getHeight()+5,105,30,
+                true,"Create table", UIActions::addTable
+                ));
+
+        // is an invisible widget which listens for key events
+        layout.add(new KeyEventWidget(UIActions::deleteSelectedTable));
         return layout;
     }
 

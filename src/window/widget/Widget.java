@@ -2,11 +2,13 @@ package window.widget;
 
 import java.awt.*;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.TablesHandler;
 
 public class Widget {
 
     private int x, y, width, height;
     private final boolean border;
+    protected boolean blocked;
 
     /**
      * Construct a rectangular widget.
@@ -22,9 +24,10 @@ public class Widget {
      */
     public Widget(int x, int y, int width, int height, boolean border) {
         this.setPosition(x,y);
-        setWidth(width);
-        setHeight(height);
+        this.setWidth(width);
+        this.setHeight(height);
         this.border = border;
+        this.blocked = false;
     }
 
     /**
@@ -134,7 +137,7 @@ public class Widget {
      * @return true if widget is blocking, else false
      */
     public boolean isBlocking() {
-        return false;
+        return blocked;
     }
 
     /**
@@ -148,5 +151,12 @@ public class Widget {
      */
     public boolean containsPoint(int px, int py) {
         return (x <= px) && (px <= x+width) && (y <= py) && (py <= y+height);
+    }
+
+    /**
+     * Refreshes the widget's state from the backend
+     */
+    public void update() {
+
     }
 }

@@ -12,10 +12,10 @@ import be.kuleuven.cs.som.taglet.*;
 
 public class EditorWidget extends LabelWidget {
 
-    private BiFunction<String, String, Boolean> isValidText;
-    private BiConsumer<String, String> pushText;
+    private BiFunction<Integer, String, Boolean> isValidText;
+    private BiConsumer<Integer, String> pushText;
+    private Consumer<Integer> clickHandler;
     private boolean selected;
-    private boolean blocked;
     private String oldText;
 
     /**
@@ -26,28 +26,31 @@ public class EditorWidget extends LabelWidget {
      * @param width width of rectangle
      * @param height height of rectangle
      * @param border whether to draw a border
-     * @param text initial text content
-     * @param isValidText function determining if the
-     *                    text content is valid
-     * @param pushText function called when the textbox
-     *                 is deselected
+     * @param id id of content
      */
-    public EditorWidget(int x, int y, int width, int height, boolean border,String text, BiFunction<String, String, Boolean> isValidText, BiConsumer<String,String> pushText) {
-        super(x, y, width, height, border, "");
-        this.isValidText = isValidText;
-        this.pushText = pushText;
+    public EditorWidget(int x, int y, int width, int height, boolean border, int id) {
+        super(x, y, width, height, border, id);
 
-        this.blocked = false;
         this.selected = false;
         oldText = text;
-        setText(text);
     }
 
-    public EditorWidget(boolean border,String text, BiFunction<String, String, Boolean> isValidText, BiConsumer<String,String> pushText) {
-        this(0,0,0,25,border,text,isValidText,pushText);
+    public EditorWidget(boolean border, int id) {
+        this(0,0,0,25,border,id);
+    }
+
+    public void setPushHandler(BiConsumer<Integer,String> pushText) {
+        this.pushText = pushText;
+    }
+
+    public void setValidHandler(BiFunction<Integer,String,Boolean> isValidText) {
+        this.isValidText = isValidText;
     }
 
 
+    public void setClickHandler(Consumer<Integer> clickHandler) {
+        this.clickHandler = clickHandler;
+    }
 
     public boolean isSelected() {
         return selected;
@@ -68,7 +71,7 @@ public class EditorWidget extends LabelWidget {
     public boolean attemptDeselect() {
         if (!isBlocking()) {
             selected = false;
-            pushText.accept(oldText, getText());
+            pushText.accept(id, getText());
             oldText = text;
             return true;
         }
@@ -76,7 +79,7 @@ public class EditorWidget extends LabelWidget {
     }
 
     private boolean canHaveAsText(String s) {
-        return isValidText.apply(getStoredText(), s);
+        return isValidText.apply(id, s);
     }
 
     /**
@@ -88,17 +91,8 @@ public class EditorWidget extends LabelWidget {
         setBlocking(!canHaveAsText(t));
     }
 
-    /**
-     *
-     * @return text content of the widget before editing began
-     */
-    public String getStoredText() {
-        return oldText;
-    }
-
-    @Override
-    public boolean isBlocking() {
-        return blocked;
+    public Integer getId() {
+        return id;
     }
 
     private void setBlocking(boolean b) {
@@ -120,6 +114,7 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_CLICKED && clickCount == 1) {
+            clickHandler.accept(clickCount);
             if (this.containsPoint(x,y)) {
                 setSelected();
                 return true;
@@ -148,7 +143,5 @@ public class EditorWidget extends LabelWidget {
         }
         return false;
     }
-
-
 
 }

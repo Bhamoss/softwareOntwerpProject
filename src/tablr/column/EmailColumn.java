@@ -74,6 +74,7 @@ public class EmailColumn extends Column {
      *
      */
     @Override
+    @Deprecated
     public boolean canHaveAsType(String type) {
         if (type.equals("Email") || type.equals("String"))
             return true;
@@ -124,5 +125,8 @@ public class EmailColumn extends Column {
     public static boolean isEmail(String value) {
         return 1 == (value.length() - value.replace("@", "").length());
     }
+
+
+
 
 }

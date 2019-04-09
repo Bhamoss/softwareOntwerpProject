@@ -6,9 +6,8 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import be.kuleuven.cs.som.taglet.*;
 
-public class ColumnWidget extends Widget {
+public class ColumnWidget extends CompositeWidget {
 
-    private LinkedList<Widget> widgets;
     private final String name;
     private int occupancy;
     private boolean resizing, resizable;
@@ -30,7 +29,6 @@ public class ColumnWidget extends Widget {
     public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
         super(x, y, width, height, false);
         assert(height>=25);
-        widgets = new LinkedList<>();
         occupancy = 0;
         resizing = false;
         this.resizable = resizable;
@@ -69,7 +67,7 @@ public class ColumnWidget extends Widget {
         occupancy += w.getHeight();
         // 1 pixel margin so borders don't overlap
         occupancy += 1;
-        widgets.add(w);
+        super.addWidget(w);
     }
 
     /**
@@ -101,18 +99,6 @@ public class ColumnWidget extends Widget {
         return name;
     }
 
-    /**
-     * Paints screen.
-     *
-     * @param g java.awt.Graphics object, offers the
-     *          methods that allow you to paint on the canvas
-     */
-    @Override
-    public void paint(Graphics g) {
-        for (Widget w: widgets) {
-            w.paint(g);
-        }
-    }
 
     private boolean onRightBorder(int x, int y) {
         return x < getWidth()+getX()
@@ -123,7 +109,6 @@ public class ColumnWidget extends Widget {
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-
         if (resizing && id == MouseEvent.MOUSE_DRAGGED) {
             resize(x-this.getX());
             return true;
@@ -136,29 +121,8 @@ public class ColumnWidget extends Widget {
             resizing = true;
             return false;
         }
-        boolean r = false;
-        for (Widget w: widgets) {
-            if (!isBlocking() || w.isBlocking())
-                r |= w.handleMouseEvent(id, x, y, clickCount);
-        }
-        return r;
+        return super.handleMouseEvent(id,x,y,clickCount);
     }
 
-    @Override
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
-        boolean r = false;
-        for (Widget w: widgets) {
-            r |= w.handleKeyEvent(id, keyCode, keyChar);
-        }
-        return r;
-    }
 
-    @Override
-    public boolean isBlocking() {
-        boolean blocked = false;
-        for (Widget w: widgets) {
-            blocked |= w.isBlocking();
-        }
-        return blocked;
-    }
 }

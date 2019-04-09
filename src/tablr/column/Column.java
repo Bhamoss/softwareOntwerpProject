@@ -477,7 +477,7 @@ public abstract class Column {
         }};
     }
 
-    public  Column setColumnType(String type) {
+    public Column setColumnType(String type) {
         Column newColumn;
         String dv;
         switch (type) {

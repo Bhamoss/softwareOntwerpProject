@@ -33,22 +33,36 @@ public class UIWindowHandler extends CanvasWindow{
      */
     public UIWindowHandler(){
         super("Tablr starting...");
+
+        // create handler(s) (for all modes)
         this.tableHandler = new TableHandler();
+        // the facade controller
         this.tablesHandler = new TablesHandler();
         this.tableDesignHandler = tableHandler.createTableDesignHandler();
         this.tableRowsHandler = tableHandler.createTableRowsHandler();
+
+        // create a window for all modes
         this.tableDesignWindow = new TableDesignWindow(this, tableDesignHandler);
         this.tablesWindow = new TablesWindow(this, tablesHandler);
         this.tableRowsWindow = new TableRowsWindow(this, tableRowsHandler);
 
+        // initialize dictionaries for widths per mode
         tableDesignWidths = new HashMap<>();
         tableRowsWidths = new HashMap<>();
 
+
         this.tableModeWidth = 80;
+
+        // hack for control press
         this.ctrlActivated = false;
+
+        // the selected object
+        // you can only select one at a time (in the checkbox)
+        // only used for checkbox
         this.selectedItem = null;
 
     }
+
 
 
     /**
@@ -91,9 +105,11 @@ public class UIWindowHandler extends CanvasWindow{
      * @param selectedItem The item to select
      */
     public void changeSelectedItem(String selectedItem) {
+        // Deselect when already selected
         if (getSelectedItem() != null && getSelectedItem().equals(selectedItem)){
             this.selectedItem = null;
         }
+        // select a previously unselected
         else{
             this.selectedItem = selectedItem;
         }
@@ -138,7 +154,10 @@ public class UIWindowHandler extends CanvasWindow{
      * @Effect Changes the selected item to null.
      */
     public void loadTablesWindow(){
+        // set the title of the window
+        // super is CanvasWindow
         super.setTitle("Tablr - Tables");
+        //
         setWidgets(tablesWindow.getLayout());
         changeSelectedItem(null);
     }
