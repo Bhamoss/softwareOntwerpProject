@@ -1,0 +1,30 @@
+@startuml
+package "commands" {
+
+        class UICommand <<(A, lightgreen)>> {
+
+        }
+
+        class ConcreteCommandA{
+
+        }
+
+        class ConcreteCommandB{
+
+        }
+
+        class ConcreteCommandC{
+
+        }
+
+        class ConcreteCommandD{
+
+        }
+
+        ConcreteCommandA --|> UICommand
+        ConcreteCommandB --|> UICommand
+        ConcreteCommandC --|> UICommand
+        ConcreteCommandD --|> UICommand
+    }
+
+@enduml

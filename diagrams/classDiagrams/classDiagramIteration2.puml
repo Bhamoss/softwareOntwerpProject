@@ -1,0 +1,276 @@
+@startuml
+title Class Diagram
+package "window" {
+
+    class CanvasWindow{
+
+    }
+
+    class Compositor{
+        - subWindows: list<SubWindowWidget>
+        __
+        + addSubWindow()
+        + removeSubWindow()
+    }
+
+    class UIController{
+        updateAll()
+
+    }
+
+
+
+    UIController - Compositor
+
+
+
+    Compositor - CanvasWindow
+
+
+    package "commands" {
+
+        class UICommand <<(A, lightgreen)>> {
+
+        }
+
+        class ConcreteCommandA{
+
+        }
+
+        class ConcreteCommandB{
+
+        }
+
+        class ConcreteCommandC{
+
+        }
+
+        class ConcreteCommandD{
+
+        }
+
+        ConcreteCommandA --|> UICommand
+        ConcreteCommandB --|> UICommand
+        ConcreteCommandC --|> UICommand
+        ConcreteCommandD --|> UICommand
+    }
+    UICommand <-> UIController
+
+
+
+    package "widget" {
+
+        class Widget {
+            -x-coordinate: int
+            -y-coordinate: int
+            -width: int
+            -height: int
+            __Inspectors__
+            paint(Graphics)
+            update()
+            handleKeyEvent(int, int, char): boolean
+            handleMouseEvent(int, int ,int): boolean
+            isBlocking(): boolean
+            __Mutators__
+            setPosition(int, int)
+        }
+
+
+        class LabelWidget{
+        }
+        LabelWidget --|> Widget
+
+
+        class EditorWidget{
+        }
+        EditorWidget --|> LabelWidget
+
+        class CheckBoxWidget{
+        }
+        CheckBoxWidget --|> Widget
+        class ButtonWidget{
+        }
+        ButtonWidget --|> LabelWidget
+
+
+        class SwitchBoxWidget{
+
+        }
+        SwitchBoxWidget --|> LabelWidget
+
+        class CompositeWidget{
+            - widgets: List<Widget>
+            __
+            + add(Widget)
+            + remove(Widget)
+        }
+
+        CompositeWidget --|> Widget
+
+        class TableWidget{
+        }
+
+        TableWidget --|> CompositeWidget
+
+        class ColumnWidget{
+        }
+
+        ColumnWidget --|> CompositeWidget
+
+        class ComponentWidget{
+        }
+
+        ComponentWidget --|> CompositeWidget
+
+        class SubWindowWidget{
+        }
+
+        SubWindowWidget --|> ComponentWidget
+
+
+        class Decorator{
+        }
+
+        Decorator --|> ComponentWidget
+
+        class ScrollHorizontalWidget{
+            - scrollPosition: int
+            __
+            + scrollTo()
+        }
+
+        ScrollHorizontalWidget --|> Decorator
+
+        class ScrollVerticalWidget{
+            - scrollPosition: int
+            __
+            + scrollTo()
+        }
+
+        ScrollVerticalWidget --|> Decorator
+
+
+
+    }
+
+    package "builder" {
+        class ModeBuilder <<(A, lightgreen)>>{
+            + build(tableId : int): SubWindowWidget
+        }
+
+        class TablesModeBuilder{
+        }
+
+        class DesignModeBuilder{
+        }
+
+        class RowsModeBuilder{
+        }
+
+        TablesModeBuilder --|> ModeBuilder
+        DesignModeBuilder --|> ModeBuilder
+        RowsModeBuilder --|> ModeBuilder
+    }
+
+    ModeBuilder -> Widget
+
+    ModeBuilder -> UICommand: uses
+
+
+}
+
+
+package "tablr" {
+
+
+
+    class TableHandler{
+        tableManager : TableManager {readOnly}
+        terminated : boolean
+        __Inspector__
+
+        __Responsibilities__
+        providing a controller for tables
+    }
+
+
+    class TableManager{
+        tables : List<Table> [*] = new LinkedList<Table>
+        currentTable : Table [0...1] = null
+        terminated : boolean = false
+        __
+
+        __Responsibility__
+        manage tables and manage access to tables
+    }
+
+    Table "0..*" <-- TableManager
+    TableHandler --> "1" TableManager
+
+
+
+
+    class Table{
+        -name
+        -columns
+        -isTerminated
+        __
+
+        __Responsibility__
+        manage Column
+    }
+
+    package "column" {
+
+        Column <|-- BooleanColumn
+        Column <|-- IntegerColumn
+        Column <|-- EmailColumn
+        Column <|-- StringColumn
+
+        class Column <<(A, lightgreen)>>{
+            -name:String
+            -allowsBlanks: boolean
+            -defaultValue: String = ""
+            -values : List<String>
+            __
+
+
+        __Responsibility__
+        Manage list with correct entries
+        }
+
+        Table *-- "0..*" Column
+
+        class BooleanColumn{
+            -type: String = "Boolean"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class StringColumn{
+            -type: String = "String"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class EmailColumn{
+            -type: String = "Email"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class IntegerColumn{
+            -type: String = "Integer"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+    }
+}
+
+UICommand -> TableHandler
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+package "builder" {
+        class ModeBuilder <<(A, lightgreen)>>{
+            + build(tableId : int): SubWindowWidget
+        }
+
+        class TablesModeBuilder{
+        }
+
+        class DesignModeBuilder{
+        }
+
+        class RowsModeBuilder{
+        }
+
+        TablesModeBuilder --|> ModeBuilder
+        DesignModeBuilder --|> ModeBuilder
+        RowsModeBuilder --|> ModeBuilder
+    }
+
+@enduml

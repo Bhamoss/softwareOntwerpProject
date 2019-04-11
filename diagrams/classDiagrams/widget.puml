@@ -1,0 +1,97 @@
+@startuml
+package "widget" {
+
+        class Widget {
+            -x-coordinate: int
+            -y-coordinate: int
+            -width: int
+            -height: int
+            __Inspectors__
+            paint(Graphics)
+            update()
+            handleKeyEvent(int, int, char): boolean
+            handleMouseEvent(int, int ,int): boolean
+            isBlocking(): boolean
+            __Mutators__
+            setPosition(int, int)
+        }
+
+
+        class LabelWidget{
+        }
+        LabelWidget --|> Widget
+
+
+        class EditorWidget{
+        }
+        EditorWidget --|> LabelWidget
+
+        class CheckBoxWidget{
+        }
+        CheckBoxWidget --|> Widget
+        class ButtonWidget{
+        }
+        ButtonWidget --|> LabelWidget
+
+
+        class SwitchBoxWidget{
+
+        }
+        SwitchBoxWidget --|> LabelWidget
+
+        class CompositeWidget{
+            - widgets: List<Widget>
+            __
+            + add(Widget)
+            + remove(Widget)
+        }
+
+        CompositeWidget --|> Widget
+
+        class TableWidget{
+        }
+
+        TableWidget --|> CompositeWidget
+
+        class ColumnWidget{
+        }
+
+        ColumnWidget --|> CompositeWidget
+
+        class ComponentWidget{
+        }
+
+        ComponentWidget --|> CompositeWidget
+
+        class SubWindowWidget{
+        }
+
+        SubWindowWidget --|> ComponentWidget
+
+
+        class Decorator{
+        }
+
+        Decorator --|> ComponentWidget
+
+        class ScrollHorizontalWidget{
+            - scrollPosition: int
+            __
+            + scrollTo()
+        }
+
+        ScrollHorizontalWidget --|> Decorator
+
+        class ScrollVerticalWidget{
+            - scrollPosition: int
+            __
+            + scrollTo()
+        }
+
+        ScrollVerticalWidget --|> Decorator
+
+
+
+    }
+
+@enduml

@@ -3,11 +3,17 @@ title Class Diagram
 
 package "window" {
     class Widget{
+        -x-coordinate
+        -y-coordinate
+        -width
+        -height
+        __Inspectors__
         paint(Graphics)
         handleKeyEvent(int, int, char): boolean
         handleMouseEvent(int, int ,int): boolean
         isBlocking(): boolean
-        containsPoint(int, int): boolean
+        __Mutators__
+        setPosition(int, int)
     }
     UIWindowHandler "1" --> "0...*" Widget: has
 
