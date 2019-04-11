@@ -20,11 +20,12 @@ package "window" {
 
 
 
-    UIController - Compositor
+    UIController -> Compositor : has
 
 
 
-    Compositor - CanvasWindow
+    UIController --> CanvasWindow : maintains
+
 
 
     package "commands" {
@@ -54,7 +55,7 @@ package "window" {
         ConcreteCommandC --|> UICommand
         ConcreteCommandD --|> UICommand
     }
-    UICommand <-> UIController
+    UICommand <--> UIController : uses
 
 
 
@@ -122,6 +123,8 @@ package "window" {
 
         ComponentWidget --|> CompositeWidget
 
+        Compositor -> ComponentWidget : manages
+
         class SubWindowWidget{
         }
 
@@ -172,9 +175,9 @@ package "window" {
         RowsModeBuilder --|> ModeBuilder
     }
 
-    ModeBuilder -> Widget
+    ModeBuilder -> Widget : uses
 
-    ModeBuilder -> UICommand: uses
+    ModeBuilder --> UICommand: uses
 
 
 }
@@ -184,7 +187,7 @@ package "tablr" {
 
 
 
-    class TableHandler{
+    class TablesHandler{
         tableManager : TableManager {readOnly}
         terminated : boolean
         __Inspector__
@@ -205,7 +208,7 @@ package "tablr" {
     }
 
     Table "0..*" <-- TableManager
-    TableHandler --> "1" TableManager
+    TablesHandler --> "1" TableManager
 
 
 
@@ -272,5 +275,5 @@ package "tablr" {
     }
 }
 
-UICommand -> TableHandler
+UICommand -> TablesHandler
 @enduml
