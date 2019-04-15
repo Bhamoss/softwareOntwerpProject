@@ -24,14 +24,14 @@ package "window" {
 
 
 
-    UIController --> CanvasWindow : maintains
+    Compositor -|> CanvasWindow
 
 
 
     package "commands" {
 
         class UICommand <<(A, lightgreen)>> {
-
+            execute()
         }
 
         class ConcreteCommandA{
@@ -158,16 +158,19 @@ package "window" {
 
     package "builder" {
         class ModeBuilder <<(A, lightgreen)>>{
-            + build(tableId : int): SubWindowWidget
         }
 
         class TablesModeBuilder{
+            + build(): SubWindowWidget
         }
 
         class DesignModeBuilder{
+            + build(tableId : int): SubWindowWidget
+
         }
 
         class RowsModeBuilder{
+            + build(tableId : int): SubWindowWidget
         }
 
         TablesModeBuilder --|> ModeBuilder
