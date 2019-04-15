@@ -30,6 +30,14 @@ import java.util.List;
  * | for i in 0...getNbTables():
  * |    getTableAt(i) != null
  *
+ * @invar there are never 2 tables with the same id.
+ * | for each x,y in tables:
+ * |     if x!=y:
+ * |          x.getId() != y.getId()
+ *
+ * @invar there are never more then MAX_TABLES.
+ * | getNbTables() <= MAX_TABLES
+ *
  * @resp Manage the tables.
  *
  */
@@ -59,6 +67,10 @@ public class TableManager {
         this.terminated = false;
     }
 
+    /**
+     * The maximum amount of tables.
+     */
+    static final int MAX_TABLES = 100;
 
 
 /*
@@ -66,6 +78,24 @@ public class TableManager {
 *                                                   TableHandler interface functions
 ************************************************************************************************************************
  */
+
+    /**
+     * Returns the name of the table with id id.
+     *
+     * @param id
+     *          The id of the table.
+     *
+     * @return  The name of the table with id id.
+     *      | return = getTable(id).getName()
+     * @throws IllegalTableException
+     *      If there is no table with that id.
+     *      | !hasAsTable(id)
+     */
+    String getTableName(int id) throws IllegalTableException
+    {
+        if (!hasAsTable(id)) throw new IllegalTableException();
+        return getTable(id).getName();
+    }
 
     /**
      *
@@ -87,6 +117,31 @@ public class TableManager {
         for (Table table: tables)
         {
             if(table.getName().equals(name)){ return true;}
+        }
+        return false;
+    }
+
+
+    /**
+     *
+     * Return whether or not the table with id id is a table.
+     *
+     * @param id
+     *      The id of the table to check.
+     *
+     * @return  true if there is a table with the id id, otherwise false.
+     *  |return = false
+     *  |for(table in table){
+     *  |     if(table.getId() ==  id) {return = true;}
+     *  |}
+     *
+     */
+    @Model
+    boolean hasAsTable(int id)
+    {
+        for (Table table: tables)
+        {
+            if(table.getId() == id){ return true;}
         }
         return false;
     }
@@ -190,15 +245,22 @@ public class TableManager {
      *
      * Adds a new table to the front of tables with name TableN,
      * with N the smallest strictly positive integer
-     * such that there is no other table with name TableN.
+     * such that there is no other table with name TableN,
+     * and with an id which is the smallest strictly positive id smaller then MAX_TABLES which is not used by
+     * another table already.
      *
      * @effect adds a new table.
-     * | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
+     *  | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
+     *
+     * @throws IllegalStateException ("Already maximum amount of tables present.")
+     *  | getNbTables() == MAX_TABLES
      *
      */
     @Model
-    void addTable()
+    void addTable() throws IllegalStateException
     {
+        if (getNbTables() == MAX_TABLES) throw new IllegalStateException("Already maximum amount of tables present.");
+
         int i = 0;
         String name = "";
         ArrayList<String> l = getTableNames();
@@ -211,7 +273,20 @@ public class TableManager {
             name = "Table" + Integer.toString(i);
             if(!l.contains(name)){found = true;}
         }
-        Table t = new Table(name);
+
+        found = false;
+        i = 0;
+        while(!found)
+        {
+            i++;
+            found = true;
+            for (Table table:tables)
+            {
+                if (table.getId() == i) found = false;
+            }
+        }
+
+        Table t = new Table(i,name);
         insertAtFrontTable(t);
     }
 
@@ -871,6 +946,36 @@ public class TableManager {
 
 
     /**
+     * Get the table with tableId as id.
+     *
+     * @param tableId the id of the table.
+     *
+     * @return the table with the given name if the table exists.
+     *  | if(!hasAsTable(id)){
+     *  | return == table: table.getId() == tableId && hasAsTable(table) == true
+     *  |}
+     *
+     * @throws IllegalTableException if there is no table with that id.
+     *  | !hasAsTable(tableId)
+     */
+    @Model
+    private Table getTable(int tableId) throws IllegalTableException
+    {
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        for(Table table: tables)
+        {
+            if(table.getId() == tableId){return table;}
+        }
+
+        // Should never occur.
+        throw new IllegalTableException();
+
+    }
+
+
+
+
+    /**
      *
      * Checks whether the table can be added at the end of all tables.
      *
@@ -900,18 +1005,23 @@ public class TableManager {
      *  true if the table is not null and there is no other table with the same name
      *  and the table is not in tables already
      *  and index is greater then 0 and smaller then the amount
-     *  of tables + 1, false otherwise.
+     *  of tables + 1,
+     *  there is no table with the same id,
+     *  there are less then MAX_TABLES tables
+     *  , false otherwise.
      *  | return == (
      *  |   table != null &&
-     *  |   for(tableY in tables) { tableY.getName() != table.getName() }
+     *  |   for(tableY in tables) { tableY.getName() != table.getName() && tableY.getId() != table.getId() }
      *  |   && index > 0
      *  |   && index <= getNbTables() + 1
+     *  |   && getNbTables() < MAX_TABLES
      *  |)
      *
      *
      */
     private boolean canHaveAsTableAt(int index,Table table)
     {
+        if (getNbTables() == MAX_TABLES) return false ;
         if (index < 1 || index > getNbTables() + 1) {return false;}
         if (table == null)
         {
@@ -921,7 +1031,7 @@ public class TableManager {
         // this also checks whether the table is already in the list because the name will be the same.
         for(Table tableY: tables)
         {
-            if(table.getName().equals(tableY.getName())) {return false;}
+            if(table.getName().equals(tableY.getName()) || table.getId() == tableY.getId()) {return false;}
         }
         return true;
     }

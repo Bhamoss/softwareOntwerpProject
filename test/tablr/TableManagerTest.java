@@ -53,6 +53,29 @@ class TableManagerTest {
     void tearDown() {
     }
 
+
+    /*
+     ************************************************
+     *           String getTableName(int id)
+     *              throws IllegalTableException
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("getTableName illegalTableException")
+    void getTableNameIllegalTable()
+    {
+        assertThrows(IllegalTableException.class, () -> c2r2.getTableName(3));
+    }
+
+
+    @Test
+    @DisplayName("getTableName success")
+    void getTableNameSuccess()
+    {
+        assertEquals("firstTable", c2r2.getTableName(1));
+    }
+
     /*
     ************************************************
     *           boolean hasAsTable(String name)
@@ -79,6 +102,28 @@ class TableManagerTest {
     void hasAsTableNull() {
         // test false case
         assertFalse(c2r2.hasAsTable(null));
+    }
+
+
+    /*
+     ************************************************
+     *           boolean hasAsTable(int id)
+     ************************************************
+     */
+
+    @Test
+    @DisplayName("hasAsTable(int id) true case")
+    void hasAsTableIntTrue() {
+        // test true case
+        assertTrue(c2r2.hasAsTable(1));
+
+    }
+
+    @Test
+    @DisplayName("hasAsTable(int id) false case")
+    void hasAsTableIntFalse() {
+        // test false case
+        assertFalse(c2r2.hasAsTable(3));
     }
 
     /*
@@ -207,15 +252,27 @@ class TableManagerTest {
     /*
      ************************************************
      *           void addTable()
+     *              throws IllegalStateException
      ************************************************
      */
+
+
+    @Test
+    @DisplayName("addTable until max tables IllegalStateException")
+    void addTableIllegalStateException() {
+        for (int i = 0; i < TableManager.MAX_TABLES; i++) {
+            emptyTM.addTable();
+        }
+        assertThrows(IllegalStateException.class, () -> emptyTM.addTable());
+    }
 
 
     @Test
     @DisplayName("addTable in empty table")
     void addTable() {
         emptyTM.addTable();
-        assertTrue(emptyTM.hasAsTable("Table1"));
+        assertTrue(emptyTM.hasAsTable(1));
+        assertEquals("Table1", emptyTM.getTableName(1));
     }
 
     @Test
@@ -223,7 +280,8 @@ class TableManagerTest {
     void addTableSecondTable() {
         emptyTM.addTable();
         emptyTM.addTable();
-        assertTrue(emptyTM.hasAsTable("Table2"));
+        assertTrue(emptyTM.hasAsTable(2));
+        assertEquals("Table2", emptyTM.getTableName(2));
     }
 
 
@@ -233,10 +291,12 @@ class TableManagerTest {
         emptyTM.addTable();
         emptyTM.addTable();
         emptyTM.addTable();
+        //TODO: change to id
         emptyTM.removeTable("Table2");
         // now there should be only Table1 and Table3
         emptyTM.addTable();
-        assertTrue(emptyTM.hasAsTable("Table2"));
+        assertTrue(emptyTM.hasAsTable(2));
+        assertEquals("Table2", emptyTM.getTableName(2));
     }
 
 

@@ -14,16 +14,24 @@ class ColumnTest {
 
     @BeforeEach
     void setUp() {
-        boolColumn10 = new BooleanColumn("booleanColumn10", 10, "true", true);
-        intColumnNoBlanks = new IntegerColumn("intColumnNoBlanks", 10, "12", false);
-        emailColumnEmptyDV = new EmailColumn("emailColumnEmptyDV", 10, "", true);
-        stringColumn0Values = new StringColumn("stringColumn0Values", 0, "", true);
+        boolColumn10 = new BooleanColumn(1, "booleanColumn10", 10, "true", true);
+        intColumnNoBlanks = new IntegerColumn(2, "intColumnNoBlanks", 10, "12", false);
+        emailColumnEmptyDV = new EmailColumn(3, "emailColumnEmptyDV", 10, "", true);
+        stringColumn0Values = new StringColumn(4, "stringColumn0Values", 0, "", true);
     }
 
     @AfterEach
     void tearDown() {
     }
 
+    @Test
+    void getId()
+    {
+        assertEquals(1, boolColumn10.getId());
+        assertEquals(2, intColumnNoBlanks.getId());
+        assertEquals(3, emailColumnEmptyDV.getId());
+        assertEquals(4, stringColumn0Values.getId());
+    }
 
     @Test
     void getName() {
@@ -62,7 +70,7 @@ class ColumnTest {
         assertTrue(intColumnNoBlanks.canHaveAsType("Integer"));
         assertTrue(intColumnNoBlanks.canHaveAsType("String"));
         assertFalse(intColumnNoBlanks.canHaveAsType("Boolean"));
-        Column c = new IntegerColumn("columnTest", 10, "0", false);
+        Column c = new IntegerColumn(5, "columnTest", 10, "0", false);
         assertTrue(c.canHaveAsType("Boolean"));
         c.setValueAt(5, "1");
         assertTrue(c.canHaveAsType("Boolean"));
@@ -206,4 +214,15 @@ class ColumnTest {
         assertEquals("String", stringColumn0Values.getType());
 
     }
+
+    @Test
+    void setType()
+    {
+        Column c = boolColumn10.setColumnType("String");
+        assertEquals(c.getId(), boolColumn10.getId());
+        assertEquals(c.getName(), boolColumn10.getName());
+        assertEquals(c.getNbValues(), boolColumn10.getNbValues());
+        assertEquals("String" , c.getType());
+    }
+
 }

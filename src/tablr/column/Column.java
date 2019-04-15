@@ -18,6 +18,9 @@ import java.util.List;
  * @invar   The name of the column is always effective
  *          | name != null
  *
+ * @invar   The id is strictly positive.
+ *          | getId() > 0
+ *
  * @resp    Holding the cells of a column.
  */
 public abstract class Column {
@@ -26,6 +29,8 @@ public abstract class Column {
      * Initialize this new column with given name, given number of values, given default value and
      *  given blanks allowed.
      *
+     * @param   id
+     *          The id of the new column.
      * @param   name
      *          The name of the new column.
      * @param   nbOfValues
@@ -45,10 +50,14 @@ public abstract class Column {
      *          with as value the given default value.
      *          | for each I in 1..nbOfValues
      *          |   addValue(getDefaultValue())
+     * @effect  The id is set to id
+     *          | getId() == id
      */
     @Model
-    protected Column(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
+    protected Column(int id, String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
             throws IllegalColumnException, IllegalArgumentException {
+        if(id <= 0) throw new IllegalArgumentException();
+        this.id = id;
         setName(name);
         this.blanksAllowed = blanksAllowed;
         setDefaultValue(defaultValue);
@@ -56,6 +65,23 @@ public abstract class Column {
             addValue(getDefaultValue());
         }
     }
+
+
+    /**
+     * Returns the ID of the table.
+     */
+    public int getId()
+    {
+        return id;
+    }
+
+    /**
+     * The id of the table.
+     *
+     * @Invar Always strictly positive
+     *  | getId() > 0
+     */
+    private final int id;
 
 
     /**
@@ -482,11 +508,11 @@ public abstract class Column {
         String dv;
         switch (type) {
             case "String":
-                newColumn = new StringColumn(getName(), getNbValues(),
+                newColumn = new StringColumn(getId(), getName(), getNbValues(),
                         getDefaultValue(), isBlanksAllowed());
                 break;
             case "Email":
-                newColumn = new EmailColumn(getName(), getNbValues(),
+                newColumn = new EmailColumn(getId(), getName(), getNbValues(),
                         getDefaultValue(), isBlanksAllowed());
                 break;
             case "Boolean":
@@ -504,7 +530,7 @@ public abstract class Column {
                             break;
                     }
                 }
-                newColumn = new BooleanColumn(getName(), getNbValues(),
+                newColumn = new BooleanColumn(getId(), getName(), getNbValues(),
                         dv, isBlanksAllowed());
                 break;
             case "Integer":
@@ -522,7 +548,7 @@ public abstract class Column {
                             break;
                     }
                 }
-                newColumn = new IntegerColumn(getName(), getNbValues(),
+                newColumn = new IntegerColumn(getId(), getName(), getNbValues(),
                         dv, isBlanksAllowed());
                 break;
             default:

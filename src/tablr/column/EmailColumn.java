@@ -26,6 +26,8 @@ public class EmailColumn extends Column {
      * Initialize this new email column with given name, given number of values, given default value and
      *  given blanks allowed.
      *
+     * @param   id
+     *          The id of the new column.
      * @param   name
      *          The name of the new email column.
      * @param   nbOfValues
@@ -35,13 +37,13 @@ public class EmailColumn extends Column {
      * @param   blanksAllowed
      *          Boolean to determine whether blanks are allowed or not.
      * @effect  This new email column is initialised as a column
-     *          with given name, given number of values, given default value and
+     *          with given id, given name, given number of values, given default value and
      *          given blanks allowed.
-     *          | super(name, nbOfValues, defaultValue, blanksAllowed)
+     *          | super(id, name, nbOfValues, defaultValue, blanksAllowed)
      */
-    public EmailColumn(String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
+    public EmailColumn(int id, String name, int nbOfValues, String defaultValue, boolean blanksAllowed)
             throws IllegalArgumentException{
-        super(name, nbOfValues, defaultValue, blanksAllowed);
+        super(id, name, nbOfValues, defaultValue, blanksAllowed);
     }
 
     /**

@@ -21,6 +21,17 @@ import java.util.List;
  * @Invar   Columns is always effective.
  *          | columns != null
  *
+ * @Invar   The Id of the table strictly positive
+ *          | getId() > 0
+ *
+ * @invar there are never 2 tables with the same id.
+ * | for each x,y in columns:
+ * |     if x!=y:
+ * |          x.getId() != y.getId()
+ *
+ * @invar there are never more then MAX_COLUMNS.
+ * | getNbColumns() <= MAX_COLUMNS
+ *
  * @resp Manage its columns and their names.
  */
 public class Table {
@@ -30,16 +41,49 @@ public class Table {
      * @param   name
      *          The name this table will have.
      *
+     * @param   id
+     *          The id of the table.
+     *
      * @throws  IllegalArgumentException ("Table name must not be empty.") if the given name is invalid.
-     *  | if(!isValidName(name) throw IllegalArgumentException
+     *  | !isValidName(name)
+     *
+     * @throws  IllegalArgumentException ("The table id should be strictly positive.") if the given name is invalid.
+     *  | id <= 0
      */
     @Raw
-    public Table(String name) throws IllegalArgumentException{
+    public Table(int id, String name) throws IllegalArgumentException{
+        if (id <= 0) throw new IllegalArgumentException("The table id should be strictly positive.");
         setName(name);
-
+        this.id = id;
         // deze lijjn is nodig omdat je alles moet initialiseren.
         this.columns = new ArrayList<Column>();
     }
+
+
+    public static final int MAX_COLUMNS = 100;
+
+/*
+************************************************************************************************************************
+*                                                       id
+************************************************************************************************************************
+*/
+
+    /**
+     * Returns the ID of the table.
+     */
+    int getId()
+    {
+        return id;
+    }
+
+    /**
+     * The id of the table.
+     *
+     * @Invar Always strictly positive
+     *  | getId() > 0
+     */
+    private final int id;
+
 
 /*
 ************************************************************************************************************************
@@ -167,6 +211,7 @@ public class Table {
      *          The row doesn't exists.
      *          | row > getNbRows() || row < 1
      */
+    //TODO: c id
     public String getCellValue(String columnName, int row) throws IllegalColumnException, IllegalRowException
     {
         if (row < 1 || row > getNbRows())
@@ -194,6 +239,7 @@ public class Table {
      *          The row doesn't exists.
      *          | row > getNbRows() || row < 1
      */
+    //TODO: c id
     public boolean canHaveAsCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException
     {
@@ -224,6 +270,7 @@ public class Table {
      *          The row doesn't exists.
      *          | row > getNbRows() || row < 1
      */
+    //TODO: c id
     public void setCellValue(String columnName, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException
     {
@@ -284,25 +331,35 @@ public class Table {
      *
      * @param   column
      *          The column to be checked.
-     * @return  False if the given column is not effective or the given column is terminated.
-     *          | result ==
+     * @return  False if there are already the maximum amount of columns
+     *          or the given column is not effective or the given column is terminated.
+     *          | !result ==
+     *          |   (getNbColumns() >= MAX_COLUMNS)
+     *          |   ||
      *          |   ( column == null || column.isTerminated() )
-     *          Otherwise, false if the the name of the given column already
+     *          Otherwise, false if the the id or name of the given column already
      *          exists in the list of columns or the number of values of the given column
      *          is the not same as the number of values of the other columns in the list columns.
-     *          | result ==
+     *          | !result ==
      *          |   for each c in columns:
      *          |       ( column.getName() == c.getName() ||
-     *          |           column.getNbValues() != getNbRows() )
+     *          |           column.getNbValues() != getNbRows() ||
+     *          |           column.getId() == c.getId())
      */
+    @Model
     private boolean canHaveAsColumn(Column column) {
+        if(getNbColumns() >= MAX_COLUMNS) return false;
         if (column == null || column.isTerminated())
             return false;
-        else
-            for (int i = 1; i <= getNbColumns(); i++)
-                if (column.getName().equals(getColumnAt(i).getName()) &&
-                        column.getNbValues() != getNbRows())
-                    return false;
+        if (column.getNbValues() != getNbRows()) return false;
+        for (Column existingColumn:
+             columns) {
+            // next statement is needed for has proper colums
+            if (existingColumn != column) {
+                if (column.getName().equals(existingColumn.getName())) return false;
+                if (column.getId() == existingColumn.getId()) return false;
+            }
+        }
         return true;
     }
 
@@ -361,11 +418,49 @@ public class Table {
      *          There isn't a column with the given columnName in this table.
      *          | !isAlreadyUsedColumnName(columnName)
      */
-    private int getColumnIndex(String name) {
+    //TODO: remove
+    private int getColumnIndex(String name) throws IllegalColumnException {
         for (int i = 1; i <= getNbColumns(); i++)
             if (getColumnAt(i).getName().equals(name))
                 return i;
         throw new IllegalColumnException();
+    }
+
+
+    /**
+     * Returns the index of the column which has the given id as id.
+     *
+     * @param   id
+     *          The id of the column of which the index is needed.
+     * @return  The index of the column which has the given id.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given id in this table.
+     *          | !hasAsColumn(id)
+     */
+    private int getColumnIndex(int id) throws IllegalColumnException {
+        for (int i = 1; i <= getNbColumns(); i++)
+            if (getColumnAt(i).getId() == id)
+                return i;
+        throw new IllegalColumnException();
+    }
+
+    /**
+     * Returns whether or not the given Id is already in use.
+     *
+     * @param id
+     *          The id to be checked.
+     *
+     * @return  true if the column name is used already, false otherwise
+     *          | return = for all column in columns: column.getId() != i
+     *
+     */
+    private boolean hasAsColumn(int id)
+    {
+        for (Column column:
+             columns) {
+            if (column.getId() == id) return false;
+        }
+        return true;
     }
 
     /**
@@ -378,13 +473,34 @@ public class Table {
      *          There isn't a column with the given columnName in this table.
      *          | !isAlreadyUsedColumnName(columnName)
      */
-    private Column getColumn(String columnName) {
+    //TODO: remove
+    private Column getColumn(String columnName) throws IllegalColumnException {
         for (Column c : columns) {
             if (c.getName().equals(columnName))
                 return c;
         }
         throw new IllegalColumnException();
     }
+
+
+    /**
+     * Returns the column with the given column id
+     *
+     * @param   id
+     *          The id of the column to return.
+     * @return  The column of this table with the given id.
+     * @throws  IllegalColumnException
+     *          There isn't a column with the given id in this table.
+     *          | !hasAsColumn(id)
+     */
+    private Column getColumn(int id) throws IllegalColumnException {
+        for (Column c : columns) {
+            if (c.getId() == id)
+                return c;
+        }
+        throw new IllegalColumnException();
+    }
+
 
 /*
  ************************************************************************************************************************
@@ -409,6 +525,7 @@ public class Table {
      */
     private void addColumnAt(int index) throws IllegalArgumentException
     {
+
         int i = 0;
         String name = "";
         ArrayList<String> l = getColumnNames();
@@ -421,7 +538,19 @@ public class Table {
             name = "Column" + Integer.toString(i);
             if(!l.contains(name)){found = true;}
         }
-        addColumnAt(index, new StringColumn(name, getNbRows(), "", true));
+
+        found = false;
+        i = 0;
+        while(!found)
+        {
+            i++;
+            found = true;
+            for (Column column:columns)
+            {
+                if (column.getId() == i) found = false;
+            }
+        }
+        addColumnAt(index, new StringColumn(i, name, getNbRows(), "", true));
     }
 
     /**
@@ -457,10 +586,15 @@ public class Table {
      *
      * @effect  A new column is added at the end of the table.
      *          | addColumnAt(getNbColumns() + 1)
+     *
+     * @throws IllegalStateException
+     *          If there are already the maximum amount of columns
+     *          | getNbColumns() >= MAX_COLUMNS
      */
     public void addColumn()
-            throws IllegalArgumentException
+            throws IllegalStateException
     {
+        if (getNbColumns() >= MAX_COLUMNS) throw new IllegalStateException();
         addColumnAt(getNbColumns() + 1);
     }
 
@@ -477,6 +611,7 @@ public class Table {
      *          The given column cannot be a column of this table at the given index.
      *          | ! canHaveAsValueAt(index, value)
      */
+    /*
     private void setColumnAt(int index, Column column)
             throws IllegalArgumentException {
         if (!canHaveAsColumnAt(index, column))
@@ -485,6 +620,9 @@ public class Table {
             throw new IllegalArgumentException("Invalid column");
         columns.set(index - 1, column);
     }
+    */
+
+    //TODO: door michiel zijn implementatie MOET je de andere column eerst verwijderen als je switcht
 
     /**
      * Remove the column of this table at the given index.
@@ -527,8 +665,26 @@ public class Table {
         removeColumnAt(getColumnIndex(name));
     }
 
-
-
+    /**
+     *
+     * Removes the column from columns.
+     *
+     * @param column
+     *          The column to be removed
+     *
+     * @effect  The column will be removed from the list columns.
+     *          | removeColumnAt(getColumnIndex(Column))
+     *
+     * @throws  IllegalArgumentException
+     *          If the given column is not a column of this table.
+     *          | !columns.contains(column)
+     */
+    private void removeColumn(Column column) throws IllegalArgumentException
+    {
+        if(!columns.contains(column)) throw new IllegalArgumentException("The given column does not exist");
+        column.terminate();
+        columns.remove(column);
+    }
 
 
 /*
@@ -610,6 +766,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     protected boolean canHaveAsColumnName(String columnName, String name) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -651,6 +808,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public String getColumnType(String columnName) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -674,6 +832,7 @@ public class Table {
      *          The given type cannot be a type of the given table.
      *          | !canHaveAsColumnType(columnName, type)
      */
+    //TODO: c id
     public void setColumnType(String columnName, String type) throws IllegalColumnException, IllegalArgumentException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -682,8 +841,9 @@ public class Table {
             throw new IllegalArgumentException();
         Column column = getColumn(columnName);
         Column newColumn = column.setColumnType(type);
-
-        setColumnAt(getColumnIndex(columnName), newColumn);
+        int index = getColumnIndex(column.getId());
+        removeColumn(column);
+        addColumnAt(index, newColumn);
     }
 
     /**
@@ -698,6 +858,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public boolean canHaveAsColumnType(String columnName, String type) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -729,6 +890,7 @@ public class Table {
      *          The given columnName doesn't exists in this table.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public void setColumnDefaultValue(String columnName, String defaultValue)
             throws IllegalColumnException, IllegalArgumentException {
         // check of deze columnName wel in de table zit
@@ -747,6 +909,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public String getColumnDefaultValue(String columnName) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -766,6 +929,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public boolean canHaveAsDefaultValue(String columnName, String defaultValue) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -791,6 +955,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public boolean getColumnAllowBlank(String columnName) throws IllegalColumnException
     {
         if (!isAlreadyUsedColumnName(columnName))
@@ -812,6 +977,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public boolean canHaveAsColumnAllowBlanks(String columnName, boolean blanksAllowed)
             throws IllegalColumnException
     {
@@ -833,6 +999,7 @@ public class Table {
      *          There is no column in this table with the given column name.
      *          | !isAlreadyUsedColumnName(columnName)
      */
+    //TODO: c id
     public void setColumnAllowBlanks(String columnName, boolean blanksAllowed)
             throws IllegalColumnException, IllegalArgumentException
     {

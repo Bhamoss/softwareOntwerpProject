@@ -149,8 +149,11 @@ public class TablesHandler {
      * @effect there is now a new table.
      * | old.getNbTables() + 1 == new.getNbTables()
      *
+     * @throws IllegalStateException ("Already maximum amount of tables present.")
+     *  | getTableManager().getNbTables() == TableManager.MAX_TABLES
+     *
      */
-    public void addTable()
+    public void addTable() throws IllegalStateException
     {
         getTableManager().addTable();
     }

@@ -20,8 +20,8 @@ class TableTest {
 
     @BeforeEach
     void setUp() {
-        emptyTable = new Table("Table0");
-        tenTable = new Table("Table10");
+        emptyTable = new Table(1,"Table0");
+        tenTable = new Table(2,"Table10");
         for (int i = 1; i <= 10; i++)
             tenTable.addColumn();
         for (int i = 1; i <= 10; i++)
@@ -89,6 +89,20 @@ class TableTest {
     void tearDown() {
     }
 
+    @Test
+    @DisplayName("Negative or zero id IllegalArgumentException.")
+    void illegalId()
+    {
+        assertThrows(IllegalArgumentException.class, () -> new Table(-1, "name"));
+        assertThrows(IllegalArgumentException.class, () -> new Table(0, "name"));
+    }
+
+    @Test
+    @DisplayName("getId")
+    void getId()
+    {
+        assertEquals(1, emptyTable.getId());
+    }
 
     @Test
     void getName() {
