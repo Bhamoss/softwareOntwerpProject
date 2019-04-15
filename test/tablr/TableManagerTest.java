@@ -38,15 +38,15 @@ class TableManagerTest {
         emptyTM = new TableManager();
         c2r2 = new TableManager();
         c2r2.addTable();
-        c2r2.setTableName("Table1", "firstTable");
+        c2r2.setTableName(1, "firstTable");
         // columnName should be Column1
-        c2r2.addColumn("firstTable");
-        c2r2.addColumn("firstTable");
-        c2r2.addRow("firstTable");
-        c2r2.addRow("firstTable");
+        c2r2.addColumn(1);
+        c2r2.addColumn(1);
+        c2r2.addRow(1);
+        c2r2.addRow(1);
 
         c2r2.addTable();
-        c2r2.setTableName("Table1", "emptyTable");
+        c2r2.setTableName(2, "emptyTable");
     }
 
     @AfterEach
@@ -151,7 +151,30 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           boolean canHaveAsName(String tableName, String newTableName)
+     *           ArrayList<Integer> getTableIds()
+     ************************************************
+     */
+
+
+    @Test
+    @DisplayName("getTableIds for empty tableManager")
+    void getTableIdsEmpty() {
+        ArrayList<Integer> c = emptyTM.getTableIds();
+        assertEquals(0, c.size());
+    }
+
+    @Test
+    @DisplayName("getTableIds for non-empty table")
+    void getTableIdsNonEmpty() {
+        ArrayList<Integer> c = c2r2.getTableIds();
+        assertEquals(2, c.size());
+        assertEquals(2,c.get(0));
+        assertEquals(1, c.get(1));
+    }
+
+    /*
+     ************************************************
+     *           boolean canHaveAsName(in tableId, String newTableName)
      *           throws  IllegalTableException
      ************************************************
      */
@@ -159,39 +182,34 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsName illegal table exception")
     void canHaveAsNameIllegalTable() {
-        assertThrows(IllegalTableException.class, () -> c2r2.canHaveAsName("nonExistent","t"));
+        assertThrows(IllegalTableException.class, () -> c2r2.canHaveAsName(1234,"t"));
     }
 
 
-    @Test
-    @DisplayName("canHaveAsName null table")
-    void canHaveAsNameNullTable() {
-        assertThrows(IllegalTableException.class, () -> c2r2.canHaveAsName(null,"t"));
-    }
 
     @Test
     @DisplayName("canHaveAsName null name")
     void canHaveAsNameNullName() {
-        assertFalse(c2r2.canHaveAsName("emptyTable",null));
+        assertFalse(c2r2.canHaveAsName(2,null));
     }
 
 
     @Test
     @DisplayName("canHaveAsName own name")
     void canHaveAsNameOwnName() {
-        assertTrue(c2r2.canHaveAsName("emptyTable","emptyTable"));
+        assertTrue(c2r2.canHaveAsName(2,"emptyTable"));
     }
 
     @Test
     @DisplayName("canHaveAsName valid name")
     void canHaveAsNameTrue() {
-        assertTrue(c2r2.canHaveAsName("firstTable","otherName"));
+        assertTrue(c2r2.canHaveAsName(1,"otherName"));
     }
 
     @Test
     @DisplayName("canHaveAsName invalid name")
     void canHaveAsNameFalse() {
-        assertFalse(c2r2.canHaveAsName("firstTable","emptyTable"));
+        assertFalse(c2r2.canHaveAsName(1,"emptyTable"));
     }
 
 
@@ -199,7 +217,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void setTableName(String tableName, String newName)
+     *           void setTableName(int tableId, String newName)
      *           throws IllegalTableException, IllegalArgumentException
      ************************************************
      */
@@ -207,31 +225,25 @@ class TableManagerTest {
     @Test
     @DisplayName("setTableName illegal table")
     void setTableNameIllegalTable() {
-        assertThrows(IllegalTableException.class , () -> c2r2.setTableName("asdf", ""));
-    }
-
-    @Test
-    @DisplayName("setTableName null table")
-    void setTableNameNullTable() {
-        assertThrows(IllegalTableException.class , () -> c2r2.setTableName(null, ""));
+        assertThrows(IllegalTableException.class , () -> c2r2.setTableName(1234, ""));
     }
 
     @Test
     @DisplayName("setTableName null name")
     void setTableNameNullName() {
-        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName("firstTable", null));
+        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName(1, null));
     }
 
     @Test
     @DisplayName("setTableName empty name")
     void setTableNameEmptyName() {
-        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName("firstTable", ""));
+        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName(1, ""));
     }
 
     @Test
     @DisplayName("setTableName name already in use")
     void setTableNameInUseName() {
-        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName("firstTable", "emptyTable"));
+        assertThrows(IllegalArgumentException.class , () -> c2r2.setTableName(1, "emptyTable"));
     }
 
 
@@ -239,7 +251,7 @@ class TableManagerTest {
     @Test
     @DisplayName("setTableName name valid")
     void setTableNameValid() {
-        c2r2.setTableName("firstTable", "newName");
+        c2r2.setTableName(1, "newName");
         int before = c2r2.getTableNames().size();
         assertTrue( c2r2.hasAsTable("newName"));
         assertFalse(c2r2.hasAsTable("firstTable"));
@@ -273,6 +285,7 @@ class TableManagerTest {
         emptyTM.addTable();
         assertTrue(emptyTM.hasAsTable(1));
         assertEquals("Table1", emptyTM.getTableName(1));
+        assertTrue(emptyTM.hasAsTable(1));
     }
 
     @Test
@@ -282,6 +295,7 @@ class TableManagerTest {
         emptyTM.addTable();
         assertTrue(emptyTM.hasAsTable(2));
         assertEquals("Table2", emptyTM.getTableName(2));
+        assertTrue(emptyTM.hasAsTable(2));
     }
 
 
@@ -292,11 +306,12 @@ class TableManagerTest {
         emptyTM.addTable();
         emptyTM.addTable();
         //TODO: change to id
-        emptyTM.removeTable("Table2");
+        emptyTM.removeTable(2);
         // now there should be only Table1 and Table3
         emptyTM.addTable();
         assertTrue(emptyTM.hasAsTable(2));
         assertEquals("Table2", emptyTM.getTableName(2));
+        assertTrue(emptyTM.hasAsTable(2));
     }
 
 
@@ -304,7 +319,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void removeTable(String tableName)
+     *           void removeTable(int tableInt)
      *           throws IllegalTableException
      ************************************************
      */
@@ -312,22 +327,19 @@ class TableManagerTest {
     @Test
     @DisplayName("removeTable Illegal table exception")
     void removeTableIllegalTable() {
-        assertThrows( IllegalTableException.class , () ->c2r2.removeTable("asdfwefdw"));
+        assertThrows( IllegalTableException.class , () ->c2r2.removeTable(1234));
     }
 
-    @Test
-    @DisplayName("removeTable null table exception")
-    void removeTableNullTable() {
-        assertThrows( IllegalTableException.class , () ->c2r2.removeTable(null));
-    }
 
     @Test
     @DisplayName("removeTable success")
     void removeTableSuccess() {
         int i = c2r2.getTableNames().size();
-        c2r2.removeTable("firstTable");
+        c2r2.removeTable(1);
         assertFalse(c2r2.hasAsTable("firstTable"));
+        assertFalse(c2r2.hasAsTable(1));
         assertTrue(c2r2.hasAsTable("emptyTable"));
+        assertTrue(c2r2.hasAsTable(2));
         assertEquals(i-1, c2r2.getTableNames().size());
     }
 
@@ -335,7 +347,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           ArrayList<String> getColumnNames(String tableName)
+     *           ArrayList<String> getColumnNames(int tableId)
      *           throws  IllegalTableException
      ************************************************
      */
@@ -345,13 +357,13 @@ class TableManagerTest {
     @Test
     @DisplayName("getColumnName Illegal table exception")
     void getColumnNamesNoOpenTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getColumnNames("asdfa"));
+        assertThrows( IllegalTableException.class, () -> c2r2.getColumnNames(1234));
     }
 
     @Test
     @DisplayName("getColumnName success")
     void getColumnNamesSuccess() {
-        ArrayList<String> c = c2r2.getColumnNames("firstTable");
+        ArrayList<String> c = c2r2.getColumnNames(1);
         assertEquals(2, c.size());
         assertEquals("Column1", c.get(0));
         assertEquals("Column2", c.get(1));
@@ -360,7 +372,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           String getColumnType(String tableName, String columnName)
+     *           String getColumnType(int tableId, int columnId)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -370,25 +382,25 @@ class TableManagerTest {
     @Test
     @DisplayName("getColumnType Illegal table exception")
     void getColumnTypeIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getColumnType("sghs", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.getColumnType(1234, 1));
     }
 
     @Test
     @DisplayName("getColumnType Illegal column exception")
     void getColumnTypeIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnType("firstTable", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnType(1, 1234));
     }
 
     @Test
     @DisplayName("getColumnType success")
     void getColumnTypeSuccess()
     {
-        assertEquals("String", c2r2.getColumnType("firstTable", "Column1"));
+        assertEquals("String", c2r2.getColumnType(1, 1));
     }
 
     /*
      ************************************************
-     *           boolean getColumnAllowBlank(String tableName, String columnName)
+     *           boolean getColumnAllowBlank(int tableId, int columnId)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -397,26 +409,26 @@ class TableManagerTest {
     @Test
     @DisplayName("getColumnAllowBlank Illegal table exception")
     void getColumnAllowBlankIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getColumnAllowBlank("asdf", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.getColumnAllowBlank(1234, 1));
     }
 
     @Test
     @DisplayName("getColumnAllowBlank Illegal column exception")
     void getColumnAllowBlankIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnAllowBlank("firstTable", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnAllowBlank(1, 1234));
     }
 
     @Test
     @DisplayName("getColumnAllowBlank success")
     void getColumnAllowBlankSuccess()
     {
-        assertTrue( c2r2.getColumnAllowBlank("firstTable", "Column1"));
+        assertTrue( c2r2.getColumnAllowBlank(1, 1));
     }
 
 
     /*
      ************************************************
-     *           String getColumnDefaultValue(String tableName, String columnName)
+     *           String getColumnDefaultValue(int tableId, int columnId)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -426,26 +438,26 @@ class TableManagerTest {
     @Test
     @DisplayName("getColumnDefaultValue Illegal table exception")
     void getColumnDefaultValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getColumnDefaultValue("asdfasfd","d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.getColumnDefaultValue(1234,1));
     }
 
     @Test
     @DisplayName("getColumnDefaultValue Illegal column exception")
     void getColumnDefaultValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnDefaultValue("firstTable", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.getColumnDefaultValue(1, 1234));
     }
 
     @Test
     @DisplayName("getColumnDefaultValue success")
     void getColumnDefaultValueSuccess()
     {
-        assertEquals(""  ,c2r2.getColumnDefaultValue("firstTable", "Column1"));
+        assertEquals(""  ,c2r2.getColumnDefaultValue(1, 1));
     }
 
 
     /*
      ************************************************
-     *           boolean canHaveAsColumnName(String tableName, String columnName, String newName)
+     *           boolean canHaveAsColumnName(int tableId, int columnId, String newName)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -454,32 +466,32 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsColumnName Illegal table exception")
     void canHaveAsColumnNameIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnName("firble", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnName(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnName Illegal column exception")
     void canHaveAsColumnNameIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnName("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnName(1, 1234, "d"));
     }
 
 
     @Test
     @DisplayName("canHaveAsColumnName name taken")
     void canHaveAsColumnNameBasicNameTaken() {
-        assertFalse(c2r2.canHaveAsColumnName("firstTable", "Column1", "Column2"));
+        assertFalse(c2r2.canHaveAsColumnName(1, 1, "Column2"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnName basic success")
     void canHaveAsColumnNameBasicSuccess() {
-        assertTrue(c2r2.canHaveAsColumnName("firstTable", "Column1", "firstColumn"));
+        assertTrue(c2r2.canHaveAsColumnName(1, 1, "firstColumn"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnName own name success")
     void canHaveAsColumnNameOwnName() {
-        assertTrue(c2r2.canHaveAsColumnName("firstTable", "Column1", "Column1"));
+        assertTrue(c2r2.canHaveAsColumnName(1, 1, "Column1"));
     }
 
 
@@ -489,7 +501,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           boolean canHaveAsColumnType(String tableName, String columnName, String type)
+     *           boolean canHaveAsColumnType(int tableId, int columnId, String type)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -499,33 +511,33 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsColumnType Illegal table exception")
     void canHaveAsColumnTypeIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnType("firble", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnType(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnType Illegal column exception")
     void canHaveAsColumnTypeIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnType("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnType(1, 1234, "d"));
     }
 
 
     @Test
     @DisplayName("canHaveAsColumnType basic failure")
     void canHaveAsColumnTypeBasicFalse() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "not boolean");
-        assertFalse(c2r2.canHaveAsColumnType("firstTable", "Column1", "Boolean"));
+        c2r2.setCellValue(1, 1, 1, "not boolean");
+        assertFalse(c2r2.canHaveAsColumnType(1, 1, "Boolean"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnType non type")
     void canHaveAsColumnTypeNonType() {
-        assertFalse(c2r2.canHaveAsColumnType("firstTable", "Column1", "flabbergasted"));
+        assertFalse(c2r2.canHaveAsColumnType(1, 1, "flabbergasted"));
     }
 
     @Test
     @DisplayName("canHaveAsColumnType basic success")
     void canHaveAsColumnTypeBasicSuccess() {
-        assertTrue(c2r2.canHaveAsColumnType("firstTable", "Column1", "Integer"));
+        assertTrue(c2r2.canHaveAsColumnType(1, 1, "Integer"));
     }
 
 
@@ -534,7 +546,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           boolean canHaveAsColumnAllowBlanks(String tableName, String columnName, boolean blanks)
+     *           boolean canHaveAsColumnAllowBlanks(int tableId, int columnId, boolean blanks)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -543,29 +555,29 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsColumnAllowBlanks Illegal table exception")
     void canHaveAsColumnAllowBlanksIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnAllowBlanks("firble", "d", false));
+        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsColumnAllowBlanks(1234, 1, false));
     }
 
     @Test
     @DisplayName("canHaveAsColumnAllowBlanks Illegal column exception")
     void canHaveAsColumnAllowBlanksIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnAllowBlanks("firstTable", "d", false));
+        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsColumnAllowBlanks(1, 1234, false));
     }
 
 
     @Test
     @DisplayName("canHaveAsColumnAllowBlanks basic failure")
     void canHaveAsColumnAllowBlanksBasicFalse() {
-        assertFalse(c2r2.canHaveAsColumnAllowBlanks("firstTable", "Column1", false));
+        assertFalse(c2r2.canHaveAsColumnAllowBlanks(1, 1, false));
     }
 
     @Test
     @DisplayName("canHaveAsColumnAllowBlanks basic success")
     void canHaveAsColumnAllowBlanksBasicSuccess() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "d");
-        c2r2.setCellValue("firstTable", "Column1", 2, "d");
-        c2r2.setColumnDefaultValue("firstTable", "Column1", "d");
-        assertTrue(c2r2.canHaveAsColumnAllowBlanks("firstTable", "Column1", false));
+        c2r2.setCellValue(1, 1, 1, "d");
+        c2r2.setCellValue(1, 1, 2, "d");
+        c2r2.setColumnDefaultValue(1, 1, "d");
+        assertTrue(c2r2.canHaveAsColumnAllowBlanks(1, 1, false));
     }
 
 
@@ -574,7 +586,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           boolean canHaveAsDefaultValue(String tableName, String columnName, String newDefaultValue)
+     *           boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue)
      *           throws IllegalColumnException, IllegalTableException
      ************************************************
      */
@@ -582,13 +594,13 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsDefaultValue Illegal table exception")
     void canHaveAsDefaultValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsDefaultValue("fible", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsDefaultValue(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("canHaveAsDefaultValue Illegal column exception")
     void canHaveAsDefaultValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsDefaultValue("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsDefaultValue(1, 1234, "d"));
     }
 
 
@@ -596,18 +608,18 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsDefaultValue basic false")
     void canHaveAsDefaultValueBasicFalse() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "d");
-        c2r2.setCellValue("firstTable", "Column1", 2, "d");
-        c2r2.setColumnDefaultValue("firstTable", "Column1", "d");
-        c2r2.setColumnAllowBlanks("firstTable", "Column1", false);
-        assertFalse(c2r2.canHaveAsDefaultValue("firstTable", "Column1", ""));
+        c2r2.setCellValue(1, 1, 1, "d");
+        c2r2.setCellValue(1, 1, 2, "d");
+        c2r2.setColumnDefaultValue(1, 1, "d");
+        c2r2.setColumnAllowBlanks(1, 1, false);
+        assertFalse(c2r2.canHaveAsDefaultValue(1, 1, ""));
     }
 
 
     @Test
     @DisplayName("canHaveAsDefaultValue basic true")
     void canHaveAsDefaultValueBasicTrue() {
-        assertTrue(c2r2.canHaveAsDefaultValue("firstTable", "Column1", "d"));
+        assertTrue(c2r2.canHaveAsDefaultValue(1, 1, "d"));
     }
 
 
@@ -616,7 +628,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void setColumnName(String tableName, String columnName, String newColumnName)
+     *           void setColumnName(int tableId, int columnId, String newColumnName)
      *           throws IllegalColumnException, IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -624,28 +636,28 @@ class TableManagerTest {
     @Test
     @DisplayName("setColumnName Illegal table exception")
     void setColumnNameIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.setColumnName("firble", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.setColumnName(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("setColumnName Illegal column exception")
     void setColumnNameIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnName("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnName(1, 1234, "d"));
     }
 
     @Test
     @DisplayName("setColumnName name taken Illegal Argument")
     void setColumnNameIllegalArgument() {
 
-        assertThrows( IllegalArgumentException.class, () -> c2r2.setColumnName("firstTable", "Column1", "Column2"));
+        assertThrows( IllegalArgumentException.class, () -> c2r2.setColumnName(1, 1, "Column2"));
     }
 
     @Test
     @DisplayName("setColumnName basic success")
     void setColumnNameBasicSuccess() {
-        c2r2.setColumnName("firstTable", "Column1", "hello");
-        assertTrue( c2r2.getColumnNames("firstTable").contains("hello")  );
-        assertFalse( c2r2.getColumnNames("firstTable").contains("Column1")  );
+        c2r2.setColumnName(1, 1, "hello");
+        assertTrue( c2r2.getColumnNames(1).contains("hello")  );
+        assertFalse( c2r2.getColumnNames(1).contains("Column1")  );
     }
 
 
@@ -653,7 +665,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void setColumnType(String tableName, String columName, String type)
+     *           void setColumnType(int tableId, int columnId, String type)
      *           throws IllegalColumnException, IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -661,27 +673,27 @@ class TableManagerTest {
     @Test
     @DisplayName("setColumnType Illegal table exception")
     void setColumnTypeIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.setColumnType("firble", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.setColumnType(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("setColumnType Illegal column exception")
     void setColumnTypeIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnType("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnType(1, 1234, "d"));
     }
 
     @Test
     @DisplayName("setColumnType Illegal Argument")
     void setColumnTypeIllegalArgument() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "d");
-        assertThrows( IllegalArgumentException.class, () -> c2r2.setColumnType("firstTable", "Column1", "Boolean"));
+        c2r2.setCellValue(1, 1, 1, "d");
+        assertThrows( IllegalArgumentException.class, () -> c2r2.setColumnType(1, 1, "Boolean"));
     }
 
     @Test
     @DisplayName("setColumnType basic success")
     void setColumnTypeBasicSuccess() {
-        c2r2.setColumnType("firstTable", "Column1", "Boolean");
-        assertEquals("Boolean" , c2r2.getColumnType("firstTable", "Column1")  );
+        c2r2.setColumnType(1, 1, "Boolean");
+        assertEquals("Boolean" , c2r2.getColumnType(1, 1)  );
     }
 
 
@@ -690,7 +702,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void setColumnAllowBlanks(String tableName, String columnName, boolean blanks)
+     *           void setColumnAllowBlanks(int tableId, int columnId, boolean blanks)
      *           throws IllegalColumnException, IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -700,13 +712,13 @@ class TableManagerTest {
     @Test
     @DisplayName("setColumnAllowBlanks Illegal table exception")
     void setColumnAllowBlanksIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.setColumnAllowBlanks("firble", "d", false));
+        assertThrows( IllegalTableException.class, () -> c2r2.setColumnAllowBlanks(1234, 1, false));
     }
 
     @Test
     @DisplayName("setColumnAllowBlanks Illegal column exception")
     void setColumnAllowBlanksIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnAllowBlanks("firstTable", "d", false));
+        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnAllowBlanks(1, 1234, false));
     }
 
 
@@ -714,17 +726,17 @@ class TableManagerTest {
     @DisplayName("setColumnAllowBlanks illegal argument")
     void setColumnAllowBlanksIllegalArgument() {
 
-        assertThrows(IllegalArgumentException.class, () ->c2r2.setColumnAllowBlanks("firstTable", "Column1", false));
+        assertThrows(IllegalArgumentException.class, () ->c2r2.setColumnAllowBlanks(1, 1, false));
     }
 
     @Test
     @DisplayName("setColumnAllowBlanks basic success")
     void setColumnAllowBlanksBasicSuccess() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "d");
-        c2r2.setCellValue("firstTable", "Column1", 2, "d");
-        c2r2.setColumnDefaultValue("firstTable", "Column1", "d");
-        c2r2.setColumnAllowBlanks("firstTable", "Column1", false);
-        assertFalse(c2r2.getColumnAllowBlank("firstTable", "Column1"));
+        c2r2.setCellValue(1, 1, 1, "d");
+        c2r2.setCellValue(1, 1, 2, "d");
+        c2r2.setColumnDefaultValue(1, 1, "d");
+        c2r2.setColumnAllowBlanks(1, 1, false);
+        assertFalse(c2r2.getColumnAllowBlank(1, 1));
     }
 
 
@@ -733,7 +745,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void setColumnDefaultValue(String tableName, String columnName, String newDefaultValue)
+     *           void setColumnDefaultValue(int tableId, int columnId, String newDefaultValue)
      *           throws IllegalColumnException, IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -741,13 +753,13 @@ class TableManagerTest {
     @Test
     @DisplayName("setColumnDefaultValue Illegal table exception")
     void setColumnDefaultValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.setColumnDefaultValue("fible", "d", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.setColumnDefaultValue(1234, 1, "d"));
     }
 
     @Test
     @DisplayName("setColumnDefaultValue Illegal column exception")
     void setColumnDefaultValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnDefaultValue("firstTable", "d", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.setColumnDefaultValue(1, 1234, "d"));
     }
 
 
@@ -755,19 +767,19 @@ class TableManagerTest {
     @Test
     @DisplayName("setColumnDefaultValue Illegal Argument")
     void setColumnDefaultValueIllegalArgument() {
-        c2r2.setCellValue("firstTable", "Column1", 1, "d");
-        c2r2.setCellValue("firstTable", "Column1", 2, "d");
-        c2r2.setColumnDefaultValue("firstTable", "Column1", "d");
-        c2r2.setColumnAllowBlanks("firstTable", "Column1", false);
-        assertThrows( IllegalArgumentException.class, () ->c2r2.setColumnDefaultValue("firstTable", "Column1", ""));
+        c2r2.setCellValue(1, 1, 1, "d");
+        c2r2.setCellValue(1, 1, 2, "d");
+        c2r2.setColumnDefaultValue(1, 1, "d");
+        c2r2.setColumnAllowBlanks(1, 1, false);
+        assertThrows( IllegalArgumentException.class, () ->c2r2.setColumnDefaultValue(1, 1, ""));
     }
 
 
     @Test
     @DisplayName("setColumnDefaultValue basic true")
     void setColumnDefaultValueBasicTrue() {
-        c2r2.setColumnDefaultValue("firstTable", "Column1", "d");
-        assertEquals("d", c2r2.getColumnDefaultValue("firstTable", "Column1"));
+        c2r2.setColumnDefaultValue(1, 1, "d");
+        assertEquals("d", c2r2.getColumnDefaultValue(1, 1));
     }
 
 
@@ -776,7 +788,7 @@ class TableManagerTest {
 
     /*
      ************************************************
-     *           void addColumn(String tableName) throws IllegalTableException
+     *           void addColumn(int tableId) throws IllegalTableException
      ************************************************
      */
 
@@ -784,19 +796,19 @@ class TableManagerTest {
     @Test
     @DisplayName("addColumn Illegal table exception")
     void addColumnIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.addColumn("firble"));
+        assertThrows( IllegalTableException.class, () -> c2r2.addColumn(1234));
     }
 
     @Test
     @DisplayName("addColumn success")
     void addColumnSuccess() {
-        c2r2.addColumn("firstTable");
-        assertEquals( 3, c2r2.getColumnNames("firstTable").size() );
+        c2r2.addColumn(1);
+        assertEquals( 3, c2r2.getColumnNames(1).size() );
     }
 
     /*
      ************************************************
-     *           void removeColumn(String tableName, String columnName)
+     *           void removeColumn(int tableId, int columnId)
      *           throws IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -804,25 +816,25 @@ class TableManagerTest {
     @Test
     @DisplayName("removeColumn Illegal table exception")
     void removeColumnIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.removeColumn("firble", "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.removeColumn(1234, 1));
     }
 
     @Test
     @DisplayName("removeColumn Illegal column exception")
     void removeColumnIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.removeColumn("firstTable", "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.removeColumn(1, 1234));
     }
 
     @Test
     @DisplayName("removeColumn success")
     void removeColumnSuccess() {
-        c2r2.removeColumn("firstTable", "Column1");
-        assertEquals( 1, c2r2.getColumnNames("firstTable").size() );
+        c2r2.removeColumn(1, 1);
+        assertEquals( 1, c2r2.getColumnNames(1).size() );
     }
 
     /*
      ************************************************
-     *           String getCellValue(String tableName, String columnName, int Row)
+     *           String getCellValue(int tableId, int columnId, int Row)
      *           throws IllegalColumnException, IllegalRowException, IllegalTableException
      ************************************************
      */
@@ -831,13 +843,13 @@ class TableManagerTest {
     @Test
     @DisplayName("getCellValue Illegal table exception")
     void getCellValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getCellValue("fible", "d", 2));
+        assertThrows( IllegalTableException.class, () -> c2r2.getCellValue(1234, 1, 2));
     }
 
     @Test
     @DisplayName("getCellValue Illegal column exception")
     void getCellValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.getCellValue("firstTable", "d", 2));
+        assertThrows( IllegalColumnException.class, () -> c2r2.getCellValue(1, 1234, 2));
     }
 
 
@@ -845,20 +857,20 @@ class TableManagerTest {
     @DisplayName("getCellValue Illegal row exception")
     void getCellValueIllegalRow() {
 
-        assertThrows(IllegalRowException.class, () ->c2r2.getCellValue("firstTable", "Column1", 99));
+        assertThrows(IllegalRowException.class, () ->c2r2.getCellValue(1, 1, 99));
     }
 
     @Test
     @DisplayName("getCellValue success")
     void getCellValueSuccess() {
-        c2r2.setCellValue("firstTable", "Column1", 2, "test");
-        assertEquals("test", c2r2.getCellValue("firstTable", "Column1", 2));
+        c2r2.setCellValue(1, 1, 2, "test");
+        assertEquals("test", c2r2.getCellValue(1, 1, 2));
     }
 
 
     /*
      ************************************************
-     *           boolean canHaveAsCellValue(String tableName, String columnName, int row, String value)
+     *           boolean canHaveAsCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
      ************************************************
      */
@@ -866,13 +878,13 @@ class TableManagerTest {
     @Test
     @DisplayName("canHaveAsCellValue Illegal table exception")
     void canHaveAsCellValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsCellValue("firle", "d", 2, "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.canHaveAsCellValue(1234, 1, 2, "d"));
     }
 
     @Test
     @DisplayName("canHaveAsCellValue Illegal column exception")
     void canHaveAsCellValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsCellValue("firstTable", "d", 2, "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.canHaveAsCellValue(1, 1234, 2, "d"));
     }
 
 
@@ -880,19 +892,19 @@ class TableManagerTest {
     @DisplayName("canHaveAsCellValue Illegal row exception")
     void canHaveAsCellValueIllegalRow() {
 
-        assertThrows(IllegalRowException.class, () ->c2r2.canHaveAsCellValue("firstTable", "Column1", 99, "d"));
+        assertThrows(IllegalRowException.class, () ->c2r2.canHaveAsCellValue(1, 1, 99, "d"));
     }
 
     @Test
     @DisplayName("canHaveAsCellValue success")
     void canHaveAsCellValueSuccess() {
-        assertTrue(c2r2.canHaveAsCellValue("firstTable", "Column1", 2, "test"));
+        assertTrue(c2r2.canHaveAsCellValue(1, 1, 2, "test"));
     }
 
 
     /*
      ************************************************
-     *           void setCellValue(String tableName, String columnName, int row, String newValue)
+     *           void setCellValue(int tableId, int columnId, int row, String newValue)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
      ************************************************
      */
@@ -901,13 +913,13 @@ class TableManagerTest {
     @Test
     @DisplayName("setCellValue Illegal table exception")
     void setCellValueIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.setCellValue("firble", "d", 2, "d"));
+        assertThrows( IllegalTableException.class, () -> c2r2.setCellValue(1234, 1, 2, "d"));
     }
 
     @Test
     @DisplayName("setCellValue Illegal column exception")
     void setCellValueIllegalColumn() {
-        assertThrows( IllegalColumnException.class, () -> c2r2.setCellValue("firstTable", "d", 2, "d"));
+        assertThrows( IllegalColumnException.class, () -> c2r2.setCellValue(1, 1234, 2, "d"));
     }
 
 
@@ -915,20 +927,20 @@ class TableManagerTest {
     @DisplayName("setCellValue Illegal row exception")
     void setCellValueIllegalRow() {
 
-        assertThrows(IllegalRowException.class, () ->c2r2.setCellValue("firstTable", "Column1", 99, "d"));
+        assertThrows(IllegalRowException.class, () ->c2r2.setCellValue(1, 1, 99, "d"));
     }
 
     @Test
     @DisplayName("setCellValue success")
     void setCellValueSuccess() {
-        c2r2.setCellValue("firstTable", "Column1", 2, "test");
-        assertEquals("test", c2r2.getCellValue("firstTable", "Column1", 2));
+        c2r2.setCellValue(1, 1, 2, "test");
+        assertEquals("test", c2r2.getCellValue(1, 1, 2));
     }
 
 
     /*
      ************************************************
-     *           void addRow(String tableName) throws IllegalTableException
+     *           void addRow(int tableId) throws IllegalTableException
      ************************************************
      */
 
@@ -936,57 +948,57 @@ class TableManagerTest {
     @Test
     @DisplayName("addRow Illegal table exception")
     void addRowIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.addRow("firle"));
+        assertThrows( IllegalTableException.class, () -> c2r2.addRow(1234));
     }
 
     @Test
     @DisplayName("addRow success")
     void addRowSuccess() {
-        c2r2.addRow("firstTable");
-        assertEquals(3, c2r2.getNbRows("firstTable"));
+        c2r2.addRow(1);
+        assertEquals(3, c2r2.getNbRows(1));
     }
 
     /*
      ************************************************
-     *           public int getNbRows(String tableName) throws IllegalTableException
+     *           public int getNbRows(int tableId) throws IllegalTableException
      ************************************************
      */
 
     @Test
     @DisplayName("getNbRows Illegal table exception")
     void getNbRowsIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.getNbRows("firsble"));
+        assertThrows( IllegalTableException.class, () -> c2r2.getNbRows(1234));
     }
 
     @Test
     @DisplayName("getNbRows success")
     void getNbRowsSuccess() {
-        assertEquals(2, c2r2.getNbRows("firstTable"));
+        assertEquals(2, c2r2.getNbRows(1));
     }
 
     /*
      ************************************************
-     *           void removeRow(String tableName, int row) throws IllegalRowException, IllegalTableException
+     *           void removeRow(int tableId, int row) throws IllegalRowException, IllegalTableException
      ************************************************
      */
 
     @Test
     @DisplayName("removeRow Illegal table exception")
     void removeRowIllegalTable() {
-        assertThrows( IllegalTableException.class, () -> c2r2.removeRow("firble", 99));
+        assertThrows( IllegalTableException.class, () -> c2r2.removeRow(1234, 99));
     }
 
     @Test
     @DisplayName("removeRow Illegal row exception")
     void removeRowIllegalRow() {
-        assertThrows( IllegalRowException.class, () -> c2r2.removeRow("firstTable", 99));
+        assertThrows( IllegalRowException.class, () -> c2r2.removeRow(1, 99));
     }
 
     @Test
     @DisplayName("removeRow success")
     void removeRowSuccess() {
-        c2r2.removeRow("firstTable", 1);
-        assertEquals(1, c2r2.getNbRows("firstTable"));
+        c2r2.removeRow(1, 1);
+        assertEquals(1, c2r2.getNbRows(1));
     }
 
 
