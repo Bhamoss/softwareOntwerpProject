@@ -17,6 +17,10 @@ public class CompositeWidget extends Widget {
         widgets.add(w);
     }
 
+    public void removeWidget(Widget w) {
+        widgets.remove(w);
+    }
+
 
     /**
      * Paints screen.
