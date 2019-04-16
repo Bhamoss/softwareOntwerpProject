@@ -53,7 +53,7 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void paint(Graphics g) {
         for (SubWindowWidget w : subWindows) {
-            w.paint(w);
+            w.paint(g);
         }
     }
 
