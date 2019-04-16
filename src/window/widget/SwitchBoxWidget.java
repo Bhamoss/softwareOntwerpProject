@@ -12,7 +12,6 @@ public class SwitchBoxWidget extends LabelWidget {
     Function<String, Boolean> isValidOption;
     Consumer<String> setOption;
     int optionIndex;
-    boolean blocked;
 
     /**
      * Creates a switchbox widget.
@@ -69,11 +68,6 @@ public class SwitchBoxWidget extends LabelWidget {
      */
     private void cycleOption() {
         setOption((optionIndex + 1) % options.size());
-    }
-
-    @Override
-    public boolean isBlocking() {
-        return blocked;
     }
 
     @Override

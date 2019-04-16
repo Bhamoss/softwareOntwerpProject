@@ -30,6 +30,14 @@ import java.util.List;
  * | for i in 0...getNbTables():
  * |    getTableAt(i) != null
  *
+ * @invar there are never 2 tables with the same id.
+ * | for each x,y in tables:
+ * |     if x!=y:
+ * |          x.getId() != y.getId()
+ *
+ * @invar there are never more then MAX_TABLES.
+ * | getNbTables() <= MAX_TABLES
+ *
  * @resp Manage the tables.
  *
  */
@@ -59,6 +67,10 @@ public class TableManager {
         this.terminated = false;
     }
 
+    /**
+     * The maximum amount of tables.
+     */
+    static final int MAX_TABLES = 100;
 
 
 /*
@@ -66,6 +78,24 @@ public class TableManager {
 *                                                   TableHandler interface functions
 ************************************************************************************************************************
  */
+
+    /**
+     * Returns the name of the table with id id.
+     *
+     * @param id
+     *          The id of the table.
+     *
+     * @return  The name of the table with id id.
+     *      | return = getTable(id).getName()
+     * @throws IllegalTableException
+     *      If there is no table with that id.
+     *      | !hasAsTable(id)
+     */
+    String getTableName(int id) throws IllegalTableException
+    {
+        if (!hasAsTable(id)) throw new IllegalTableException();
+        return getTable(id).getName();
+    }
 
     /**
      *
@@ -91,6 +121,31 @@ public class TableManager {
         return false;
     }
 
+
+    /**
+     *
+     * Return whether or not the table with id id is a table.
+     *
+     * @param id
+     *      The id of the table to check.
+     *
+     * @return  true if there is a table with the id id, otherwise false.
+     *  |return = false
+     *  |for(table in table){
+     *  |     if(table.getId() ==  id) {return = true;}
+     *  |}
+     *
+     */
+    @Model
+    boolean hasAsTable(int id)
+    {
+        for (Table table: tables)
+        {
+            if(table.getId() == id){ return true;}
+        }
+        return false;
+    }
+
     /**
      *
      * Get the names of the tables.
@@ -112,26 +167,46 @@ public class TableManager {
     }
 
     /**
-     * Returns whether the table with tableName can have the newTableName name.
      *
-     * @param tableName
-     *  the name of the table to check on.
-     * @param newTableName
-     *  the name you want to check on.
+     * Get the ids of the tables.
      *
-     * @return true if the table with tableName exist, no other table has that name and the name is valid.
-     *  | if(tableName in getTableNames()) {result == (tableName == newTableName
-     *  | || (newTableName not in getTableName() && Table.isValidName(newTableName)))}
-     *
-     * @throws IllegalTableException if the table with that tableName does not exist.
-     *  | ∀strings in getTableNames(): strings != tableName
+     * @return a list containing the ids of the tables.
+     * | return == ArrayList<Integer>
+     * | && ∀table in tables: ∃! i: ArrayList<Integer>.get(i).equals(table.getId())
      *
      */
     @Model
-    boolean canHaveAsName(String tableName, String newTableName) throws  IllegalTableException
+    ArrayList<Integer> getTableIds()
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table t = getTable(tableName);
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for(Table table: tables)
+        {
+            list.add(table.getId());
+        }
+        return list;
+    }
+
+    /**
+     * Returns whether the table with id can have the newTableName name.
+     *
+     * @param tableId
+     *  the id of the table to check on.
+     * @param newTableName
+     *  the name you want to check on.
+     *
+     * @return true if the table with tableId exist, no other table has that name and the name is valid.
+     *  | if(tableId in getTableIds()) {result == (tableName == newTableName
+     *  | || (newTableName not in getTableNames() && Table.isValidName(newTableName)))}
+     *
+     * @throws IllegalTableException if the table with that tableName does not exist.
+     *  | ∀ints in getTableIds(): ints != tableId
+     *
+     */
+    @Model
+    boolean canHaveAsName(int tableId, String newTableName) throws  IllegalTableException
+    {
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table t = getTable(tableId);
         // checking wether there already is a table with that name.
         for(Table table: this.tables)
         {
@@ -149,40 +224,40 @@ public class TableManager {
     /**
      * Returns true if the table is empty.
      *
-     * @param tableName the name of the table whos name is to be changed.
+     * @param tableId the id of the table whos name is to be changed.
      * @return true if the has columns else false.
      */
-    boolean isTableEmpty(String tableName)
+    boolean isTableEmpty(int tableId)
     {
-        return getTable(tableName).getNbColumns() == 0;
+        return getTable(tableId).getNbColumns() == 0;
     }
 
 
     /**
      *
-     * Sets the tablename of the table with tableName to newName if there is such a table and newname is valid.
+     * Sets the tablename of the table with tableId to newName if there is such a table and newname is valid.
      *
-     * @param tableName the name of the table whos name is to be changed.
+     * @param tableId the id of the table whos name is to be changed.
      *
      * @param newName the new name of the table.
      *
      * @effect if both names are valid, the table with tableName now has newName as name.
-     *  | if(hasAsTable(tableName) && canHaveAsName(tableName, newName){
-     *  |   old.getTable(tableName) == new.getTable(newName)
+     *  | if(hasAsTable(tableId) && canHaveAsName(tableId, newName){
+     *  |   getTableName(tableId).equals(newName)
      *  |}
      *
-     * @throws IllegalTableException if there is no table with tableName.
-     *  | !hasAsTable(tableName)
+     * @throws IllegalTableException if there is no table with tableId.
+     *  | !hasAsTable(tableId)
      *
      * @throws IllegalArgumentException if the new name is not valid for the given table.
-     *  | !canHaveAsName(tableName, newName)
+     *  | !canHaveAsName(tableId, newName)
      */
     @Model
-    void setTableName(String tableName, String newName) throws IllegalTableException, IllegalArgumentException
+    void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        if(!canHaveAsName(tableName, newName)){throw new IllegalArgumentException("The new name is not valid.");}
-        getTable(tableName).setName(newName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        if(!canHaveAsName(tableId, newName)){throw new IllegalArgumentException("The new name is not valid.");}
+        getTable(tableId).setName(newName);
 
     }
 
@@ -190,15 +265,22 @@ public class TableManager {
      *
      * Adds a new table to the front of tables with name TableN,
      * with N the smallest strictly positive integer
-     * such that there is no other table with name TableN.
+     * such that there is no other table with name TableN,
+     * and with an id which is the smallest strictly positive id smaller then MAX_TABLES which is not used by
+     * another table already.
      *
      * @effect adds a new table.
-     * | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
+     *  | old.getTableNames().size() + 1 = new.getTableNames().size() + 1
+     *
+     * @throws IllegalStateException ("Already maximum amount of tables present.")
+     *  | getNbTables() == MAX_TABLES
      *
      */
     @Model
-    void addTable()
+    void addTable() throws IllegalStateException
     {
+        if (getNbTables() == MAX_TABLES) throw new IllegalStateException("Already maximum amount of tables present.");
+
         int i = 0;
         String name = "";
         ArrayList<String> l = getTableNames();
@@ -211,29 +293,42 @@ public class TableManager {
             name = "Table" + Integer.toString(i);
             if(!l.contains(name)){found = true;}
         }
-        Table t = new Table(name);
+
+        found = false;
+        i = 0;
+        while(!found)
+        {
+            i++;
+            found = true;
+            for (Table table:tables)
+            {
+                if (table.getId() == i) found = false;
+            }
+        }
+
+        Table t = new Table(i,name);
         insertAtFrontTable(t);
     }
 
     /**
-     * Removes the table with the given name if it exists.
+     * Removes the table with the given id if it exists.
      *
-     * @param tableName the name of the table to be removed.
+     * @param tableId the id of the table to be removed.
      *
      * @effect if the table exists, it is removed.
-     * | if(getTableNames().contains(tableName)){
-     * |    new.getTableNames.contains(tableName == false &&
+     * | if(getTableIds().contains(tableId)){
+     * |    new.getTableIds.contains(tableId) == false &&
      * |    old.getNbTables() + 1 == new.getNbTables()
      * |}
      *
-     * @throws IllegalTableException if there is no table with the given name.
-     * | !getTableNames().contains("tableName")
+     * @throws IllegalTableException if there is no table with the given id.
+     * | !getTableIds().contains(tableId)
      */
     @Model
-    void removeTable(String tableName) throws IllegalTableException
+    void removeTable(int tableId) throws IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        removeTable(getTable(tableName));
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        removeTable(getTable(tableId));
 
     }
 
@@ -245,43 +340,63 @@ public class TableManager {
     /**
      * Returns a new list of strings with all the names of the columns in it.
      *
-     * @param tableName the name of the table
+     * @param tableId the id of the table
      *
      * @return  List of all the column names of all the columns in this table.
      *
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<String> getColumnNames(String tableName) throws IllegalTableException
+    ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
         return table.getColumnNames();
     }
 
     /**
+     * Returns a new list of Integers with all the ids of the columns in it.
      *
-     * Returns the type of the column in this table with the given column name.
+     * @param tableId the id of the table
      *
-     * @param   columnName
-     *          The name of the column of which the type should be returned.
-     * @param tableName the name of the table
+     * @return  List of all the column ids of the columns in this table.
+     *
+     * @throws IllegalTableException
+     * If there is no table with tableId as id.
+     * | hasAsTable(tableId) == false
+     */
+    @Model
+    ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
+    {
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getColumnIds();
+    }
+
+    /**
+     *
+     * Returns the type of the column in this table with the given column id.
+     *
+     * @param   tableId
+     *          the name of the table
+     * @param   columnId
+     *          The id of the column of which the type should be returned.
      * @return  The type of the given column.
      * @throws  IllegalColumnException
      *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    String getColumnType(String tableName, String columnName) throws IllegalColumnException, IllegalTableException
+    String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.getColumnType(columnName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getColumnType(columnId);
     }
 
     /**
@@ -292,185 +407,185 @@ public class TableManager {
 
     /**
      *
-     * Returns the blanks allowed of the column in this table with the given column name.
+     * Returns the blanks allowed of the column in this table with the given column id.
      *
-     * @param   columnName
-     *          The name of the column of which the blanks allowed should be returned.
      *
-     * @param tableName the name of the table
+     * @param tableId the id of the table
+     *
+     * @param   columnId
+     *          The id of the column of which the blanks allowed should be returned.
      *
      * @return  The type of the given column.
      * @throws  IllegalColumnException
-     *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There is no column in this table with the given column id.
+     *          | !getTable(tableId).hasAsColumn(columnName)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean getColumnAllowBlank(String tableName, String columnName) throws IllegalColumnException, IllegalTableException
+    boolean getColumnAllowBlank(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.getColumnAllowBlank(columnName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getColumnAllowBlank(columnId);
     }
 
     /**
      *
-     * Returns the default value of the column in this table with the given column name.
-     *
-     * @param   columnName
-     *          The name of the column of which the default value should be returned.
-     * @param tableName the name of the table
+     * Returns the default value of the column in this table with the given column id.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the default value should be returned.
      * @return  The type of the given column.
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    String getColumnDefaultValue(String tableName, String columnName) throws IllegalColumnException, IllegalTableException
+    String getColumnDefaultValue(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.getColumnDefaultValue(columnName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getColumnDefaultValue(columnId);
     }
 
 
     /**
      *
-     * Check whether the column with given column name can have the given name.
+     * Check whether the column with given column id can have the given name.
      *
-     * @param   columnName
-     *          The name of the column of which the given name should be checked.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the given name should be checked.
      * @param   newName
      *          The name to be checked
-     * @param tableName the name of the table
      * @return  True if and only if the column can accept the given name and
      *              if the name is not already used in this table, if it is already used
      *              and the name is the same as the given columnName, then the name is also acceptable.
-     *          |   if (getTable(tableName).getColumn(columnName).canHaveAsName(newName))
-     *          |       then result == ( getTable(tableName).isAlreadyUsedColumnName(newName) && !columnName.equals(newName) )
+     *          |   if (getTable(tableId).getColumn(columnId).canHaveAsName(newName))
+     *          |       then result == ( getTable(tableId).hasAsColumn(columnId) && !columnName.equals(newName) )
      * @throws  IllegalColumnException
-     *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There is no column in this table with the given column id.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnName(String tableName, String columnName, String newName) throws IllegalColumnException, IllegalTableException
+    boolean canHaveAsColumnName(int tableId, int columnId, String newName) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.canHaveAsColumnName(columnName, newName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.canHaveAsColumnName(columnId, newName);
     }
 
     // Dit kan enum type zijn of string
 
     /**
      *
-     * Check whether the column with given column name can have the given type.
+     * Check whether the column with given column id can have the given type.
      *
-     * @param tableName the name of the table
-     * @param   columnName
-     *          The name of the column of which the given type should be checked.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the given type should be checked.
      * @param   type
      *          The type to be checked
      * @return
      * @throws  IllegalColumnException
-     *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There is no column in this table with the given column id.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnType(String tableName, String columnName, String type) throws IllegalColumnException, IllegalTableException
+    boolean canHaveAsColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.canHaveAsColumnType(columnName, type);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.canHaveAsColumnType(columnId, type);
     }
 
 
     /**
      *
-     * Check whether the column with given column name can have the given name.
+     * Check whether the column with given column id can have the given allowBlanks.
      *
-     * @param tableName the name of the table
-     * @param   columnName
-     *          The name of the column of which the given blanks allowed should be checked.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the given blanks allowed should be checked.
      * @param   blanksAllowed
      *          The blanks allowed to be checked.
      * @return  Returns whether this column can have the given blanks allowed.
      * @throws  IllegalColumnException
      *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnAllowBlanks(String tableName, String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
+    boolean canHaveAsColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.canHaveAsColumnAllowBlanks(columnName, blanksAllowed);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.canHaveAsColumnAllowBlanks(columnId, blanksAllowed);
     }
 
     /**
      *
-     * Check whether the column with given column name can have the given default value.
+     * Check whether the column with given column id can have the given default value.
      *
-     * @param tableName the name of the table
-     * @param   columnName
-     *          The name of the column of which the given default value should be checked.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the given default value should be checked.
      * @param   newDefaultValue
      *          The default value to be checked
      * @return
      * @throws  IllegalColumnException
-     *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There is no column in this table with the given column id.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsDefaultValue(String tableName, String columnName, String newDefaultValue) throws IllegalColumnException, IllegalTableException
+    boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue) throws IllegalColumnException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.canHaveAsDefaultValue(columnName, newDefaultValue);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.canHaveAsDefaultValue(columnId, newDefaultValue);
     }
 
     /**
      *
-     * Set the name of the given columnName to the given name.
+     * Set the name of the given columnName to the given id.
      *
-     * @param tableName the name of the table
-     * @param   columnName
-     *          The columnName of which the name must be changed.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of which the name must be changed.
      * @param   newColumnName
      *          The new name of the given columnName
-     * @effect  The name of the given columnName is set to the given name.
-     *          | getTable(tableName).getColumn(columnName).setName(newColumnName)
+     * @effect  The name of the given id is set to the given name.
+     *          | getTable(tableId).getColumn(columnId).setName(newColumnName)
      * @throws  IllegalArgumentException
      *          The given newColumnName is already used for another columnName in this table.
-     *          | getTable(tableName).isAlreadyUsedColumnName(newColumnName)
+     *          | getTable(tableId).hasAsColumn(newColumnName)
      * @throws  IllegalColumnException
-     *          The given columnName doesn't exist in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          The given id doesn't exist in this table.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      *
      */
     @Model
-    void setColumnName(String tableName, String columnName, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.setColumnName(columnName, newColumnName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.setColumnName(columnId, newColumnName);
 
     }
 
@@ -478,8 +593,8 @@ public class TableManager {
      *
      * Set the type of the given column to the given type.
      *
-     * @param tableName the name of the table
-     * @param   columnName
+     * @param   tableId the id of the table
+     * @param   columnId
      *          The column of which the type must be set.
      * @param   type
      *          The new type to be set.
@@ -487,92 +602,92 @@ public class TableManager {
      *
      * @throws  IllegalColumnException
      *          The given column doesn't exists in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(column)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws  IllegalArgumentException
      *          The given type cannot be a type of the given table.
-     *          | !getTable(tableName).canHaveAsColumnType(columnName, type)
+     *          | !getTable(tableId).canHaveAsColumnType(columnId, type)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnType(String tableName, String columnName, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.setColumnType(columnName, type);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.setColumnType(columnId, type);
     }
 
     /**
      *
-     * Set the blanksAllowed allowed of the column with the given column name to the given blanksAllowed.
+     * Set the blanksAllowed allowed of the column with the given column id to the given blanksAllowed.
      *
-     * @param   tableName the name of the table
-     * @param   columnName
-     *          The name of the column of which the allow blanksAllowed should be set.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the allow blanksAllowed should be set.
      * @param   blanksAllowed
      *          The blanksAllowed to be set.
-     * @effect  The blanksAllowed of the column with the given column name are set to the given blanksAllowed.
-     *          | getTable(tableName).getColumn(columnName).setBlanksAllowed(blanksAllowed)
+     * @effect  The blanksAllowed of the column with the given column id are set to the given blanksAllowed.
+     *          | getTable(tableId).getColumn(columnId).setBlanksAllowed(blanksAllowed)
      * @throws  IllegalColumnException
      *          There is no column in this table with the given column name.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnAllowBlanks(String tableName, String columnName, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.setColumnAllowBlanks(columnName, blanksAllowed);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.setColumnAllowBlanks(columnId, blanksAllowed);
     }
 
     /**
      *
-     * Sets the default value of the given columnName to the given
+     * Sets the default value of the given columnId to the given
      * default value.
      *
-     * @param   tableName the name of the table
-     * @param   columnName
-     *          The columnName of which the default value must be changed.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of which the default value must be changed.
      * @param   defaultValue
      *          The new default value for the given columnName
-     * @effect  The default value of the given columnName is set to the given value.
-     *          | getTable(tableName).getColumn(columnName).setDefaultValue(defaultValue);
+     * @effect  The default value of the given columnId is set to the given value.
+     *          | getTable(tableId).getColumn(columnId).setDefaultValue(defaultValue);
      * @throws  IllegalColumnException
      *          The given columnName doesn't exists in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnDefaultValue(String tableName, String columnName, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.setColumnDefaultValue(columnName, defaultValue);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.setColumnDefaultValue(columnId, defaultValue);
     }
 
     /**
      * Add a new column as a column for this table at the end of the columns list
      *
-     * @param   tableName the name of the table
+     * @param   tableId the id of the table
      *
      * @effect  A new column is added at the end of the table.
-     *          | getTable(tableName).addColumnAt(getNbColumns() + 1)
+     *          | getTable(tableId).addColumnAt(getNbColumns() + 1)
      *
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void addColumn(String tableName) throws IllegalTableException
+    void addColumn(int tableId) throws IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
         table.addColumn();
     }
 
@@ -580,25 +695,26 @@ public class TableManager {
 
     /**
      *
-     * Remove the column of this table with the given column name
+     * Remove the column of this table with the given column id
      *
-     * @param   tableName the name of the table
-     * @param   name
-     *          The name of the column to be removed.
-     * @effect  The column which has the given name, will be removed from the list columns.
-     *          | getTable(tableName).removeColumnAt(getColumnIndex(name))
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column to be removed.
+     * @effect  The column which has the given id, will be removed from the list columns.
+     *          | getTable(tableId).removeColumnAt(getColumnIndex(columnId))
      * @throws  IllegalColumnException
-     *          The given name is not a name of a column in this table.
+     *          The given id is not an id of a column in this table.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
      * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void removeColumn(String tableName, String name) throws IllegalArgumentException, IllegalTableException
+    void removeColumn(int tableId, int columnId) throws IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.removeColumn(name);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.removeColumn(columnId);
     }
 
 /*
@@ -608,31 +724,31 @@ public class TableManager {
 */
     /**
      *
-     * Return the cell at the given row of the column with the given column name.
+     * Return the cell at the given row of the column with the given column id.
      *
-     * @param   tableName the name of the table
-     * @param   columnName
-     *          The name of the column of which the cell must be returned.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column of which the cell must be returned.
      * @param   row
      *          The row number of the row of the cell that must be returned.
      * @return The value of the cell.
-     * | getTable(tableName).getCellValue(columnName, row)
+     * | getTable(tableId).getCellValue(columnId, row)
      * @throws  IllegalColumnException
-     *          There isn't a column with the given columnName in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There isn't a column with the given columnId in this table.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws  IllegalRowException
      *          The row doesn't exists.
-     *          | row > getTable(tableName).getNbRows() || row < 1
+     *          | row > getTable(tableId).getNbRows() || row < 1
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    String getCellValue(String tableName, String columnName, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
+    String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.getCellValue(columnName, row);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getCellValue(columnId, row);
     }
 
 
@@ -642,88 +758,88 @@ public class TableManager {
     /**
      *
      * Checks whether the given value can be the value for the cell
-     *  of the given column (given column name) at the given row.
+     *  of the given column (given column id) at the given row.
      *
-     * @param   tableName the name of the table
-     * @param   columnName
-     *          The name of the column.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column.
      * @param   row
      *          The row number of the row.
      * @param   value
      *          The value to be checked.
      * @return True if the cell can have the value, false otherwise.
-     * | getTable(tableName).canHaveAsCellValue(columnName,row,value)
+     * | getTable(tableId).canHaveAsCellValue(columnId,row,value)
      * @throws  IllegalColumnException
      *          There isn't a column with the given columnName in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws  IllegalRowException
      *          The row doesn't exists.
-     *          | row > getTable(tableName).getNbRows() || row < 1
+     *          | row > getTable(tableId).getNbRows() || row < 1
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsCellValue(String tableName, String columnName, int row, String value)
+    boolean canHaveAsCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        return table.canHaveAsCellValue(columnName,row,value);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.canHaveAsCellValue(columnId, row, value);
     }
 
     /**
      *
      * Sets the given value as value for the cell
-     *  of the given column (given column name) at the given row.
+     *  of the given column (given column id) at the given row.
      *
-     * @param   tableName the name of the table
-     * @param   columnName
-     *          The name of the column.
+     * @param   tableId the id of the table
+     * @param   columnId
+     *          The id of the column.
      * @param   row
      *          The row number of the row.
      * @param   value
      *          The value to be set.
      * @effect  The value of the cell of the given column at the given row,
      *          is set to the given value.
-     *          | getTable(tableName).getColumn(columnName).setValueAt(row, value)
+     *          | getTable(tableId).getColumn(columnId).setValueAt(row, value)
      * @throws  IllegalColumnException
-     *          There isn't a column with the given columnName in this table.
-     *          | !getTable(tableName).isAlreadyUsedColumnName(columnName)
+     *          There isn't a column with the given columnId in this table.
+     *          | !getTable(tableId).hasAsColumn(columnId)
      * @throws  IllegalRowException
      *          The row doesn't exists.
-     *          | row > getTable(tableName).getNbRows() || row < 1
+     *          | row > getTable(tableId).getNbRows() || row < 1
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void setCellValue(String tableName, String columnName, int row, String value)
+    void setCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
-        table.setCellValue(columnName, row, value);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        table.setCellValue(columnId, row, value);
     }
 
     // should always work
 
     /**
-     Adds a row at the end of this table.
+     * Adds a row at the end of this table.
      *
-     * @param   tableName the name of the table
+     * @param   tableId the id of the table
      * @effect  For each column in this table, a new row is added at the end of the column.
-     *          | for each I in 1..getTable(tableName).getNbColumns():
-     *          |   getTable(tableName).getColumnAt(I).addValue();
+     *          | for each I in 1..getTable(tableId).getNbColumns():
+     *          |   getTable(tableId).getColumnAt(I).addValue();
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void addRow(String tableName) throws IllegalTableException
+    void addRow(int tableId) throws IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
         table.addRow();
     }
 
@@ -732,24 +848,24 @@ public class TableManager {
      *
      * Remove the given row of this table.
      *
-     * @param   tableName the name of the table
+     * @param   tableId the id of the table
      * @param   row
      *          The row to be deleted.
      * @effect  For each column in this table, the given row is removed from the column.
-     *          | for each I in 1..getTable(tableName).getNbColumns():
-     *          |   getTable(tableName).getColumnAt(I).removeValue(row);
+     *          | for each I in 1..getTable(tableId).getNbColumns():
+     *          |   getTable(tableId).getColumnAt(I).removeValue(row);
      * @throws  IllegalRowException
      *          The row doesn't exists.
-     *          | row > getTable(tableName).getNbRows() || row < 1
+     *          | row > getTable(tableId).getNbRows() || row < 1
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    void removeRow(String tableName, int row) throws IllegalRowException, IllegalTableException
+    void removeRow(int tableId, int row) throws IllegalRowException, IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
         table.removeRow(row);
     }
 
@@ -757,22 +873,22 @@ public class TableManager {
     /**
      * Returns the number of rows.
      *
-     * @param   tableName the name of the table
+     * @param   tableId the id of the table
      * @return  0 if there are no columns in this table.
-     *          | if (getTable(tableName).getNbColumns() == 0)
+     *          | if (getTable(tableId).getNbColumns() == 0)
      *          |   result == 0
      *          Otherwise, the number of values (rows) of the first column of this table.
      *          | else
-     *          |   result == getTable(tableName).getColumnAt(1).getNbValues()
+     *          |   result == getTable(tableId).getColumnAt(1).getNbValues()
      * @throws IllegalTableException
-     * If there is no table with tableName as name.
-     * | !hasAsTable(tableName) == false
+     * If there is no table with tableId as id.
+     * | !hasAsTable(tableId) == false
      */
     @Model
-    public int getNbRows(String tableName) throws IllegalTableException
+    public int getNbRows(int tableId) throws IllegalTableException
     {
-        if(!hasAsTable(tableName)){throw new IllegalTableException();}
-        Table table = getTable(tableName);
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
         return table.getNbRows();
     }
 
@@ -840,33 +956,34 @@ public class TableManager {
     }
 
 
+
     /**
-     * Get the table with string name.
+     * Get the table with tableId as id.
      *
-     * @param name the name of the table.
+     * @param tableId the id of the table.
      *
      * @return the table with the given name if the table exists.
-     *  | if(!hasAsTable(name)){
-     *  | return == table: table.getName() == name && hasAsTable(table) == true
+     *  | if(!hasAsTable(id)){
+     *  | return == table: table.getId() == tableId && hasAsTable(table) == true
      *  |}
      *
-     * @throws IllegalTableException if there is no table with that name.
-     *  | !hasAsTable(name)
+     * @throws IllegalTableException if there is no table with that id.
+     *  | !hasAsTable(tableId)
      */
     @Model
-    private Table getTable(String name) throws IllegalTableException
+    private Table getTable(int tableId) throws IllegalTableException
     {
-
-        if(!hasAsTable(name)){throw new IllegalTableException();}
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
         for(Table table: tables)
         {
-            if(table.getName().equals(name)){return table;}
+            if(table.getId() == tableId){return table;}
         }
 
         // Should never occur.
         throw new IllegalTableException();
 
     }
+
 
 
 
@@ -900,18 +1017,23 @@ public class TableManager {
      *  true if the table is not null and there is no other table with the same name
      *  and the table is not in tables already
      *  and index is greater then 0 and smaller then the amount
-     *  of tables + 1, false otherwise.
+     *  of tables + 1,
+     *  there is no table with the same id,
+     *  there are less then MAX_TABLES tables
+     *  , false otherwise.
      *  | return == (
      *  |   table != null &&
-     *  |   for(tableY in tables) { tableY.getName() != table.getName() }
+     *  |   for(tableY in tables) { tableY.getName() != table.getName() && tableY.getId() != table.getId() }
      *  |   && index > 0
      *  |   && index <= getNbTables() + 1
+     *  |   && getNbTables() < MAX_TABLES
      *  |)
      *
      *
      */
     private boolean canHaveAsTableAt(int index,Table table)
     {
+        if (getNbTables() == MAX_TABLES) return false ;
         if (index < 1 || index > getNbTables() + 1) {return false;}
         if (table == null)
         {
@@ -921,7 +1043,7 @@ public class TableManager {
         // this also checks whether the table is already in the list because the name will be the same.
         for(Table tableY: tables)
         {
-            if(table.getName().equals(tableY.getName())) {return false;}
+            if(table.getName().equals(tableY.getName()) || table.getId() == tableY.getId()) {return false;}
         }
         return true;
     }

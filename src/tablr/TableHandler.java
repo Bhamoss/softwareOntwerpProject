@@ -102,7 +102,7 @@ public class TableHandler {
      */
     public boolean canHaveAsName(String tableName, String newTableName) throws IllegalTableException
     {
-        return getTableManager().canHaveAsName(tableName, newTableName);
+        return false; // getTableManager().canHaveAsName(tableName, newTableName);
     }
 
     /**
@@ -122,7 +122,7 @@ public class TableHandler {
      * @throws IllegalTableException
      */
     public boolean isTableEmpty(String tableName) throws IllegalTableException {
-        return getTableManager().isTableEmpty(tableName);
+        return false; // getTableManager().isTableEmpty(tableName);
     }
 
 
@@ -147,7 +147,7 @@ public class TableHandler {
      */
     public void setTableName(String tableName, String newName) throws IllegalTableException, IllegalArgumentException
     {
-        getTableManager().setTableName(tableName, newName);
+        //getTableManager().setTableName(tableName, newName);
     }
 
     /**
@@ -180,7 +180,7 @@ public class TableHandler {
      */
     public void removeTable(String tableName) throws IllegalTableException
     {
-        getTableManager().removeTable(tableName);
+        //getTableManager().removeTable(tableName);
     }
 
     /**
