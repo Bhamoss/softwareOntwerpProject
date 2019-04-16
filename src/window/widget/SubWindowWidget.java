@@ -68,20 +68,38 @@ public class SubWindowWidget extends ComponentWidget {
         super.setPosition(x, y);
     }
 
+    /**
+     * check if the point (x,y) is in the bottom right corner
+     *  of the subwindow (this means in a square of 5x5 pixels out the subwindow)
+     * @param x
+     * @param y
+     */
     private boolean onRightCorner(int x, int y) {
         return getX() + getWidth() < x &&
                 x < getX() + getWidth() + 5 &&
-                getY() + getHeight() - 5 < y &&
+                getY() + getHeight() < y &&
                 y < getY() + getHeight() + 5;
     }
 
+    /**
+     * check if the point (x,y) is in the right border
+     *  of the subwindow (this means in a rectangle of 5xheight pixels at the right of the subwindow)
+     * @param x
+     * @param y
+     */
     private boolean onRightBorder(int x, int y) {
         return getX() + getWidth() < x &&
                 x < getX() + getWidth() + 5 &&
                 getY() + TITLE_HEIGHT < y &&
-                y < getY() + getHeight() - 5;
+                y < getY() + getHeight();
     }
 
+    /**
+     * check if the point (x,y) is in the bottom border
+     *  of the subwindow (this means in a rectangle of widthx5 pixels under the subwindow)
+     * @param x
+     * @param y
+     */
     private boolean onBottomBorder(int x, int y) {
         return getX() < x &&
                 x < getX() + getWidth() &&
@@ -89,6 +107,12 @@ public class SubWindowWidget extends ComponentWidget {
                 y < getY() + getHeight() + 5;
     }
 
+    /**
+     * Check whether the given point (x,y) is on the title
+     *  of this subwindow or not
+     * @param x
+     * @param y
+     */
     public boolean onTitle(int x, int y) {
         return title.containsPoint(x,y);
     }
