@@ -1,6 +1,7 @@
 package window;
 
 import window.widget.CompositeWidget;
+import window.widget.SubWindowWidget;
 
 import java.awt.*;
 import java.util.LinkedList;
