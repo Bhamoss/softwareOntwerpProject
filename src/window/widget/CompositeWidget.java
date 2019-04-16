@@ -30,6 +30,8 @@ public class CompositeWidget extends Widget {
      */
     @Override
     public void paint(Graphics g) {
+        // eerst zelf paint, dan pas widgets erin painten
+        super.paint(g);
         for (Widget w: widgets) {
             w.paint(g);
         }
