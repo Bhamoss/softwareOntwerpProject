@@ -1,7 +1,12 @@
 # softwareOntwerpProject
 De repo voor het project van softwareontwerp.
 
-
+## Todo
+- [ ] getAllTypes naar front-end
+- [ ] Start-up case klasse
+- [ ] compositor en UIController samensmelten
+- [ ] eventBus, @Subsribe methodes en attachen/posten
+- [ ] (set type naar column klasse)
 
 ## ToDo (Commentaar eerste iteratie)
 
