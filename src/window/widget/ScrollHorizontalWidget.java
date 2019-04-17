@@ -68,6 +68,7 @@ public class ScrollHorizontalWidget extends ScrollWidget {
         else if (newX + bar.getWidth() > background.getX() + background.getWidth())
             newX = background.getX() + background.getWidth() - bar.getWidth();
         bar.setX(newX);
+        component.updateVisibleFrame(interval, 0);
     }
 
 

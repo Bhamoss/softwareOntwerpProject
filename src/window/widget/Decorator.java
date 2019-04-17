@@ -1,7 +1,5 @@
 package window.widget;
 
-import java.awt.*;
-
 public class Decorator extends ComponentWidget {
 
     public Decorator(ComponentWidget cw) {
@@ -31,7 +29,8 @@ public class Decorator extends ComponentWidget {
         return component.getTotalHeight();
     }
 
-
-
-
+    @Override
+    protected void updateVisibleFrame(int dx, int dy) {
+        component.updateVisibleFrame(dx, dy);
+    }
 }

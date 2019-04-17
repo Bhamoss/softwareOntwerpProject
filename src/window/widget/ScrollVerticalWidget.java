@@ -68,6 +68,7 @@ public class ScrollVerticalWidget extends ScrollWidget {
         else if (newY + bar.getHeight() > background.getY() + background.getHeight())
             newY = background.getY() + background.getHeight() - bar.getHeight();
         bar.setY(newY);
+        component.updateVisibleFrame(0, interval);
     }
 
     @Override

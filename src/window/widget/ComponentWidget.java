@@ -1,6 +1,5 @@
 package window.widget;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
@@ -163,6 +162,8 @@ public class ComponentWidget extends CompositeWidget {
     protected int getTotalWidth() {
         return 0;
     }
+
+    protected void updateVisibleFrame(int dx, int dy) {}
 
 
 }

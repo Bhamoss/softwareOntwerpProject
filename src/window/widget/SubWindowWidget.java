@@ -1,13 +1,7 @@
 package window.widget;
 
 
-import tablr.column.BooleanColumn;
-
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.image.WritableRenderedImage;
-import java.util.LinkedList;
-import java.util.function.Function;
 
 public class SubWindowWidget extends ComponentWidget {
 
@@ -215,9 +209,22 @@ public class SubWindowWidget extends ComponentWidget {
     @Override
     protected void paintWidgets(Graphics g) {
         for (Widget w: widgets) {
-//            w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-//                        this.getWidth() - MARGIN_LEFT, this.getHeight() - MARGIN_TOP);
+            w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                        this.getWidth() - MARGIN_LEFT, this.getHeight() - MARGIN_TOP);
             w.paint(g);
+        }
+    }
+
+    @Override
+    protected void updateVisibleFrame(int dx, int dy) {
+        int oldVX = getVirtualX();
+        int oldVY = getVirtualY();
+
+        setVirtualX(getVirtualX() + dx);
+        setVirtualY(getVirtualY() + dy);
+
+        for (Widget w:widgets) {
+            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
         }
     }
 }
