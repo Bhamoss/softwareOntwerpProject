@@ -23,7 +23,8 @@ public class Widget {
      * @param border whether to draw a border
      */
     public Widget(int x, int y, int width, int height, boolean border) {
-        this.setPosition(x,y);
+        this.setX(x);
+        this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
         this.border = border;
