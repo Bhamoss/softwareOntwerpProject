@@ -153,7 +153,23 @@ public class ComponentWidget extends CompositeWidget {
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
+    protected int getTotalHeight() {
+        int result = 0;
+        for (Widget w: widgets) {
+            if (result < w.getY() + w.getHeight())
+                result = w.getY() + w.getHeight();
+        }
+        return result;
+    }
 
+    protected int getTotalWidth() {
+        int result = 0;
+        for (Widget w: widgets) {
+            if (result < w.getX() + w.getWidth())
+                result = w.getX() + w.getWidth();
+        }
+        return result;
+    }
 
 
 }

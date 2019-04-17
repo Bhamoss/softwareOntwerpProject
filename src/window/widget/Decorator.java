@@ -21,6 +21,16 @@ public class Decorator extends ComponentWidget {
         return component.onCloseBtn(x,y);
     }
 
+    @Override
+    protected int getTotalHeight() {
+        return component.getTotalHeight();
+    }
+
+    @Override
+    protected int getTotalWidth() {
+        return component.getTotalHeight();
+    }
+
 
 
 }

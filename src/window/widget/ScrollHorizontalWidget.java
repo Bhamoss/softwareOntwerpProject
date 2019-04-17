@@ -16,6 +16,7 @@ public class ScrollHorizontalWidget extends ScrollWidget {
         bar = new Widget(cw.getX(),
                 cw.getY()+ cw.getHeight() - HEIGHT,
                 cw.getWidth() - ScrollVerticalWidget.WIDTH - 10, HEIGHT, false);
+        updateBarLength();
     }
 
     @Override
@@ -29,8 +30,7 @@ public class ScrollHorizontalWidget extends ScrollWidget {
     protected void resizeWidth(int w) {
         super.resizeWidth(w);
         background.setWidth(component.getWidth() - ScrollVerticalWidget.WIDTH);
-        bar.setWidth(component.getWidth() - ScrollVerticalWidget.WIDTH - 10);
-        //TODO: resize width, bar aanpassen in procenten
+        updateBarLength();
     }
 
     @Override
@@ -40,5 +40,14 @@ public class ScrollHorizontalWidget extends ScrollWidget {
                 component.getY() + component.getHeight() - HEIGHT);
         bar.setPosition(component.getX(),
                 component.getY() + component.getHeight() - HEIGHT);
+    }
+
+    @Override
+    protected void updateBarLength() {
+        int w = background.getWidth()*background.getWidth()/component.getTotalWidth();
+        if (w > background.getWidth()) {
+            w = background.getWidth();
+        }
+        bar.setWidth(w);
     }
 }

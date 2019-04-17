@@ -70,4 +70,8 @@ public class ScrollWidget extends Decorator {
         return  super.handleMouseEvent(id, x, y ,clickCount);
     }
 
+    protected void updateBarLength() {
+
+    }
+
 }

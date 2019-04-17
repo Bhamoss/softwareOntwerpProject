@@ -18,15 +18,15 @@ public class ScrollVerticalWidget extends ScrollWidget {
                                     WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), true);
         bar = new Widget(cw.getX() + cw.getWidth() - WIDTH,
                             cw.getY()+ SubWindowWidget.getTitleHeight(),
-                            WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight() - 10, false);
+                            WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), false);
+        updateBarLength();
     }
 
     @Override
     protected void resizeHeight(int h) {
         super.resizeHeight(h);
         background.setHeight(component.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight());
-        bar.setHeight(component.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight() - 10);
-        //TODO: resize height, bar aanpassen in procenten
+        updateBarLength();
     }
 
     @Override
@@ -43,5 +43,15 @@ public class ScrollVerticalWidget extends ScrollWidget {
                 component.getY() + SubWindowWidget.getTitleHeight());
         bar.setPosition(component.getX() + component.getWidth() - WIDTH,
                 component.getY() + SubWindowWidget.getTitleHeight());
+    }
+
+    @Override
+    protected void updateBarLength() {
+        int h = (background.getHeight()+SubWindowWidget.getTitleHeight())*(background.getHeight()+SubWindowWidget.getTitleHeight())
+                /component.getTotalHeight();
+        if (h > background.getHeight()) {
+            h = background.getHeight();
+        }
+        bar.setHeight(h);
     }
 }
