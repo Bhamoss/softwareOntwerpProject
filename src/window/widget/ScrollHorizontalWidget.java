@@ -1,6 +1,7 @@
 package window.widget;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class ScrollHorizontalWidget extends ScrollWidget {
 
@@ -50,4 +51,25 @@ public class ScrollHorizontalWidget extends ScrollWidget {
         }
         bar.setWidth(w);
     }
+
+    @Override
+    protected void setBarMovedBegin(int x, int y) {
+        barMovedBegin = x;
+    }
+
+
+
+    @Override
+    protected void moveBar(int x, int y) {
+        int interval = barMovedBegin - x; // positief, bar naar beneden, negatief, bar naar boven
+        int newX = bar.getX() - interval;
+        if (newX < background.getX())
+            newX = background.getX();
+        else if (newX + bar.getWidth() > background.getX() + background.getWidth())
+            newX = background.getX() + background.getWidth() - bar.getWidth();
+        bar.setX(newX);
+    }
+
+
+
 }

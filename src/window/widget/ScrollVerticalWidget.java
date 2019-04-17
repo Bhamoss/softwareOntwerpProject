@@ -1,8 +1,6 @@
 package window.widget;
 
-import tablr.column.Column;
-
-import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class ScrollVerticalWidget extends ScrollWidget {
 
@@ -20,6 +18,7 @@ public class ScrollVerticalWidget extends ScrollWidget {
                             cw.getY()+ SubWindowWidget.getTitleHeight(),
                             WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), false);
         updateBarLength();
+        updateBarPosition();
     }
 
     @Override
@@ -47,11 +46,34 @@ public class ScrollVerticalWidget extends ScrollWidget {
 
     @Override
     protected void updateBarLength() {
-        int h = (background.getHeight()+SubWindowWidget.getTitleHeight())*(background.getHeight()+SubWindowWidget.getTitleHeight())
+        int h = (background.getHeight())*(background.getHeight())
                 /component.getTotalHeight();
         if (h > background.getHeight()) {
             h = background.getHeight();
         }
         bar.setHeight(h);
     }
+
+    @Override
+    protected void updateBarPosition() {
+
+    }
+
+    @Override
+    protected void moveBar(int x, int y) {
+        int interval = barMovedBegin - y; // positief, bar naar beneden, negatief, bar naar boven
+        int newY = bar.getY() - interval;
+        if (newY < background.getY())
+            newY = background.getY();
+        else if (newY + bar.getHeight() > background.getY() + background.getHeight())
+            newY = background.getY() + background.getHeight() - bar.getHeight();
+        bar.setY(newY);
+    }
+
+    @Override
+    protected void setBarMovedBegin(int x, int y) {
+        barMovedBegin = y;
+    }
+
+
 }

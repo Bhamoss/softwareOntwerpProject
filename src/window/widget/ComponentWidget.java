@@ -141,6 +141,9 @@ public class ComponentWidget extends CompositeWidget {
             resizingCorner = false;
             resizingRightBorder = false;
             resizingBottomBorder = false;
+            if (moving){
+                setPosition(x,y);
+            }
             moving = false;
             return false;
         }
@@ -154,21 +157,11 @@ public class ComponentWidget extends CompositeWidget {
     }
 
     protected int getTotalHeight() {
-        int result = 0;
-        for (Widget w: widgets) {
-            if (result < w.getY() + w.getHeight())
-                result = w.getY() + w.getHeight();
-        }
-        return result;
+        return 0;
     }
 
     protected int getTotalWidth() {
-        int result = 0;
-        for (Widget w: widgets) {
-            if (result < w.getX() + w.getWidth())
-                result = w.getX() + w.getWidth();
-        }
-        return result;
+        return 0;
     }
 
 

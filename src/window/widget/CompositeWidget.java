@@ -33,8 +33,9 @@ public class CompositeWidget extends Widget {
         if (isVisible()) {
             // eerst zelf paint, dan pas widgets erin painten
             super.paint(g);
-            paintWidgets(g);
         }
+
+        paintWidgets(g);
     }
 
     protected void paintWidgets(Graphics g) {

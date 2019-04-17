@@ -48,29 +48,43 @@ public class ScrollWidget extends Decorator {
         return bar.containsPoint(x, y);
     }
 
-    protected void moveBar() {
+    protected void moveBar(int x, int y) {
 
     }
+
+    protected int barMovedBegin;
+
+    protected void setBarMovedBegin(int x, int y) {}
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_PRESSED && onBar(x ,y)) {
             barMoving = true;
+            setBarMovedBegin(x, y);
             return false;
         }
         if (id == MouseEvent.MOUSE_DRAGGED && barMoving) {
-            moveBar();
+            moveBar(x,y);
+            setBarMovedBegin(x, y);
             return true;
         }
-        if (id == MouseEvent.MOUSE_RELEASED) {
+        if (id == MouseEvent.MOUSE_RELEASED && barMoving) {
+            moveBar(x,y);
             barMoving = false;
+            return true;
         }
 
-        component.handleMouseEvent(id, x, y, clickCount);
-        return  super.handleMouseEvent(id, x, y ,clickCount);
+        if (component.handleMouseEvent(id, x, y, clickCount)){
+            super.handleMouseEvent(id, x, y ,clickCount);
+            return true;
+        }
+        return super.handleMouseEvent(id, x, y ,clickCount);
     }
 
     protected void updateBarLength() {
+
+    }
+    protected void updateBarPosition() {
 
     }
 

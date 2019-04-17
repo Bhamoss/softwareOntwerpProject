@@ -5,6 +5,7 @@ import tablr.column.BooleanColumn;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.WritableRenderedImage;
 import java.util.LinkedList;
 import java.util.function.Function;
 
@@ -21,8 +22,8 @@ public class SubWindowWidget extends ComponentWidget {
 
 
 
-    private int visibleX;
-    private int visibleY;
+    private int virtualX;
+    private int virtualY;
 
 
     /**
@@ -41,9 +42,8 @@ public class SubWindowWidget extends ComponentWidget {
                 (t) -> {close(); return true;});
         //TODO: close button toevoegen
         isActive = false;
-        visibleX = x;
-        visibleY = y;
-
+        virtualY = y;
+        virtualX = x;
     }
 
     protected static int getTitleHeight() {return TITLE_HEIGHT;}
@@ -55,6 +55,7 @@ public class SubWindowWidget extends ComponentWidget {
         this.closeBtn.border = false;
         this.closeBtn.setText("");
         this.border = false;
+
     }
 
     public void setActive(boolean active) {
@@ -65,28 +66,39 @@ public class SubWindowWidget extends ComponentWidget {
         return isActive;
     }
 
-    public int getVisibleX() {
-        return visibleX;
+    public int getVirtualX() {
+        return virtualX;
     }
 
-    public void setVisibleX(int x) {
-        if (x <= getX())
-            this.visibleX = getX();
+    /**
+     * idem als setVirtualY
+     * @param x
+     */
+    public void setVirtualX(int x) {
+        if (x > getX())
+            this.virtualX = getX();
         else
-            this.visibleX = x;
+            this.virtualX = x;
+        //setPositionWidgets();
     }
 
-    public int getVisibleY() {
-        return visibleY;
+    public int getVirtualY() {
+        return virtualY;
     }
 
-    public void setVisibleY(int y) {
-        if (y <= getY())
-            this.visibleY = getY();
+    /**
+     * set the virtual y to the given y
+     *  if the given y is larger than the getY() of the subwindow
+     *      then the virtual y = getY()
+     * @param y
+     */
+    public void setVirtualY(int y) {
+        if (y > getY())
+            this.virtualY = getY();
         else
-            this.visibleY = y;
+            this.virtualY = y;
+        //setPositionWidgets();
     }
-
 
 
     /**
@@ -97,7 +109,7 @@ public class SubWindowWidget extends ComponentWidget {
     @Override
     public void addWidget(Widget w) {
         // position widget wordt tov de positie van deze subwindow gepositioneerd
-        w.setPosition(getX() + w.getX()+MARGIN_LEFT, getY() + w.getY() + MARGIN_TOP);
+        w.setPosition(getVirtualX() + w.getX()+MARGIN_LEFT, getVirtualY() + w.getY() + MARGIN_TOP);
         super.addWidget(w);
     }
 
@@ -113,15 +125,41 @@ public class SubWindowWidget extends ComponentWidget {
         //      pas daarna de positie van de subwindow herinstellen
         titleLabel.setPosition(titleLabel.getX() - getX() + x, titleLabel.getY() - getY() + y);
         closeBtn.setPosition(closeBtn.getX() - getX() + x, closeBtn.getY() - getY() + y);
-        for (Widget w:widgets) {
-            w.setPosition(w.getX() - getX() + x, w.getY() - getY() + y);
-        }
+        int oldVX = getVirtualX();
+        int oldVY = getVirtualY();
+        int oldX = getX();
+        int oldY = getY();
+
         super.setPosition(x, y);
-        setVisibleX(getX());
-        setVisibleY(getY());
+
+        setVirtualX(x - oldX + getVirtualX());
+        setVirtualY(y - oldY + getVirtualY());
+
+        for (Widget w:widgets) {
+            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
+        }
     }
 
 
+    @Override
+    protected int getTotalHeight() {
+        int result = 0;
+        for (Widget w: widgets) {
+            if (result < w.getY() - getVirtualY() + w.getHeight())
+                result = w.getY() - getVirtualY() + w.getHeight();
+        }
+        return result;
+    }
+
+    @Override
+    protected int getTotalWidth() {
+        int result = 0;
+        for (Widget w: widgets) {
+            if (result < w.getX() - getVirtualX() + w.getWidth())
+                result = w.getX() - getVirtualX() + w.getWidth();
+        }
+        return result;
+    }
 
     /**
      * Check whether the given point (x,y) is on the titleLabel
@@ -167,8 +205,6 @@ public class SubWindowWidget extends ComponentWidget {
     }
 
 
-
-
     @Override
     public void paint(Graphics g) {
         titleLabel.paint(g);
@@ -179,7 +215,8 @@ public class SubWindowWidget extends ComponentWidget {
     @Override
     protected void paintWidgets(Graphics g) {
         for (Widget w: widgets) {
-            w.setVisible(this.getVisibleX(), this.getVisibleY(), this.getWidth(), this.getHeight());
+//            w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+//                        this.getWidth() - MARGIN_LEFT, this.getHeight() - MARGIN_TOP);
             w.paint(g);
         }
     }
