@@ -5,15 +5,12 @@ import tablr.column.BooleanColumn;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 import java.util.function.Function;
 
 public class SubWindowWidget extends ComponentWidget {
 
     private boolean isActive;
-    private boolean resizingBottomBorder;
-    private boolean resizingRightBorder;
-    private boolean resizingCorner;
-    private boolean moving;
 
     private LabelWidget titleLabel;
     private ButtonWidget closeBtn;
@@ -21,6 +18,11 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int TITLE_HEIGHT = 25;
     private static final int MARGIN_TOP = 30;
     private static final int MARGIN_LEFT = 5;
+
+
+
+    private int visibleX;
+    private int visibleY;
 
 
     /**
@@ -36,16 +38,23 @@ public class SubWindowWidget extends ComponentWidget {
         super(x,y,width,height,border);
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
-                (t) -> {return false;});
+                (t) -> {close(); return true;});
         //TODO: close button toevoegen
         isActive = false;
-        resizingBottomBorder = false;
-        resizingRightBorder = false;
-        resizingCorner = false;
+        visibleX = x;
+        visibleY = y;
+
     }
 
-    public boolean close(Integer i) {
-        return false;
+    protected static int getTitleHeight() {return TITLE_HEIGHT;}
+
+    protected void close() {
+        super.close();
+        this.titleLabel.border = false;
+        this.titleLabel.setText("");
+        this.closeBtn.border = false;
+        this.closeBtn.setText("");
+        this.border = false;
     }
 
     public void setActive(boolean active) {
@@ -55,6 +64,30 @@ public class SubWindowWidget extends ComponentWidget {
     public boolean isActive() {
         return isActive;
     }
+
+    public int getVisibleX() {
+        return visibleX;
+    }
+
+    public void setVisibleX(int x) {
+        if (x <= getX())
+            this.visibleX = getX();
+        else
+            this.visibleX = x;
+    }
+
+    public int getVisibleY() {
+        return visibleY;
+    }
+
+    public void setVisibleY(int y) {
+        if (y <= getY())
+            this.visibleY = getY();
+        else
+            this.visibleY = y;
+    }
+
+
 
     /**
      * adds a widget to the list of widgets of this subwindow
@@ -67,6 +100,7 @@ public class SubWindowWidget extends ComponentWidget {
         w.setPosition(getX() + w.getX()+MARGIN_LEFT, getY() + w.getY() + MARGIN_TOP);
         super.addWidget(w);
     }
+
 
     /**
      * Sets x and y of top-left corner of subwindow and
@@ -83,46 +117,11 @@ public class SubWindowWidget extends ComponentWidget {
             w.setPosition(w.getX() - getX() + x, w.getY() - getY() + y);
         }
         super.setPosition(x, y);
+        setVisibleX(getX());
+        setVisibleY(getY());
     }
 
-    /**
-     * check if the point (x,y) is in the bottom right corner
-     *  of the subwindow (this means in a square of 5x5 pixels out the subwindow)
-     * @param x
-     * @param y
-     */
-    private boolean onRightCorner(int x, int y) {
-        return getX() + getWidth() < x &&
-                x < getX() + getWidth() + 5 &&
-                getY() + getHeight() < y &&
-                y < getY() + getHeight() + 5;
-    }
 
-    /**
-     * check if the point (x,y) is in the right border
-     *  of the subwindow (this means in a rectangle of 5xheight pixels at the right of the subwindow)
-     * @param x
-     * @param y
-     */
-    private boolean onRightBorder(int x, int y) {
-        return getX() + getWidth() < x &&
-                x < getX() + getWidth() + 5 &&
-                getY() + TITLE_HEIGHT < y &&
-                y < getY() + getHeight();
-    }
-
-    /**
-     * check if the point (x,y) is in the bottom border
-     *  of the subwindow (this means in a rectangle of widthx5 pixels under the subwindow)
-     * @param x
-     * @param y
-     */
-    private boolean onBottomBorder(int x, int y) {
-        return getX() < x &&
-                x < getX() + getWidth() &&
-                getY() + getHeight() < y &&
-                y < getY() + getHeight() + 5;
-    }
 
     /**
      * Check whether the given point (x,y) is on the titleLabel
@@ -130,90 +129,58 @@ public class SubWindowWidget extends ComponentWidget {
      * @param x
      * @param y
      */
-    public boolean onTitle(int x, int y) {
+    @Override
+    protected boolean onTitle(int x, int y) {
         return titleLabel.containsPoint(x,y);
     }
 
-    /**
-     * Resizes the width and height of the subwindow
-     * @param w new width
-     * @param h new height
-     */
-    private void resize(int w, int h) {
-        resizeHeight(h);
-        resizeWidth(w);
-    }
-
-    private void resizeHeight(int h) {
-        if (h <= 5)
-            return;
-        this.setHeight(h);
-    }
-
-    private void resizeWidth(int w) {
-        if (w <= 5)
-            return;
-        this.setWidth(w);
-        this.titleLabel.setWidth(3*this.getWidth()/4);
-        this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
-        this.closeBtn.setWidth(this.getWidth()/4);
+    @Override
+    protected boolean onCloseBtn(int x, int y) {
+        return closeBtn.containsPoint(x,y);
     }
 
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED) {
-            if (onRightCorner(x,y)) {
-                resizingCorner = true;
-                return false;
-            }
-            else if (onRightBorder(x,y)) {
-                resizingRightBorder = true;
-                return false;
-            }
-            else if (onBottomBorder(x,y)) {
-                resizingBottomBorder = true;
-                return false;
-            }
-            else if (onTitle(x,y)) {
-                moving = true;
-                return false;
-            }
-        }
-
-        if (id == MouseEvent.MOUSE_DRAGGED) {
-            if (resizingCorner) {
-                resize(x-this.getX(), y - this.getY());
-                return true;
-            }
-            else if (resizingRightBorder) {
-                resizeWidth(x-this.getX());
-                return true;
-            }
-            else if (resizingBottomBorder) {
-                resizeHeight(y - this.getY());
-                return true;
-            }
-            else if (moving) {
-                setPosition(x,y);
-                return true;
-            }
-        }
-
-        if (id == MouseEvent.MOUSE_RELEASED) {
-            resizingCorner = false;
-            resizingRightBorder = false;
-            resizingBottomBorder = false;
-            return false;
-        }
-
-        return super.handleMouseEvent(id,x,y,clickCount);
+        if (closeBtn.containsPoint(x, y) && clickCount > 0)
+            return closeBtn.handleMouseEvent(id, x, y, clickCount);
+        return super.handleMouseEvent(id, x, y, clickCount);
     }
+
+
+
+
+    protected void resizeWidth(int w) {
+        //if (w >= SubWindowWidget.MINIMUM_SIZE) {
+            super.resizeWidth(w);
+            this.titleLabel.setWidth(3*this.getWidth()/4);
+            this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
+            this.closeBtn.setWidth(this.getWidth()/4);
+        //}
+    }
+
+    @Override
+    protected  void resizeHeight(int h) {
+        //if (h >= SubWindowWidget.MINIMUM_SIZE){
+            super.resizeHeight(h);
+        //}
+    }
+
+
+
 
     @Override
     public void paint(Graphics g) {
         titleLabel.paint(g);
         closeBtn.paint(g);
         super.paint(g);
+    }
+
+    @Override
+    protected void paintWidgets(Graphics g) {
+        for (Widget w: widgets) {
+            w.setVisible(this.getVisibleX(), this.getVisibleY(), this.getWidth(), this.getHeight());
+            w.paint(g);
+        }
     }
 }

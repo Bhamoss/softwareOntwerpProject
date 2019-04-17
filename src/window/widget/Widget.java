@@ -7,8 +7,9 @@ import tablr.TablesHandler;
 public class Widget {
 
     private int x, y, width, height;
-    private final boolean border;
+    protected boolean border;
     protected boolean blocked;
+    protected boolean isVisible;
 
     /**
      * Construct a rectangular widget.
@@ -29,6 +30,7 @@ public class Widget {
         this.setHeight(height);
         this.border = border;
         this.blocked = false;
+        this.isVisible = true;
     }
 
     /**
@@ -90,12 +92,14 @@ public class Widget {
      *          methods that allow you to paint on the canvas
      */
     public void paint(Graphics g) {
-        g.setClip(x,y,width+1,height+1);
-        if (isBlocking())
-            g.setColor(Color.red);
-        if (border)
-            g.drawRect(x, y, width, height);
-        g.setColor(Color.black);
+        if (isVisible()) {
+            g.setClip(x,y,width+1,height+1);
+            if (isBlocking())
+                g.setColor(Color.red);
+            if (border)
+                g.drawRect(x, y, width, height);
+            g.setColor(Color.black);
+        }
     }
 
 
@@ -160,4 +164,27 @@ public class Widget {
     public void update() {
 
     }
+
+    /**
+     * checks whether this widget is visible or not
+     */
+    protected boolean isVisible() {
+        return isVisible;
+    }
+
+    /**
+     * sets the visibility of this widget, true if widget is in given rectangle, otherwise false
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     */
+    protected void setVisible(int x, int y, int w, int h) {
+        this.isVisible = this.x >= x &&
+                            this.y >= y &&
+                            x + w >= this.x + this.width &&
+                            y + h >= this.y + this.height;
+    }
+
+
 }

@@ -1,8 +1,26 @@
 package window.widget;
 
+import java.awt.*;
+
 public class Decorator extends ComponentWidget {
 
-    public Decorator(int x, int y, int width, int height, boolean border) {
-        super(x,y,width,height,border);
+    public Decorator(ComponentWidget cw) {
+        super(cw.getX(),cw.getY(),cw.getWidth(),cw.getHeight(),false);
+        component = cw;
     }
+
+    protected ComponentWidget component;
+
+    @Override
+    protected boolean onTitle(int x, int y) {
+        return component.onTitle(x,y);
+    }
+
+    @Override
+    protected boolean onCloseBtn(int x, int y) {
+        return component.onCloseBtn(x,y);
+    }
+
+
+
 }
