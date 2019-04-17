@@ -1,6 +1,25 @@
 # softwareOntwerpProject
 De repo voor het project van softwareontwerp.
 
+## Regels voor de commandbus
+### Subscriber (Widget)
+Enkel widgets kunnen subscriben aan de CommandBus.
+De methodes moet aan het volgende voldoen:
+- public zijn
+- exact 1 parameter hebben
+- parameter moet (een subclasse van) UICommando zijn
+- moet @Subscribe ervoor hebben
+
+De subscribe methodes van superclassen worden ook automatisch geactiveerd als ze niet abstract zijn.  
+Je moet je object registeren op het einde van je constructor,
+en je MOET ALTIJD deregisteren bij het verwijderen van de widget/ een subwindow.
+
+### Command
+Een command die je op de bus wilt moet je op het einde van zijn execute  
+`post(this)`  
+oproepen.
+Je kan dit enkel oproepen op (een subclasse van) UICommando.
+
 ## Todo
 - [ ] getAllTypes naar front-end
 - [ ] Start-up case klasse
