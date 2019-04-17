@@ -102,11 +102,13 @@ public class EditorWidget extends LabelWidget {
 
     @Override
     public void paint(Graphics g) {
-        if (isSelected())
-            text += "ⵊ";
-        super.paint(g);
-        if (isSelected())
-            text = text.substring(0,text.length()-1);
+        if (isVisible()) {
+            if (isSelected())
+                text += "ⵊ";
+            super.paint(g);
+            if (isSelected())
+                text = text.substring(0, text.length() - 1);
+        }
 
     }
 

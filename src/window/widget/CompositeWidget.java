@@ -30,8 +30,15 @@ public class CompositeWidget extends Widget {
      */
     @Override
     public void paint(Graphics g) {
-        // eerst zelf paint, dan pas widgets erin painten
-        super.paint(g);
+        if (isVisible()) {
+            // eerst zelf paint, dan pas widgets erin painten
+            super.paint(g);
+        }
+
+        paintWidgets(g);
+    }
+
+    protected void paintWidgets(Graphics g) {
         for (Widget w: widgets) {
             w.paint(g);
         }
@@ -69,5 +76,11 @@ public class CompositeWidget extends Widget {
         return blocked;
     }
 
-
+    @Override
+    protected void setVisible(int x, int y, int w, int h) {
+        super.setVisible(x,y,w,h);
+        for (Widget wg: widgets) {
+            wg.setVisible(x,y,w,h);
+        }
+    }
 }

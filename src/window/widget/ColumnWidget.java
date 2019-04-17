@@ -60,7 +60,7 @@ public class ColumnWidget extends CompositeWidget {
      */
     public void addWidget(Widget w) {
         if (occupancy+w.getHeight() > this.getHeight())
-            return;
+            setHeight(occupancy+w.getHeight());
 
         w.setPosition(getX(),getY()+occupancy);
         w.setWidth(getWidth());
@@ -68,6 +68,18 @@ public class ColumnWidget extends CompositeWidget {
         // 1 pixel margin so borders don't overlap
         occupancy += 1;
         super.addWidget(w);
+    }
+
+    @Override
+    protected void setPosition(int x, int y) {
+        super.setPosition(x, y);
+        occupancy  = 0;
+        for (Widget w: widgets) {
+            w.setPosition(getX(), getY()+occupancy);
+            occupancy += w.getHeight();
+            occupancy += 1;
+
+        }
     }
 
     /**
@@ -124,5 +136,13 @@ public class ColumnWidget extends CompositeWidget {
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
-
+    @Override
+    protected void setVisible(int x, int y, int w, int h) {
+        this.isVisible = this.getX() >= x &&
+                this.getY() >= y &&
+                x + w >= this.getX() + this.getWidth();
+        for (Widget wg: widgets) {
+            wg.setVisible(x,y,w,h);
+        }
+    }
 }
