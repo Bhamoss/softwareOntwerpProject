@@ -9,6 +9,8 @@ public class ScrollWidget extends Decorator {
     protected Widget bar;
     protected boolean barMoving;
 
+    protected boolean atTheEnd;
+
     protected double procent;
 
     public ScrollWidget(ComponentWidget cw) {
