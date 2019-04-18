@@ -35,16 +35,22 @@ public class ScrollVerticalWidget extends ScrollWidget {
     @Override
     protected void setPosition(int x, int y) {
         super.setPosition(x, y);
+        bar.setPosition(component.getX() + component.getWidth() - WIDTH,
+                component.getY() + SubWindowWidget.getTitleHeight()
+                        + (bar.getY() - background.getY()) // het incalculeren van waar de bar nu staat
+        );
         background.setPosition(component.getX() + component.getWidth() - WIDTH,
                 component.getY() + SubWindowWidget.getTitleHeight());
-        bar.setPosition(component.getX() + component.getWidth() - WIDTH,
-                component.getY() + SubWindowWidget.getTitleHeight());
+
     }
 
     @Override
     protected void updateBarLength() {
         super.updateBarLength();
-        bar.setHeight(Math.toIntExact(Math.round(background.getHeight() * procent)));
+        int h = Math.toIntExact(Math.round(background.getHeight() * procent));
+        if (h > background.getHeight() - (bar.getY() - background.getY()))
+            h = background.getHeight() - (bar.getY() - background.getY());
+        bar.setHeight(h);
     }
 
     @Override

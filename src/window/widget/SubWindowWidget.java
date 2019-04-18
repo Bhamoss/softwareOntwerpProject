@@ -106,7 +106,7 @@ public class SubWindowWidget extends ComponentWidget {
 
 
     /**
-     * adds a widget to the list of widgets of this subwindow
+     * adds a widget to the list of columnWidgets of this subwindow
      *  and also update the position of the given widget
      * @param w widget to be added
      */
@@ -120,7 +120,7 @@ public class SubWindowWidget extends ComponentWidget {
 
     /**
      * Sets x and y of top-left corner of subwindow and
-     *  updates the position of all the widgets within this subwindow
+     *  updates the position of all the columnWidgets within this subwindow
      */
     @Override
     protected void setPosition(int x, int y) {

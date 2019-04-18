@@ -1,15 +1,15 @@
 package window.widget;
 
+import tablr.column.Column;
+
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 
 public class TableWidget extends CompositeWidget {
 
     private int occupancy;
     private int lastAdded;
-    protected LinkedList<ColumnWidget> widgets;
+    protected LinkedList<ColumnWidget> columnWidgets;
 
 
     public TableWidget(int x, int y, int width, int height) {
@@ -18,36 +18,63 @@ public class TableWidget extends CompositeWidget {
         assert(width>=25);
         occupancy = 0;
         lastAdded = 0;
+        columnWidgets = new LinkedList<>();
     }
 
     public void addColumn(int width, boolean resizable, String name) {
         // Check if space is available
         if (occupancy+width > this.getWidth())
-            return;
+            setWidth(occupancy + width);
 
         ColumnWidget c = new ColumnWidget(
-                0,0,0,0,
+                getX()+occupancy,getY(),width,getHeight(),
                 name, resizable, true, x->resizedColumn());
 
-        c.setPosition(getX()+occupancy,getY());
-        c.setHeight(getHeight());
-        c.setWidth(width);
         // 1 pixel margin so borders don't overlap
         occupancy += width + 1;
-        super.addWidget(c);
+        columnWidgets.add(c);
+        //super.addWidget(c);
     }
 
     public void addEntry(Widget w) {
-        widgets.get(lastAdded).addWidget(w);
-        lastAdded = (lastAdded + 1) % widgets.size();
+        columnWidgets.get(lastAdded).addWidget(w);
+        if (getHeight() < w.getY() + w.getHeight())
+            setHeight(w.getY() + w.getHeight());
+        lastAdded = (lastAdded + 1) % columnWidgets.size();
     }
 
     private void resizedColumn() {
         int x = this.getX();
-        for (Widget c : widgets) {
+        for (Widget c : columnWidgets) {
             c.setX(x);
             x += c.getWidth();
         }
     }
 
+    @Override
+    protected void paintWidgets(Graphics g) {
+        for (Widget w: columnWidgets) {
+            w.paint(g);
+        }
+    }
+
+    @Override
+    protected void setPosition(int x, int y) {
+        super.setPosition(x, y);
+        occupancy = 0;
+        for (ColumnWidget w: columnWidgets) {
+            w.setPosition(getX() + occupancy, getY());
+            occupancy += w.getWidth() + 1;
+        }
+    }
+
+    @Override
+    protected void setVisible(int x, int y, int w, int h) {
+        this.isVisible = this.getX() >= x &&
+                this.getY() >= y &&
+                x + w >= this.getX() + this.getWidth();
+        for (ColumnWidget wg: columnWidgets) {
+            wg.setVisible(x,y,w,h);
+        }
+    }
 }

@@ -31,7 +31,7 @@ public class CompositeWidget extends Widget {
     @Override
     public void paint(Graphics g) {
         if (isVisible()) {
-            // eerst zelf paint, dan pas widgets erin painten
+            // eerst zelf paint, dan pas columnWidgets erin painten
             super.paint(g);
         }
 

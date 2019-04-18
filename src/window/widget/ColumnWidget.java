@@ -15,7 +15,7 @@ public class ColumnWidget extends CompositeWidget {
 
     /**
      * Creates a container widget with resizable width,
-     * containing other widgets in a vertical fashion.
+     * containing other columnWidgets in a vertical fashion.
      *
      * @param x x-coordinate of top-left corner
      * @param y y-coordinate of top-left corner

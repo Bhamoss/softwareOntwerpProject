@@ -34,16 +34,20 @@ public class ScrollHorizontalWidget extends ScrollWidget {
     @Override
     protected void setPosition(int x, int y) {
         super.setPosition(x, y);
+        bar.setPosition(component.getX() + (bar.getX() - background.getX()),
+                component.getY() + component.getHeight() - HEIGHT);
         background.setPosition(component.getX(),
                 component.getY() + component.getHeight() - HEIGHT);
-        bar.setPosition(component.getX(),
-                component.getY() + component.getHeight() - HEIGHT);
+
     }
 
     @Override
     protected void updateBarLength() {
         super.updateBarLength();
-        bar.setWidth(Math.toIntExact(Math.round(background.getWidth() * procent)));
+        int w = Math.toIntExact(Math.round(background.getWidth() * procent));
+        if (w > background.getWidth() - (bar.getX() - background.getX()))
+            w = background.getWidth() - (bar.getX() - background.getX());
+        bar.setWidth(w);
     }
 
     @Override
