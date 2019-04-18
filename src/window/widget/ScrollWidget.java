@@ -9,6 +9,8 @@ public class ScrollWidget extends Decorator {
     protected Widget bar;
     protected boolean barMoving;
 
+    protected double procent;
+
     public ScrollWidget(ComponentWidget cw) {
         super(cw);
         barMoving = false;
@@ -48,7 +50,7 @@ public class ScrollWidget extends Decorator {
         return bar.containsPoint(x, y);
     }
 
-    protected void moveBar(int x, int y) {
+    protected void moveBar(int x, int y, int begin) {
 
     }
 
@@ -64,12 +66,12 @@ public class ScrollWidget extends Decorator {
             return false;
         }
         if (id == MouseEvent.MOUSE_DRAGGED && barMoving) {
-            moveBar(x,y);
+            moveBar(x,y, barMovedBegin);
             setBarMovedBegin(x, y);
             return true;
         }
         if (id == MouseEvent.MOUSE_RELEASED && barMoving) {
-            moveBar(x,y);
+            moveBar(x,y, barMovedBegin);
             barMoving = false;
             return true;
         }
@@ -82,10 +84,10 @@ public class ScrollWidget extends Decorator {
     }
 
     protected void updateBarLength() {
-
-    }
-    protected void updateBarPosition() {
-
+        updateProcent();
     }
 
+    protected void updateProcent() {
+
+    }
 }

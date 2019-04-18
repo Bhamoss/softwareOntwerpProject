@@ -1,8 +1,5 @@
 package window.widget;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
-
 public class ScrollHorizontalWidget extends ScrollWidget {
 
     protected static final int HEIGHT = 10;
@@ -45,11 +42,16 @@ public class ScrollHorizontalWidget extends ScrollWidget {
 
     @Override
     protected void updateBarLength() {
-        int w = background.getWidth()*background.getWidth()/component.getTotalWidth();
-        if (w > background.getWidth()) {
-            w = background.getWidth();
+        super.updateBarLength();
+        bar.setWidth(Math.toIntExact(Math.round(background.getWidth() * procent)));
+    }
+
+    @Override
+    protected void updateProcent() {
+        procent = ((double)background.getWidth() / (double)component.getTotalWidth());
+        if (procent > 1) {
+            procent = 1;
         }
-        bar.setWidth(w);
     }
 
     @Override
@@ -60,15 +62,19 @@ public class ScrollHorizontalWidget extends ScrollWidget {
 
 
     @Override
-    protected void moveBar(int x, int y) {
-        int interval = barMovedBegin - x; // positief, bar naar beneden, negatief, bar naar boven
+    protected void moveBar(int x, int y, int begin) {
+        int interval = begin - x; // positief, bar naar beneden, negatief, bar naar boven
         int newX = bar.getX() - interval;
-        if (newX < background.getX())
+        if (newX < background.getX()) {
             newX = background.getX();
-        else if (newX + bar.getWidth() > background.getX() + background.getWidth())
+            interval = 10;
+        }
+        else if (newX + bar.getWidth() > background.getX() + background.getWidth()) {
             newX = background.getX() + background.getWidth() - bar.getWidth();
+            interval = 0;
+        }
         bar.setX(newX);
-        component.updateVisibleFrame(interval, 0);
+        component.updateVisibleFrame((Math.toIntExact(Math.round(Math.pow(procent, -1) + procent)))*interval, 0);
     }
 
 

@@ -13,6 +13,9 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int TITLE_HEIGHT = 25;
     private static final int MARGIN_TOP = 30;
     private static final int MARGIN_LEFT = 5;
+    private static final int MARGIN_BOTTOM = 10;
+    private static final int MARGIN_RIGHT = 10;
+
 
 
 
@@ -69,10 +72,14 @@ public class SubWindowWidget extends ComponentWidget {
      * @param x
      */
     public void setVirtualX(int x) {
+        int oldX = this.virtualX;
         if (x > getX())
             this.virtualX = getX();
         else
             this.virtualX = x;
+        for (Widget w:widgets) {
+            w.setPosition(w.getX() - oldX + this.virtualX, w.getY());
+        }
         //setPositionWidgets();
     }
 
@@ -87,11 +94,14 @@ public class SubWindowWidget extends ComponentWidget {
      * @param y
      */
     public void setVirtualY(int y) {
+        int oldY = this.virtualY;
         if (y > getY())
             this.virtualY = getY();
         else
             this.virtualY = y;
-        //setPositionWidgets();
+        for (Widget w:widgets) {
+            w.setPosition(w.getX(), w.getY() - oldY + this.virtualY);
+        }
     }
 
 
@@ -119,8 +129,7 @@ public class SubWindowWidget extends ComponentWidget {
         //      pas daarna de positie van de subwindow herinstellen
         titleLabel.setPosition(titleLabel.getX() - getX() + x, titleLabel.getY() - getY() + y);
         closeBtn.setPosition(closeBtn.getX() - getX() + x, closeBtn.getY() - getY() + y);
-        int oldVX = getVirtualX();
-        int oldVY = getVirtualY();
+
         int oldX = getX();
         int oldY = getY();
 
@@ -129,9 +138,6 @@ public class SubWindowWidget extends ComponentWidget {
         setVirtualX(x - oldX + getVirtualX());
         setVirtualY(y - oldY + getVirtualY());
 
-        for (Widget w:widgets) {
-            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
-        }
     }
 
 
@@ -139,8 +145,8 @@ public class SubWindowWidget extends ComponentWidget {
     protected int getTotalHeight() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getY() - getVirtualY() + w.getHeight())
-                result = w.getY() - getVirtualY() + w.getHeight();
+            if (result < w.getY() + w.getHeight()- getVirtualY() - MARGIN_BOTTOM)
+                result = w.getY() + w.getHeight() - getVirtualY() - MARGIN_BOTTOM;
         }
         return result;
     }
@@ -149,8 +155,8 @@ public class SubWindowWidget extends ComponentWidget {
     protected int getTotalWidth() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getX() - getVirtualX() + w.getWidth())
-                result = w.getX() - getVirtualX() + w.getWidth();
+            if (result < w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT)
+                result = w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT;
         }
         return result;
     }
@@ -210,21 +216,15 @@ public class SubWindowWidget extends ComponentWidget {
     protected void paintWidgets(Graphics g) {
         for (Widget w: widgets) {
             w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                        this.getWidth() - MARGIN_LEFT, this.getHeight() - MARGIN_TOP);
+                        this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT, this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
             w.paint(g);
         }
     }
 
     @Override
     protected void updateVisibleFrame(int dx, int dy) {
-        int oldVX = getVirtualX();
-        int oldVY = getVirtualY();
-
         setVirtualX(getVirtualX() + dx);
         setVirtualY(getVirtualY() + dy);
 
-        for (Widget w:widgets) {
-            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
-        }
     }
 }

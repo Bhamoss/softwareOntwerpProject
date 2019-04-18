@@ -1,7 +1,5 @@
 package window.widget;
 
-import java.awt.event.MouseEvent;
-
 public class ScrollVerticalWidget extends ScrollWidget {
 
 
@@ -18,7 +16,6 @@ public class ScrollVerticalWidget extends ScrollWidget {
                             cw.getY()+ SubWindowWidget.getTitleHeight(),
                             WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), false);
         updateBarLength();
-        updateBarPosition();
     }
 
     @Override
@@ -46,29 +43,33 @@ public class ScrollVerticalWidget extends ScrollWidget {
 
     @Override
     protected void updateBarLength() {
-        int h = (background.getHeight())*(background.getHeight())
-                /component.getTotalHeight();
-        if (h > background.getHeight()) {
-            h = background.getHeight();
+        super.updateBarLength();
+        bar.setHeight(Math.toIntExact(Math.round(background.getHeight() * procent)));
+    }
+
+    @Override
+    protected void updateProcent() {
+        procent = ((double)background.getHeight() / (double)component.getTotalHeight());
+        if (procent > 1) {
+            procent = 1;
         }
-        bar.setHeight(h);
     }
 
     @Override
-    protected void updateBarPosition() {
-
-    }
-
-    @Override
-    protected void moveBar(int x, int y) {
-        int interval = barMovedBegin - y; // positief, bar naar beneden, negatief, bar naar boven
+    protected void moveBar(int x, int y, int begin) {
+        int interval = begin - y; // positief, bar naar beneden, negatief, bar naar boven
         int newY = bar.getY() - interval;
-        if (newY < background.getY())
+        if (newY < background.getY()) {
             newY = background.getY();
-        else if (newY + bar.getHeight() > background.getY() + background.getHeight())
+            interval = 10;
+        }
+        else if (newY + bar.getHeight() > background.getY() + background.getHeight()) {
             newY = background.getY() + background.getHeight() - bar.getHeight();
+            interval = 0;
+        }
         bar.setY(newY);
-        component.updateVisibleFrame(0, interval);
+        component.updateVisibleFrame(0,
+                (Math.toIntExact(Math.round(Math.pow(procent, -1) + procent)))*interval);
     }
 
     @Override

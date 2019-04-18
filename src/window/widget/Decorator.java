@@ -26,7 +26,7 @@ public class Decorator extends ComponentWidget {
 
     @Override
     protected int getTotalWidth() {
-        return component.getTotalHeight();
+        return component.getTotalWidth();
     }
 
     @Override
