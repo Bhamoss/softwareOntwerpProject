@@ -71,9 +71,7 @@ class SubWindowWidgetTest {
 
         assertEquals(250 + swFilled.getY() + SubWindowWidget.getMarginTop(), label.getY() );
         assertEquals(250 + swFilled.getX() + SubWindowWidget.getMarginLeft(), label.getX() );
-        swFilled.setVisible(swFilled.getX(), swFilled.getY(), swFilled.getWidth(), swFilled.getWidth());
-        assertTrue(btn.isVisible());
-        assertFalse(label.isVisible());
+
     }
 
     @Test

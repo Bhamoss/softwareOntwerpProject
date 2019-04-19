@@ -57,10 +57,8 @@ public class LabelWidget extends Widget{
 
     @Override
     public void paint(Graphics g) {
-        if (isVisible()) {
-            super.paint(g);
-            g.drawString(text, getX() + OFFSET, getY() + getHeight() - OFFSET);
-        }
+        super.paint(g);
+        g.drawString(text, getX() + OFFSET, getY() + getHeight() - OFFSET);
     }
 
     @Override

@@ -69,13 +69,5 @@ public class TableWidget extends CompositeWidget {
         }
     }
 
-    @Override
-    protected void setVisible(int x, int y, int w, int h) {
-        this.isVisible = this.getX() >= x &&
-                this.getY() >= y &&
-                x + w >= this.getX() + this.getWidth();
-        for (ColumnWidget wg: columnWidgets) {
-            wg.setVisible(x,y,w,h);
-        }
-    }
+
 }

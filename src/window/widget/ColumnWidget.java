@@ -137,13 +137,5 @@ public class ColumnWidget extends CompositeWidget {
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
-    @Override
-    protected void setVisible(int x, int y, int w, int h) {
-        this.isVisible = this.getX() >= x &&
-                this.getY() >= y &&
-                x + w >= this.getX() + this.getWidth();
-        for (Widget wg: widgets) {
-            wg.setVisible(x,y,w,h);
-        }
-    }
+
 }

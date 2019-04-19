@@ -38,7 +38,7 @@ public class SubWindowWidget extends ComponentWidget {
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 (t) -> {close(); return true;});
-        //TODO: close button toevoegen
+        //TODO: constructor krijgt close command mee blub
         isActive = false;
         virtualY = y;
         virtualX = x;
@@ -228,21 +228,14 @@ public class SubWindowWidget extends ComponentWidget {
     @Override
     protected void paintWidgets(Graphics g) {
         for (Widget w: widgets) {
-            w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                        this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT, this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
+            g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                        this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                        this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
             w.paint(g);
         }
     }
 
-    @Override
-    protected void setVisible(int x, int y, int w, int h) {
-        //super.setVisible(x,y,w,h);
-        for (Widget wg: widgets) {
-            wg.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                    this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT, this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
 
-        }
-    }
     @Override
     protected void updateVisibleFrame(int dx, int dy) {
         setVirtualX(getVirtualX() + dx);

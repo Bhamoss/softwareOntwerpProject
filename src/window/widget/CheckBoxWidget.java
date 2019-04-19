@@ -86,12 +86,10 @@ public class CheckBoxWidget extends Widget {
 
     @Override
     public void paint(Graphics g) {
-        if (isVisible()) {
-            super.paint(g);
-            if (isChecked()) {
-                g.drawLine(getX(), getY(), getX() + getWidth(), getY() + getHeight());
-                g.drawLine(getX(), getY() + getHeight(), getX() + getWidth(), getY());
-            }
+        super.paint(g);
+        if (isChecked()) {
+            g.drawLine(getX(), getY(), getX() + getWidth(), getY() + getHeight());
+            g.drawLine(getX(), getY() + getHeight(), getX() + getWidth(), getY());
         }
     }
 

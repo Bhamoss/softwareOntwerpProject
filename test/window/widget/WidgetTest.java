@@ -88,18 +88,4 @@ class WidgetTest {
     void update() {
     }
 
-    @Test
-    void setVisible() {
-        // widget is visible case
-        w300.setVisible(300,300,500,500);
-        assertTrue(w300.isVisible());
-
-        //Widget invisible, full widget not in the given rectangle
-        w300.setVisible(900,900,900,900);
-        assertFalse(w300.isVisible());
-
-        // widget invisible, part of widget in the given rectangle
-        w300.setVisible(301,301,900,900);
-        assertFalse(w300.isVisible());
-    }
 }
