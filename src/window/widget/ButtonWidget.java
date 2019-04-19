@@ -6,6 +6,7 @@ import be.kuleuven.cs.som.taglet.*;
 
 public class ButtonWidget extends LabelWidget {
 
+    //TODO UICommand van maken
     private final Function<Integer, Boolean> onClick;
 
     /**

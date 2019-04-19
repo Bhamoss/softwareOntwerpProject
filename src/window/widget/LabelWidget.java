@@ -13,7 +13,7 @@ public class LabelWidget extends Widget{
 
     protected String text;
     protected Integer id;
-    protected Function<Integer, String> refreshText;
+    protected Function<Integer, String> refreshText; //TODO: uicommand van maken
 
 
     /**

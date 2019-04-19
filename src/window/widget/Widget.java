@@ -38,6 +38,7 @@ public class Widget {
      * @param height height of rectangle
      * @param border whether to draw a border
      */
+    //TODO geef update command mee
     public Widget(int width, int height, boolean border) {
         this(0,0,width,height,border);
     }

@@ -25,8 +25,7 @@ public class ScrollWidget extends Decorator {
 
     @Override
     protected void close() {
-        bar = new Widget(0,0,0,0, false);
-        background = new Widget(0,0,0,0, false);
+
     }
 
     @Override

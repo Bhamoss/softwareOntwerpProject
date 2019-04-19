@@ -47,12 +47,12 @@ public class SubWindowWidget extends ComponentWidget {
     public static int getTitleHeight() {return TITLE_HEIGHT;}
 
     protected void close() {
-        super.close();
-        this.titleLabel.border = false;
-        this.titleLabel.setText("");
-        this.closeBtn.border = false;
-        this.closeBtn.setText("");
-        this.border = false;
+//        super.close();
+//        this.titleLabel.border = false;
+//        this.titleLabel.setText("");
+//        this.closeBtn.border = false;
+//        this.closeBtn.setText("");
+//        this.border = false;
 
     }
 

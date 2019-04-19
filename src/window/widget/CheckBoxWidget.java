@@ -13,6 +13,7 @@ public class CheckBoxWidget extends Widget {
     private boolean checked;
     private boolean blocked;
 
+    // TODO UICommand van maken
     private final Consumer<Boolean> toggleHandler;
     private final Function<Boolean, Boolean> isValidToggle;
 

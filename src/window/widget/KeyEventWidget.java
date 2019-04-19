@@ -5,6 +5,7 @@ import be.kuleuven.cs.som.taglet.*;
 
 public class KeyEventWidget extends Widget {
 
+    //TODO een command van maken???
     private final BiFunction<Integer, Integer, Boolean> keyHandler;
 
     /**

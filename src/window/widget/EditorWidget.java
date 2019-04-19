@@ -39,6 +39,7 @@ public class EditorWidget extends LabelWidget {
         this(0,0,0,25,border,id);
     }
 
+    // TODO: hiervan commands maken
     public void setPushHandler(BiConsumer<Integer,String> pushText) {
         this.pushText = pushText;
     }
