@@ -2,6 +2,7 @@ package window.widget;
 
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class SubWindowWidget extends ComponentWidget {
 
@@ -233,6 +234,15 @@ public class SubWindowWidget extends ComponentWidget {
         }
     }
 
+    @Override
+    protected void setVisible(int x, int y, int w, int h) {
+        //super.setVisible(x,y,w,h);
+        for (Widget wg: widgets) {
+            wg.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                    this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT, this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
+
+        }
+    }
     @Override
     protected void updateVisibleFrame(int dx, int dy) {
         setVirtualX(getVirtualX() + dx);

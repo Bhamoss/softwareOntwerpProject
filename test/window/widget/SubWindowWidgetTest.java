@@ -13,7 +13,6 @@ class SubWindowWidgetTest {
     ButtonWidget btn;
     LabelWidget label;
 
-
     @BeforeEach
     void setUp() {
         swEmpty = new SubWindowWidget(0,0,200,200,true, "emptySW");
@@ -51,8 +50,6 @@ class SubWindowWidgetTest {
         assertFalse(swFilled.onCloseBtn(525, SubWindowWidget.getTitleHeight() + 301));
     }
 
-
-
     @Test
     void getTotalHeight() {
         assertEquals(0, swEmpty.getTotalHeight());
@@ -74,6 +71,9 @@ class SubWindowWidgetTest {
 
         assertEquals(250 + swFilled.getY() + SubWindowWidget.getMarginTop(), label.getY() );
         assertEquals(250 + swFilled.getX() + SubWindowWidget.getMarginLeft(), label.getX() );
+        swFilled.setVisible(swFilled.getX(), swFilled.getY(), swFilled.getWidth(), swFilled.getWidth());
+        assertTrue(btn.isVisible());
+        assertFalse(label.isVisible());
     }
 
     @Test
@@ -111,4 +111,39 @@ class SubWindowWidgetTest {
         assertEquals(250 + 400 + SubWindowWidget.getMarginTop(), label.getY() );
         assertEquals(250 + 400 + SubWindowWidget.getMarginLeft(), label.getX() );
     }
+
+    @Test
+    void resizeWidth() {
+        // Set width of swEmpty, check if title and closeBtn change
+        swEmpty.resizeWidth(400);
+        // check width sw
+        assertEquals(400, swEmpty.getWidth());
+        // check width title
+        assertTrue(swEmpty.onTitle(0,SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onTitle(300, SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onTitle(200, 10));
+        assertFalse(swEmpty.onTitle(0, SubWindowWidget.getTitleHeight() + 1));
+        // check width closeBtn
+        assertTrue(swEmpty.onCloseBtn(300,SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onCloseBtn(400, SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onCloseBtn(350, 10));
+        assertFalse(swEmpty.onCloseBtn(300, SubWindowWidget.getTitleHeight() + 1));
+
+        // Set width of swEmpty, check if title and closeBtn change
+        swEmpty.resizeWidth(199);
+        // check width sw --> niets verandert normaal
+        assertEquals(400, swEmpty.getWidth());
+        // check width title --> niets verandert normaal
+        assertTrue(swEmpty.onTitle(0,SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onTitle(300, SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onTitle(200, 10));
+        assertFalse(swEmpty.onTitle(0, SubWindowWidget.getTitleHeight() + 1));
+        // check width closeBtn --> niets verandert normaal
+        assertTrue(swEmpty.onCloseBtn(300,SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onCloseBtn(400, SubWindowWidget.getTitleHeight()));
+        assertTrue(swEmpty.onCloseBtn(350, 10));
+        assertFalse(swEmpty.onCloseBtn(300, SubWindowWidget.getTitleHeight() + 1));
+    }
+
+
 }

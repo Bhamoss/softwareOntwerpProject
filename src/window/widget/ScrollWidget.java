@@ -3,6 +3,11 @@ package window.widget;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+/**
+ * Overkoepelende klasse voor een scrollwidget, bevat een background en bar widget
+ *      bar kan in background bewegen.
+ *      houdt ook bij hoeveel procent van de bar gevuld moet zijn in de background
+ */
 public class ScrollWidget extends Decorator {
 
     protected Widget background;
@@ -45,27 +50,52 @@ public class ScrollWidget extends Decorator {
     }
 
 
-
-
-
+    /**
+     * checks whether the given point is on the bar or not
+     * @param x
+     * @param y
+     */
     protected boolean onBar(int x, int y){
         return bar.containsPoint(x, y);
     }
 
+    /**
+     * checks whether the given point is on the background or not
+     * @param x
+     * @param y
+     */
+    protected boolean onBackground(int x, int y){
+        return background.containsPoint(x, y);
+    }
+
+    /**
+     * Move bar from begin to the given x or y, needs to be further defined in subclasses
+     * @param x
+     * @param y
+     * @param begin
+     */
     protected void moveBar(int x, int y, int begin) {
 
     }
 
     protected int barMovedBegin;
 
+    /**
+     * method doet niets, moet overschreven worden in de subclasses
+     *  bedoeling dat barMovedBegin wordt geupdated naar de juiste gegeven parameter
+     * @param x
+     * @param y
+     */
     protected void setBarMovedBegin(int x, int y) {}
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED && onBar(x ,y)) {
-            barMoving = true;
-            setBarMovedBegin(x, y);
-            return false;
+        if (id == MouseEvent.MOUSE_PRESSED) {
+            if (onBar(x,y)) {
+                barMoving = true;
+                setBarMovedBegin(x, y);
+                return false;
+            }
         }
         if (id == MouseEvent.MOUSE_DRAGGED && barMoving) {
             moveBar(x,y, barMovedBegin);
@@ -89,6 +119,9 @@ public class ScrollWidget extends Decorator {
         updateProcent();
     }
 
+    /**
+     * method doet niets, moet overschreven worden in de subclasses
+     */
     protected void updateProcent() {
 
     }

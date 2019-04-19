@@ -1,5 +1,7 @@
 package window.widget;
 
+import java.awt.event.MouseEvent;
+
 public class ScrollVerticalWidget extends ScrollWidget {
 
 
@@ -11,10 +13,10 @@ public class ScrollVerticalWidget extends ScrollWidget {
         super(cw);
         background = new Widget(cw.getX() + cw.getWidth() - WIDTH,
                                     cw.getY() + SubWindowWidget.getTitleHeight(),
-                                    WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), true);
+                                    WIDTH, cw.getHeight() - SubWindowWidget.getMarginBottom() - SubWindowWidget.getTitleHeight(), true);
         bar = new Widget(cw.getX() + cw.getWidth() - WIDTH,
                             cw.getY()+ SubWindowWidget.getTitleHeight(),
-                            WIDTH, cw.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight(), false);
+                            WIDTH, cw.getHeight() - SubWindowWidget.getMarginBottom() - SubWindowWidget.getTitleHeight(), false);
         updateBarLength();
     }
 
@@ -22,7 +24,7 @@ public class ScrollVerticalWidget extends ScrollWidget {
     protected void resizeHeight(int h) {
         super.resizeHeight(h);
         int oldH = background.getHeight();
-        background.setHeight(component.getHeight() - ScrollHorizontalWidget.HEIGHT - SubWindowWidget.getTitleHeight());
+        background.setHeight(component.getHeight() - SubWindowWidget.getMarginBottom() - SubWindowWidget.getTitleHeight());
         updateBarLength();
         if (atTheEnd) {
             component.updateVisibleFrame(0,background.getHeight() - oldH);
@@ -52,17 +54,6 @@ public class ScrollVerticalWidget extends ScrollWidget {
         background.setY(component.getY() + SubWindowWidget.getTitleHeight());
     }
 
-//    @Override
-//    protected void setPosition(int x, int y) {
-//        super.setPosition(x, y);
-//        bar.setPosition(component.getX() + component.getWidth() - WIDTH,
-//                component.getY() + SubWindowWidget.getTitleHeight()
-//                        + (bar.getY() - background.getY()) // het incalculeren van waar de bar nu staat
-//        );
-//        background.setPosition(component.getX() + component.getWidth() - WIDTH,
-//                component.getY() + SubWindowWidget.getTitleHeight());
-//
-//    }
 
     @Override
     protected void updateBarLength() {
@@ -106,5 +97,16 @@ public class ScrollVerticalWidget extends ScrollWidget {
         barMovedBegin = y;
     }
 
-
+//    @Override
+//    public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
+//        if (id == MouseEvent.MOUSE_PRESSED && !onBar(x,y) && onBackground(x,y)){
+//            if (y < bar.getY()) {
+//                moveBar(x, y - 10, y);
+//            } else {
+//                moveBar(x, y + 10, y);
+//            }
+//            return true;
+//        }
+//        return super.handleMouseEvent(id, x, y, clickCount);
+//    }
 }
