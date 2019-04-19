@@ -1,5 +1,7 @@
 package window.widget;
 
+import java.awt.event.MouseEvent;
+
 public class ScrollHorizontalWidget extends ScrollWidget {
 
     protected static final int HEIGHT = 10;
@@ -91,6 +93,19 @@ public class ScrollHorizontalWidget extends ScrollWidget {
         }
         bar.setX(newX);
         component.updateVisibleFrame((Math.toIntExact(Math.round(Math.pow(procent, -1) + procent)))*interval, 0);
+    }
+
+    @Override
+    public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
+        if (id == MouseEvent.MOUSE_PRESSED && !onBar(x,y) && onBackground(x,y)){
+            if (x < bar.getX()) {
+                moveBar(x-10, y, x);
+            } else {
+                moveBar(x + 10, y, x);
+            }
+            return true;
+        }
+        return super.handleMouseEvent(id, x, y, clickCount);
     }
 
 
