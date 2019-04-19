@@ -147,7 +147,7 @@ public class ComponentWidget extends CompositeWidget {
             return false;
         }
 
-        if (onCloseBtn(x ,y) && clickCount > 0){
+        if (onCloseBtn(x ,y)){
             this.close();
             return true;
         }

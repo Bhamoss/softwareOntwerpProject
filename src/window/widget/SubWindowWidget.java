@@ -208,20 +208,13 @@ public class SubWindowWidget extends ComponentWidget {
 
 
     protected void resizeWidth(int w) {
-        //if (w >= SubWindowWidget.MINIMUM_SIZE) {
-            super.resizeWidth(w);
-            this.titleLabel.setWidth(3*this.getWidth()/4);
-            this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
-            this.closeBtn.setWidth(this.getWidth()/4);
-        //}
+        super.resizeWidth(w);
+        this.titleLabel.setWidth(3*this.getWidth()/4);
+        this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
+        this.closeBtn.setWidth(this.getWidth()/4);
     }
 
-    @Override
-    protected  void resizeHeight(int h) {
-        //if (h >= SubWindowWidget.MINIMUM_SIZE){
-            super.resizeHeight(h);
-        //}
-    }
+
 
 
     @Override
