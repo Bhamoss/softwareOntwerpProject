@@ -13,6 +13,7 @@ public class CheckBoxWidget extends Widget {
     private boolean checked;
     private boolean blocked;
 
+    // TODO UICommand van maken
     private final Consumer<Boolean> toggleHandler;
     private final Function<Boolean, Boolean> isValidToggle;
 
@@ -86,12 +87,10 @@ public class CheckBoxWidget extends Widget {
 
     @Override
     public void paint(Graphics g) {
-        if (isVisible()) {
-            super.paint(g);
-            if (isChecked()) {
-                g.drawLine(getX(), getY(), getX() + getWidth(), getY() + getHeight());
-                g.drawLine(getX(), getY() + getHeight(), getX() + getWidth(), getY());
-            }
+        super.paint(g);
+        if (isChecked()) {
+            g.drawLine(getX(), getY(), getX() + getWidth(), getY() + getHeight());
+            g.drawLine(getX(), getY() + getHeight(), getX() + getWidth(), getY());
         }
     }
 

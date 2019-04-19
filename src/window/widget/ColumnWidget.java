@@ -15,7 +15,7 @@ public class ColumnWidget extends CompositeWidget {
 
     /**
      * Creates a container widget with resizable width,
-     * containing other widgets in a vertical fashion.
+     * containing other columnWidgets in a vertical fashion.
      *
      * @param x x-coordinate of top-left corner
      * @param y y-coordinate of top-left corner
@@ -69,6 +69,7 @@ public class ColumnWidget extends CompositeWidget {
         occupancy += 1;
         super.addWidget(w);
     }
+
 
     @Override
     protected void setPosition(int x, int y) {
@@ -136,13 +137,5 @@ public class ColumnWidget extends CompositeWidget {
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
-    @Override
-    protected void setVisible(int x, int y, int w, int h) {
-        this.isVisible = this.getX() >= x &&
-                this.getY() >= y &&
-                x + w >= this.getX() + this.getWidth();
-        for (Widget wg: widgets) {
-            wg.setVisible(x,y,w,h);
-        }
-    }
+
 }

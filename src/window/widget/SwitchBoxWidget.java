@@ -9,6 +9,8 @@ import be.kuleuven.cs.som.taglet.*;
 public class SwitchBoxWidget extends LabelWidget {
 
     List<String> options;
+
+    //TODO commands van maken??
     Function<String, Boolean> isValidOption;
     Consumer<String> setOption;
     int optionIndex;

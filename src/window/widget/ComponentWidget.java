@@ -13,7 +13,7 @@ public class ComponentWidget extends CompositeWidget {
     private static final int MINIMUM_SIZE = 200;
 
 
-
+    // TODO: close command meegeven voor de close method, opgeroepen door subwindowWidget closebutton
     public ComponentWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
         resizingBottomBorder = false;
@@ -93,7 +93,7 @@ public class ComponentWidget extends CompositeWidget {
     }
 
     protected void close() {
-        widgets = new LinkedList<>();
+
     }
 
     @Override
@@ -147,7 +147,7 @@ public class ComponentWidget extends CompositeWidget {
             return false;
         }
 
-        if (onCloseBtn(x ,y) && clickCount > 0){
+        if (onCloseBtn(x ,y)){
             this.close();
             return true;
         }

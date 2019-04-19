@@ -13,7 +13,7 @@ public class LabelWidget extends Widget{
 
     protected String text;
     protected Integer id;
-    protected Function<Integer, String> refreshText;
+    protected Function<Integer, String> refreshText; //TODO: uicommand van maken
 
 
     /**
@@ -54,14 +54,24 @@ public class LabelWidget extends Widget{
         this.refreshText = refreshText;
     }
 
-
+    /**
+     * Paints screen.
+     *
+     * @param g java.awt.Graphics object, offers the
+     *          methods that allow you to paint on the canvas
+     */
     @Override
     public void paint(Graphics g) {
-        if (isVisible()) {
-            super.paint(g);
-            g.drawString(text, getX() + OFFSET, getY() + getHeight() - OFFSET);
+        super.paint(g);
+        Rectangle oldRect = g.getClipBounds();
+        Rectangle intersection = g.getClipBounds().intersection(new Rectangle(getX(),getY(),getWidth()+1,getHeight()+1));
+        if (!intersection.isEmpty()) {
+            g.setClip(intersection);
         }
+        g.drawString(text, getX() + OFFSET, getY() + getHeight() - OFFSET);
+        g.setClip(oldRect);
     }
+
 
     @Override
     public void update() {

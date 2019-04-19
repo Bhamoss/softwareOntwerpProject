@@ -6,6 +6,7 @@ import be.kuleuven.cs.som.taglet.*;
 
 public class ButtonWidget extends LabelWidget {
 
+    //TODO UICommand van maken
     private final Function<Integer, Boolean> onClick;
 
     /**
@@ -41,7 +42,7 @@ public class ButtonWidget extends LabelWidget {
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (this.containsPoint(x,y) && id == MouseEvent.MOUSE_PRESSED)
+        if (this.containsPoint(x,y) && id == MouseEvent.MOUSE_CLICKED)
             return onClick.apply(clickCount);
         return false;
     }

@@ -2,6 +2,7 @@ package window.widget;
 
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class SubWindowWidget extends ComponentWidget {
 
@@ -13,6 +14,9 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int TITLE_HEIGHT = 25;
     private static final int MARGIN_TOP = 30;
     private static final int MARGIN_LEFT = 5;
+    private static final int MARGIN_BOTTOM = 10;
+    private static final int MARGIN_RIGHT = 10;
+
 
 
 
@@ -34,21 +38,21 @@ public class SubWindowWidget extends ComponentWidget {
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 (t) -> {close(); return true;});
-        //TODO: close button toevoegen
+        //TODO: constructor krijgt close command mee blub
         isActive = false;
         virtualY = y;
         virtualX = x;
     }
 
-    protected static int getTitleHeight() {return TITLE_HEIGHT;}
+    public static int getTitleHeight() {return TITLE_HEIGHT;}
 
     protected void close() {
-        super.close();
-        this.titleLabel.border = false;
-        this.titleLabel.setText("");
-        this.closeBtn.border = false;
-        this.closeBtn.setText("");
-        this.border = false;
+//        super.close();
+//        this.titleLabel.border = false;
+//        this.titleLabel.setText("");
+//        this.closeBtn.border = false;
+//        this.closeBtn.setText("");
+//        this.border = false;
 
     }
 
@@ -69,10 +73,14 @@ public class SubWindowWidget extends ComponentWidget {
      * @param x
      */
     public void setVirtualX(int x) {
+        int oldX = this.virtualX;
         if (x > getX())
             this.virtualX = getX();
         else
             this.virtualX = x;
+        for (Widget w:widgets) {
+            w.setPosition(w.getX() - oldX + this.virtualX, w.getY());
+        }
         //setPositionWidgets();
     }
 
@@ -87,11 +95,14 @@ public class SubWindowWidget extends ComponentWidget {
      * @param y
      */
     public void setVirtualY(int y) {
+        int oldY = this.virtualY;
         if (y > getY())
             this.virtualY = getY();
         else
             this.virtualY = y;
-        //setPositionWidgets();
+        for (Widget w:widgets) {
+            w.setPosition(w.getX(), w.getY() - oldY + this.virtualY);
+        }
     }
 
 
@@ -109,48 +120,63 @@ public class SubWindowWidget extends ComponentWidget {
 
 
     /**
-     * Sets x and y of top-left corner of subwindow and
-     *  updates the position of all the widgets within this subwindow
+     * Sets the y of the top-left corner of subwindow
+     *  and updates the position of all the widgets in this subwindow
+     * @param y to be set
      */
     @Override
-    protected void setPosition(int x, int y) {
-        // eerst van elke widget de huidige positie aftrekken (positie vn widget tov punt (0,0) )
-        //      en dan optellen met de nieuwe (x,y) positie (positie vn widget tov van punt (x,y)),
-        //      pas daarna de positie van de subwindow herinstellen
-        titleLabel.setPosition(titleLabel.getX() - getX() + x, titleLabel.getY() - getY() + y);
-        closeBtn.setPosition(closeBtn.getX() - getX() + x, closeBtn.getY() - getY() + y);
-        int oldVX = getVirtualX();
-        int oldVY = getVirtualY();
-        int oldX = getX();
+    public void setY(int y) {
+        titleLabel.setY(titleLabel.getY() - getY() + y);
+        closeBtn.setY(closeBtn.getY() - getY() + y);
         int oldY = getY();
-
-        super.setPosition(x, y);
-
-        setVirtualX(x - oldX + getVirtualX());
+        super.setY(y);
         setVirtualY(y - oldY + getVirtualY());
-
-        for (Widget w:widgets) {
-            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
-        }
     }
 
+    /**
+     * Sets the x of the top-left corner of subwindow
+     *  and updates the position of all the widgets in this subwindow
+     * @param x to be set
+     */
+    @Override
+    public void setX(int x) {
+        titleLabel.setX(titleLabel.getX() - getX() + x);
+        closeBtn.setX(closeBtn.getX() - getX() + x);
+        int oldX = getX();
+        super.setX(x);
+        setVirtualX(x - oldX + getVirtualX());
+    }
 
+    /**
+     * returns the actual subwindowwidget height
+     *  this means the y + height of the widget that is the most at the bottom
+     *  If no other widgets, or this subwindow can show all it widgets
+     *      the return value is 0
+     * @return
+     */
     @Override
     protected int getTotalHeight() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getY() - getVirtualY() + w.getHeight())
-                result = w.getY() - getVirtualY() + w.getHeight();
+            if (result < w.getY() + w.getHeight()- getVirtualY() - MARGIN_BOTTOM)
+                result = w.getY() + w.getHeight() - getVirtualY() - MARGIN_BOTTOM;
         }
         return result;
     }
 
+    /**
+     * returns the actual subwindowwidget width
+     *  this means the x + width of the most right widget
+     *  If no other widgets, or this subwindow can show all it widgets
+     *      the return value is 0
+     * @return
+     */
     @Override
     protected int getTotalWidth() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getX() - getVirtualX() + w.getWidth())
-                result = w.getX() - getVirtualX() + w.getWidth();
+            if (result < w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT)
+                result = w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT;
         }
         return result;
     }
@@ -174,7 +200,7 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (closeBtn.containsPoint(x, y) && clickCount > 0)
+        if (closeBtn.containsPoint(x, y))
             return closeBtn.handleMouseEvent(id, x, y, clickCount);
         return super.handleMouseEvent(id, x, y, clickCount);
     }
@@ -183,20 +209,13 @@ public class SubWindowWidget extends ComponentWidget {
 
 
     protected void resizeWidth(int w) {
-        //if (w >= SubWindowWidget.MINIMUM_SIZE) {
-            super.resizeWidth(w);
-            this.titleLabel.setWidth(3*this.getWidth()/4);
-            this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
-            this.closeBtn.setWidth(this.getWidth()/4);
-        //}
+        super.resizeWidth(w);
+        this.titleLabel.setWidth(3*this.getWidth()/4);
+        this.closeBtn.setX(3*this.getWidth()/4 + this.getX());
+        this.closeBtn.setWidth(this.getWidth()/4);
     }
 
-    @Override
-    protected  void resizeHeight(int h) {
-        //if (h >= SubWindowWidget.MINIMUM_SIZE){
-            super.resizeHeight(h);
-        //}
-    }
+
 
 
     @Override
@@ -208,23 +227,38 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     protected void paintWidgets(Graphics g) {
+        g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
         for (Widget w: widgets) {
-            w.setVisible(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                        this.getWidth() - MARGIN_LEFT, this.getHeight() - MARGIN_TOP);
             w.paint(g);
+            g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                    this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                    this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
         }
     }
 
+
     @Override
     protected void updateVisibleFrame(int dx, int dy) {
-        int oldVX = getVirtualX();
-        int oldVY = getVirtualY();
-
         setVirtualX(getVirtualX() + dx);
         setVirtualY(getVirtualY() + dy);
 
-        for (Widget w:widgets) {
-            w.setPosition(w.getX() - oldVX + getVirtualX(), w.getY() - oldVY + getVirtualY());
-        }
+    }
+
+    public static int getMarginTop() {
+        return MARGIN_TOP;
+    }
+
+    public static int getMarginLeft() {
+        return MARGIN_LEFT;
+    }
+
+    public static int getMarginBottom() {
+        return MARGIN_BOTTOM;
+    }
+
+    public static int getMarginRight() {
+        return MARGIN_RIGHT;
     }
 }

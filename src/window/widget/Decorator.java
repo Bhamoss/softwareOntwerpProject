@@ -1,13 +1,15 @@
 package window.widget;
 
-public class Decorator extends ComponentWidget {
 
+public class Decorator extends ComponentWidget {
     public Decorator(ComponentWidget cw) {
         super(cw.getX(),cw.getY(),cw.getWidth(),cw.getHeight(),false);
         component = cw;
     }
 
     protected ComponentWidget component;
+
+    // klasse geeft gwn alles door naar zijn component van de onderstaande methods
 
     @Override
     protected boolean onTitle(int x, int y) {
@@ -26,7 +28,7 @@ public class Decorator extends ComponentWidget {
 
     @Override
     protected int getTotalWidth() {
-        return component.getTotalHeight();
+        return component.getTotalWidth();
     }
 
     @Override

@@ -39,6 +39,7 @@ public class EditorWidget extends LabelWidget {
         this(0,0,0,25,border,id);
     }
 
+    // TODO: hiervan commands maken
     public void setPushHandler(BiConsumer<Integer,String> pushText) {
         this.pushText = pushText;
     }
@@ -102,13 +103,11 @@ public class EditorWidget extends LabelWidget {
 
     @Override
     public void paint(Graphics g) {
-        if (isVisible()) {
-            if (isSelected())
-                text += "ⵊ";
-            super.paint(g);
-            if (isSelected())
-                text = text.substring(0, text.length() - 1);
-        }
+        if (isSelected())
+            text += "ⵊ";
+        super.paint(g);
+        if (isSelected())
+            text = text.substring(0, text.length() - 1);
 
     }
 
