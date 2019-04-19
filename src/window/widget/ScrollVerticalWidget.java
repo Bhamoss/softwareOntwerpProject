@@ -36,17 +36,33 @@ public class ScrollVerticalWidget extends ScrollWidget {
         bar.setX(component.getX() + component.getWidth() - WIDTH);
     }
 
-    @Override
-    protected void setPosition(int x, int y) {
-        super.setPosition(x, y);
-        bar.setPosition(component.getX() + component.getWidth() - WIDTH,
-                component.getY() + SubWindowWidget.getTitleHeight()
-                        + (bar.getY() - background.getY()) // het incalculeren van waar de bar nu staat
-        );
-        background.setPosition(component.getX() + component.getWidth() - WIDTH,
-                component.getY() + SubWindowWidget.getTitleHeight());
 
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+        bar.setX(component.getX() + component.getWidth() - WIDTH);
+        background.setX(component.getX() + component.getWidth() - WIDTH);
     }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+        bar.setY(component.getY() + SubWindowWidget.getTitleHeight()
+                + (bar.getY() - background.getY()));// het incalculeren van waar de bar nu staat
+        background.setY(component.getY() + SubWindowWidget.getTitleHeight());
+    }
+
+//    @Override
+//    protected void setPosition(int x, int y) {
+//        super.setPosition(x, y);
+//        bar.setPosition(component.getX() + component.getWidth() - WIDTH,
+//                component.getY() + SubWindowWidget.getTitleHeight()
+//                        + (bar.getY() - background.getY()) // het incalculeren van waar de bar nu staat
+//        );
+//        background.setPosition(component.getX() + component.getWidth() - WIDTH,
+//                component.getY() + SubWindowWidget.getTitleHeight());
+//
+//    }
 
     @Override
     protected void updateBarLength() {

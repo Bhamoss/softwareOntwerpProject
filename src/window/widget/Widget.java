@@ -24,10 +24,10 @@ public class Widget {
      * @param border whether to draw a border
      */
     public Widget(int x, int y, int width, int height, boolean border) {
-        this.setX(x);
-        this.setY(y);
-        this.setWidth(width);
-        this.setHeight(height);
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.border = border;
         this.blocked = false;
         this.isVisible = true;

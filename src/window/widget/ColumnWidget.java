@@ -70,6 +70,7 @@ public class ColumnWidget extends CompositeWidget {
         super.addWidget(w);
     }
 
+
     @Override
     protected void setPosition(int x, int y) {
         super.setPosition(x, y);

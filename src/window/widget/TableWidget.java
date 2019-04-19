@@ -58,6 +58,7 @@ public class TableWidget extends CompositeWidget {
         }
     }
 
+
     @Override
     protected void setPosition(int x, int y) {
         super.setPosition(x, y);
