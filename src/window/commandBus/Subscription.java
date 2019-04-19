@@ -4,6 +4,7 @@ package window.commandBus;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
+import window.WindowCompositor;
 import window.commands.UICommand;
 import window.widget.Widget;
 import java.lang.reflect.Method;
@@ -40,7 +41,7 @@ class Subscription {
      *              | if(!isValidSubscriber() || !canHaveAsOnEvent())
      */
     @Raw
-    Subscription(Widget subscriber, Method onEvent)
+    Subscription(Object subscriber, Method onEvent)
             throws IllegalArgumentException
     {
         if(!isValidSubscriber(subscriber)) {
@@ -74,6 +75,7 @@ class Subscription {
     {
         // command can not be null
         if(command == null) return false;
+
 
         // command has to be of the same parameter type as on
         if(!getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())) return false;
@@ -223,20 +225,21 @@ class Subscription {
      * The subscriber on which to invoke a method when a command to which it is subscribed is put on the bus.
      *
      * @invar subscriber is not null.
+     * @invar subscriber is a (subclass of) WindowCompositor or Widget.
      */
-    private final Widget subscriber;
+    private final Object subscriber;
 
     /**
-     * Returns whether or not the given widget is the same as the subscriber of this subscription.
-     * @param widget
-     *          The widget to be tested.
+     * Returns whether or not the given object is the same as the subscriber of this subscription.
+     * @param object
+     *          The object to be tested.
      *
-     * @return  True if and only if the widget is the same object as the subscriber of this subscription.
+     * @return  True if and only if the object is the same object as the subscriber of this subscription.
      *          | getSubscriber() == widget
      */
-    boolean isSubscriber(Widget widget)
+    boolean isSubscriber(Object object)
     {
-        return getSubscriber() == widget;
+        return getSubscriber() == object;
     }
 
     /**
@@ -246,7 +249,7 @@ class Subscription {
      *
      */
     @Model @Raw @Basic
-    private final Widget getSubscriber()
+    private final Object getSubscriber()
     {
         return subscriber;
     }
@@ -256,15 +259,22 @@ class Subscription {
      * Returns whether or not the subscriber is valid.
      *
      * @param sub
-     *          The widget to be checked.
+     *          The object to be checked.
      *
-     * @return True if and only if sub is not null.
+     * @return True if and only if sub is not null and a subclass of WindowCompositor or Widget.
      *          | return == sub != null
+     *          |           && (WindowCompositor.class.isAssignableFrom(sub.getClass()) || Widget.class.isAssignableFrom(sub.getClass()))
      */
     @Model
-    private boolean isValidSubscriber(Widget sub)
+    private boolean isValidSubscriber(Object sub)
     {
-        return sub != null;
+        // sub cannot be null
+        if (sub == null) return false;
+
+        // sub must be (a subclass of) WindowCompositor or Widget
+        if(!(WindowCompositor.class.isAssignableFrom(sub.getClass()) || Widget.class.isAssignableFrom(sub.getClass()))) return false;
+
+        return true;
     }
 
 

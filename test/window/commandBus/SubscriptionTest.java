@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import window.WindowCompositor;
 
 import java.lang.reflect.Method;
 
@@ -18,6 +19,7 @@ class SubscriptionTest {
     BrotherWidget brotherWidget = null;
     BrotherCommand brotherCommand = null;
     SubclassSubWidget subclassSubWidget = null;
+    SubWindowCompositor subCom = null;
 
     Method noSubscribe = null;
     Method twoMethod = null;
@@ -25,6 +27,7 @@ class SubscriptionTest {
     Method privMethod = null;
     Method validMethod = null;
     Method brotherMethod = null;
+    Method validSubCom = null;
 
     String f = null;
 
@@ -34,7 +37,6 @@ class SubscriptionTest {
         Method[] methods = basicWidget.getClass().getDeclaredMethods();
         for (Method method:
              methods) {
-            f = method.getName();
             if (method.getName().equals("execute"))
             {
                 noSubscribe = method;
@@ -63,8 +65,6 @@ class SubscriptionTest {
         methods = brotherWidget.getClass().getDeclaredMethods();
         for (Method method:
                 methods) {
-            f = method.getName();
-            noSubscribe = null;
             if (method.getName().equals("notSubWidgetMethod"))
             {
                 brotherMethod = method;
@@ -72,6 +72,16 @@ class SubscriptionTest {
         }
         brotherCommand = new BrotherCommand();
         subclassSubWidget = new SubclassSubWidget();
+
+        methods = SubWindowCompositor.class.getDeclaredMethods();
+        for (Method method:
+                methods) {
+            if (method.getName().equals("valid"))
+            {
+                validSubCom = method;
+            }
+        }
+        subCom = new SubWindowCompositor();
     }
 
     @AfterEach
@@ -135,7 +145,18 @@ class SubscriptionTest {
     }
 
 
-    //success is basically tested at the beginning
+    @Test
+    @DisplayName("Constructor success with Widget.")
+    void constructorSuccessWidget() {
+        basicSub = new Subscription(basicWidget, validMethod);
+    }
+
+
+    @Test
+    @DisplayName("Constructor success with WindowCompositor.")
+    void constructorSuccessWindowCompositor() {
+        basicSub = new Subscription(subCom, validSubCom);
+    }
 
 
     /*
@@ -172,6 +193,15 @@ class SubscriptionTest {
     void isSubscriberNull() {
         assertFalse(basicSub.isSubscriber(null));
     }
+
+
+
+    @Test
+    @DisplayName("Constructor subscriber wrong class.")
+    void constructorWrongSubscriber() {
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(new Integer(1302), validMethod));
+    }
+
 
     @Test
     @DisplayName("isSubscriber not the widget")

@@ -1,7 +1,10 @@
 package window.commandBus;
 
+import window.WindowCompositor;
 import window.widget.Widget;
 import window.commands.UICommand;
+
+import java.awt.*;
 
 
 class SubWidget extends Widget
@@ -87,4 +90,13 @@ class BrotherCommand extends UICommand
 
     }
 
+}
+
+class SubWindowCompositor extends WindowCompositor
+{
+    @Subscribe
+    public void valid(UICommand c)
+    {
+
+    }
 }
