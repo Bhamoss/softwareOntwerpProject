@@ -11,7 +11,7 @@ public class ColumnWidget extends CompositeWidget {
     private final String name;
     private int occupancy;
     private boolean resizing, resizable;
-    //private final Consumer<Integer> onResize; //TODO NEEDED????
+    private final Consumer<Integer> onResize;
 
     /**
      * Creates a container widget with resizable width,
@@ -32,7 +32,7 @@ public class ColumnWidget extends CompositeWidget {
         occupancy = 0;
         resizing = false;
         this.resizable = resizable;
-        //this.onResize = onResize;
+        this.onResize = onResize;
         this.name = name;
 
         LabelWidget topLabel = new LabelWidget(x,y,width,25,visible,name);
@@ -93,7 +93,7 @@ public class ColumnWidget extends CompositeWidget {
         if (!resizable)
             return;
         this.setWidth(w);
-        //this.onResize.accept(w);
+        this.onResize.accept(w);
         for (Widget wg: widgets) {
             wg.setWidth(w);
         }

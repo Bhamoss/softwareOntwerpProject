@@ -4,6 +4,8 @@ import java.awt.*;
 import be.kuleuven.cs.som.taglet.*;
 import tablr.TablesHandler;
 
+import javax.print.DocFlavor;
+
 public class Widget {
 
     private int x, y, width, height;
@@ -91,12 +93,22 @@ public class Widget {
      *          methods that allow you to paint on the canvas
      */
     public void paint(Graphics g) {
+        Rectangle oldRect = g.getClipBounds();
+        Rectangle intersection = g.getClipBounds().intersection(new Rectangle(x,y,width+1,height+1));
+        if (!intersection.isEmpty()) {
+            g.setClip(intersection);
+        }
         //g.setClip(x,y,width+1,height+1);
         if (isBlocking())
             g.setColor(Color.red);
         if (border)
             g.drawRect(x, y, width, height);
         g.setColor(Color.black);
+        g.setClip(oldRect);
+    }
+
+    private void setClip(Graphics g) {
+
     }
 
 

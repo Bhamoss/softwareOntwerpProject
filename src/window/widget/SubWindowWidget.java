@@ -227,11 +227,14 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     protected void paintWidgets(Graphics g) {
+        g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
         for (Widget w: widgets) {
-            g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                        this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
-                        this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
             w.paint(g);
+            g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
+                    this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                    this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
         }
     }
 

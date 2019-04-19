@@ -69,5 +69,15 @@ public class TableWidget extends CompositeWidget {
         }
     }
 
+    @Override
+    public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
+        boolean r = false;
+        for (ColumnWidget w: columnWidgets) {
+            if (!isBlocking() || w.isBlocking())
+                r |= w.handleMouseEvent(id, x, y, clickCount);
+        }
+        return r;
+    }
+
 
 }
