@@ -62,17 +62,12 @@ public class LabelWidget extends Widget{
      */
     @Override
     public void paint(Graphics g) {
+        super.paint(g);
         Rectangle oldRect = g.getClipBounds();
         Rectangle intersection = g.getClipBounds().intersection(new Rectangle(getX(),getY(),getWidth()+1,getHeight()+1));
         if (!intersection.isEmpty()) {
             g.setClip(intersection);
         }
-        //g.setClip(x,y,width+1,height+1);
-        if (isBlocking())
-            g.setColor(Color.red);
-        if (border)
-            g.drawRect(getX(),getY(),getWidth(),getHeight());
-        g.setColor(Color.black);
         g.drawString(text, getX() + OFFSET, getY() + getHeight() - OFFSET);
         g.setClip(oldRect);
     }
