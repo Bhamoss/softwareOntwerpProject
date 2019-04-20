@@ -14,6 +14,11 @@ public class CheckBoxWidget extends Widget {
     private boolean blocked;
 
     // TODO UICommand van maken
+    //      Voorstel:
+    //          Consumer wordt UICommand
+    //          Function wordt UICommandWithReturn
+    //          Alles wordt ipv setChecked(boolean)
+    //               toggleChecked(), gwn togglen met de negatie van wat er al instaat
     private final Consumer<Boolean> toggleHandler;
     private final Function<Boolean, Boolean> isValidToggle;
 
