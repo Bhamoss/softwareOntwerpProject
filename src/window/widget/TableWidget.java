@@ -40,14 +40,32 @@ public class TableWidget extends CompositeWidget {
         if (occupancy+width > this.getWidth())
             setWidth(occupancy + width);
 
-        ColumnWidget c = new ColumnWidget(
-                getX()+occupancy,getY(),width,getHeight(),
-                name, resizable, true, x->resizedColumn());
 
+        columnWidgets.add(new ColumnWidget(
+                getX()+occupancy,getY(),width,getHeight(),
+                name, resizable, true, x->resizedColumn()));
         // 1 pixel margin so borders don't overlap
         occupancy += width + 1;
-        columnWidgets.add(c);
-        //super.addWidget(c);
+    }
+
+    /**
+     * add a columnWidget to this tableWidget with the given width, resizability and columnName
+     *  if the width of the columnWidget cannot fit in the table, the table width is updated
+     * @param width
+     * @param resizable
+     * @param name
+     */
+    public void addSelectorColumn(int width, boolean resizable, String name) {
+        // Check if space is available
+        if (occupancy+width > this.getWidth())
+            setWidth(occupancy + width);
+
+
+        columnWidgets.add(new SelectorColumnWidget(
+                getX()+occupancy,getY(),width,getHeight(),
+                name, resizable, true, x->resizedColumn()));
+        // 1 pixel margin so borders don't overlap
+        occupancy += width + 1;
     }
 
     /**
@@ -56,10 +74,23 @@ public class TableWidget extends CompositeWidget {
      * @param w
      */
     public void addEntry(Widget w) {
+        if (columnWidgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
+            return;
+        }
         columnWidgets.get(lastAdded).addWidget(w);
         if (getHeight() < w.getY() + w.getHeight())
             setHeight(w.getY() + w.getHeight());
         lastAdded = (lastAdded + 1) % columnWidgets.size();
+    }
+
+    public void addEntry(int id) {
+        if (columnWidgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
+            columnWidgets.get(lastAdded).addRow(id);
+            if (getHeight() < columnWidgets.get(lastAdded).getLastAdded().getY() + columnWidgets.get(lastAdded).getLastAdded().getHeight())
+                setHeight(columnWidgets.get(lastAdded).getLastAdded().getY() + columnWidgets.get(lastAdded).getLastAdded().getHeight());
+            lastAdded = (lastAdded + 1) % columnWidgets.size();
+        }
+
     }
 
     /**

@@ -13,6 +13,7 @@ public class ColumnWidget extends CompositeWidget {
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
+
     /**
      * Creates a container widget with resizable width,
      * containing other columnWidgets in a vertical fashion.
@@ -70,6 +71,14 @@ public class ColumnWidget extends CompositeWidget {
         // 1 pixel margin so borders don't overlap
         occupancy += 1;
         super.addWidget(w);
+    }
+
+    public Widget getLastAdded() {
+        return widgets.getLast();
+    }
+
+    public void addRow(int id) {
+
     }
 
 
