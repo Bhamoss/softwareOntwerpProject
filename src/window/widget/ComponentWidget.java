@@ -136,7 +136,8 @@ public class ComponentWidget extends CompositeWidget {
             }
         }
 
-        if (id == MouseEvent.MOUSE_RELEASED) {
+        if (id == MouseEvent.MOUSE_RELEASED &&
+                (resizingCorner || resizingBottomBorder || resizingRightBorder || moving)) {
             resizingCorner = false;
             resizingRightBorder = false;
             resizingBottomBorder = false;

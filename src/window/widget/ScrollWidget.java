@@ -33,6 +33,7 @@ public class ScrollWidget extends Decorator {
         component.paint(g);
         // paint the background in lightgray
         paintWithColor(g, Color.lightGray, background);
+        updateBarLength();
         paintWithColor(g, Color.darkGray, bar);
     }
 

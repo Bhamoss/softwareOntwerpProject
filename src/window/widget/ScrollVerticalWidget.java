@@ -99,7 +99,7 @@ public class ScrollVerticalWidget extends ScrollWidget {
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED && !onBar(x,y) && onBackground(x,y)){
+        if (id == MouseEvent.MOUSE_CLICKED && !onBar(x,y) && onBackground(x,y)){
             if (y < bar.getY()) {
                 moveBar(x, y - 10, y);
             } else {

@@ -126,7 +126,7 @@ public class ColumnWidget extends CompositeWidget {
             resize(x-this.getX());
             return true;
         }
-        if (id == MouseEvent.MOUSE_RELEASED) {
+        if (resizing && id == MouseEvent.MOUSE_RELEASED) {
             resizing = false;
             return false;
         }

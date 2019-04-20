@@ -45,10 +45,13 @@ public class TableWidget extends CompositeWidget {
 
     private void resizedColumn() {
         int x = this.getX();
+        occupancy = 0;
         for (Widget c : columnWidgets) {
             c.setX(x);
             x += c.getWidth();
+            occupancy += c.getWidth() + 1;
         }
+        this.setWidth(occupancy);
     }
 
     @Override

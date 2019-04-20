@@ -97,7 +97,7 @@ public class ScrollHorizontalWidget extends ScrollWidget {
 
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED && !onBar(x,y) && onBackground(x,y)){
+        if (id == MouseEvent.MOUSE_CLICKED && !onBar(x,y) && onBackground(x,y)){
             if (x < bar.getX()) {
                 moveBar(x-10, y, x);
             } else {
