@@ -4,12 +4,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import tablr.TablesHandler;
 import window.WindowCompositor;
 
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for Subscription.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class SubscriptionTest {
 
     Subscription basicSub = null;
@@ -98,6 +105,21 @@ class SubscriptionTest {
     @DisplayName("Constructor subscriber null.")
     void constructorSubscriberNull() {
         assertThrows(IllegalArgumentException.class, () -> new Subscription(null, noSubscribe));
+    }
+
+
+    @Test
+    @DisplayName("Constructor subscriber invalid class.")
+    void constructorSubscriberInvalidClass() {
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(new TablesHandler(), noSubscribe));
+        try
+        {
+            new Subscription(new TablesHandler(), noSubscribe);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertEquals("The subscriber is invalid.", e.getMessage());
+        }
     }
 
     @Test

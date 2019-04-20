@@ -135,6 +135,15 @@ class Subscription {
         return onEvent;
     }
 
+    /**
+     * Returns the class of the parameter of onEvent.
+     * @return the class of the parameter of onEvent.
+     *          | getOnEvent().getParameterTypes()[0]
+     */
+    public Class<?> getOnEventClass()
+    {
+        return getOnEvent().getParameterTypes()[0];
+    }
 
     /**
      * Returns whether or not the subscription can have this event

@@ -6,7 +6,12 @@ import window.commands.UICommand;
 
 import java.awt.*;
 
-
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class SubWidget extends Widget
 {
 
@@ -51,11 +56,23 @@ class SubWidget extends Widget
     }
 }
 
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class SubclassSubWidget extends SubWidget
 {
     public int m = 1;
 }
 
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class BrotherWidget extends Widget
 {
 
@@ -71,6 +88,12 @@ class BrotherWidget extends Widget
     }
 }
 
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class SubCommand extends UICommand
 {
 
@@ -82,6 +105,12 @@ class SubCommand extends UICommand
     public int t = 69;
 }
 
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class BrotherCommand extends UICommand
 {
 
@@ -92,6 +121,12 @@ class BrotherCommand extends UICommand
 
 }
 
+/**
+ * Class used in SubscriptionTest.
+ *
+ * @author Thomas Bamelis
+ * @version 0.0.1
+ */
 class SubWindowCompositor extends WindowCompositor
 {
     @Subscribe
