@@ -213,7 +213,6 @@ public class SubWindowWidget extends ComponentWidget {
      * @param x
      * @param y
      * @param clickCount
-     * @return
      */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {

@@ -88,14 +88,29 @@ public class ScrollWidget extends Decorator {
      */
     protected void setBarMovedBegin(int x, int y) {}
 
+    /**
+     * if mouse is pressed (MouseEvent.MOUSE_PRESSED) AND onBar(x,y):
+     *      barMoving is set true and the barMovedBegin is set
+     * if mouse is dragged (MouseEvent.MOUSE_DRAGGED) AND barMoving is set true:
+     *      move the bar from barMovedBegin to x or y
+     *      and update the barMovedBegin
+     * if mouse is released (MouseEvent.MOUSE_RELEASED) AND barMoving is set true:
+     *      move the bar from barMovedBegin to x or y
+     *      and set the barMoving to false
+     * otherwise call component.handleMouseEvent(id, x, y, clickCount)
+     *          and call super.handleMouseEvent(id, x, y ,clickCount)
+     * @param id
+     * @param x
+     * @param y
+     * @param clickCount
+     */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED) {
-            if (onBar(x,y)) {
-                barMoving = true;
-                setBarMovedBegin(x, y);
-                return false;
-            }
+        if (id == MouseEvent.MOUSE_PRESSED && onBar(x,y)) {
+            barMoving = true;
+            setBarMovedBegin(x, y);
+            return false;
+
         }
         if (id == MouseEvent.MOUSE_DRAGGED && barMoving) {
             moveBar(x,y, barMovedBegin);
@@ -108,13 +123,14 @@ public class ScrollWidget extends Decorator {
             return true;
         }
 
-        if (component.handleMouseEvent(id, x, y, clickCount)){
-            super.handleMouseEvent(id, x, y ,clickCount);
-            return true;
-        }
-        return super.handleMouseEvent(id, x, y ,clickCount);
+        boolean r = component.handleMouseEvent(id, x, y, clickCount);
+        r |= super.handleMouseEvent(id, x, y ,clickCount);
+        return r;
     }
 
+    /**
+     * update the length of the bar widget
+     */
     protected void updateBarLength() {
         updateProcent();
     }
