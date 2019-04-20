@@ -29,34 +29,41 @@ public class UIHandler {
 
     private final TableLayout tableLayout;
 
-    /*
-     *  Common stuff
-     * ****************************************************************************
-     */
-
-
-    private final TablesHandler tablesHandler;
 
     public Integer getTableWidth(Integer tableId) {
         return getTableLayout().getTableWidth(tableId);
     }
 
-    public void putTablewidth(Integer tableId, Integer tableWidth) {
-        getTableLayout().putTablewidth(tableId,tableWidth);
+    public void putTableWidth(Integer tableId, Integer tableWidth) {
+        getTableLayout().putTableWidth(tableId,tableWidth);
     }
 
-    public Integer getColumnwidths(Integer tableId, Integer columnId) {
-        return getTableLayout().getColumnwidths(tableId,columnId);
+    public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
+        return getTableLayout().getColumnWidth(tableId,columnNumber);
     }
 
-    public void putColumnwidths(Integer tableId, Integer columnId, Integer columnWidth) {
-        getTableLayout().putColumnwidths(tableId,columnId,columnWidth);
+    public void putColumnWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
+        getTableLayout().putColumnWidth(tableId,columnNumber,columnWidth);
     }
+
+    public Integer getRowWidth(Integer tableId, Integer columnNumber) {
+        return getTableLayout().getRowWidth(tableId,columnNumber);
+    }
+
+    public void putRowWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
+        getTableLayout().putRowWidth(tableId,columnNumber,columnWidth);
+    }
+
+    /*
+     *  Common stuff
+     * ****************************************************************************
+     */
 
     /*
      *  TableHandler
      * ****************************************************************************
      */
+    private final TablesHandler tablesHandler;
 
     /**
      *

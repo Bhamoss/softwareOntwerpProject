@@ -1,22 +1,35 @@
 package window.commands;
 
-import tablr.TablesHandler;
+import window.UIHandler;
+import window.commandBus.CommandBus;
 
-public class AddTableCommand extends UICommand {
+public class AddTableCommand extends UICommandWithReturn<Boolean> {
 
-    public AddTableCommand(TablesHandler tablesHandler){
-        this.tablesHandler = tablesHandler;
+    public AddTableCommand(UIHandler uiHandler, CommandBus commandBus){
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
     }
 
-    private TablesHandler tablesHandler;
+    private UIHandler uiHandler;
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    private final CommandBus commandBus;
+
+    public UIHandler getUIHandler() {
+        return uiHandler;
+    }
+
+    public CommandBus getCommandBus() {
+        return commandBus;
     }
 
     @Override
     public void execute() {
-        //TODO eventbus
-        getTablesHandler().addTable();
+        getUIHandler().addTable();
+        getCommandBus().post(this);
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }

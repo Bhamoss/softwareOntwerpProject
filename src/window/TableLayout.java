@@ -8,22 +8,35 @@ public class TableLayout {
 
     private HashMap<Integer,HashMap<Integer,Integer>> columnWidths;
 
+    private HashMap<Integer,HashMap<Integer,Integer>> rowWidths;
+
     public Integer getTableWidth(Integer tableId) {
         return tableWidths.get(tableId);
     }
 
-    public void putTablewidth(Integer tableId, Integer tableWidth) {
+    public void putTableWidth(Integer tableId, Integer tableWidth) {
         this.tableWidths.put(tableId,tableWidth);
     }
 
-    public Integer getColumnwidths(Integer tableId, Integer columnId) {
-        return columnWidths.get(tableId).get(columnId);
+    public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
+        return columnWidths.get(tableId).get(columnNumber);
     }
 
-    public void putColumnwidths(Integer tableId, Integer columnId, Integer columnWidth) {
+    public void putColumnWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
         if(!columnWidths.keySet().contains(tableId)){
             columnWidths.put(tableId, new HashMap<>());
         }
-        columnWidths.get(tableId).put(columnId,columnWidth);
+        columnWidths.get(tableId).put(columnNumber,columnWidth);
+    }
+
+    public Integer getRowWidth(Integer tableId, Integer columnNumber) {
+        return columnWidths.get(tableId).get(columnNumber);
+    }
+
+    public void putRowWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
+        if(!columnWidths.keySet().contains(tableId)){
+            columnWidths.put(tableId, new HashMap<>());
+        }
+        columnWidths.get(tableId).put(columnNumber,columnWidth);
     }
 }
