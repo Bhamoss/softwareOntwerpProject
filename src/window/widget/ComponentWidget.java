@@ -12,7 +12,22 @@ public class ComponentWidget extends CompositeWidget {
 
     private static final int MINIMUM_SIZE = 200;
 
+    public boolean isClosed() {
+        return isClosed;
+    }
 
+    boolean isClosed;
+
+
+    /**
+     * creates a componentWidget
+     *
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param border
+     */
     // TODO: close command meegeven voor de close method, opgeroepen door subwindowWidget closebutton
     public ComponentWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
@@ -20,11 +35,12 @@ public class ComponentWidget extends CompositeWidget {
         resizingRightBorder = false;
         resizingCorner = false;
         moving = false;
+        isClosed = false;
     }
 
     /**
      * check if the point (x,y) is in the bottom right corner
-     *  of the subwindow (this means in a square of 5x5 pixels out the subwindow)
+     *  of the subwindow (this means in a square of 10x10 pixels out the subwindow)
      * @param x
      * @param y
      */
@@ -37,7 +53,7 @@ public class ComponentWidget extends CompositeWidget {
 
     /**
      * check if the point (x,y) is in the right border
-     *  of the subwindow (this means in a rectangle of 5xheight pixels at the right of the subwindow)
+     *  of the subwindow (this means in a rectangle of 10xheight pixels at the right of the subwindow)
      * @param x
      * @param y
      */
@@ -50,7 +66,7 @@ public class ComponentWidget extends CompositeWidget {
 
     /**
      * check if the point (x,y) is in the bottom border
-     *  of the subwindow (this means in a rectangle of widthx5 pixels under the subwindow)
+     *  of the subwindow (this means in a rectangle of widthx10 pixels under the subwindow)
      * @param x
      * @param y
      */
@@ -61,17 +77,27 @@ public class ComponentWidget extends CompositeWidget {
                 y < getY() + getHeight() + 10;
     }
 
+    /**
+     * check if the point (x,y) is on the title
+     * @param x
+     * @param y
+     */
     protected boolean onTitle(int x, int y) {
         return false;
     }
 
+    /**
+     * check if the point (x,y) is on the close button
+     * @param x
+     * @param y
+     */
     protected boolean onCloseBtn(int x, int y) {
         return false;
     }
 
 
     /**
-     * Resizes the width and height of the subwindow
+     * Resizes the width and height of the componentWidget
      * @param w new width
      * @param h new height
      */
@@ -80,22 +106,67 @@ public class ComponentWidget extends CompositeWidget {
         resizeWidth(w);
     }
 
+    /**
+     * resizes the height of this componentWidget
+     *
+     * If the given height h is smaller than the mininum height alowed
+     *  the height is not resized
+     * @param h
+     */
     protected void resizeHeight(int h) {
-        if (h <= MINIMUM_SIZE)
+        if (h < MINIMUM_SIZE)
             return;
         this.setHeight(h);
     }
 
+    /**
+     * resizes the width of this componentWidget
+     *
+     * If the given width w is smaller than the mininum width alowed
+     *  the width is not resized
+     * @param w
+     */
     protected void resizeWidth(int w) {
-        if (w <= MINIMUM_SIZE)
+        if (w < MINIMUM_SIZE)
             return;
         this.setWidth(w);
     }
 
     protected void close() {
-
+        widgets = new LinkedList<>();
+        this.isClosed = true;
     }
 
+    /**
+     * if mouse is pressed (MouseEvent.MOUSE_PRESSED):
+     *      if the point x,y is on the right corner
+     *          set resizingCorner true
+     *      if the point x,y is on the right border
+     *          set resizingRightBorder true
+     *      if the point x,y is on the bottom border
+     *          set resizingBottomBorder true
+     *      if the point x,y is on the title
+     *          set moving true
+     * if mouse is dragged (MouseEvent.MOUSE_DRAGGED):
+     *      if resizingCorner
+     *          resize the height and the width of this componentWidget
+     *      if resizingRightBorder
+     *          resize the width of this componentWidget
+     *      if resizingBottomBorder
+     *          resize the height of this componentWidget
+     *      if moving
+     *          set the position of this componentWidget to the given (x,y) point of the mouse
+     * if mouse is released (MouseEvent.MOUSE_RELEASED) AND
+     *      previously one of the variables resizingCorner, resizingBottomBorder, resizingRightBorder or moving
+     *      was set true
+     *          set all of them to false
+     * Otherwise, call super.handleMouseEvent(id,x,y,clickCount)
+     * @param id
+     * @param x
+     * @param y
+     * @param clickCount
+     * @return
+     */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_PRESSED) {
@@ -136,7 +207,8 @@ public class ComponentWidget extends CompositeWidget {
             }
         }
 
-        if (id == MouseEvent.MOUSE_RELEASED) {
+        if (id == MouseEvent.MOUSE_RELEASED &&
+                (resizingCorner || resizingBottomBorder || resizingRightBorder || moving)) {
             resizingCorner = false;
             resizingRightBorder = false;
             resizingBottomBorder = false;
@@ -147,20 +219,21 @@ public class ComponentWidget extends CompositeWidget {
             return false;
         }
 
-        if (onCloseBtn(x ,y)){
-            this.close();
-            return true;
-        }
-
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
+    /**
+     * return the total height of all the widgets in this componentWidget
+     */
     protected int getTotalHeight() {
-        return 0;
+        return this.getHeight();
     }
 
+    /**
+     * return the total width of all the widgets in this componentWidget
+     */
     protected int getTotalWidth() {
-        return 0;
+        return this.getWidth();
     }
 
     protected void updateVisibleFrame(int dx, int dy) {}

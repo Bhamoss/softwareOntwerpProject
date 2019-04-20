@@ -1,29 +1,42 @@
 package window.commands;
 
-import tablr.TablesHandler;
+import window.UIHandler;
+import window.commandBus.CommandBus;
 
-public class RemoveTableCommand extends UICommand {
+public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
 
-    public RemoveTableCommand(int tableId, TablesHandler tablesHandler){
+    public RemoveTableCommand(int tableId, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
     }
 
     private final int tableId;
 
-    private final TablesHandler tablesHandler;
+    private final UIHandler uiHandler;
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    private final CommandBus commandBus;
+
+    public UIHandler getUiHandler() {
+        return uiHandler;
     }
 
     public int getTableId() {
         return tableId;
     }
 
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
+
     @Override
     public void execute() {
-        //TODO eventBus
-        getTablesHandler().removeTable(getTableId());
+        getUiHandler().removeTable(getTableId());
+        getCommandBus().post(this);
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }

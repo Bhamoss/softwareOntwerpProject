@@ -13,6 +13,7 @@ public class ColumnWidget extends CompositeWidget {
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
+
     /**
      * Creates a container widget with resizable width,
      * containing other columnWidgets in a vertical fashion.
@@ -51,8 +52,10 @@ public class ColumnWidget extends CompositeWidget {
     /**
      * Adds a widget to the bottom of the column.
      *
-     * The widget only gets added if it's height
-     * can fit in the remaining space of the column.
+     * If the height of this widget cannot fit into the current heigth
+     * of this columnWidget, the height is changed so that the widget
+     * can fit in this columnWidget.
+     *
      * The width of the widget is rescaled to the
      * width of the column.
      *
@@ -70,16 +73,27 @@ public class ColumnWidget extends CompositeWidget {
         super.addWidget(w);
     }
 
+    public Widget getLastAdded() {
+        return widgets.getLast();
+    }
 
+    public void addRow(int id) {
+
+    }
+
+
+    /**
+     * Sets the given y as y-value for this columnWidget
+     *      Also updates the y-value for all the widgets inside this columnWidget
+     * @param y
+     */
     @Override
-    protected void setPosition(int x, int y) {
-        super.setPosition(x, y);
+    public void setY(int y) {
+        super.setY(y);
         occupancy  = 0;
         for (Widget w: widgets) {
-            w.setPosition(getX(), getY()+occupancy);
-            occupancy += w.getHeight();
-            occupancy += 1;
-
+            w.setY(getY()+occupancy);
+            occupancy += w.getHeight() + 1;
         }
     }
 
@@ -99,6 +113,12 @@ public class ColumnWidget extends CompositeWidget {
         }
     }
 
+    /**
+     * set the x-value of this columnWidget to the given x
+     *      and set the x-value of all the widgets in this columnWidget also
+     *      to the given x
+     * @param x
+     */
     @Override
     public void setX(int x) {
         super.setX(x);
@@ -113,6 +133,11 @@ public class ColumnWidget extends CompositeWidget {
     }
 
 
+    /**
+     * checks whether the given point (x,y) is on the right border of this columnWidget
+     * @param x
+     * @param y
+     */
     private boolean onRightBorder(int x, int y) {
         return x < getWidth()+getX()
                 && getWidth()+getX()-5 < x
@@ -120,13 +145,26 @@ public class ColumnWidget extends CompositeWidget {
                 && y < getY()+25;
     }
 
+    /**
+     * If (x,y) are on the right border of this columnWidget and the id == MouseEvent.MOUSE_PRESSED
+     *      set resizing true
+     * If resizing and id == MouseEvent.MOUSE_DRAGGED
+     *      resize this columnWidget to width x - this.x
+     * If resizing and id == MouseEvent.MOUSE_RELEASED
+     *      stop resizing, thus resizing to false
+     * otherwise call super.handleMouseEvent(id, x, y, clickCount)
+     * @param id
+     * @param x
+     * @param y
+     * @param clickCount
+     */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (resizing && id == MouseEvent.MOUSE_DRAGGED) {
             resize(x-this.getX());
             return true;
         }
-        if (id == MouseEvent.MOUSE_RELEASED) {
+        if (resizing && id == MouseEvent.MOUSE_RELEASED) {
             resizing = false;
             return false;
         }

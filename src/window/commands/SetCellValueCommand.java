@@ -4,7 +4,9 @@ import tablr.TablesHandler;
 
 import java.util.function.Supplier;
 
-public class SetCellValueCommand extends UICommand{
+public class SetCellValueCommand extends UICommandWithReturn<Boolean>{
+
+    //TODO Continue adaptations
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
                                Supplier<String> stringSupplier, TablesHandler tablesHandler){
@@ -46,7 +48,12 @@ public class SetCellValueCommand extends UICommand{
 
     @Override
     public void execute() {
-        //TODO bus event
         getTablesHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
+
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }
