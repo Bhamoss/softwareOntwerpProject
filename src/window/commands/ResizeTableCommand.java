@@ -5,19 +5,16 @@ import window.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class ResizeColumnCommand extends UICommand{
+public class ResizeTableCommand extends UICommand{
 
-    public ResizeColumnCommand(Integer tableId, Integer columnNumber, Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
+    public ResizeTableCommand(Integer tableId, Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
-        this.columnNumber = columnNumber;
         this.columnwidth = columnwidth;
         this.uiHandler = uiHandler;
         this.commandBus = commandBus;
     }
 
     private final Integer tableId;
-
-    private final Integer columnNumber;
 
     private final Supplier<Integer> columnwidth;
 
@@ -27,10 +24,6 @@ public class ResizeColumnCommand extends UICommand{
 
     public Integer getTableId() {
         return tableId;
-    }
-
-    public Integer getColumnNumber() {
-        return columnNumber;
     }
 
     public Integer getColumnwidth() {
@@ -47,7 +40,7 @@ public class ResizeColumnCommand extends UICommand{
 
     @Override
     public void execute() {
-        getUiHandler().putColumnWidth(getTableId(),getColumnNumber(),getColumnwidth());
+        getUiHandler().putTableWidth(getTableId(),getColumnwidth());
         getCommandBus().post(this);
     }
 }

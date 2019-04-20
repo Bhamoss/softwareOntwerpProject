@@ -1,36 +1,52 @@
 package window.commands;
 
 import tablr.TablesHandler;
+import window.UIHandler;
+import window.commandBus.CommandBus;
 
-public class RemoveColumnCommand extends UICommand {
+import java.util.function.Supplier;
 
-    public RemoveColumnCommand(int tableId, int columnId, TablesHandler tablesHandler){
+public class RemoveColumnCommand extends UICommandWithReturn<Boolean> {
+
+    public RemoveColumnCommand(int tableId, Supplier<Integer> columnId, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
     }
 
     private final int tableId;
 
-    private final int columnId;
+    private final Supplier<Integer> columnId;
 
-    private final TablesHandler tablesHandler;
+    private final UIHandler uiHandler;
+
+    private final CommandBus commandBus;
 
     public int getTableId() {
         return tableId;
     }
 
     public int getColumnId() {
-        return columnId;
+        return columnId.get();
     }
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
+    }
+
+    public CommandBus getCommandBus() {
+        return commandBus;
     }
 
     @Override
     public void execute() {
-        //TODO bus event
-        getTablesHandler().removeColumn(getTableId(),getColumnId());
+        getUIHandler().removeColumn(getTableId(),getColumnId());
+        getCommandBus().post(this);
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }
