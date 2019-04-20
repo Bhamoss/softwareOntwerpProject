@@ -24,30 +24,17 @@ public class ScrollWidget extends Decorator {
     }
 
     @Override
-    protected void close() {
-
-    }
-
-    @Override
     public void paint(Graphics g) {
-        component.paint(g);
-        // paint the background in lightgray
-        paintWithColor(g, Color.lightGray, background);
-        updateBarLength();
-        paintWithColor(g, Color.darkGray, bar);
+        if (!isClosed()) {
+            component.paint(g);
+            // paint the background in lightgray
+            paintWithColor(g, Color.lightGray, background);
+            updateBarLength();
+            paintWithColor(g, Color.darkGray, bar);
+        }
     }
 
-    private void paintWithColor(Graphics g, Color c, Widget w) {
-        Color tmp = g.getColor();
 
-        g.setColor(c);
-        g.setClip(w.getX(), w.getY(),
-                w.getWidth() + 1, w.getHeight() + 1);
-        g.fillRect(w.getX(), w.getY(),
-                w.getWidth(), w.getHeight());
-
-        g.setColor(tmp);
-    }
 
 
     /**
@@ -125,6 +112,10 @@ public class ScrollWidget extends Decorator {
 
         boolean r = component.handleMouseEvent(id, x, y, clickCount);
         r |= super.handleMouseEvent(id, x, y ,clickCount);
+        if (component.isClosed()){
+            isClosed = true;
+            r = true;
+        }
         return r;
     }
 

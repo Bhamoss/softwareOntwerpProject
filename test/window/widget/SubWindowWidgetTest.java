@@ -18,7 +18,7 @@ class SubWindowWidgetTest {
         swEmpty = new SubWindowWidget(0,0,200,200,true, "emptySW");
 
         swFilled = new SubWindowWidget(300,300,300,300,true, "filledSW");
-        btn = new ButtonWidget(0,0, 100,100, true, "Button", x->{btn.setText("Changed"); return false;});
+        //btn = new ButtonWidget(0,0, 100,100, true, "Button", x->{btn.setText("Changed"); return false;});
         label = new LabelWidget(250, 250, 100,100,true,"Label");
         swFilled.addWidget(btn);
         swFilled.addWidget(label);

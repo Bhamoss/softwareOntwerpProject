@@ -12,6 +12,12 @@ public class ComponentWidget extends CompositeWidget {
 
     private static final int MINIMUM_SIZE = 200;
 
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    boolean isClosed;
+
 
     /**
      * creates a componentWidget
@@ -29,6 +35,7 @@ public class ComponentWidget extends CompositeWidget {
         resizingRightBorder = false;
         resizingCorner = false;
         moving = false;
+        isClosed = false;
     }
 
     /**
@@ -126,7 +133,8 @@ public class ComponentWidget extends CompositeWidget {
     }
 
     protected void close() {
-
+        widgets = new LinkedList<>();
+        this.isClosed = true;
     }
 
     /**
@@ -211,10 +219,6 @@ public class ComponentWidget extends CompositeWidget {
             return false;
         }
 
-        if (onCloseBtn(x ,y)){
-            this.close();
-            return true;
-        }
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 

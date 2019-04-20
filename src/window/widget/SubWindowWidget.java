@@ -1,8 +1,11 @@
 package window.widget;
 
 
+import window.commands.UICommandWithReturn;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 public class SubWindowWidget extends ComponentWidget {
 
@@ -16,6 +19,7 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int MARGIN_LEFT = 5;
     private static final int MARGIN_BOTTOM = 10;
     private static final int MARGIN_RIGHT = 10;
+
 
 
     /**
@@ -39,9 +43,21 @@ public class SubWindowWidget extends ComponentWidget {
     public SubWindowWidget(int x, int y, int width, int height, boolean border, String title) {
         super(x,y,width,height,border);
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
+        // close command definieren
+        HashMap<Integer, UICommandWithReturn<Boolean>> tmp = new HashMap<>();
+        tmp.put(2, new UICommandWithReturn<Boolean>() {
+            @Override
+            public Boolean getReturn() {
+                return true;
+            }
+
+            @Override
+            public void execute() {
+                close();
+            }
+        });
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
-                (t) -> {close(); return true;});
-        //TODO: constructor krijgt close command mee blub
+                tmp);
         isActive = false;
         virtualY = y;
         virtualX = x;
@@ -52,13 +68,9 @@ public class SubWindowWidget extends ComponentWidget {
      */
     public static int getTitleHeight() {return TITLE_HEIGHT;}
 
+    // TODO: close beter definieren, hier of in de UICommandWIthReturn in constructor
     protected void close() {
-//        super.close();
-//        this.titleLabel.border = false;
-//        this.titleLabel.setText("");
-//        this.closeBtn.border = false;
-//        this.closeBtn.setText("");
-//        this.border = false;
+        this.isClosed = true;
 
     }
 
@@ -239,9 +251,12 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     public void paint(Graphics g) {
-        titleLabel.paint(g);
-        closeBtn.paint(g);
-        super.paint(g);
+        if (!isClosed()) {
+            paintWithColor(g, Color.white, this);
+            titleLabel.paint(g);
+            closeBtn.paint(g);
+            super.paint(g);
+        }
     }
 
     /**

@@ -107,10 +107,17 @@ public class Widget {
         g.setClip(oldRect);
     }
 
-    private void setClip(Graphics g) {
+    void paintWithColor(Graphics g, Color c, Widget w) {
+        Color tmp = g.getColor();
 
+        g.setColor(c);
+        g.setClip(w.getX(), w.getY(),
+                w.getWidth() + 1, w.getHeight() + 1);
+        g.fillRect(w.getX(), w.getY(),
+                w.getWidth(), w.getHeight());
+
+        g.setColor(tmp);
     }
-
 
     /**
      * Event handler for keyboard events
