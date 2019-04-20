@@ -18,14 +18,17 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int MARGIN_RIGHT = 10;
 
 
-
-
+    /**
+     * (virtualX,virtualY) is the point of the rectangle of the widgets inside
+     * this subwindow starts. VirtualX and virtualY cannot be larger than the
+     * x and y of this subWindowWidget
+     */
     private int virtualX;
     private int virtualY;
 
 
     /**
-     * construct a subwindow widget
+     * creates a subwindow widget
      * @param x x-coordinate of top-left corner
      * @param y y-coordinate of top-left corner
      * @param width width of rectangle
@@ -44,6 +47,9 @@ public class SubWindowWidget extends ComponentWidget {
         virtualX = x;
     }
 
+    /**
+     * returns the title height of a subWindowWidget
+     */
     public static int getTitleHeight() {return TITLE_HEIGHT;}
 
     protected void close() {
@@ -64,6 +70,7 @@ public class SubWindowWidget extends ComponentWidget {
         return isActive;
     }
 
+
     public int getVirtualX() {
         return virtualX;
     }
@@ -79,7 +86,7 @@ public class SubWindowWidget extends ComponentWidget {
         else
             this.virtualX = x;
         for (Widget w:widgets) {
-            w.setPosition(w.getX() - oldX + this.virtualX, w.getY());
+            w.setX(w.getX() - oldX + this.virtualX);
         }
         //setPositionWidgets();
     }
@@ -90,8 +97,9 @@ public class SubWindowWidget extends ComponentWidget {
 
     /**
      * set the virtual y to the given y
-     *  if the given y is larger than the getY() of the subwindow
+     *  if the given y is larger than the getY() of the subWindow
      *      then the virtual y = getY()
+     *  Alse updates the y-value of all the widgets inside this subWindow
      * @param y
      */
     public void setVirtualY(int y) {
@@ -101,7 +109,7 @@ public class SubWindowWidget extends ComponentWidget {
         else
             this.virtualY = y;
         for (Widget w:widgets) {
-            w.setPosition(w.getX(), w.getY() - oldY + this.virtualY);
+            w.setY(w.getY() - oldY + this.virtualY);
         }
     }
 
@@ -198,6 +206,15 @@ public class SubWindowWidget extends ComponentWidget {
     }
 
 
+    /**
+     * if point (x,y) is over the closeBtn, give the handleMouseEvent to the  closeBtn
+     * otherwise call super.handleMouseEvent(id, x, y, clickCount)
+     * @param id
+     * @param x
+     * @param y
+     * @param clickCount
+     * @return
+     */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (closeBtn.containsPoint(x, y))
@@ -206,8 +223,11 @@ public class SubWindowWidget extends ComponentWidget {
     }
 
 
-
-
+    /**
+     * resize the width of this subWindowWidget, also titleLabel and closeBtn are updated
+     *  titleLabel is 3/4*width and closeBtn 1/4*width
+     * @param w
+     */
     protected void resizeWidth(int w) {
         super.resizeWidth(w);
         this.titleLabel.setWidth(3*this.getWidth()/4);
@@ -225,6 +245,10 @@ public class SubWindowWidget extends ComponentWidget {
         super.paint(g);
     }
 
+    /**
+     * paint the widgets within this subwindow, within the clip of this subwindow
+     * @param g
+     */
     @Override
     protected void paintWidgets(Graphics g) {
         g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
