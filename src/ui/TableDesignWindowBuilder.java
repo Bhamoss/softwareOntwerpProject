@@ -1,220 +1,185 @@
-package window;
+package ui;
 
-import tablr.TableDesignHandler;
-import window.widget.*;
-import be.kuleuven.cs.som.taglet.*;
-import java.awt.event.KeyEvent;
+import ui.commandBus.CommandBus;
+import ui.widget.*;
+
 import java.util.LinkedList;
 
 /**
  * @author  Michiel Provoost
  * @version 1.0.0
  *
- * A window generating columnWidgets defining the table design mode.
+ * A window generating widgets defining the table design mode.
  *
  * @resp    Generating the window for the table design mode.
  */
-public class TableDesignWindow{
+public class TableDesignWindowBuilder {
 
     /**
      * Create a window class for the table design mode
-     * @param uiWindowHandler The master UI controller, managing this window.
-     * @param tableHandler The table design handler connecting the window to the backend.
      */
-    public TableDesignWindow(UIWindowHandler uiWindowHandler, TableDesignHandler tableHandler){
-            this.uiWindowHandler = uiWindowHandler;
-            this.tableHandler = tableHandler;
+    public TableDesignWindowBuilder (WindowCompositor compositor, UIHandler uiHandler, CommandBus bus){
+        this.compositor = compositor;
+        this.uiHandler = uiHandler;
+        this.bus = bus;
 
     }
 
     /**
-     * The UIWindowHandler managing this window.
+     * The UIStarter managing this window.
      */
-    private final UIWindowHandler uiWindowHandler;
-    /**
-     * The TableDesignHandler to interface with.
-     */
-    private TableDesignHandler tableHandler;
+    private final WindowCompositor compositor;
 
     /**
-     * A list containing the checkboxes to select a column.
+     * The TableRowsHandler to interface with.
      */
-    private LinkedList<CheckBoxWidget> checkBoxes;
+    private final UIHandler uiHandler;
 
     /**
-     * Gets the UIWindowHandler calling this window.
-     * @return The UIWindowHandler calling this window.
+     * The commandBus handling the widget events
      */
-    public UIWindowHandler getUIHandler() {
-        return uiWindowHandler;
-    }
+    private final CommandBus bus;
+
 
 
 
     /**
      * Constructs the UI for the design window.
      *
-     * @return A list of columnWidgets, defining the geometry
+     * @return A list of widgets, defining the geometry
      *         of the window
      */
-    public LinkedList<Widget> getLayout(){
-        LinkedList<Widget> layout = new LinkedList<>();
-        checkBoxes = new LinkedList<>();
+    public SubWindowWidget build(int id){
 
-        // Define different columns
-        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        ColumnWidget typeColumn = new ColumnWidget(
-                45+ getUIHandler().getTableDesignWidth(tableHandler.getOpenTable()),
-                10,55,500, "Type"
-        );
-        ColumnWidget blanksColumn = new ColumnWidget(
-                100+ getUIHandler().getTableDesignWidth(tableHandler.getOpenTable()),
-                10,45,500,"Blank"
-        );
-        ColumnWidget defaultColumn = new ColumnWidget(
-                145+ getUIHandler().getTableDesignWidth(tableHandler.getOpenTable()),
-                10,60,500,"Default"
-        );
-        ColumnWidget namesColumn = new ColumnWidget(
-                45, 10, getUIHandler().getTableDesignWidth(tableHandler.getOpenTable()), 500, "Names",
-                (Integer w) -> {
-                    getUIHandler().putTableDesignWidth(tableHandler.getOpenTable(), w);
-                    typeColumn.setX(45+w);
-                    blanksColumn.setX(100+w);
-                    defaultColumn.setX(145+w);
-                });
+        /*
+         // Define different columns
+         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
+         ColumnWidget typeColumn = new ColumnWidget(
+         45+ getUIHandler().getTableDesignWidth(uiHandler.getOpenTable()),
+         10,55,500, "Type"
+         );
+         ColumnWidget blanksColumn = new ColumnWidget(
+         100+ getUIHandler().getTableDesignWidth(uiHandler.getOpenTable()),
+         10,45,500,"Blank"
+         );
+         ColumnWidget defaultColumn = new ColumnWidget(
+         145+ getUIHandler().getTableDesignWidth(uiHandler.getOpenTable()),
+         10,60,500,"Default"
+         );
+         ColumnWidget namesColumn = new ColumnWidget(
+         45, 10, getUIHandler().getTableDesignWidth(uiHandler.getOpenTable()), 500, "Names",
+         (Integer w) -> {
+         getUIHandler().putTableDesignWidth(uiHandler.getOpenTable(), w);
+         typeColumn.setX(45+w);
+         blanksColumn.setX(100+w);
+         defaultColumn.setX(145+w);
+         });
+         layout.add(selectedColumn);
+         layout.add(typeColumn);
+         layout.add(blanksColumn);
+         layout.add(namesColumn);
+         layout.add(defaultColumn);
+         // Add row for each designcolumn
+         for(String columnName : uiHandler.getColumnNames()){
+         // NAME
+         EditorWidget editor = new EditorWidget(
+         true, columnName,
+         uiHandler::canHaveAsColumnName,
+         (String oldColumnName,String newColumnName) ->{
+         uiHandler.setColumnName(oldColumnName,newColumnName);
+         getUIHandler().changeSelectedItem("");
+         unSelectAllBoxes();
+         }
+         );
+         namesColumn.addWidget(editor);
+         // SELECTION
+         CheckBoxWidget selectBox = new CheckBoxWidget((Boolean toggle) ->{
+         unSelectAllBoxes();
+         getUIHandler().changeSelectedItem(editor.getStoredText());
+         });
+         selectedColumn.addWidget(selectBox);
+         checkBoxes.add(selectBox);
+         // TYPE
+         SwitchBoxWidget typeBox = new SwitchBoxWidget(true,
+         uiHandler.getAvailableColumnTypes(),
+         uiHandler.getColumnType(columnName),
+         (String type) ->
+         uiHandler.canHaveAsColumnType(editor.getStoredText(), type),
+         (String type) -> {
+         uiHandler.setColumnType(editor.getStoredText(), type);
+         reload();
+         }
+         );
+         typeColumn.addWidget(typeBox);
+         // BLANKS ALLOWED
+         CheckBoxWidget blanksBox = new CheckBoxWidget(
+         uiHandler.getColumnAllowBlank(editor.getStoredText()),
+         (Boolean toggle)-> {
+         uiHandler.setColumnAllowBlanks(editor.getStoredText(),toggle);
+         reload();
+         getUIHandler().repaint();
+         },
+         (Boolean toggle)->
+         uiHandler.canHaveAsColumnAllowBlanks(editor.getStoredText(),toggle)
+         );
+         blanksColumn.addWidget(blanksBox);
+         // DEFAULT VALUE
+         Widget defaultWidget;
+         if(uiHandler.getColumnType(columnName).equals("Boolean")) {
+         LinkedList<String> options = new LinkedList<>();
+         options.add("true");
+         options.add("false");
+         if (uiHandler.getColumnAllowBlank(editor.getStoredText()))
+         options.add("");
+         defaultWidget = new SwitchBoxWidget(true, options,
+         uiHandler.getColumnDefaultValue(editor.getStoredText()),
+         (String option) -> true,
+         (String option)->{
+         uiHandler.setColumnDefaultValue(editor.getStoredText(),option);
+         });
+         }else {
+         defaultWidget = new EditorWidget(true,
+         uiHandler.getColumnDefaultValue(editor.getStoredText()),
+         (String oldName, String newDefault) ->
+         uiHandler.canHaveAsDefaultValue(editor.getStoredText(), newDefault),
+         (String oldName, String newDefault) ->
+         uiHandler.setColumnDefaultValue(editor.getStoredText(), newDefault)
+         );
+         }
+         defaultColumn.addWidget(defaultWidget);
+         }
+         // CREATE COLUMN BUTTON
+         layout.add(new ButtonWidget(
+         20,500,105,30,true,"Create column",
+         (Integer clickCount) -> {
+         if(clickCount == 2) {
+         uiHandler.addColumn();
+         reload();
+         return true;
+         }
+         return false;
+         }));
+         // KEY EVENTS
+         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
+         if (keyCode == KeyEvent.VK_ESCAPE) {
+         getUIHandler().loadTablesWindow();
+         return true;
+         } else if (keyCode == KeyEvent.VK_DELETE && getUIHandler().getSelectedItem() != null) {
+         uiHandler.removeColumn(getUIHandler().getSelectedItem());
+         reload();
+         getUIHandler().removeTableRowsEntry(uiHandler.getOpenTable(), getUIHandler().getSelectedItem());
+         return true;
+         } else if (keyCode == 13) {
+         getUIHandler().loadTableRowsWindow(uiHandler.getOpenTable());
+         getUIHandler().repaint();
+         }
+         return false;
+         }));
+         **/
 
-        layout.add(selectedColumn);
-        layout.add(typeColumn);
-        layout.add(blanksColumn);
-        layout.add(namesColumn);
-        layout.add(defaultColumn);
-
-        // Add row for each designcolumn
-        /*for(String columnName : tableHandler.getColumnNames()){
-            // NAME
-            EditorWidget editor = new EditorWidget(
-                    true, columnName,
-                    tableHandler::canHaveAsColumnName,
-                    (String oldColumnName,String newColumnName) ->{
-                        tableHandler.setColumnName(oldColumnName,newColumnName);
-                        getUIHandler().changeSelectedItem("");
-                        unSelectAllBoxes();
-                    }
-            );
-            namesColumn.addWidget(editor);
-
-            // SELECTION
-            CheckBoxWidget selectBox = new CheckBoxWidget((Boolean toggle) ->{
-                unSelectAllBoxes();
-                getUIHandler().changeSelectedItem(editor.getStoredText());
-            });
-            selectedColumn.addWidget(selectBox);
-            checkBoxes.add(selectBox);
-
-
-            // TYPE
-            SwitchBoxWidget typeBox = new SwitchBoxWidget(true,
-                    tableHandler.getAvailableColumnTypes(),
-                    tableHandler.getColumnType(columnName),
-                    (String type) ->
-                            tableHandler.canHaveAsColumnType(editor.getStoredText(), type),
-                    (String type) -> {
-                            tableHandler.setColumnType(editor.getStoredText(), type);
-                            reload();
-                    }
-            );
-            typeColumn.addWidget(typeBox);
-
-
-            // BLANKS ALLOWED
-            CheckBoxWidget blanksBox = new CheckBoxWidget(
-                    tableHandler.getColumnAllowBlank(editor.getStoredText()),
-                    (Boolean toggle)-> {
-                            tableHandler.setColumnAllowBlanks(editor.getStoredText(),toggle);
-                            reload();
-                            getUIHandler().repaint();
-                    },
-                    (Boolean toggle)->
-                            tableHandler.canHaveAsColumnAllowBlanks(editor.getStoredText(),toggle)
-
-            );
-            blanksColumn.addWidget(blanksBox);
-
-            // DEFAULT VALUE
-            Widget defaultWidget;
-            if(tableHandler.getColumnType(columnName).equals("Boolean")) {
-                LinkedList<String> options = new LinkedList<>();
-                options.add("true");
-                options.add("false");
-                if (tableHandler.getColumnAllowBlank(editor.getStoredText()))
-                    options.add("");
-                defaultWidget = new SwitchBoxWidget(true, options,
-                        tableHandler.getColumnDefaultValue(editor.getStoredText()),
-                        (String option) -> true,
-                        (String option)->{
-                    tableHandler.setColumnDefaultValue(editor.getStoredText(),option);
-                });
-            }else {
-                defaultWidget = new EditorWidget(true,
-                        tableHandler.getColumnDefaultValue(editor.getStoredText()),
-                        (String oldName, String newDefault) ->
-                                tableHandler.canHaveAsDefaultValue(editor.getStoredText(), newDefault),
-                        (String oldName, String newDefault) ->
-                                tableHandler.setColumnDefaultValue(editor.getStoredText(), newDefault)
-                );
-            }
-            defaultColumn.addWidget(defaultWidget);
-        }
-        */
-
-        // CREATE COLUMN BUTTON
-//        layout.add(new ButtonWidget(
-//                20,500,105,30,true,"Create column",
-//                (Integer clickCount) -> {
-//                    if(clickCount == 2) {
-//                        tableHandler.addColumn();
-//                        reload();
-//                        return true;
-//                    }
-//                    return false;
-//                }));
-
-        // KEY EVENTS
-        layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
-            if (keyCode == KeyEvent.VK_ESCAPE) {
-                getUIHandler().loadTablesWindow();
-                return true;
-            } else if (keyCode == KeyEvent.VK_DELETE && getUIHandler().getSelectedItem() != null) {
-                tableHandler.removeColumn(getUIHandler().getSelectedItem());
-                reload();
-                getUIHandler().removeTableRowsEntry(tableHandler.getOpenTable(), getUIHandler().getSelectedItem());
-                return true;
-            } else if (keyCode == 13) {
-                getUIHandler().loadTableRowsWindow(tableHandler.getOpenTable());
-                getUIHandler().repaint();
-            }
-            return false;
-        }));
-
-        return layout;
+        return null;
     }
 
-    /**
-     * Forces deselect every checkbox
-     */
-    private void unSelectAllBoxes() {
-        for (CheckBoxWidget w : checkBoxes) {
-            w.forceUncheck();
-        }
-    }
-
-    /**
-     * Reconstructs the columnWidgets on the window.
-     */
-    private void reload() {
-        getUIHandler().loadTableDesignWindow(tableHandler.getOpenTable());
-    }
 
 
 

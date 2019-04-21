@@ -24,7 +24,7 @@ public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
     }
 
     public int getTableId() {
-        return getTableId();
+        return getTableId.get();
     }
 
     public CommandBus getCommandBus() {

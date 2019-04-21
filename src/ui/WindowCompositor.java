@@ -1,8 +1,14 @@
 package ui;
 
+import ui.commandBus.Subscribe;
+import ui.commands.AddTableCommand;
+import ui.commands.OpenTableCommand;
+import ui.commands.RemoveTableCommand;
 import ui.widget.SubWindowWidget;
+import ui.widget.Widget;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 public class WindowCompositor extends CanvasWindow {
@@ -56,7 +62,24 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     public void rebuildAllWidgets() {
-        // TODO: implement
+        LinkedList<SubWindowWidget> oldSubWindows = (LinkedList<SubWindowWidget>) subWindows.clone();
+        subWindows.clear();
+        for (SubWindowWidget subWindow : oldSubWindows)
+            addSubWindow(rebuildWindow(subWindow));
+        repaint();
+    }
+
+    private SubWindowWidget rebuildWindow(SubWindowWidget subwindow) {
+        // TODO
+        String type = subwindow.mode;
+        if (type == "tables")
+            return tablesWindowBuilder.build();
+        int id = subwindow.id;
+        if (type == "design")
+            return tableDesignWindowBuilder.build(id);
+        else if (type == "rows")
+            return tableRowsWindowBuilder.build(id);
+        return null;
     }
 
     public void setActiveSubWindow(SubWindowWidget subwindow) {
@@ -74,8 +97,9 @@ public class WindowCompositor extends CanvasWindow {
 
     private SubWindowWidget resolveCoordinate(int x, int y) {
         for (int i=subWindows.size()-1; i>=0; i--) {
-            if (subWindows.get(i).containsPoint(x, y))
+            if (subWindows.get(i).containsPoint(x, y)) {
                 return subWindows.get(i);
+            }
         }
         return null;
     }
@@ -90,19 +114,39 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
         SubWindowWidget clickedWindow = resolveCoordinate(x, y);
-        if (clickedWindow == null)
+        if (clickedWindow == null) {
             return;
+        }
+
+        boolean paintflag = false;
 
         if (clickedWindow.isActive()) {
-            clickedWindow.handleMouseEvent(id, x, y, clickCount);
-        } else {
+            System.out.println(id);
+            paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
+        } else if (id == MouseEvent.MOUSE_PRESSED){
             setActiveSubWindow(clickedWindow);
         }
 
+        if (paintflag)
+            repaint();
     }
 
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
+        boolean paintflag = getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
+        if (paintflag)
+            repaint();
     }
+
+
+    @Subscribe
+    public void update(AddTableCommand command) {
+        rebuildAllWidgets();
+    }
+
+    @Subscribe
+    public void update(RemoveTableCommand command) {
+        rebuildAllWidgets();
+    }
+
 }

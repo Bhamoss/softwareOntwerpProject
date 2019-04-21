@@ -1,11 +1,11 @@
-import ui.UIWindowHandler;
+import ui.UIStarter;
 
 
 public class Main{
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            // create the UIWindowHandler
-            UIWindowHandler ui = new UIWindowHandler();
+            // create the UIStarter
+            UIStarter ui = new UIStarter();
             /*
              *
              * Difference repaint VS load

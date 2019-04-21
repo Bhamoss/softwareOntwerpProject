@@ -11,13 +11,13 @@ import ui.commandBus.CommandBus;
  *
  * @resp    Managing the correct windows.
  */
-public class UIWindowHandler extends CanvasWindow{
+public class UIStarter extends CanvasWindow{
 
     /**
      * Creates a new UI window with given tableManager.
      * @Effect loads tables window.
      */
-    public UIWindowHandler(){
+    public UIStarter(){
         super("Tablr starting...");
 
         // create handler (for all modes)
@@ -37,6 +37,8 @@ public class UIWindowHandler extends CanvasWindow{
         compositor.setTablesWindowBuilder(tablesWindowBuilder);
         compositor.setTableDesignWindowBuilder(tableDesignWindowBuilder);
         compositor.setTableRowsWindowBuilder(tableRowsWindowBuilder);
+
+        commandBus.subscribe(compositor);
 
         compositor.addTablesSubWindow();
     }

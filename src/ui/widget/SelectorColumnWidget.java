@@ -52,10 +52,11 @@ public class SelectorColumnWidget extends ColumnWidget {
 
 
     public int getSelectedId() {
+        CheckBoxWidget w;
         for (int i = 1; i < widgets.size(); i++) {
-            CheckBoxWidget w = (CheckBoxWidget)widgets.get(i);
+            w = (CheckBoxWidget) widgets.get(i);
             if (w.isChecked()) {
-                return ids.get(i);
+                return ids.get(i-1);
             }
         }
         return -1;

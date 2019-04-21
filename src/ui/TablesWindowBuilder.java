@@ -5,6 +5,7 @@ import ui.commandBus.CommandBus;
 import ui.commands.*;
 import ui.widget.*;
 
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -29,7 +30,7 @@ public class TablesWindowBuilder {
     }
 
     /**
-     * The UIWindowHandler managing this window.
+     * The UIStarter managing this window.
      */
     private final WindowCompositor compositor;
 
@@ -53,14 +54,14 @@ public class TablesWindowBuilder {
      */
     public SubWindowWidget build(){
         // list you will return
-        SubWindowWidget window = new SubWindowWidget(10, 10, 200, 200, true, "Tables");
+        SubWindowWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Tables");
+        window.mode = "tables";
 
-
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, 500, "S", false, true, x->{});
-        window.addWidget(selectorColumn);
         // TODO: tableLayout
-        ColumnWidget tablesColumn = new ColumnWidget(45,10,80,500, "Tables", true, true, x->{});
+        ColumnWidget tablesColumn = new ColumnWidget(45,10,80,250, "Tables", true, true, x->{});
         window.addWidget(tablesColumn);
+        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, tablesColumn.getHeight(), "S", false, true, x->{});
+        window.addWidget(selectorColumn);
 
 
         // fill all 3 columns with corresponding widgets
@@ -86,7 +87,7 @@ public class TablesWindowBuilder {
                 ));
 
         // is an invisible widget which listens for key events
-        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, bus)));
+        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, bus), KeyEvent.VK_DELETE));
         return window;
     }
 }

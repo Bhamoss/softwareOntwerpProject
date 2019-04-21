@@ -36,7 +36,7 @@ public class LabelWidget extends Widget{
     public LabelWidget(int x, int y, int width, int height, boolean border, Integer id) {
         super(x,y,width,height,border);
         this.id = id;
-        //this.update();
+        this.text = "";
     }
 
 
@@ -51,6 +51,7 @@ public class LabelWidget extends Widget{
     public void setGetHandler(Function<Integer, String> refreshText) {
         assert(this.id != null);
         this.refreshText = refreshText;
+        this.update();
     }
 
     /**
@@ -72,9 +73,7 @@ public class LabelWidget extends Widget{
     }
 
 
-    @Override
-    @Subscribe
-    public void update(UICommand command) {
+    public void update() {
         if (refreshText != null) {
             setText(refreshText.apply(id));
         }

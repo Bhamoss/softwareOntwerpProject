@@ -19,6 +19,9 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int MARGIN_BOTTOM = 10;
     private static final int MARGIN_RIGHT = 10;
 
+    public int id;
+    public String mode;
+
 
 
     /**

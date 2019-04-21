@@ -113,7 +113,6 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_CLICKED && clickCount == 1) {
-            clickHandler.execute();
             //clickHandler.accept(clickCount);
             if (this.containsPoint(x,y)) {
                 setSelected();
@@ -121,6 +120,10 @@ public class EditorWidget extends LabelWidget {
             } else {
                 return attemptDeselect();
             }
+        }
+
+        if (id == MouseEvent.MOUSE_CLICKED && clickCount == 2 && this.containsPoint(x,y)) {
+            clickHandler.execute();
         }
         return false;
     }
