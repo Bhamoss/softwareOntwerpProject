@@ -1,16 +1,7 @@
 package ui;
 
-import tablr.TableDesignHandler;
-import tablr.TableHandler;
-import tablr.TableRowsHandler;
 import tablr.TablesHandler;
 import ui.commandBus.CommandBus;
-import ui.widget.Widget;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * @author  Michiel Provoost
@@ -22,8 +13,6 @@ import java.util.LinkedList;
  */
 public class UIWindowHandler extends CanvasWindow{
 
-    private final TablesHandler tablesHandler;
-
     /**
      * Creates a new UI window with given tableManager.
      * @Effect loads tables window.
@@ -32,17 +21,30 @@ public class UIWindowHandler extends CanvasWindow{
         super("Tablr starting...");
 
         // create handler (for all modes)
-        this.tablesHandler = new TablesHandler();
+        TableLayout tableLayout = new TableLayout();
+        TablesHandler tablesHandler = new TablesHandler();
+        uiHandler = new UIHandler(tableLayout, tablesHandler);
+        compositor = new WindowCompositor();
+        compositor.show();
+
+        commandBus = new CommandBus();
 
         // create a window for all modes
-        this.tableDesignWindowBuilder = new TableDesignWindowBuilder(this, tablesHandler);
-        this.tablesWindowBuilder = new TablesWindowBuilder(this, tablesHandler);
-        this.tableRowsWindowBuilder = new TableRowsWindowBuilder(this, tablesHandler);
+        tablesWindowBuilder = new TablesWindowBuilder(compositor, uiHandler, commandBus);
+        tableDesignWindowBuilder = new TableDesignWindowBuilder(compositor, uiHandler, commandBus);
+        tableRowsWindowBuilder = new TableRowsWindowBuilder(compositor, uiHandler, commandBus);
 
-        this.commandBus = new CommandBus();
+        compositor.setTablesWindowBuilder(tablesWindowBuilder);
+        compositor.setTableDesignWindowBuilder(tableDesignWindowBuilder);
+        compositor.setTableRowsWindowBuilder(tableRowsWindowBuilder);
 
+        compositor.addTablesSubWindow();
     }
 
+
+    private final UIHandler uiHandler;
+
+    private final WindowCompositor compositor;
 
 
     /**

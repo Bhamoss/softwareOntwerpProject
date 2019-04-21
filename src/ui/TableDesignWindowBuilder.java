@@ -1,6 +1,5 @@
 package ui;
 
-import tablr.TableDesignHandler;
 import ui.commandBus.CommandBus;
 import ui.widget.*;
 
@@ -51,8 +50,9 @@ public class TableDesignWindowBuilder {
      * @return A list of widgets, defining the geometry
      *         of the window
      */
-    public LinkedList<Widget> build(int id){
+    public SubWindowWidget build(int id){
 
+        /**
         // Define different columns
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         ColumnWidget typeColumn = new ColumnWidget(
@@ -187,25 +187,11 @@ public class TableDesignWindowBuilder {
             }
             return false;
         }));
+         **/
 
-        return layout;
+        return null;
     }
 
-    /**
-     * Forces deselect every checkbox
-     */
-    private void unSelectAllBoxes() {
-        for (CheckBoxWidget w : checkBoxes) {
-            w.forceUncheck();
-        }
-    }
-
-    /**
-     * Reconstructs the widgets on the window.
-     */
-    private void reload() {
-        getUIHandler().loadTableDesignWindow(uiHandler.getOpenTable());
-    }
 
 
 

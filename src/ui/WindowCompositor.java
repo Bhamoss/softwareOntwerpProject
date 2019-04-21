@@ -7,17 +7,26 @@ import java.util.LinkedList;
 
 public class WindowCompositor extends CanvasWindow {
 
-    LinkedList<SubWindowWidget> subWindows;
-    TablesWindowBuilder tablesWindowBuilder;
-    TableDesignWindowBuilder tableDesignWindowBuilder;
-    TableRowsWindowBuilder tableRowsWindowBuilder;
+    private LinkedList<SubWindowWidget> subWindows;
+    private TablesWindowBuilder tablesWindowBuilder;
+    private TableDesignWindowBuilder tableDesignWindowBuilder;
+    private TableRowsWindowBuilder tableRowsWindowBuilder;
 
 
-    public WindowCompositor(TablesWindowBuilder tablesWindowBuilder, TableDesignWindowBuilder tableDesignWindowBuilder, TableRowsWindowBuilder tableRowsWindowBuilder) {
+    public WindowCompositor() {
         super("Tablr");
         this.subWindows = new LinkedList<>();
+    }
+
+    public void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
         this.tablesWindowBuilder = tablesWindowBuilder;
+    }
+
+    public void setTableDesignWindowBuilder(TableDesignWindowBuilder tableDesignWindowBuilder) {
         this.tableDesignWindowBuilder = tableDesignWindowBuilder;
+    }
+
+    public void setTableRowsWindowBuilder(TableRowsWindowBuilder tableRowsWindowBuilder) {
         this.tableRowsWindowBuilder = tableRowsWindowBuilder;
     }
 

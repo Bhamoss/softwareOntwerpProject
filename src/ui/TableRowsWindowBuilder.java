@@ -1,6 +1,5 @@
 package ui;
 
-import tablr.TableRowsHandler;
 import ui.commandBus.CommandBus;
 import ui.widget.*;
 
@@ -52,7 +51,8 @@ public class TableRowsWindowBuilder {
      * @return A list of widgets, defining the geometry
      *         of the window
      */
-    public LinkedList<Widget> build(int id){
+    public SubWindowWidget build(int id){
+        /*
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         layout.add(selectedColumn);
 
@@ -133,9 +133,10 @@ public class TableRowsWindowBuilder {
             }
             return false;
         }));
+         **/
 
 
-        return layout;
+        return null;
     }
 
 
