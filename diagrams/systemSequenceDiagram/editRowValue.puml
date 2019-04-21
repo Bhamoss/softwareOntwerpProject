@@ -1,5 +1,5 @@
 @startuml
-title Edit row value \n MSS
+titleLabel Edit row value \n MSS
 Actor User
 Boundary System
 User -> System: editCell(column,row)

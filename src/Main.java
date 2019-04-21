@@ -9,9 +9,9 @@ public class Main{
             /*
              *
              * Difference repaint VS load
-             * - repaint: paints the existing widgets, without asking for new ones
+             * - repaint: paints the existing columnWidgets, without asking for new ones
              *
-             * - load/rebuild: constructs all new widgets with information from the tablesHandler and paint them
+             * - load/rebuild: constructs all new columnWidgets with information from the tablesHandler and paint them
              *
              */
         });

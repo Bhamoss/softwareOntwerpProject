@@ -1,5 +1,5 @@
 @startuml
-title Class Diagram
+titleLabel Class Diagram
 package "window" {
 
     class CanvasWindow{

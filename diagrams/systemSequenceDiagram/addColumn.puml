@@ -1,5 +1,5 @@
 @startuml
-title Add column \n MSS
+titleLabel Add column \n MSS
 Actor User
 Boundary System
 User -> System: createNewColumn()

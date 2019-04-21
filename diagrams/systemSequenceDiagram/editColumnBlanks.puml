@@ -1,5 +1,5 @@
 @startuml
-title Edit column blanks \n \n Main Success Scenario
+titleLabel Edit column blanks \n \n Main Success Scenario
 Actor User
 Boundary System
 alt blanks == allowed

@@ -1,65 +1,76 @@
-package ui;
+package window;
 
-import ui.commandBus.CommandBus;
-import ui.widget.*;
-
+import tablr.TableRowsHandler;
+import window.widget.*;
+import be.kuleuven.cs.som.taglet.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author  Michiel Provoost
  * @version 1.0.0
  *
- * A window generating widgets defining the table rows mode.
+ * A window generating columnWidgets defining the table rows mode.
  *
  * @resp    Generating the window for the table rows mode.
  */
-public class TableRowsWindowBuilder {
+public class TableRowsWindow {
 
+    /**
+     * A list containing the checkboxes to select a row.
+     */
+    private LinkedList<CheckBoxWidget> checkBoxes;
 
     /**
      * Generates a tableRowsWindow with a given UIWindowHandler and TableRowsHandler.
+     * @param uiWindowHandler The master UI controller, managing this window.
+     * @param tableHandler The TableRowsHandler connecting the window to the backend.
      */
-    public TableRowsWindowBuilder (WindowCompositor compositor, UIHandler uiHandler, CommandBus bus){
-        this.compositor = compositor;
-        this.uiHandler = uiHandler;
-        this.bus = bus;
+    public TableRowsWindow(UIWindowHandler uiWindowHandler, TableRowsHandler tableHandler){
+        this.uiWindowHandler = uiWindowHandler;
+        this.tableHandler = tableHandler;
 
     }
 
     /**
      * The UIWindowHandler managing this window.
      */
-    private final WindowCompositor compositor;
+    private final UIWindowHandler uiWindowHandler;
 
     /**
      * The TableRowsHandler to interface with.
      */
-    private final UIHandler uiHandler;
+    private final TableRowsHandler tableHandler;
 
     /**
-     * The commandBus handling the widget events
+     * Gets the UIWindowHandler calling this window.
+     * @return The UIWindowHandler calling this window.
      */
-    private final CommandBus bus;
-
+    public UIWindowHandler getUIHandler() {
+        return uiWindowHandler;
+    }
 
     /**
      * Constructs the UI for the rows window.
      *
-     * @return A list of widgets, defining the geometry
+     * @return A list of columnWidgets, defining the geometry
      *         of the window
      */
-    public SubWindowWidget build(int id){
-        /*
+    public LinkedList<Widget> getLayout(){
+        LinkedList<Widget> layout = new LinkedList<>();
+        checkBoxes = new LinkedList<>();
+        String tableName = tableHandler.getOpenTable();
+
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         layout.add(selectedColumn);
 
         ColumnWidget column;
         EditorWidget editor;
 
-        ArrayList<String> columnNames = uiHandler.getColumnNames();
+        ArrayList<String> columnNames = tableHandler.getColumnNames();
         LinkedList<ColumnWidget> traversedColumns = new LinkedList<>();
         Collections.reverse(columnNames);
 
@@ -69,23 +80,24 @@ public class TableRowsWindowBuilder {
             }
         }
 
+        /*
         for(String columnName : columnNames) {
             ColumnWidget[] currentTraversed = traversedColumns.stream().toArray(ColumnWidget[]::new);
-            column = new ColumnWidget(calcPos(columnName, uiHandler.getColumnNames()), 10, getUIHandler().getTableRowsWidth(uiHandler.getOpenTable(),columnName), 500, columnName, true, true,
+            column = new ColumnWidget(calcPos(columnName, tableHandler.getColumnNames()), 10, getUIHandler().getTableRowsWidth(tableHandler.getOpenTable(),columnName), 500, columnName, true, true,
                     (Integer w) -> {
                         for( ColumnWidget cw : currentTraversed ) {
-                            cw.setX(calcPos(cw.getName(), uiHandler.getColumnNames()));
+                            cw.setX(calcPos(cw.getName(), tableHandler.getColumnNames()));
                         }
                         getUIHandler().addTableRowsEntry(tableName, columnName, w);
                 });
             traversedColumns.add(column);
 
-            for (int i = 1; i<= uiHandler.getNbRows(); i++) {
+            for (int i = 1; i<=tableHandler.getNbRows(); i++) {
                 int row = i;
-                editor = new EditorWidget(true, uiHandler.getCellValue(columnName,i),
-                        (String oldName, String newName) -> uiHandler.canHaveAsCellValue(columnName,row,newName),
+                editor = new EditorWidget(true, tableHandler.getCellValue(columnName,i),
+                        (String oldName, String newName) -> tableHandler.canHaveAsCellValue(columnName,row,newName),
                         (String oldName, String newName) -> {
-                            uiHandler.setCellValue(columnName, row, newName);
+                            tableHandler.setCellValue(columnName, row, newName);
                             getUIHandler().changeSelectedItem("");
                             unSelectAllBoxes();
                         }
@@ -96,8 +108,8 @@ public class TableRowsWindowBuilder {
             layout.add(column);
 
         }
-
-        for (int i = 1; i<= uiHandler.getNbRows(); i++) {
+        */
+        for (int i = 1; i<=tableHandler.getNbRows(); i++) {
             // Create a button left of the editor to select it
             Integer row = i;
             CheckBoxWidget selectButton = new CheckBoxWidget(
@@ -106,26 +118,27 @@ public class TableRowsWindowBuilder {
                         getUIHandler().changeSelectedItem(row.toString());
                     });
             selectedColumn.addWidget(selectButton);
+            checkBoxes.add(selectButton);
         }
 
-        ButtonWidget createButton = new ButtonWidget(20,500,105,30,true,"Create Row",
-                (Integer clickCount) ->{
-                    if(clickCount == 2){
-                        uiHandler.addRow();
-                        getUIHandler().loadTableRowsWindow(uiHandler.getOpenTable());
-                        return true;
-                    }
-                    return false;
-        });
-        layout.add(createButton);
+//        ButtonWidget createButton = new ButtonWidget(20,500,105,30,true,"Create Row",
+//                (Integer clickCount) ->{
+//                    if(clickCount == 2){
+//                        tableHandler.addRow();
+//                        getUIHandler().loadTableRowsWindow(tableHandler.getOpenTable());
+//                        return true;
+//                    }
+//                    return false;
+//        });
+        //layout.add(createButton);
 
         layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
             if (keyCode == KeyEvent.VK_DELETE && getUIHandler().getSelectedItem() != null) {
-                uiHandler.removeRow(Integer.valueOf(getUIHandler().getSelectedItem()));
-                getUIHandler().loadTableRowsWindow(uiHandler.getOpenTable());
+                tableHandler.removeRow(Integer.valueOf(getUIHandler().getSelectedItem()));
+                getUIHandler().loadTableRowsWindow(tableHandler.getOpenTable());
                 return true;
             } else if (keyCode == 13) {
-                getUIHandler().loadTableDesignWindow(uiHandler.getOpenTable());
+                getUIHandler().loadTableDesignWindow(tableHandler.getOpenTable());
                 getUIHandler().repaint();
             }else if (keyCode == KeyEvent.VK_ESCAPE) {
                 getUIHandler().loadTablesWindow();
@@ -133,11 +146,36 @@ public class TableRowsWindowBuilder {
             }
             return false;
         }));
-         **/
 
 
-        return null;
+        return layout;
     }
 
+    /**
+     * Unselects all rows.
+     */
+    private void unSelectAllBoxes() {
+        for (CheckBoxWidget w : checkBoxes) {
+            w.forceUncheck();
+        }
+    }
+
+    /**
+     * Calculates the x-position of a given column.
+     *
+     * @param columnName The column to calculate position of.
+     * @param names The names of all other columns.
+     * @return The x-coordinate of the top-left of the column.
+     */
+    private int calcPos(String columnName, List<String> names) {
+        int x = 45;
+        for (String name : names) {
+            if (name == columnName)
+                break;
+            System.out.println();
+            x += getUIHandler().getTableRowsWidth(tableHandler.getOpenTable(),name);
+        }
+        return x;
+    }
 
 }

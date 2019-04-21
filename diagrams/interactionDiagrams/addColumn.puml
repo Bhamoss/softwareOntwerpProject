@@ -1,5 +1,5 @@
 @startuml
-title Add column
+titleLabel Add column
 Actor User
 
 User->ButtonWidget: Presses button

@@ -1,5 +1,5 @@
 @startuml
-title Edit Column Name
+titleLabel Edit Column Name
 Actor User
 
 

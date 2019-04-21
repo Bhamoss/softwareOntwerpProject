@@ -1,5 +1,5 @@
 @startuml
-title Edit column type \n \n Main Success Scenario
+titleLabel Edit column type \n \n Main Success Scenario
 Actor User
 Boundary System
 User -> System: selectColumnType(Column)

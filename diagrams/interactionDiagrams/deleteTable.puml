@@ -1,5 +1,5 @@
 @startuml
-title Delete Table\nMSS
+titleLabel Delete Table\nMSS
 Actor User
 
 User->ButtonWidget: Presses delete

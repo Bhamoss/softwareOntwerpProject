@@ -1,5 +1,5 @@
 @startuml
-title Add row
+titleLabel Add row
 Actor User
 
 User->ButtonWidget: Presses button

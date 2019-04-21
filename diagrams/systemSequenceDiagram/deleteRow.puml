@@ -1,5 +1,5 @@
 @startuml
-title Delete row \n MSS
+titleLabel Delete row \n MSS
 Actor User
 Boundary System
 User-> System: selectRow(row)

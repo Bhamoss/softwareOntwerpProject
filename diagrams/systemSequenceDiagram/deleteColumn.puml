@@ -1,5 +1,5 @@
 @startuml
-title Delete column\nMSS
+titleLabel Delete column\nMSS
 Actor User
 Boundary System
 User -> System: selectColumn(column)

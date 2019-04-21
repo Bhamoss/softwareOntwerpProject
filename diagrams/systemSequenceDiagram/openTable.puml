@@ -1,5 +1,5 @@
 @startuml
-title Open table \n MSS
+titleLabel Open table \n MSS
 Actor User
 Boundary System
 User -> System: selectTable(table)

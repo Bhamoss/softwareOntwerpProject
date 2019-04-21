@@ -1,5 +1,5 @@
 @startuml
-title Domain Model
+titleLabel Domain Model
 
 class Table{
 name

@@ -1,5 +1,5 @@
 @startuml
-title Delete Row\nMSS
+titleLabel Delete Row\nMSS
 Actor User
 User->ButtonWidget: Presses delete
 activate ButtonWidget

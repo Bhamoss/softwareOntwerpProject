@@ -1,5 +1,5 @@
 @startuml
-title Edit Column Name  \n\nMain Success Scenario
+titleLabel Edit Column Name  \n\nMain Success Scenario
 Actor User
 Boundary System
 User -> System: selectColumnName(Column)

@@ -1,5 +1,5 @@
 @startuml
-title Edit Column Default Value
+titleLabel Edit Column Default Value
 Actor User
 
 
