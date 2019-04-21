@@ -1,4 +1,4 @@
-import window.UIWindowHandler;
+import ui.UIWindowHandler;
 
 
 public class Main{

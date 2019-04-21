@@ -1,58 +1,80 @@
-package tablr;
+package ui;
+
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Model;
-import be.kuleuven.cs.som.taglet.*;
+import tablr.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Thomas Bamelis
- * @version 1.0.0
- *
- * A class accepting tasks which can be done in table mode, and thus providing a controller for it, which works on and creates a new TableManager.
- *
- * @invar the handler always has a TableManager.
- *  | getTableManager() != null
- *
- * @resp provide a controller for the table mode and its use cases.
- */
-public class TablesHandler {
+public class UIHandler {
 
-    /**
-     * Creates a tableHandler with the given tableManager.
-     *
-     * @throws IllegalArgumentException if mng is invalid.
-     *                                  | !canHaveAsTableManager(mng)
-     * @post the tableManager for this is set to mng.
-     * | if(canHaveAsTableManager(mng){getTableManager().getTableManager() == new TableManager()}
-     */
-    public TablesHandler() {
-
-        TableManager mng = new TableManager();
-        // safety check, should always be true
-        assert (canHaveAsTableManager(mng));
-        this.tableManager = mng;
-
+    public UIHandler(TableLayout tableLayout, TablesHandler tablesHandler){
+        this.tableLayout = tableLayout;
+        this.tablesHandler = tablesHandler;
     }
 
+    public TableLayout getTableLayout() {
+        return tableLayout;
+    }
+
+    /**
+     * Returns the tableManager.
+     */
+    @Basic @Immutable @Model
+    public TablesHandler getTablesHandler() {
+        return tablesHandler;
+    }
+
+    private final TableLayout tableLayout;
+
+
+    public Integer getTableWidth(Integer tableId) {
+        return getTableLayout().getTableWidth(tableId);
+    }
+
+    public void putTableWidth(Integer tableId, Integer tableWidth) {
+        getTableLayout().putTableWidth(tableId,tableWidth);
+    }
+
+    public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
+        return getTableLayout().getColumnWidth(tableId,columnNumber);
+    }
+
+    public void putColumnWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
+        getTableLayout().putColumnWidth(tableId,columnNumber,columnWidth);
+    }
+
+    public Integer getRowWidth(Integer tableId, Integer columnNumber) {
+        return getTableLayout().getRowWidth(tableId,columnNumber);
+    }
+
+    public void putRowWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
+        getTableLayout().putRowWidth(tableId,columnNumber,columnWidth);
+    }
+
+    /*
+     *  Common stuff
+     * ****************************************************************************
+     */
 
     /*
      *  TableHandler
      * ****************************************************************************
      */
+    private final TablesHandler tablesHandler;
 
     /**
      *
      * Returns the amount of tables.
      *
      * @return the amount of tables.
-     * | return == getTableIds().size()
+     * | return == getTablesHandler().getNbTables()
      */
     public int getNbTables()
     {
-        return  getTableIds().size();
+        return  getTablesHandler().getNbTables();
     }
 
     /**
@@ -61,12 +83,12 @@ public class TablesHandler {
      *
      * @return a list containing the ids of the tables.
      * | return == ArrayList<Integer>
-     * | && ∀table in getTableManager().tables: ∃! i: ArrayList<Integer>.get(i).equals(table.getId())
+     * | && ∀table in getTablesHandler().tables: ∃! i: ArrayList<Integer>.get(i).equals(table.getId())
      *
      */
     public ArrayList<Integer> getTableIds()
     {
-        return getTableManager().getTableIds();
+        return getTablesHandler().getTableIds();
     }
 
 
@@ -78,14 +100,14 @@ public class TablesHandler {
      *          The id of the table.
      *
      * @return  The name of the table with id id.
-     *      | return = getTableManager().getTableManager().getTable(id).getName()
+     *      | return = getTablesHandler().getTableName(id)
      * @throws IllegalTableException
      *      If there is no table with that id.
-     *      | !getTableManager().getTableManager().hasAsTable(id)
+     *      | !getTableManager().hasAsTable(id)
      */
-    public String getTableName(int id) throws IllegalTableException
+    String getTableName(int id) throws IllegalTableException
     {
-        return getTableManager().getTableName(id);
+        return getTablesHandler().getTableName(id);
     }
 
 
@@ -98,13 +120,13 @@ public class TablesHandler {
      *      The name of the table to check.
      *
      * @return true if the name of there is a table with the name name, otherwise false.
-     *  | return == getTableManager().getTableNames().contains(name)
+     *  | return == getTablesHandler().hasAsTable(name)
      *
      */
-    public boolean hasAsTable(String name)
+    boolean hasAsTable(String name)
     {
 
-        return getTableManager().hasAsTable(name);
+        return getTablesHandler().hasAsTable(name);
     }
 
     /**
@@ -118,10 +140,10 @@ public class TablesHandler {
      *  | return == getTableManager().getTableNames().contains(name)
      *
      */
-    public boolean hasAsTable(int tableId)
+    boolean hasAsTable(int tableId)
     {
 
-        return getTableManager().hasAsTable(tableId);
+        return getTablesHandler().hasAsTable(tableId);
     }
 
 
@@ -133,7 +155,7 @@ public class TablesHandler {
      */
     public ArrayList<String> getTableNames()
     {
-        return tableManager.getTableNames();
+        return getTablesHandler().getTableNames();
     }
 
 
@@ -156,7 +178,7 @@ public class TablesHandler {
      */
     public boolean canHaveAsName(int tableId, String newTableName) throws IllegalTableException
     {
-        return getTableManager().canHaveAsName(tableId, newTableName);
+        return getTablesHandler().canHaveAsName(tableId, newTableName);
     }
 
 
@@ -166,7 +188,7 @@ public class TablesHandler {
      * @throws IllegalTableException
      */
     public boolean isTableEmpty(int tableId) throws IllegalTableException {
-        return getTableManager().isTableEmpty(tableId);
+        return getTablesHandler().isTableEmpty(tableId);
     }
 
 
@@ -191,7 +213,7 @@ public class TablesHandler {
      */
     public void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
     {
-        getTableManager().setTableName(tableId, newName);
+        getTablesHandler().setTableName(tableId, newName);
     }
 
     /**
@@ -211,7 +233,7 @@ public class TablesHandler {
      */
     public void addTable() throws IllegalStateException
     {
-        getTableManager().addTable();
+        getTablesHandler().addTable();
     }
 
     /**
@@ -230,7 +252,7 @@ public class TablesHandler {
      */
     public void removeTable(int tableId) throws IllegalTableException
     {
-        getTableManager().removeTable(tableId);
+        getTablesHandler().removeTable(tableId);
     }
 
 
@@ -255,7 +277,7 @@ public class TablesHandler {
      */
     public ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
     {
-        return getTableManager().getColumnNames(tableId);
+        return getTablesHandler().getColumnNames(tableId);
     }
 
 
@@ -272,9 +294,9 @@ public class TablesHandler {
      * | getTableManager().hasAsTable(tableId) == false
      */
     @Model
-    public ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
+    ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
     {
-        return getTableManager().getColumnIds(tableId);
+        return getTablesHandler().getColumnIds(tableId);
     }
 
 
@@ -291,7 +313,7 @@ public class TablesHandler {
      */
     public int getNbColumns(int tableId) throws IllegalTableException
     {
-        return getColumnIds(tableId).size();
+        return getTablesHandler().getNbColumns(tableId);
     }
 
 
@@ -305,7 +327,7 @@ public class TablesHandler {
      * @param   columnId
      *          The id of the column of which the type should be returned.
      * @return  The type of the given column.
-     * @throws  IllegalColumnException
+     * @throws IllegalColumnException
      *          There is no column in this table with the given column name.
      *          | !getTableManager().getTable(tableId).hasAsColumn(columnId)
      * @throws IllegalTableException
@@ -314,7 +336,7 @@ public class TablesHandler {
      */
     public String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnType(tableId, columnId);
+        return getTablesHandler().getColumnType(tableId, columnId);
     }
 
     //TODO: change when the comments on iteration 1 have been implemented
@@ -349,7 +371,7 @@ public class TablesHandler {
      */
     public boolean getColumnAllowBlank(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnAllowBlank(tableId, columnId);
+        return getTablesHandler().getColumnAllowBlank(tableId, columnId);
     }
 
     /**
@@ -365,7 +387,7 @@ public class TablesHandler {
      */
     public String getColumnDefaultValue(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().getColumnDefaultValue(tableId, columnId);
+        return getTablesHandler().getColumnDefaultValue(tableId, columnId);
     }
 
 
@@ -392,10 +414,8 @@ public class TablesHandler {
      */
     public boolean canHaveAsColumnName(int tableId, int columnId, String newName) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnName(tableId, columnId, newName);
+        return getTablesHandler().canHaveAsColumnName(tableId, columnId, newName);
     }
-
-    // Dit kan enum type zijn of string
 
     /**
      *
@@ -417,7 +437,7 @@ public class TablesHandler {
     public boolean canHaveAsColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalTableException
     {
         //System.out.println();
-        return getTableManager().canHaveAsColumnType(tableId, columnId, type);
+        return getTablesHandler().canHaveAsColumnType(tableId, columnId, type);
     }
 
 
@@ -440,7 +460,7 @@ public class TablesHandler {
      */
     public boolean canHaveAsColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnAllowBlanks(tableId, columnId, blanksAllowed);
+        return getTablesHandler().canHaveAsColumnAllowBlanks(tableId, columnId, blanksAllowed);
     }
 
     /**
@@ -462,7 +482,7 @@ public class TablesHandler {
      */
     public boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsDefaultValue(tableId, columnId, newDefaultValue);
+        return getTablesHandler().canHaveAsDefaultValue(tableId, columnId, newDefaultValue);
     }
 
     /**
@@ -489,7 +509,7 @@ public class TablesHandler {
      */
     public void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnName(tableId, columnId, newColumnName);
+        getTablesHandler().setColumnName(tableId, columnId, newColumnName);
     }
 
     /**
@@ -516,7 +536,7 @@ public class TablesHandler {
     public void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         //System.out.println("SETTING COLUMN TYPE");
-        getTableManager().setColumnType(tableId, columnId, type);
+        getTablesHandler().setColumnType(tableId, columnId, type);
     }
 
     /**
@@ -539,7 +559,7 @@ public class TablesHandler {
      */
     public void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnAllowBlanks(tableId, columnId, blanksAllowed);
+        getTablesHandler().setColumnAllowBlanks(tableId, columnId, blanksAllowed);
     }
 
     /**
@@ -563,7 +583,7 @@ public class TablesHandler {
      */
     public void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setColumnDefaultValue(tableId, columnId, defaultValue);
+        getTablesHandler().setColumnDefaultValue(tableId, columnId, defaultValue);
     }
 
     /**
@@ -580,7 +600,7 @@ public class TablesHandler {
      */
     public void addColumn(int tableId) throws IllegalTableException
     {
-        getTableManager().addColumn(tableId);
+        getTablesHandler().addColumn(tableId);
     }
 
 
@@ -602,7 +622,7 @@ public class TablesHandler {
      */
     public void removeColumn(int tableId, int columnId) throws IllegalArgumentException, IllegalTableException
     {
-        getTableManager().removeColumn(tableId, columnId);
+        getTablesHandler().removeColumn(tableId, columnId);
     }
 
 
@@ -626,7 +646,7 @@ public class TablesHandler {
      * @throws  IllegalColumnException
      *          There isn't a column with the given columnId in this table.
      *          | !getTableManager().getTable(tableId).hasAsColumn(columnId)
-     * @throws  IllegalRowException
+     * @throws IllegalRowException
      *          The row doesn't exists.
      *          | row > getTableManager().getTable(tableId).getNbRows() || row < 1
      * @throws IllegalTableException
@@ -635,7 +655,7 @@ public class TablesHandler {
      */
     public String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        return getTableManager().getCellValue(tableId, columnId ,row);
+        return getTablesHandler().getCellValue(tableId, columnId ,row);
     }
 
 
@@ -655,7 +675,7 @@ public class TablesHandler {
      */
     public int getNbRows(int tableId) throws IllegalTableException
     {
-        return getTableManager().getNbRows(tableId);
+        return getTablesHandler().getNbRows(tableId);
     }
 
 
@@ -686,7 +706,7 @@ public class TablesHandler {
     public boolean canHaveAsCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
-        return getTableManager().canHaveAsCellValue(tableId, columnId, row, value);
+        return getTablesHandler().canHaveAsCellValue(tableId, columnId, row, value);
     }
 
     /**
@@ -717,7 +737,7 @@ public class TablesHandler {
     public void setCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
-        getTableManager().setCellValue(tableId, columnId, row, value);
+        getTablesHandler().setCellValue(tableId, columnId, row, value);
     }
 
     /**
@@ -733,7 +753,7 @@ public class TablesHandler {
      */
     public void addRow(int tableId) throws IllegalTableException
     {
-        getTableManager().addRow(tableId);
+        getTablesHandler().addRow(tableId);
     }
 
     /**
@@ -755,37 +775,22 @@ public class TablesHandler {
      */
     public void removeRow(int tableId, int row) throws IllegalRowException, IllegalTableException
     {
-        getTableManager().removeRow(tableId, row);
+        getTablesHandler().removeRow(tableId, row);
     }
 
-
-    /*
-     *  Common stuff
-     * ****************************************************************************
-     */
 
     /**
-     * Returns the tableManager.
+     * Returns whether the given TablesHandler is valid as tablesHandler.
+     *
+     * @param tablesHandler the tablesHandler to evaluate.
+     *
+     * @return true if tablesHandler is not null.
      */
-    @Basic @Immutable @Model
-    private TableManager getTableManager()
+    private boolean canHaveAsTablesHandler(TablesHandler tablesHandler)
     {
-        return tableManager;
+        return tablesHandler != null;
     }
 
-    /**
-     * Returns whether the given tableManager is valid as tablemanager.
-     *
-     * @param tableManager the tableManager to evaluate.
-     *
-     * @return true if tableManager is not null.
-     */
-    private boolean canHaveAsTableManager(TableManager tableManager)
-    {
-        return tableManager != null;
-    }
-
-    private final TableManager tableManager;
 
     /**
      * Returns whether this is terminated.
@@ -803,5 +808,8 @@ public class TablesHandler {
      * | !(new.terminate == false && old.terminate == true
      */
     private boolean terminated = false;
+
+
+
 
 }
