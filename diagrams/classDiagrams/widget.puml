@@ -1,49 +1,120 @@
 @startuml
+title widget class diagram
 package "widget" {
 
         class Widget {
-            -x-coordinate: int
-            -y-coordinate: int
+            -x: int
+            -y: int
             -width: int
             -height: int
+            #border: boolean
+            #blocked: boolean
             __Inspectors__
-            paint(Graphics)
-            update()
-            handleKeyEvent(int, int, char): boolean
-            handleMouseEvent(int, int ,int): boolean
-            isBlocking(): boolean
+            +getX(): int
+            +getY(): int
+            +getWidth(): int
+            +getHeight(): int
+            +containsPoint(x: int, y: int): boolean
+            +isBlocking(): boolean
             __Mutators__
-            setPosition(int, int)
+            +setX(x: int): void
+            +setY(y: int): void
+            #setWidth(w: int): void
+            #setHeight(h: int): void
+            #setPosition(x: int, y: int): void
+            +paint(g: Graphics): void
+            +handleKeyEvent(id: int, keyCode: int,
+                \t keyChar: char): boolean
+            +handleMouseEvent(id: int, x: int, y: int,
+                \t clickCount: int): boolean
+            +update(command: UICommand): void
         }
 
 
         class LabelWidget{
+            #text: String
+            #id: int
+            -{static}OFFSET: int
+            __Inspectors__
+            +getText(): String
+            __Mutators__
+            #setText(text: String): void
+            +paint(g: Graphics): void
         }
         LabelWidget --|> Widget
 
 
         class EditorWidget{
+            -pushCommand: UICommand
+            -clickHandler: UICommand
+            -selected: boolean
+            -oldText: String
+            __Inspectors__
+            +isSelected(): boolean
+            +getId(): int
+            -canHaveAsText(s: String): boolean
+            __Mutators__
+            +setPushCommand(c: UICommand): void
+            +setClickHandler(c: UICommand): void
+            +setSelected(): void
+            +attemptDeselect(): boolean
+            +setText(t: String): void
+            -setBlocking(b: boolean): void
+            +paint(g: Graphics): void
+            +handleKeyEvent(id: int, keyCode: int,
+                \t keyChar: char): boolean
+            +handleMouseEvent(id: int, x: int, y: int,
+                \t clickCount: int): boolean
         }
         EditorWidget --|> LabelWidget
 
         class CheckBoxWidget{
+            -checked: boolean
+            -{static}SIZE: int
+            __Inspectors__
+            +isChecked(): boolean
+            __Mutators__
+            +setChecked(c: boolean): void
+            +forceUncheck(): void
+            +paint(g: Graphics): void
+            +handleMouseEvent(id: int, x: int,
+                \t y: int, clickCount: int): boolean
         }
         CheckBoxWidget --|> Widget
         class ButtonWidget{
+            -onClick: HashMap<int,
+                \t UICommandWithReturn<boolean>>
+            __Mutators__
+            +handleMouseEvent(id: int, x: int,
+                            \t y: int, clickCount: int): boolean
         }
         ButtonWidget --|> LabelWidget
 
 
         class SwitchBoxWidget{
-
+            ~optionIndex: int
+            ~isValidOption: Function<String, Boolean>
+            ~setOption: Consumer<String>
+            __Mutators__
+            -setOption(ind: int): void
+            -cycleOption(): void
+            +handleMouseEvent(id: int, x: int,
+                \t y: int, clickCount: int): boolean
         }
         SwitchBoxWidget --|> LabelWidget
 
         class CompositeWidget{
-            - widgets: List<Widget>
-            __
-            + add(Widget)
-            + remove(Widget)
+            - widgets: LinkedList<Widget>
+            __Inspectors__
+            +isBlocking(): boolean
+            __Mutators__
+            + addWidget(w: Widget): void
+            + removeWidget(w: Widget): void
+            +paint(g: Graphics): void
+            +handleKeyEvent(id: int, keyCode: int,
+                \t keyChar: char): boolean
+            +handleMouseEvent(id: int, x: int, y: int,
+                \t clickCount: int): boolean
         }
 
         CompositeWidget --|> Widget

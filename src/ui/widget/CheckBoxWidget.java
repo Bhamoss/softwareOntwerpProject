@@ -8,7 +8,6 @@ import java.util.function.Function;
 public class CheckBoxWidget extends Widget {
 
     private boolean checked;
-    private boolean blocked;
 
     // TODO UICommand van maken
     //      Voorstel:
@@ -80,11 +79,6 @@ public class CheckBoxWidget extends Widget {
      */
     public void forceUncheck() {
         this.checked = false;
-    }
-
-    @Override
-    public boolean isBlocking() {
-        return blocked;
     }
 
     @Override
