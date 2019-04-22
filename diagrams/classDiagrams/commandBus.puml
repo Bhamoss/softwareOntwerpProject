@@ -1,0 +1,50 @@
+@startuml
+
+package commandBus {
+
+class Subscription {
+- subscriber : Object {final}
+- onEvent : Method {final}
+____
+~ Subscription(subscriber : Object, onEvent : Method) {exception IllegalArgumentException}
+~ trigger(command : UICommand) : void {exception IllegalArgumentException}
+- canBeParameter(command : UICommand) : boolean
+~ getOnEventClass() : Class<?>
+- getOnEvent() : Method {final}
+- canHaveAsOnEvent(event : Method) : boolean
+~ isSubscriber(object : Object) : boolean
+- getSubscriber() : Object {final}
+- isValidSubscriber(sub : Object) : boolean
+__Responsibilities__
+Representing a sub-
+scription by holding
+a subscriber and a
+method which can
+be invoked with an
+appropriate command.
+}
+
+
+class CommandBus {
+- subscriptions : Map<Class<?>, Map<Subscription, Subscription>> [0..*]
+- subscriberCache : Map<Class<?>, List<Method>> [0..*]
+- subscriptionCache : Map<Object, List<Subscription>> [0..*]
+____
++ CommandBus()
++ subscribe(subscriber : Object) : void {exception IllegalArgumentException}
++ unsubscribe(subscriber : Object) : void {exception IllegalArgumentException}
++ post(command: UICommand) : void
+- getSubscriptions() : Map<Class<?>, Map<Subscription,Subscription>>
+- getSubscriberCache() : Map<Class<?>, List<Method>>
+- getSubscriptionCache() : Map<Object, List<Subscription>>
+__Responsibilities__
+Holding and accepting subscriptions and commands.
+When accepting a command, triggering the
+appropriate subscriptions (information expert).
+}
+
+CommandBus *-- Subscription
+}
+
+
+@enduml

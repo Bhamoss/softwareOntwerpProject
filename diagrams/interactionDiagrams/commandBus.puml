@@ -1,0 +1,41 @@
+@startuml
+title MSS
+Actor user
+create commandBus
+user -> commandBus: create
+return commandBus
+... SUBSCRIBE ...
+user -> commandBus : subscribe(subscriber)
+collections subscription
+create subscription
+commandBus -> subscription : create
+return subscription
+... POST ...
+user -> commandBus : post(command)
+alt subscription.getOnEventClass() ==  command.class
+commandBus -> subscription : trigger(command)
+subscription -> subscriber : onEvent(command)
+end
+... UNSUBSCRIBE ...
+user -> commandBus : unsubscribe(subscriber)
+commandBus -> subscription : destroy
+destroy subscription
+
+newpage subscribe: wrong subscriber or method
+
+user -> commandBus : subscribe(subscriber)
+alt !isValidSubscriber(subscriber)
+commandBus -> user : throw new IllegalArgumentException("The subscriber is not valid")
+else !canHaveAsOnEvent(subscriber.class.getMethods().removeIf(method -> method.isAnnotationPresent(Subscribe.class)))
+commandBus -> user : throw new IllegalArgumentException("The onEvent is not valid")
+else subscriber is already subscribed
+commandBus -> user : throw new IllegalArgumentException("Subscriber is already subscribed")
+end
+
+newpage unsubscribe: wrong subscriber
+
+user -> commandBus : subscribe(subscriber)
+alt subscriber is not subscribed
+commandBus -> user : throw new IllegalArgumentException("Subscriber is not subscribed")
+end
+@enduml
