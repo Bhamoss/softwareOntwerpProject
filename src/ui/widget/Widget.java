@@ -106,7 +106,7 @@ public class Widget {
     }
 
     void paintWithColor(Graphics g, Color c, Widget w) {
-        Color tmp = g.getColor();
+        Color oldColor = g.getColor();
 
         g.setColor(c);
         g.setClip(w.getX(), w.getY(),
@@ -114,7 +114,7 @@ public class Widget {
         g.fillRect(w.getX(), w.getY(),
                 w.getWidth(), w.getHeight());
 
-        g.setColor(tmp);
+        g.setColor(oldColor);
     }
 
     /**

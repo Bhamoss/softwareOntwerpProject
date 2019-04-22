@@ -1,5 +1,7 @@
 package ui.widget;
 
+import ui.commandBus.Subscribe;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -22,6 +24,7 @@ public class ScrollWidget extends Decorator {
         super(cw);
         barMoving = false;
     }
+
 
     @Override
     public void paint(Graphics g) {
@@ -111,6 +114,12 @@ public class ScrollWidget extends Decorator {
         boolean r = component.handleMouseEvent(id, x, y, clickCount);
         r |= super.handleMouseEvent(id, x, y ,clickCount);
         return r;
+    }
+
+
+    @Override
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+        return component.handleKeyEvent(id, keyCode, keyChar);
     }
 
     /**

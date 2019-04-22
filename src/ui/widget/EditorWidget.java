@@ -131,6 +131,7 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
         if (selected && id == KeyEvent.KEY_PRESSED) {
+            System.out.println("EDITOR ENTERED");
             if (keyCode >= 48) { // Alphanumerical key
                 setText(text + keyChar);
                 return true;

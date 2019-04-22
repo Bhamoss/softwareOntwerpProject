@@ -40,7 +40,8 @@ public class WindowCompositor extends CanvasWindow {
 
     public void addSubWindow(ComponentWidget subwindow) {
         subWindows.add(subwindow);
-        subWindows.getLast().setActive(false);
+        if (!subWindows.isEmpty())
+            subWindows.getLast().setActive(false);
         subwindow.setActive(true);
     }
 
@@ -64,6 +65,7 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     public void rebuildAllWidgets() {
+        System.out.println("REBUILDING ALL WIDGETS");
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
         for (ComponentWidget subWindow : oldSubWindows)
@@ -127,16 +129,21 @@ public class WindowCompositor extends CanvasWindow {
         // Dragging events are always handled by the active subwindow,
         // clicking is handled by the active window if it is being clicked,
         // if another window is clicked, that active window gets changed
-        ComponentWidget clickedWindow = (id==MouseEvent.MOUSE_DRAGGED) ? getActiveWindow() : resolveCoordinate(x, y);
-        if (clickedWindow == null) {
+        ComponentWidget clickedWindow = resolveCoordinate(x,y);
+        if (id == MouseEvent.MOUSE_DRAGGED || clickedWindow==null)
+            clickedWindow = getActiveWindow();
+
+        if (clickedWindow == null)
             return;
-        }
+
 
         boolean paintflag = false;
 
         if (clickedWindow.isActive()) {
+            System.out.println("Mouse active");
             paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
         } else if (id == MouseEvent.MOUSE_PRESSED){
+            System.out.println("Changing active");
             setActiveSubWindow(clickedWindow);
         }
 
@@ -147,9 +154,14 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         ComponentWidget activeWindow = getActiveWindow();
-
+        boolean paintflag = false;
         // Key events are always handled by the active window
-        if (activeWindow != null && getActiveWindow().handleKeyEvent(id, keyCode, keyChar))
+        if (activeWindow != null) {
+            System.out.println("Key active");
+            paintflag = getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
+        }
+
+        if (paintflag)
             repaint();
     }
 

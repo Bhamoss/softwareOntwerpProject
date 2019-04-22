@@ -29,11 +29,7 @@ public class CompositeWidget extends Widget {
      */
     @Override
     public void paint(Graphics g) {
-        //if (isVisible()) {
-            // eerst zelf paint, dan pas columnWidgets erin painten
-            super.paint(g);
-        //}
-
+        super.paint(g);
         paintWidgets(g);
     }
 
@@ -58,6 +54,7 @@ public class CompositeWidget extends Widget {
 
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+        System.out.println(widgets);
         boolean r = false;
         for (Widget w: widgets) {
             r |= w.handleKeyEvent(id, keyCode, keyChar);

@@ -110,7 +110,6 @@ public class TableWidget extends CompositeWidget {
      * paint all the columnWidgets of this tableWidget
      * @param g
      */
-    @Override
     protected void paintWidgets(Graphics g) {
         for (Widget w: columnWidgets) {
             w.paint(g);

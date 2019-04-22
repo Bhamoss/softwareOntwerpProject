@@ -7,6 +7,8 @@ import be.kuleuven.cs.som.annotate.Raw;
 import ui.WindowCompositor;
 import ui.commands.UICommand;
 import ui.widget.Widget;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -80,11 +82,15 @@ class Subscription {
         try {
             getOnEvent().invoke(getSubscriber(), command);
         }
-        catch (Exception e)
+        catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Illegal Access Exception");
+        }
+        catch (InvocationTargetException e)
         {
-            // THIS SHOULD NEVER HAPPEN
-            // A try catch statement is required for compilation.
-            throw new IllegalStateException();
+            // Occurs when the subscribed method throws an exception
+            System.out.println("Invocation Target Exception");
+            System.out.println(e.getCause());
+            throw new IllegalArgumentException("");
         }
     }
 

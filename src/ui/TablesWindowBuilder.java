@@ -57,11 +57,8 @@ public class TablesWindowBuilder {
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
         ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Tables", onClose);
-        // encapsulate in scrolling decorator
-        window = new ScrollVerticalWidget(window);
 
-        onClose.setSubwindow(window);
-        window.mode = "tables";
+        // encapsulate in scrolling decorator
 
         // TODO: tableLayout
         ColumnWidget tablesColumn = new ColumnWidget(46,10,80,250, "Tables", true, true, x->{});
@@ -94,6 +91,9 @@ public class TablesWindowBuilder {
 
         // is an invisible widget which listens for key events
         window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, bus), KeyEvent.VK_DELETE));
-        return window;
+        ComponentWidget scrollWindow = new ScrollVerticalWidget(new ScrollHorizontalWidget(window));
+        onClose.setSubwindow(scrollWindow);
+        scrollWindow.mode = "tables";
+        return scrollWindow;
     }
 }
