@@ -59,29 +59,6 @@ class Subscription {
     }
 
     /**
-     *
-     * Returns whether or not the command can be used as a parameter when onEvent is called on Subscriber.
-     *
-     * @param command
-     *          The command to be checked.
-     * @return True if and only if the command is of the same class as the parameter or a subclass of it of onEvent and command is not null.
-     *          | result == command != null && getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())
-     */
-    @Model
-    private boolean canBeParameter(UICommand command)
-    {
-        // command can not be null
-        if(command == null) return false;
-
-
-        // command has to be of the same parameter type as on
-        if(!getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())) return false;
-
-        return true;
-    }
-
-
-    /**
      * Triggers the onEvent method on the subscriber with parameter command.
      *
      * @param command
@@ -111,6 +88,31 @@ class Subscription {
         }
     }
 
+
+    /**
+     *
+     * Returns whether or not the command can be used as a parameter when onEvent is called on Subscriber.
+     *
+     * @param command
+     *          The command to be checked.
+     * @return True if and only if the command is of the same class as the parameter or a subclass of it of onEvent and command is not null.
+     *          | result == command != null && getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())
+     */
+    @Model
+    private boolean canBeParameter(UICommand command)
+    {
+        // command can not be null
+        if(command == null) return false;
+
+
+        // command has to be of the same parameter type as on
+        if(!getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())) return false;
+
+        return true;
+    }
+
+
+
     /**
      * The method to invoke when an event happens.
      *
@@ -123,6 +125,16 @@ class Subscription {
     private final Method onEvent;
 
     /**
+     * Returns the class of the parameter of onEvent.
+     * @return the class of the parameter of onEvent.
+     *          | getOnEvent().getParameterTypes()[0]
+     */
+    Class<?> getOnEventClass()
+    {
+        return getOnEvent().getParameterTypes()[0];
+    }
+
+    /**
      * Returns the event of this subscriber.
      *
      * @return The event of this subscriber.
@@ -131,16 +143,6 @@ class Subscription {
     @Model @Raw @Basic
     private final Method getOnEvent() {
         return onEvent;
-    }
-
-    /**
-     * Returns the class of the parameter of onEvent.
-     * @return the class of the parameter of onEvent.
-     *          | getOnEvent().getParameterTypes()[0]
-     */
-    public Class<?> getOnEventClass()
-    {
-        return getOnEvent().getParameterTypes()[0];
     }
 
     /**
