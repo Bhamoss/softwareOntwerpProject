@@ -25,13 +25,11 @@ public class ScrollWidget extends Decorator {
 
     @Override
     public void paint(Graphics g) {
-        if (!isClosed()) {
-            component.paint(g);
-            // paint the background in lightgray
-            paintWithColor(g, Color.lightGray, background);
-            updateBarLength();
-            paintWithColor(g, Color.darkGray, bar);
-        }
+        component.paint(g);
+        // paint the background in lightgray
+        paintWithColor(g, Color.lightGray, background);
+        updateBarLength();
+        paintWithColor(g, Color.darkGray, bar);
     }
 
 
@@ -112,10 +110,6 @@ public class ScrollWidget extends Decorator {
 
         boolean r = component.handleMouseEvent(id, x, y, clickCount);
         r |= super.handleMouseEvent(id, x, y ,clickCount);
-        if (component.isClosed()){
-            isClosed = true;
-            r = true;
-        }
         return r;
     }
 

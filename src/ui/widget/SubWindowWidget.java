@@ -1,6 +1,8 @@
 package ui.widget;
 
 
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.UICommand;
 import ui.commands.UICommandWithReturn;
 
 import java.awt.*;
@@ -8,7 +10,6 @@ import java.util.HashMap;
 
 public class SubWindowWidget extends ComponentWidget {
 
-    private boolean isActive;
 
     private LabelWidget titleLabel;
     private ButtonWidget closeBtn;
@@ -19,8 +20,6 @@ public class SubWindowWidget extends ComponentWidget {
     private static final int MARGIN_BOTTOM = 10;
     private static final int MARGIN_RIGHT = 10;
 
-    public int id;
-    public String mode;
 
 
 
@@ -42,25 +41,15 @@ public class SubWindowWidget extends ComponentWidget {
      * @param border whether to draw a border
      * @param title titleLabel of the subwindow
      */
-    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title) {
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, UICommandWithReturn<Boolean> onClose) {
         super(x,y,width,height,border);
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
+
         // close command definieren
         HashMap<Integer, UICommandWithReturn<Boolean>> tmp = new HashMap<>();
-        tmp.put(2, new UICommandWithReturn<Boolean>() {
-            @Override
-            public Boolean getReturn() {
-                return true;
-            }
-
-            @Override
-            public void execute() {
-                close();
-            }
-        });
+        tmp.put(2, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 tmp);
-        isActive = false;
         virtualY = y;
         virtualX = x;
     }
@@ -70,19 +59,7 @@ public class SubWindowWidget extends ComponentWidget {
      */
     public static int getTitleHeight() {return TITLE_HEIGHT;}
 
-    // TODO: close beter definieren, hier of in de UICommandWIthReturn in constructor
-    protected void close() {
-        this.isClosed = true;
 
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
 
 
     public int getVirtualX() {
@@ -253,12 +230,10 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     public void paint(Graphics g) {
-        if (!isClosed()) {
-            paintWithColor(g, Color.white, this);
-            titleLabel.paint(g);
-            closeBtn.paint(g);
-            super.paint(g);
-        }
+        paintWithColor(g, Color.white, this);
+        titleLabel.paint(g);
+        closeBtn.paint(g);
+        super.paint(g);
     }
 
     /**

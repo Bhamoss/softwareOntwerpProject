@@ -259,7 +259,7 @@ public class CanvasWindow {
 	 * Call this method if the canvas is out of date and needs to be repainted.
 	 * This will cause method {@link #paint(Graphics)} to be called after the current call of method handleMouseEvent or handleKeyEvent finishes.
 	 */
-	protected final void repaint() {
+	public final void repaint() {
 		if (panel != null)
 			panel.repaint();
 	}

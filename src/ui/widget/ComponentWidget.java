@@ -12,11 +12,10 @@ public class ComponentWidget extends CompositeWidget {
 
     private static final int MINIMUM_SIZE = 200;
 
-    public boolean isClosed() {
-        return isClosed;
-    }
 
-    boolean isClosed;
+    public int id;
+    public String mode;
+
 
 
     /**
@@ -35,8 +34,22 @@ public class ComponentWidget extends CompositeWidget {
         resizingRightBorder = false;
         resizingCorner = false;
         moving = false;
-        isClosed = false;
+        isActive = false;
     }
+
+    /**
+     * Whether the component is currently active.
+     */
+    private boolean isActive;
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
 
     /**
      * check if the point (x,y) is in the bottom right corner
@@ -132,10 +145,6 @@ public class ComponentWidget extends CompositeWidget {
         this.setWidth(w);
     }
 
-    protected void close() {
-        widgets = new LinkedList<>();
-        this.isClosed = true;
-    }
 
     /**
      * if mouse is pressed (MouseEvent.MOUSE_PRESSED):

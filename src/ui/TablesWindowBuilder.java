@@ -52,13 +52,19 @@ public class TablesWindowBuilder {
      *
      * @return list of all widgets needed in table mode
      */
-    public SubWindowWidget build(){
-        // list you will return
-        SubWindowWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Tables");
+    public ComponentWidget build(){
+
+        CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
+        // Subwindow to build
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Tables", onClose);
+        // encapsulate in scrolling decorator
+        window = new ScrollVerticalWidget(window);
+
+        onClose.setSubwindow(window);
         window.mode = "tables";
 
         // TODO: tableLayout
-        ColumnWidget tablesColumn = new ColumnWidget(45,10,80,250, "Tables", true, true, x->{});
+        ColumnWidget tablesColumn = new ColumnWidget(46,10,80,250, "Tables", true, true, x->{});
         window.addWidget(tablesColumn);
         SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, tablesColumn.getHeight(), "S", false, true, x->{});
         window.addWidget(selectorColumn);

@@ -4,6 +4,7 @@ import ui.commandBus.Subscribe;
 import ui.commands.AddTableCommand;
 import ui.commands.OpenTableCommand;
 import ui.commands.RemoveTableCommand;
+import ui.widget.ComponentWidget;
 import ui.widget.SubWindowWidget;
 import ui.widget.Widget;
 
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 
 public class WindowCompositor extends CanvasWindow {
 
-    private LinkedList<SubWindowWidget> subWindows;
+    private LinkedList<ComponentWidget> subWindows;
     private TablesWindowBuilder tablesWindowBuilder;
     private TableDesignWindowBuilder tableDesignWindowBuilder;
     private TableRowsWindowBuilder tableRowsWindowBuilder;
@@ -37,7 +38,7 @@ public class WindowCompositor extends CanvasWindow {
     }
 
 
-    public void addSubWindow(SubWindowWidget subwindow) {
+    public void addSubWindow(ComponentWidget subwindow) {
         subWindows.add(subwindow);
         subWindows.getLast().setActive(false);
         subwindow.setActive(true);
@@ -55,47 +56,56 @@ public class WindowCompositor extends CanvasWindow {
         addSubWindow(tableRowsWindowBuilder.build(id));
     }
 
-    public void removeSubWindow(SubWindowWidget subwindow) {
+    public void removeSubWindow(ComponentWidget subwindow) {
         subWindows.remove(subwindow);
-        subWindows.getLast().setActive(true);
+        if (!subWindows.isEmpty())
+            subWindows.getLast().setActive(true);
         subwindow.setActive(false);
     }
 
     public void rebuildAllWidgets() {
-        LinkedList<SubWindowWidget> oldSubWindows = (LinkedList<SubWindowWidget>) subWindows.clone();
+        LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
-        for (SubWindowWidget subWindow : oldSubWindows)
+        for (ComponentWidget subWindow : oldSubWindows)
             addSubWindow(rebuildWindow(subWindow));
         repaint();
     }
 
-    private SubWindowWidget rebuildWindow(SubWindowWidget subwindow) {
-        // TODO
+    private ComponentWidget rebuildWindow(ComponentWidget subwindow) {
+        ComponentWidget newSubWindow;
         String type = subwindow.mode;
+
+        // TODO: make enum?
         if (type == "tables")
-            return tablesWindowBuilder.build();
-        int id = subwindow.id;
-        if (type == "design")
-            return tableDesignWindowBuilder.build(id);
+            newSubWindow = tablesWindowBuilder.build();
+        else if (type == "design")
+            newSubWindow = tableDesignWindowBuilder.build(subwindow.id);
         else if (type == "rows")
-            return tableRowsWindowBuilder.build(id);
-        return null;
+            newSubWindow = tableRowsWindowBuilder.build(subwindow.id);
+        else
+            throw new IllegalArgumentException("State not supported");
+
+        newSubWindow.setX(subwindow.getX());
+        newSubWindow.setY(subwindow.getY());
+        return newSubWindow;
     }
 
-    public void setActiveSubWindow(SubWindowWidget subwindow) {
+    public void setActiveSubWindow(ComponentWidget subwindow) {
         removeSubWindow(subwindow);
         addSubWindow(subwindow);
     }
 
-    public boolean isSubWindowActive(SubWindowWidget subwindow) {
+    public boolean isSubWindowActive(ComponentWidget subwindow) {
         return subwindow.equals(subWindows.getLast());
     }
 
-    public SubWindowWidget getActiveWindow() {
+    public ComponentWidget getActiveWindow() {
+        if (subWindows.isEmpty())
+            return null;
         return subWindows.getLast();
     }
 
-    private SubWindowWidget resolveCoordinate(int x, int y) {
+    private ComponentWidget resolveCoordinate(int x, int y) {
         for (int i=subWindows.size()-1; i>=0; i--) {
             if (subWindows.get(i).containsPoint(x, y)) {
                 return subWindows.get(i);
@@ -104,16 +114,20 @@ public class WindowCompositor extends CanvasWindow {
         return null;
     }
 
+
     @Override
     protected void paint(Graphics g) {
-        for (SubWindowWidget w : subWindows) {
+        for (Widget w : subWindows) {
             w.paint(g);
         }
     }
 
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-        SubWindowWidget clickedWindow = resolveCoordinate(x, y);
+        // Dragging events are always handled by the active subwindow,
+        // clicking is handled by the active window if it is being clicked,
+        // if another window is clicked, that active window gets changed
+        ComponentWidget clickedWindow = (id==MouseEvent.MOUSE_DRAGGED) ? getActiveWindow() : resolveCoordinate(x, y);
         if (clickedWindow == null) {
             return;
         }
@@ -121,7 +135,6 @@ public class WindowCompositor extends CanvasWindow {
         boolean paintflag = false;
 
         if (clickedWindow.isActive()) {
-            System.out.println(id);
             paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
         } else if (id == MouseEvent.MOUSE_PRESSED){
             setActiveSubWindow(clickedWindow);
@@ -133,19 +146,21 @@ public class WindowCompositor extends CanvasWindow {
 
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        boolean paintflag = getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
-        if (paintflag)
+        ComponentWidget activeWindow = getActiveWindow();
+
+        // Key events are always handled by the active window
+        if (activeWindow != null && getActiveWindow().handleKeyEvent(id, keyCode, keyChar))
             repaint();
     }
 
 
     @Subscribe
-    public void update(AddTableCommand command) {
+    public void update(AddTableCommand c) {
         rebuildAllWidgets();
     }
 
     @Subscribe
-    public void update(RemoveTableCommand command) {
+    public void update(RemoveTableCommand c) {
         rebuildAllWidgets();
     }
 
