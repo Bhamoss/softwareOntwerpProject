@@ -1,9 +1,7 @@
 package ui.commands;
 
-import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.widget.ComponentWidget;
-import ui.widget.SubWindowWidget;
 
 public class CloseSubWindowCommand extends UICommandWithReturn<Boolean> {
 

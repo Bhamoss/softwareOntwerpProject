@@ -1,6 +1,5 @@
 package ui.commands;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 
 import java.util.function.Supplier;

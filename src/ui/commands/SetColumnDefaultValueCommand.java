@@ -1,16 +1,18 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnDefaultValueCommand extends UICommand{
+public class SetColumnDefaultValueCommand extends PushCommand{
 
-    public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, TablesHandler tablesHandler){
+    public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, TablesHandler tablesHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
         this.stringSupplier = stringSupplier;
         this.tablesHandler = tablesHandler;
+        this.commandBus = commandBus;
     }
 
     private final int tableId;
@@ -20,6 +22,8 @@ public class SetColumnDefaultValueCommand extends UICommand{
     private final Supplier<String> stringSupplier;
 
     private final TablesHandler tablesHandler;
+
+    private final CommandBus commandBus;
 
     public int getTableId() {
         return tableId;
@@ -37,9 +41,13 @@ public class SetColumnDefaultValueCommand extends UICommand{
         return tablesHandler;
     }
 
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
+
     @Override
     public void execute() {
-        //TODO event bus
         getTablesHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
+        getCommandBus().post(this);
     }
 }

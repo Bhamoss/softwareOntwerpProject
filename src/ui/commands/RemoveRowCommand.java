@@ -40,8 +40,8 @@ public class RemoveRowCommand extends UICommandWithReturn<Boolean> {
 
     @Override
     public void execute() {
-        getCommandBus().post(this);
         getUIHandler().removeColumn(getTableId(),getRowId());
+        getCommandBus().post(this);
     }
 
     @Override

@@ -5,7 +5,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class ResizeRowCommand extends UICommand{
+public class ResizeRowCommand extends PushCommand{
 
     public ResizeRowCommand(Integer tableId, Integer columnNumber, Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
