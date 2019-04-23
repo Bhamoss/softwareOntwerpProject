@@ -5,7 +5,9 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 import ui.WindowCompositor;
+import ui.commands.PushCommand;
 import ui.commands.UICommand;
+import ui.commands.UpdateCommand;
 import ui.widget.Widget;
 
 import java.lang.reflect.InvocationTargetException;
@@ -188,7 +190,7 @@ class Subscription {
         }
 
         // if the parameter of the method is not (a subclass of) UICommand, return false.
-        if(!UICommand.class.isAssignableFrom(event.getParameterTypes()[0])) {
+        if(!PushCommand.class.isAssignableFrom(event.getParameterTypes()[0])) {
             return false;
         }
 
@@ -286,8 +288,11 @@ class Subscription {
         // sub cannot be null
         if (sub == null) return false;
 
-        // sub must be (a subclass of) WindowCompositor or Widget
-        if(!(WindowCompositor.class.isAssignableFrom(sub.getClass()) || Widget.class.isAssignableFrom(sub.getClass()))) return false;
+        // sub must be (a subclass of) WindowCompositor or Widget or UpdateCommand
+        if(!(WindowCompositor.class.isAssignableFrom(sub.getClass()) ||
+                Widget.class.isAssignableFrom(sub.getClass())) ||
+                UpdateCommand.class.isAssignableFrom(sub.getClass())
+        ) return false;
 
         return true;
     }

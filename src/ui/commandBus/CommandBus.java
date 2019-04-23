@@ -2,6 +2,7 @@ package ui.commandBus;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
+import ui.commands.PushCommand;
 import ui.commands.UICommand;
 
 import java.lang.reflect.Method;
@@ -218,7 +219,7 @@ public class CommandBus {
      * @post The subscribers of the command are triggered, with the command as parameter.
      *          | for each subscription in getSubscriptions().get(command): subscription.trigger(command)
      */
-    public void post(UICommand command) {
+    public void post(PushCommand command) {
 
         // Get the exact class of the command
         Class<?> commandClass = command.getClass();
