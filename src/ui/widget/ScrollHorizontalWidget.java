@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 public class ScrollHorizontalWidget extends ScrollWidget {
 
-    protected static final int HEIGHT = 10;
+    public static final int HEIGHT = 10;
 
 
 

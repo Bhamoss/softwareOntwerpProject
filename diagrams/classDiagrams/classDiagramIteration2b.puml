@@ -75,100 +75,90 @@ package "ui" {
 
     package "widget" {
 
-        class Widget {
-            -x-coordinate: int
-            -y-coordinate: int
-            -width: int
-            -height: int
-            __Inspectors__
-            paint(Graphics)
-            update()
-            handleKeyEvent(int, int, char): boolean
-            handleMouseEvent(int, int ,int): boolean
-            isBlocking(): boolean
-            __Mutators__
-            setPosition(int, int)
-        }
+                class Widget {
+                    -x: int
+                    -y: int
+                    -width: int
+                    -height: int
+                    #border: boolean
+                    #blocked: boolean
+                    __Inspectors__
+                    +containsPoint(x: int, y: int): boolean
+                    __Mutators__
+                    +paint(g: Graphics): void
+                    +handleKeyEvent(id: int, keyCode: int,
+                        \t keyChar: char): boolean
+                    +handleMouseEvent(id: int, x: int, y: int,
+                        \t clickCount: int): boolean
+                    +update(command: UICommand): void
+                }
 
 
-        class LabelWidget{
-        }
-        LabelWidget --|> Widget
+                class LabelWidget{
+                    #text: String
+                }
+                LabelWidget --|> Widget
 
 
-        class EditorWidget{
-        }
-        EditorWidget --|> LabelWidget
+                class EditorWidget{
+                }
+                EditorWidget --|> LabelWidget
 
-        class CheckBoxWidget{
-        }
-        CheckBoxWidget --|> Widget
-        class ButtonWidget{
-        }
-        ButtonWidget --|> LabelWidget
-
-
-        class SwitchBoxWidget{
-
-        }
-        SwitchBoxWidget --|> LabelWidget
-
-        class CompositeWidget{
-            - widgets: List<Widget>
-            __
-            + add(Widget)
-            + remove(Widget)
-        }
-
-        CompositeWidget --|> Widget
-
-        class TableWidget{
-        }
-
-        TableWidget --|> CompositeWidget
-
-        class ColumnWidget{
-        }
-
-        ColumnWidget --|> CompositeWidget
-
-        class ComponentWidget{
-        }
-
-        ComponentWidget --|> CompositeWidget
-
-        Compositor -> ComponentWidget : manages
-
-        class SubWindowWidget{
-        }
-
-        SubWindowWidget --|> ComponentWidget
+                class CheckBoxWidget{
+                    -checked: boolean
+                }
+                CheckBoxWidget --|> Widget
+                class ButtonWidget{
+                }
+                ButtonWidget --|> LabelWidget
 
 
-        class Decorator{
-        }
+                class SwitchBoxWidget{
+                }
+                SwitchBoxWidget --|> LabelWidget
+                package compositeWidgets{
+                    class CompositeWidget{
+                        - widgets: LinkedList<Widget>
+                        __Mutators__
+                        + addWidget(w: Widget): void
+                        + removeWidget(w: Widget): void
+                    }
 
-        Decorator --|> ComponentWidget
+                    CompositeWidget --|> Widget
 
-        class ScrollHorizontalWidget{
-            - scrollPosition: int
-            __
-            + scrollTo()
-        }
+                    class TableWidget{
+                    }
 
-        ScrollHorizontalWidget --|> Decorator
+                    TableWidget --|> CompositeWidget
 
-        class ScrollVerticalWidget{
-            - scrollPosition: int
-            __
-            + scrollTo()
-        }
+                    class ColumnWidget{
+                    }
 
-        ScrollVerticalWidget --|> Decorator
+                    ColumnWidget --|> CompositeWidget
+
+                    class SelectorColumnWidget {
+                        -ids: LinkedList<Integer>
+                        __Inspectors__
+                        +getSelectedId(): int
+                    }
+
+                    SelectorColumnWidget --|> ColumnWidget
+
+                    package componentWidgets{
+                        class ComponentWidget{
+                            -isActive: boolean
+                        }
 
 
+
+                        ComponentWidget --|> CompositeWidget
+
+
+                    }
+                }
 
     }
+
 
     package "builder" {
 

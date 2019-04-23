@@ -10,7 +10,7 @@ public class ComponentWidget extends CompositeWidget {
     private boolean resizingCorner;
     private boolean moving;
 
-    private static final int MINIMUM_SIZE = 200;
+    public static final int MINIMUM_SIZE = 200;
 
 
     public int id;

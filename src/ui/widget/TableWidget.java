@@ -60,8 +60,8 @@ public class TableWidget extends CompositeWidget {
 
 
         columnWidgets.add(new SelectorColumnWidget(
-                getX()+occupancy,getY(),width,getHeight(),
-                name, resizable, true, x->resizedColumn()));
+                getX()+occupancy,getY(),getHeight(),
+                name, true, x->resizedColumn()));
         // 1 pixel margin so borders don't overlap
         occupancy += width + 1;
     }

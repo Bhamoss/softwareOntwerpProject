@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 public class ScrollVerticalWidget extends ScrollWidget {
 
 
-    static final int WIDTH = 10;
+    public static final int WIDTH = 10;
 
 
 
