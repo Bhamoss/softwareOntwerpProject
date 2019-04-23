@@ -144,17 +144,64 @@ package "widget" {
 
         class ColumnWidget{
             -name: String
+            -occupancy: int
+            -resizing: boolean
+            -resizable: boolean
+            -onResize: Consumer<Integer>
+            __Inspectors__
+            +getLastAdded(): Widget
+            +getName(): String
+            -onRightBorder(x: int, y: int): boolean
+            __Mutators__
+            +addWidget(w: Widget): void
+            +addRow(id: int): void
+            +setX(x: int): void
+            +setY(y: int): void
+            -resize(w: int): void
+            +handleMouseEvent(id: int, x: int, y: int,
+                \t clickCount: int): boolean
         }
 
         ColumnWidget --|> CompositeWidget
 
         class SelectorColumnWidget {
-
+            -ids: LinkedList<Integer>
+            __Inspectors__
+            +getSelectedId(): int
+            +getLastAdded(): CheckBoxWidget
+            __Mutators__
+            +addWidget(w: Widget): void
+            +addRow(id: int): void
+            -unCheckAll(): void
         }
 
         SelectorColumnWidget --|> ColumnWidget
 
         class ComponentWidget{
+            -resizingBottomBorder: boolean
+            -resizingRightBorder: boolean
+            -resizingCorner: boolean
+            -moving: boolean
+            -isActive: boolean
+            -MINIMUM_SIZE: int
+            +id: int
+            +mode: String
+            __Inspector__
+            +isActive(): boolean
+            -onRightCorner(x: int, y: int): boolean
+            -onRightBorder(x: int, y: int): boolean
+            -onBottomBorder(x: int, y: int): boolean
+            -onTitle(x: int, y: int): boolean
+            -onCloseBtn(x: int, y: int): boolean
+            #getTotalHeight(): int
+            #getTotalWidth(): int
+            __Mutators__
+            -resize(w: int, h: int): void
+            #resizeHeight(h: int): void
+            #resizeWidth(w: int): void
+            +handleMouseEvent(id: int, x: int, y: int,
+                            \t clickCount: int): boolean
+            #updateVisibleFrame(dx: int, dy: int): void
         }
 
         ComponentWidget --|> CompositeWidget
