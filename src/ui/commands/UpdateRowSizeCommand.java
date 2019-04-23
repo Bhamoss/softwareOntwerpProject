@@ -3,13 +3,12 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.ColumnWidget;
-import ui.widget.LabelWidget;
 
-public class UpdateColumnSizeCommand  extends UpdateCommand{
+public class UpdateRowSizeCommand extends UpdateCommand{
 
-    public UpdateColumnSizeCommand(int tableId, int columnId, ColumnWidget w, UIHandler handler) {
+    public UpdateRowSizeCommand(int tableId, int rowId, ColumnWidget w, UIHandler handler) {
         this.tableId = tableId;
-        this.columnId = columnId;
+        this.rowId = rowId;
         this.widget = w;
         this.handler = handler;
     }
@@ -18,7 +17,7 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
 
     private final int tableId;
 
-    private final int columnId;
+    private final int rowId;
 
     private final UIHandler handler;
 
@@ -26,8 +25,8 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
         return tableId;
     }
 
-    public int getColumnId() {
-        return columnId;
+    public int getRowId() {
+        return rowId;
     }
 
     public ColumnWidget getWidget() {
@@ -39,8 +38,8 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
     }
 
     @Subscribe
-    public void update(ResizeColumnCommand command) {
-        if (getTableId() == command.getTableId() && getColumnId() == command.getColumnNumber()) {
+    public void update(ResizeRowCommand command) {
+        if (getTableId() == command.getTableId() && getRowId() == command.getColumnNumber()) {
             update();
         }
     }
@@ -49,7 +48,7 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
     public void update() {
         //TODO set width
         getWidget();
-        getHandler().getColumnWidth(getTableId(),getColumnId());
+        getHandler().getRowWidth(getTableId(),getRowId());
     }
 
 }

@@ -2,19 +2,18 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.ColumnWidget;
-import ui.widget.LabelWidget;
+import ui.widget.EditorWidget;
+import ui.widget.SwitchBoxWidget;
 
-public class UpdateColumnSizeCommand  extends UpdateCommand{
-
-    public UpdateColumnSizeCommand(int tableId, int columnId, ColumnWidget w, UIHandler handler) {
+public class UpdateColumnDefaultValueCommand extends UpdateCommand{
+    public UpdateColumnDefaultValueCommand(int tableId, int columnId, EditorWidget w, UIHandler handler) {
         this.tableId = tableId;
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
     }
 
-    private final ColumnWidget widget;
+    private final EditorWidget widget;
 
     private final int tableId;
 
@@ -30,7 +29,7 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
         return columnId;
     }
 
-    public ColumnWidget getWidget() {
+    public EditorWidget getWidget() {
         return widget;
     }
 
@@ -39,17 +38,15 @@ public class UpdateColumnSizeCommand  extends UpdateCommand{
     }
 
     @Subscribe
-    public void update(ResizeColumnCommand command) {
-        if (getTableId() == command.getTableId() && getColumnId() == command.getColumnNumber()) {
+    public void update(SetColumnDefaultValueCommand command) {
+        if (getTableId() == command.getTableId() && getColumnId() == command.getColumnId()) {
             update();
         }
     }
 
     @Override
     public void update() {
-        //TODO set width
-        getWidget();
-        getHandler().getColumnWidth(getTableId(),getColumnId());
+        getWidget().setText(getHandler().getColumnDefaultValue(getTableId(),getColumnId()));
     }
 
 }
