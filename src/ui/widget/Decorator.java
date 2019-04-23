@@ -35,4 +35,16 @@ public class Decorator extends ComponentWidget {
     protected void updateVisibleFrame(int dx, int dy) {
         component.updateVisibleFrame(dx, dy);
     }
+
+
+    @Override
+    public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
+        return component.handleMouseEvent(id, x, y, clickCount);
+    }
+
+    @Override
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+        return component.handleKeyEvent(id, keyCode, keyChar);
+    }
+
 }
