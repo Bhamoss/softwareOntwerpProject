@@ -110,6 +110,8 @@ public class Widget {
     }
 
     void paintWithColor(Graphics g, Color c, Widget w) {
+        Rectangle oldRect = g.getClipBounds();
+
         Color oldColor = g.getColor();
 
         g.setColor(c);
@@ -119,6 +121,8 @@ public class Widget {
                 w.getWidth(), w.getHeight());
 
         g.setColor(oldColor);
+        g.setClip(oldRect);
+
     }
 
     /**

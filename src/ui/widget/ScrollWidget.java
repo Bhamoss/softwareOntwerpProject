@@ -32,7 +32,13 @@ public class ScrollWidget extends Decorator {
         // paint the background in lightgray
         paintWithColor(g, Color.lightGray, background);
         updateBarLength();
-        paintWithColor(g, Color.darkGray, bar);
+        if (procent == 1) {
+            paintWithColor(g, Color.lightGray, bar);
+
+        }else {
+            paintWithColor(g, Color.darkGray, bar);
+
+        }
     }
 
 
