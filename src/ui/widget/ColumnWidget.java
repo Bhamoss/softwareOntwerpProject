@@ -74,7 +74,6 @@ public class ColumnWidget extends CompositeWidget {
         return widgets.getLast();
     }
 
-    // TODO: remove?
     public void addRow(int id) {
 
     }
