@@ -1,11 +1,10 @@
 package ui.commands;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 
 import java.util.function.Supplier;
 
-public class SetTableNameCommand extends UICommand{
+public class SetTableNameCommand extends PushCommand{
 
     public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler){
         this.newNameSupplier = newNameSupplier;

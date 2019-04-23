@@ -47,7 +47,7 @@ public class SubWindowWidget extends ComponentWidget {
 
         // close command definieren
         HashMap<Integer, UICommandWithReturn<Boolean>> tmp = new HashMap<>();
-        tmp.put(2, onClose);
+        tmp.put(1, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 tmp);
         virtualY = y;
@@ -246,10 +246,12 @@ public class SubWindowWidget extends ComponentWidget {
                 this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
                 this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
         for (Widget w: widgets) {
-            w.paint(g);
-            g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
-                    this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
-                    this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
+            //if (!w.intersection(g.getClipBounds()).isEmpty()) {
+                w.paint(g);
+                g.setClip(this.getX() + MARGIN_LEFT, this.getY() + MARGIN_TOP,
+                        this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
+                        this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
+            //}
         }
     }
 

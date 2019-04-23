@@ -1,14 +1,9 @@
 package ui.commands;
 
-import tablr.TablesHandler;
-import ui.CanvasWindow;
 import ui.UIHandler;
 import ui.WindowCompositor;
 
-import java.awt.*;
-import java.util.function.Supplier;
-
-public class OpenTableCommand extends UICommand {
+public class OpenTableCommand extends PushCommand {
 
     public OpenTableCommand(int id, WindowCompositor compositor, UIHandler uiHandler){
         this.id = id;

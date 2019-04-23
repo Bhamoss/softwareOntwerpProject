@@ -84,6 +84,10 @@ public class Widget {
     }
 
 
+    public Rectangle intersection(Rectangle r) {
+        return r.intersection(new Rectangle(x,y,width + 1, height + 1));
+    }
+
     /**
      * Paints screen.
      *
@@ -92,7 +96,7 @@ public class Widget {
      */
     public void paint(Graphics g) {
         Rectangle oldRect = g.getClipBounds();
-        Rectangle intersection = g.getClipBounds().intersection(new Rectangle(x,y,width+1,height+1));
+        Rectangle intersection = intersection(oldRect);
         if (!intersection.isEmpty()) {
             g.setClip(intersection);
         }

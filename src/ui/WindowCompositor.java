@@ -2,27 +2,35 @@ package ui;
 
 import ui.commandBus.Subscribe;
 import ui.commands.AddTableCommand;
+import ui.commands.AddTableWindowCommand;
 import ui.commands.OpenTableCommand;
 import ui.commands.RemoveTableCommand;
 import ui.widget.ComponentWidget;
+import ui.widget.KeyEventWidget;
 import ui.widget.SubWindowWidget;
 import ui.widget.Widget;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 public class WindowCompositor extends CanvasWindow {
 
     private LinkedList<ComponentWidget> subWindows;
+
     private TablesWindowBuilder tablesWindowBuilder;
     private TableDesignWindowBuilder tableDesignWindowBuilder;
     private TableRowsWindowBuilder tableRowsWindowBuilder;
+
+    private KeyEventWidget globalKeyEvent;
+    boolean ctrlPressed = false;
 
 
     public WindowCompositor() {
         super("Tablr");
         this.subWindows = new LinkedList<>();
+        globalKeyEvent = new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T);
     }
 
     public void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
@@ -154,11 +162,11 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         ComponentWidget activeWindow = getActiveWindow();
-        boolean paintflag = false;
+        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar);;
         // Key events are always handled by the active ui
         if (activeWindow != null) {
             System.out.println("Key active");
-            paintflag = getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
+            paintflag |= getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
         }
 
         if (paintflag)

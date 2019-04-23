@@ -1,6 +1,6 @@
 package ui.commands;
 
-public class SwitchSubwindowCommand extends UICommand{
+public class SwitchSubwindowCommand extends PushCommand {
 
     public SwitchSubwindowCommand(){
 

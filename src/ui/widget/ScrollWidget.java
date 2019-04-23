@@ -111,16 +111,9 @@ public class ScrollWidget extends Decorator {
             return true;
         }
 
-        boolean r = component.handleMouseEvent(id, x, y, clickCount);
-        r |= super.handleMouseEvent(id, x, y ,clickCount);
-        return r;
+        return super.handleMouseEvent(id, x, y ,clickCount);
     }
 
-
-    @Override
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
-        return component.handleKeyEvent(id, keyCode, keyChar);
-    }
 
     /**
      * update the length of the bar widget
