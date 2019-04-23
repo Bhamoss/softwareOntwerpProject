@@ -9,14 +9,14 @@ import java.util.LinkedList;
  * @author  Michiel Provoost
  * @version 1.0.0
  *
- * A window generating widgets defining the table design mode.
+ * A ui generating widgets defining the table design mode.
  *
- * @resp    Generating the window for the table design mode.
+ * @resp    Generating the ui for the table design mode.
  */
 public class TableDesignWindowBuilder {
 
     /**
-     * Create a window class for the table design mode
+     * Create a ui class for the table design mode
      */
     public TableDesignWindowBuilder (WindowCompositor compositor, UIHandler uiHandler, CommandBus bus){
         this.compositor = compositor;
@@ -26,7 +26,7 @@ public class TableDesignWindowBuilder {
     }
 
     /**
-     * The UIStarter managing this window.
+     * The UIStarter managing this ui.
      */
     private final WindowCompositor compositor;
 
@@ -44,10 +44,10 @@ public class TableDesignWindowBuilder {
 
 
     /**
-     * Constructs the UI for the design window.
+     * Constructs the UI for the design ui.
      *
      * @return A list of widgets, defining the geometry
-     *         of the window
+     *         of the ui
      */
     public SubWindowWidget build(int id){
 

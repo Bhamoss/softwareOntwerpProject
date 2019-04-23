@@ -24,7 +24,7 @@ public class CloseSubWindowCommand extends UICommandWithReturn<Boolean> {
     }
 
     public Boolean getReturn() {
-        // Repainting is always needed after removing a window
+        // Repainting is always needed after removing a ui
         return true;
     }
 

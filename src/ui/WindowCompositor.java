@@ -127,8 +127,8 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
         // Dragging events are always handled by the active subwindow,
-        // clicking is handled by the active window if it is being clicked,
-        // if another window is clicked, that active window gets changed
+        // clicking is handled by the active ui if it is being clicked,
+        // if another ui is clicked, that active ui gets changed
         ComponentWidget clickedWindow = resolveCoordinate(x,y);
         if (id == MouseEvent.MOUSE_DRAGGED || clickedWindow==null)
             clickedWindow = getActiveWindow();
@@ -155,7 +155,7 @@ public class WindowCompositor extends CanvasWindow {
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         ComponentWidget activeWindow = getActiveWindow();
         boolean paintflag = false;
-        // Key events are always handled by the active window
+        // Key events are always handled by the active ui
         if (activeWindow != null) {
             System.out.println("Key active");
             paintflag = getActiveWindow().handleKeyEvent(id, keyCode, keyChar);

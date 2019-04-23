@@ -1,7 +1,7 @@
 @startuml
 titleLabel Class Diagram
 
-package "window" {
+package "ui" {
     class Widget{
         -x-coordinate
         -y-coordinate
@@ -53,15 +53,15 @@ package "window" {
 
     class TablesWindow{
     __Responsibilities__
-        generating tables window widgets
+        generating tables ui widgets
     }
     class TableDesignWindow{
     __Responsibilities__
-        generating table design window widgets
+        generating table design ui widgets
     }
     class TableRowsWindow{
     __Responsibilities__
-        generating table rows window widgets
+        generating table rows ui widgets
     }
 }
     UIWindowHandler "1" --> "1" TablesWindow: manages

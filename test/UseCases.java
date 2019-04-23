@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.*;
-import window.CanvasWindow;
-import window.UIWindowHandler;
+import ui.CanvasWindow;
+import ui.UIWindowHandler;
 
 
 import java.io.File;

@@ -1,9 +1,9 @@
-package window.commandBus;
+package ui.commandBus;
 
 import tablr.TablesHandler;
-import window.WindowCompositor;
-import window.widget.Widget;
-import window.commands.UICommand;
+import ui.WindowCompositor;
+import ui.widget.Widget;
+import ui.commands.UICommand;
 
 import java.util.ArrayList;
 

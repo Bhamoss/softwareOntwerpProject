@@ -13,14 +13,14 @@ import java.util.LinkedList;
  * @author  Michiel Provoost
  * @version 1.0.0
  *
- * A window generating widgets defining the tables mode.
+ * A ui generating widgets defining the tables mode.
  *
- * @resp    Generating the window for the tables mode.
+ * @resp    Generating the ui for the tables mode.
  */
 public class TablesWindowBuilder {
 
     /**
-     * Create a window for the tables mode
+     * Create a ui for the tables mode
      */
     public TablesWindowBuilder(WindowCompositor compositor, UIHandler uiHandler, CommandBus bus){
         this.compositor = compositor;
@@ -30,7 +30,7 @@ public class TablesWindowBuilder {
     }
 
     /**
-     * The UIStarter managing this window.
+     * The UIStarter managing this ui.
      */
     private final WindowCompositor compositor;
 
@@ -47,7 +47,7 @@ public class TablesWindowBuilder {
 
 
     /**
-     * Constructs the widgets defining the window geometry
+     * Constructs the widgets defining the ui geometry
      * in the table mode
      *
      * @return list of all widgets needed in table mode

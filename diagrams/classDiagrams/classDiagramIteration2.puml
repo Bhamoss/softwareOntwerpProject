@@ -1,6 +1,6 @@
 @startuml
 titleLabel Class Diagram
-package "window" {
+package "ui" {
 
     class CanvasWindow{
 

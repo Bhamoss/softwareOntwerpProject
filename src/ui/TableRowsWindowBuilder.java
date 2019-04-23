@@ -12,9 +12,9 @@ import java.util.LinkedList;
  * @author  Michiel Provoost
  * @version 1.0.0
  *
- * A window generating widgets defining the table rows mode.
+ * A ui generating widgets defining the table rows mode.
  *
- * @resp    Generating the window for the table rows mode.
+ * @resp    Generating the ui for the table rows mode.
  */
 public class TableRowsWindowBuilder {
 
@@ -30,7 +30,7 @@ public class TableRowsWindowBuilder {
     }
 
     /**
-     * The UIStarter managing this window.
+     * The UIStarter managing this ui.
      */
     private final WindowCompositor compositor;
 
@@ -46,10 +46,10 @@ public class TableRowsWindowBuilder {
 
 
     /**
-     * Constructs the UI for the rows window.
+     * Constructs the UI for the rows ui.
      *
      * @return A list of widgets, defining the geometry
-     *         of the window
+     *         of the ui
      */
     public SubWindowWidget build(int id){
         /*

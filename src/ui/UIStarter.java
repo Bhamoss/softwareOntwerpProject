@@ -14,8 +14,8 @@ import ui.commandBus.CommandBus;
 public class UIStarter extends CanvasWindow{
 
     /**
-     * Creates a new UI window with given tableManager.
-     * @Effect loads tables window.
+     * Creates a new UI ui with given tableManager.
+     * @Effect loads tables ui.
      */
     public UIStarter(){
         super("Tablr starting...");
@@ -29,7 +29,7 @@ public class UIStarter extends CanvasWindow{
 
         commandBus = new CommandBus();
 
-        // create a window for all modes
+        // create a ui for all modes
         tablesWindowBuilder = new TablesWindowBuilder(compositor, uiHandler, commandBus);
         tableDesignWindowBuilder = new TableDesignWindowBuilder(compositor, uiHandler, commandBus);
         tableRowsWindowBuilder = new TableRowsWindowBuilder(compositor, uiHandler, commandBus);

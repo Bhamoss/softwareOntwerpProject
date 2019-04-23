@@ -1,10 +1,8 @@
-package window.commandBus;
+package ui.commandBus;
 
-import window.WindowCompositor;
-import window.widget.Widget;
-import window.commands.UICommand;
-
-import java.awt.*;
+import ui.WindowCompositor;
+import ui.widget.Widget;
+import ui.commands.UICommand;
 
 /**
  * Class used in SubscriptionTest.

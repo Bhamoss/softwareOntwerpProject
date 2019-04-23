@@ -48,11 +48,11 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../window/RecordingItem.html" titleLabel="class in window"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../window/TableRowsWindow.html" titleLabel="class in window"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../window/RecordingItem.html" titleLabel="class in ui"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../window/TableRowsWindow.html" titleLabel="class in ui"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../index.html?window/TableDesignWindow.html" target="_top">Frames</a></li>
+<li><a href="../index.html?ui/TableDesignWindow.html" target="_top">Frames</a></li>
 <li><a href="TableDesignWindow.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">window</div>
+<div class="subTitle">ui</div>
 <h2 titleLabel="Class TableDesignWindow" class="titleLabel">Class TableDesignWindow</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>window.TableDesignWindow</li>
+<li>ui.TableDesignWindow</li>
 </ul>
 </li>
 </ul>
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Object</pre>
 <dl>
 <dt><span class="simpleTagLabel">Responsibility:</span></dt>
-<dd>Generating the window for the table design mode.</dd>
+<dd>Generating the ui for the table design mode.</dd>
 </dl>
 </li>
 </ul>
@@ -133,7 +133,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private java.util.LinkedList&lt;<a href="../window/widget/CheckBoxWidget.html" titleLabel="class in window.widget">CheckBoxWidget</a>&gt;</code></td>
+<td class="colFirst"><code>private java.util.LinkedList&lt;<a href="../window/widget/CheckBoxWidget.html" titleLabel="class in ui.widget">CheckBoxWidget</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#checkBoxes">checkBoxes</a></span></code>
 <div class="block">A list containing the checkboxes to select a column.</div>
 </td>
@@ -145,9 +145,9 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private <a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a></code></td>
+<td class="colFirst"><code>private <a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#uiWindowHandler">uiWindowHandler</a></span></code>
-<div class="block">The UIWindowHandler managing this window.</div>
+<div class="block">The UIWindowHandler managing this ui.</div>
 </td>
 </tr>
 </table>
@@ -165,9 +165,9 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#TableDesignWindow-window.UIWindowHandler-tablr.TableDesignHandler-">TableDesignWindow</a></span>(<a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a>&nbsp;uiWindowHandler,
+<td class="colOne"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#TableDesignWindow-window.UIWindowHandler-tablr.TableDesignHandler-">TableDesignWindow</a></span>(<a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a>&nbsp;uiWindowHandler,
                  <a href="../tablr/TableDesignHandler.html" titleLabel="class in tablr">TableDesignHandler</a>&nbsp;tableHandler)</code>
-<div class="block">Create a window class for the table design mode</div>
+<div class="block">Create a ui class for the table design mode</div>
 </td>
 </tr>
 </table>
@@ -186,21 +186,21 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.LinkedList&lt;<a href="../window/widget/Widget.html" titleLabel="class in window.widget">Widget</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.LinkedList&lt;<a href="../window/widget/Widget.html" titleLabel="class in ui.widget">Widget</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#getLayout--">getLayout</a></span>()</code>
-<div class="block">Constructs the UI for the design window.</div>
+<div class="block">Constructs the UI for the design ui.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a></code></td>
+<td class="colFirst"><code><a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#getUIHandler--">getUIHandler</a></span>()</code>
-<div class="block">Gets the UIWindowHandler calling this window.</div>
+<div class="block">Gets the UIWindowHandler calling this ui.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../window/TableDesignWindow.html#reload--">reload</a></span>()</code>
-<div class="block">Reconstructs the widgets on the window.</div>
+<div class="block">Reconstructs the widgets on the ui.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -237,8 +237,8 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>uiWindowHandler</h4>
-<pre>private final&nbsp;<a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a> uiWindowHandler</pre>
-<div class="block">The UIWindowHandler managing this window.</div>
+<pre>private final&nbsp;<a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a> uiWindowHandler</pre>
+<div class="block">The UIWindowHandler managing this ui.</div>
 </li>
 </ul>
 <a name="tableHandler">
@@ -257,7 +257,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>checkBoxes</h4>
-<pre>private&nbsp;java.util.LinkedList&lt;<a href="../window/widget/CheckBoxWidget.html" titleLabel="class in window.widget">CheckBoxWidget</a>&gt; checkBoxes</pre>
+<pre>private&nbsp;java.util.LinkedList&lt;<a href="../window/widget/CheckBoxWidget.html" titleLabel="class in ui.widget">CheckBoxWidget</a>&gt; checkBoxes</pre>
 <div class="block">A list containing the checkboxes to select a column.</div>
 </li>
 </ul>
@@ -275,13 +275,13 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>TableDesignWindow</h4>
-<pre>public&nbsp;TableDesignWindow(<a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a>&nbsp;uiWindowHandler,
+<pre>public&nbsp;TableDesignWindow(<a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a>&nbsp;uiWindowHandler,
                          <a href="../tablr/TableDesignHandler.html" titleLabel="class in tablr">TableDesignHandler</a>&nbsp;tableHandler)</pre>
-<div class="block">Create a window class for the table design mode</div>
+<div class="block">Create a ui class for the table design mode</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>uiWindowHandler</code> - The master UI controller, managing this window.</dd>
-<dd><code>tableHandler</code> - The table design handler connecting the window to the backend.</dd>
+<dd><code>uiWindowHandler</code> - The master UI controller, managing this ui.</dd>
+<dd><code>tableHandler</code> - The table design handler connecting the ui to the backend.</dd>
 </dl>
 </li>
 </ul>
@@ -299,9 +299,9 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getUIHandler</h4>
-<pre>public&nbsp;<a href="../window/UIWindowHandler.html" titleLabel="class in window">UIWindowHandler</a>&nbsp;getUIHandler()</pre>
-<div class="block">Gets the UIWindowHandler calling this window.</div>
-<dl><DT><B>Returns:</B><DD>The UIWindowHandler calling this window.</DD>
+<pre>public&nbsp;<a href="../window/UIWindowHandler.html" titleLabel="class in ui">UIWindowHandler</a>&nbsp;getUIHandler()</pre>
+<div class="block">Gets the UIWindowHandler calling this ui.</div>
+<dl><DT><B>Returns:</B><DD>The UIWindowHandler calling this ui.</DD>
 </dl>
 </li>
 </ul>
@@ -311,10 +311,10 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLayout</h4>
-<pre>public&nbsp;java.util.LinkedList&lt;<a href="../window/widget/Widget.html" titleLabel="class in window.widget">Widget</a>&gt;&nbsp;getLayout()</pre>
-<div class="block">Constructs the UI for the design window.</div>
+<pre>public&nbsp;java.util.LinkedList&lt;<a href="../window/widget/Widget.html" titleLabel="class in ui.widget">Widget</a>&gt;&nbsp;getLayout()</pre>
+<div class="block">Constructs the UI for the design ui.</div>
 <dl><DT><B>Returns:</B><DD>A list of widgets, defining the geometry
-         of the window</DD>
+         of the ui</DD>
 </dl>
 </li>
 </ul>
@@ -335,7 +335,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>reload</h4>
 <pre>private&nbsp;void&nbsp;reload()</pre>
-<div class="block">Reconstructs the widgets on the window.</div>
+<div class="block">Reconstructs the widgets on the ui.</div>
 </li>
 </ul>
 </li>
@@ -365,11 +365,11 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../window/RecordingItem.html" titleLabel="class in window"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../window/TableRowsWindow.html" titleLabel="class in window"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../window/RecordingItem.html" titleLabel="class in ui"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../window/TableRowsWindow.html" titleLabel="class in ui"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../index.html?window/TableDesignWindow.html" target="_top">Frames</a></li>
+<li><a href="../index.html?ui/TableDesignWindow.html" target="_top">Frames</a></li>
 <li><a href="TableDesignWindow.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">

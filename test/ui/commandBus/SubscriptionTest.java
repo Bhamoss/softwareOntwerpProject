@@ -1,11 +1,10 @@
-package window.commandBus;
+package ui.commandBus;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tablr.TablesHandler;
-import window.WindowCompositor;
 
 import java.lang.reflect.Method;
 
