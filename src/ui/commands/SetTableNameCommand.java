@@ -1,18 +1,22 @@
 package ui.commands;
 
 import ui.UIHandler;
+import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
 public class SetTableNameCommand extends PushCommand{
 
-    public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler){
+    public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler, CommandBus bus){
         this.newNameSupplier = newNameSupplier;
         this.id = id;
         this.tablesHandler = uiHandler;
+        this.bus = bus;
     }
 
     final private Supplier<String> newNameSupplier;
+
+    final private CommandBus bus;
 
     final private int id;
 
@@ -30,9 +34,10 @@ public class SetTableNameCommand extends PushCommand{
         return id;
     }
 
-    public void execute(){
-        //TODO busEvent
+    public void execute() {
+        System.out.println("SETTING TABLE NAME");
         getTablesHandler().setTableName(getId(),getNewNameSupplier().get());
+        bus.post(this);
 
     }
 }

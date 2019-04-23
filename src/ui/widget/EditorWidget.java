@@ -8,10 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class EditorWidget extends LabelWidget {
 
-    private BiFunction<Integer, String, Boolean> isValidText;
+    private Function<String, Boolean> isValidText;
     private PushCommand pushCommand;
     private PushCommand clickHandler;
     private boolean selected;
@@ -27,22 +28,22 @@ public class EditorWidget extends LabelWidget {
      * @param border whether to draw a border
      * @param id id of content
      */
-    public EditorWidget(int x, int y, int width, int height, boolean border, int id) {
-        super(x, y, width, height, border, id);
+    public EditorWidget(int x, int y, int width, int height, boolean border) {
+        super(x, y, width, height, border);
 
         this.selected = false;
         oldText = text;
     }
 
-    public EditorWidget(boolean border, int id) {
-        this(0,0,0,25,border,id);
+    public EditorWidget(boolean border) {
+        this(0,0,0,25,border);
     }
 
     public void setPushHandler(PushCommand pushCommand) {
         this.pushCommand = pushCommand;
     }
 
-    public void setValidHandler(BiFunction<Integer,String,Boolean> isValidText) {
+    public void setValidHandler(Function<String,Boolean> isValidText) {
         this.isValidText = isValidText;
     }
 
@@ -79,7 +80,7 @@ public class EditorWidget extends LabelWidget {
     }
 
     private boolean canHaveAsText(String s) {
-        return isValidText.apply(id, s);
+        return isValidText.apply(s);
     }
 
     /**
@@ -91,9 +92,6 @@ public class EditorWidget extends LabelWidget {
         setBlocking(!canHaveAsText(t));
     }
 
-    public Integer getId() {
-        return id;
-    }
 
     private void setBlocking(boolean b) {
         blocked = b;

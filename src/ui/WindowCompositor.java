@@ -73,7 +73,6 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     public void rebuildAllWidgets() {
-        System.out.println("REBUILDING ALL WIDGETS");
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
         for (ComponentWidget subWindow : oldSubWindows)
@@ -155,6 +154,7 @@ public class WindowCompositor extends CanvasWindow {
         } else if (id == MouseEvent.MOUSE_PRESSED){
             System.out.println("CHANGING ACTIVE");
             setActiveSubWindow(clickedWindow);
+            paintflag = true;
         }
 
         if (paintflag)
@@ -164,7 +164,7 @@ public class WindowCompositor extends CanvasWindow {
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         ComponentWidget activeWindow = getActiveWindow();
-        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar);;
+        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar);
         // Key events are always handled by the active ui
         if (activeWindow != null) {
             System.out.println("Key active");
