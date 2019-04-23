@@ -4,8 +4,8 @@ import ui.UIStarter;
 public class Main{
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            // create the UIStarter
-            UIStarter ui = new UIStarter();
+            // Start UI
+            new UIStarter();
             /*
              *
              * Difference repaint VS load

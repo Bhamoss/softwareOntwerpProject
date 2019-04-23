@@ -223,7 +223,7 @@ class CanvasWindowRecording {
 
 public class CanvasWindow {
 
-	int width = 600;
+	int width = 1000;
 	int height = 600;
 	String title;
 	Panel panel;
