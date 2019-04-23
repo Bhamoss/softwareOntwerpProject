@@ -47,9 +47,9 @@ public class WindowCompositor extends CanvasWindow {
 
 
     public void addSubWindow(ComponentWidget subwindow) {
-        subWindows.add(subwindow);
         if (!subWindows.isEmpty())
             subWindows.getLast().setActive(false);
+        subWindows.add(subwindow);
         subwindow.setActive(true);
     }
 
@@ -138,20 +138,22 @@ public class WindowCompositor extends CanvasWindow {
         // clicking is handled by the active ui if it is being clicked,
         // if another ui is clicked, that active ui gets changed
         ComponentWidget clickedWindow = resolveCoordinate(x,y);
-        if (id == MouseEvent.MOUSE_DRAGGED || clickedWindow==null)
+        if (id == MouseEvent.MOUSE_DRAGGED || clickedWindow==null) {
             clickedWindow = getActiveWindow();
+        }
 
-        if (clickedWindow == null)
+        if (clickedWindow == null) {
             return;
+        }
 
 
         boolean paintflag = false;
 
         if (clickedWindow.isActive()) {
-            System.out.println("Mouse active");
+            System.out.println("MOUSE TO SUBWINDOW");
             paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
         } else if (id == MouseEvent.MOUSE_PRESSED){
-            System.out.println("Changing active");
+            System.out.println("CHANGING ACTIVE");
             setActiveSubWindow(clickedWindow);
         }
 
