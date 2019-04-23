@@ -207,13 +207,12 @@ public class SubWindowWidget extends ComponentWidget {
      */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        //if (this.containsPoint(x,y)) {
+
             if (closeBtn.containsPoint(x, y))
                 return closeBtn.handleMouseEvent(id, x, y, clickCount);
             return super.handleMouseEvent(id, x, y, clickCount);
-//        }
-//        return false;
     }
+
 
 
     /**
@@ -235,7 +234,8 @@ public class SubWindowWidget extends ComponentWidget {
     public void paint(Graphics g) {
         paintWithColor(g, Color.white, this);
         if (isActive()) {
-            paintWithColor(g, Color.yellow, titleLabel);
+            paintWithColor(g, Color.magenta, titleLabel);
+            paintWithColor(g, Color.magenta, closeBtn);
         }
         titleLabel.paint(g);
         closeBtn.paint(g);

@@ -39,6 +39,7 @@ public class ScrollWidget extends Decorator {
             paintWithColor(g, Color.darkGray, bar);
 
         }
+        background.paint(g);
     }
 
 

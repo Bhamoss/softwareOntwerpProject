@@ -178,25 +178,6 @@ public class ComponentWidget extends CompositeWidget {
      */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (id == MouseEvent.MOUSE_PRESSED) {
-            if (onRightCorner(x,y)) {
-                resizingCorner = true;
-                return false;
-            }
-            else if (onRightBorder(x,y)) {
-                resizingRightBorder = true;
-                return false;
-            }
-            else if (onBottomBorder(x,y)) {
-                resizingBottomBorder = true;
-                return false;
-            }
-            else if (onTitle(x,y)) {
-                moving = true;
-                return false;
-            }
-        }
-
         if (id == MouseEvent.MOUSE_DRAGGED) {
             if (resizingCorner) {
                 resize(x-this.getX(), y - this.getY());
@@ -229,6 +210,24 @@ public class ComponentWidget extends CompositeWidget {
         }
 
         if (this.containsPoint(x,y)) {
+            if (id == MouseEvent.MOUSE_PRESSED) {
+                if (onRightCorner(x,y)) {
+                    resizingCorner = true;
+                    return false;
+                }
+                else if (onRightBorder(x,y)) {
+                    resizingRightBorder = true;
+                    return false;
+                }
+                else if (onBottomBorder(x,y)) {
+                    resizingBottomBorder = true;
+                    return false;
+                }
+                else if (onTitle(x,y)) {
+                    moving = true;
+                    return false;
+                }
+            }
             return super.handleMouseEvent(id,x,y,clickCount);
         }
         return false;
@@ -250,5 +249,9 @@ public class ComponentWidget extends CompositeWidget {
 
     protected void updateVisibleFrame(int dx, int dy) {}
 
+    @Override
+    public boolean containsPoint(int px, int py){
+        return (getX() <= px) && (px <= getX()+getWidth() + 10) && (getY() <= py) && (py <= getY()+getHeight()+ 10);
+    }
 
 }
