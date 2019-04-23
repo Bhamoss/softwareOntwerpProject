@@ -1,17 +1,18 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.UIHandler;
 import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
 public class SetColumnDefaultValueCommand extends PushCommand{
 
-    public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, TablesHandler tablesHandler, CommandBus commandBus){
+    public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
         this.stringSupplier = stringSupplier;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
         this.commandBus = commandBus;
     }
 
@@ -21,7 +22,7 @@ public class SetColumnDefaultValueCommand extends PushCommand{
 
     private final Supplier<String> stringSupplier;
 
-    private final TablesHandler tablesHandler;
+    private final UIHandler uiHandler;
 
     private final CommandBus commandBus;
 
@@ -37,8 +38,8 @@ public class SetColumnDefaultValueCommand extends PushCommand{
         return stringSupplier;
     }
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
     }
 
     public CommandBus getCommandBus() {
@@ -47,7 +48,7 @@ public class SetColumnDefaultValueCommand extends PushCommand{
 
     @Override
     public void execute() {
-        getTablesHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
+        getUIHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
         getCommandBus().post(this);
     }
 }

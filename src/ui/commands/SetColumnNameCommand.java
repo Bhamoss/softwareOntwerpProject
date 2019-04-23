@@ -1,31 +1,37 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.UIHandler;
+import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnNameCommand extends UICommand {
+public class SetColumnNameCommand extends UICommandWithReturn<Boolean> {
 
-    public SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, TablesHandler tablesHandler){
+    public SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, UIHandler uiHandler, CommandBus commandBus){
         this.newNameSupplier = newNameSupplier;
         this.tableId = tableId;
         this.columnId = columnId;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
     }
 
     final private Supplier<String> newNameSupplier;
 
     final private int tableId;
+
     final private int columnId;
 
-    final private TablesHandler tablesHandler;
+    final private UIHandler uiHandler;
+
+    final private CommandBus commandBus;
 
     public Supplier<String> getNewNameSupplier(){
         return newNameSupplier;
     }
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
     }
 
     public int getTableId() {
@@ -36,9 +42,17 @@ public class SetColumnNameCommand extends UICommand {
         return columnId;
     }
 
-    public void execute(){
-        //TODO busEvent
-        getTablesHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
 
+    public void execute(){
+        getUIHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
+        getCommandBus().post(this);
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }
