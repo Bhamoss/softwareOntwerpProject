@@ -1,6 +1,6 @@
 package ui.commands;
 
-public abstract class UICommandWithReturn<T> extends UICommand {
+public abstract class UICommandWithReturn<T> extends PushCommand {
 
     public abstract T getReturn();
 }

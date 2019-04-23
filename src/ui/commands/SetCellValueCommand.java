@@ -1,6 +1,7 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
@@ -9,12 +10,13 @@ public class SetCellValueCommand extends UICommandWithReturn<Boolean>{
     //TODO Continue adaptations
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
-                               Supplier<String> stringSupplier, TablesHandler tablesHandler){
+                               Supplier<String> stringSupplier, TablesHandler tablesHandler,  CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
         this.rowId = rowId;
         this.stringSupplier = stringSupplier;
         this.tablesHandler = tablesHandler;
+        this.commandBus = commandBus;
     }
     private final int tableId;
 
@@ -25,6 +27,8 @@ public class SetCellValueCommand extends UICommandWithReturn<Boolean>{
     private final Supplier<String> stringSupplier;
 
     private final TablesHandler tablesHandler;
+
+    private final CommandBus commandBus;
 
     public int getTableId() {
         return tableId;
@@ -46,9 +50,14 @@ public class SetCellValueCommand extends UICommandWithReturn<Boolean>{
         return tablesHandler;
     }
 
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
+
     @Override
     public void execute() {
         getTablesHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
+        getCommandBus().post(this);
 
     }
 
