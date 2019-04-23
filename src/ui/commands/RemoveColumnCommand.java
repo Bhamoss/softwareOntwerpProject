@@ -1,17 +1,18 @@
 package ui.commands;
 
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
 public class RemoveColumnCommand extends UICommandWithReturn<Boolean> {
 
-    public RemoveColumnCommand(int tableId, Supplier<Integer> columnId, UIHandler uiHandler, CommandBus commandBus){
+    public RemoveColumnCommand(int tableId, Supplier<Integer> columnId, UIHandler uiHandler, WindowCompositor windowCompositor){
         this.tableId = tableId;
         this.columnId = columnId;
         this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.windowCompositor = windowCompositor;
     }
 
     private final int tableId;
@@ -20,7 +21,7 @@ public class RemoveColumnCommand extends UICommandWithReturn<Boolean> {
 
     private final UIHandler uiHandler;
 
-    private final CommandBus commandBus;
+    private final WindowCompositor windowCompositor;
 
     public int getTableId() {
         return tableId;
@@ -34,14 +35,14 @@ public class RemoveColumnCommand extends UICommandWithReturn<Boolean> {
         return uiHandler;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+    public WindowCompositor getWindowCompositor() {
+        return windowCompositor;
     }
 
     @Override
     public void execute() {
         getUIHandler().removeColumn(getTableId(),getColumnId());
-        getCommandBus().post(this);
+        getWindowCompositor().rebuildAllWidgets();
     }
 
     @Override

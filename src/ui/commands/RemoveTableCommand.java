@@ -1,23 +1,24 @@
 package ui.commands;
 
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
 public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
 
-    public RemoveTableCommand(Supplier<Integer> getTableId, UIHandler uiHandler, CommandBus commandBus){
+    public RemoveTableCommand(Supplier<Integer> getTableId, UIHandler uiHandler, WindowCompositor windowCompositor){
         this.getTableId = getTableId;
         this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.windowCompositor = windowCompositor;
     }
 
     private final Supplier<Integer> getTableId;
 
     private final UIHandler uiHandler;
 
-    private final CommandBus commandBus;
+    private final WindowCompositor windowCompositor;
 
     public UIHandler getUiHandler() {
         return uiHandler;
@@ -27,14 +28,14 @@ public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
         return getTableId.get();
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+    public WindowCompositor getWindowCompositor() {
+        return windowCompositor;
     }
 
     @Override
     public void execute() {
         getUiHandler().removeTable(getTableId());
-        getCommandBus().post(this);
+        getWindowCompositor().rebuildAllWidgets();
     }
 
     @Override

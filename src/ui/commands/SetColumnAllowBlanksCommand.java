@@ -1,17 +1,18 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.UIHandler;
 import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
 public class SetColumnAllowBlanksCommand extends PushCommand {
 
-    public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier, TablesHandler tablesHandler, CommandBus commandBus){
+    public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
         this.commandBus = commandBus;
     }
 
@@ -21,7 +22,7 @@ public class SetColumnAllowBlanksCommand extends PushCommand {
 
     private final Supplier<Boolean> booleanSupplier;
 
-    private final TablesHandler tablesHandler;
+    private final UIHandler uiHandler;
 
     private final CommandBus commandBus;
 
@@ -37,8 +38,8 @@ public class SetColumnAllowBlanksCommand extends PushCommand {
         return booleanSupplier;
     }
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
     }
 
     public CommandBus getCommandBus() {
@@ -47,7 +48,7 @@ public class SetColumnAllowBlanksCommand extends PushCommand {
 
     @Override
     public void execute() {
-        getTablesHandler().setColumnAllowBlanks(getTableId(),getColumnId(),getBooleanSupplier().get());
+        getUIHandler().setColumnAllowBlanks(getTableId(),getColumnId(),getBooleanSupplier().get());
         getCommandBus().post(this);
     }
 }

@@ -7,37 +7,40 @@ import java.util.function.Supplier;
 
 public class SetTableNameCommand extends PushCommand{
 
-    public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler, CommandBus bus){
+    public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler, CommandBus commandBus){
         this.newNameSupplier = newNameSupplier;
         this.id = id;
-        this.tablesHandler = uiHandler;
-        this.bus = bus;
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
     }
 
     final private Supplier<String> newNameSupplier;
 
-    final private CommandBus bus;
+    final private CommandBus commandBus;
 
     final private int id;
 
-    final private UIHandler tablesHandler;
+    final private UIHandler uiHandler;
 
     public Supplier<String> getNewNameSupplier(){
         return newNameSupplier;
     }
 
-    public UIHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
     }
 
     public int getId() {
         return id;
     }
 
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
+
     public void execute() {
-        System.out.println("SETTING TABLE NAME");
-        getTablesHandler().setTableName(getId(),getNewNameSupplier().get());
-        bus.post(this);
+        getUIHandler().setTableName(getId(),getNewNameSupplier().get());
+        getCommandBus().post(this);
 
     }
 }

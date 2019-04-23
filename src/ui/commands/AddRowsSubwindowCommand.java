@@ -2,21 +2,28 @@ package ui.commands;
 
 import ui.WindowCompositor;
 
-public class AddTableWindowCommand extends UICommandWithReturn<Boolean> {
+public class AddRowsSubwindowCommand extends UICommandWithReturn<Boolean>{
 
-    public AddTableWindowCommand(WindowCompositor compositor) {
+    public AddRowsSubwindowCommand(WindowCompositor compositor, Integer id) {
         this.compositor = compositor;
+        this.id = id;
     }
 
     private final WindowCompositor compositor;
+
+    private final Integer id;
 
     public WindowCompositor getCompositor() {
         return compositor;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     @Override
     public void execute() {
-        getCompositor().addTablesSubWindow();
+        getCompositor().addRowsSubWindow(getId());
     }
 
     @Override

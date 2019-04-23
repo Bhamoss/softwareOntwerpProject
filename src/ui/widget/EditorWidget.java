@@ -2,6 +2,7 @@ package ui.widget;
 
 import ui.commands.PushCommand;
 import ui.commands.UICommand;
+import ui.commands.UICommandWithReturn;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,7 +15,7 @@ public class EditorWidget extends LabelWidget {
 
     private Function<String, Boolean> isValidText;
     private PushCommand pushCommand;
-    private PushCommand clickHandler;
+    private UICommandWithReturn<Boolean> clickHandler;
     private boolean selected;
     private String oldText;
 
@@ -26,7 +27,6 @@ public class EditorWidget extends LabelWidget {
      * @param width width of rectangle
      * @param height height of rectangle
      * @param border whether to draw a border
-     * @param id id of content
      */
     public EditorWidget(int x, int y, int width, int height, boolean border) {
         super(x, y, width, height, border);
@@ -48,7 +48,7 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    public void setClickHandler(PushCommand clickHandler) {
+    public void setClickHandler(UICommandWithReturn clickHandler) {
         this.clickHandler = clickHandler;
     }
 
@@ -112,7 +112,6 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_CLICKED && clickCount == 1) {
-            //clickHandler.accept(clickCount);
             if (this.containsPoint(x,y)) {
                 setSelected();
                 return true;
@@ -123,6 +122,7 @@ public class EditorWidget extends LabelWidget {
 
         if (id == MouseEvent.MOUSE_CLICKED && clickCount == 2 && this.containsPoint(x,y)) {
             clickHandler.execute();
+            return clickHandler.getReturn();
         }
         return false;
     }
@@ -130,7 +130,6 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
         if (selected && id == KeyEvent.KEY_PRESSED) {
-            System.out.println("EDITOR ENTERED");
             if (keyCode >= 48) { // Alphanumerical key
                 setText(text + keyChar);
                 return true;

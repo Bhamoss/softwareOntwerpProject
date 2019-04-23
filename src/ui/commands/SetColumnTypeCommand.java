@@ -1,16 +1,19 @@
 package ui.commands;
 
 import tablr.TablesHandler;
+import ui.UIHandler;
+import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnTypeCommand extends PushCommand {
+public class SetColumnTypeCommand extends UICommandWithReturn<Boolean> {
 
-    public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, TablesHandler tablesHandler){
+    public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
         this.typeSupplier = typeSupplier;
-        this.tablesHandler = tablesHandler;
+        this.uiHandler = uiHandler;
+        this.commandBus = commandBus;
 
     }
 
@@ -20,7 +23,9 @@ public class SetColumnTypeCommand extends PushCommand {
 
     private final Supplier<String> typeSupplier;
 
-    private final TablesHandler tablesHandler;
+    private final UIHandler uiHandler;
+
+    private final CommandBus commandBus;
 
     public int getTableId() {
         return tableId;
@@ -30,17 +35,26 @@ public class SetColumnTypeCommand extends PushCommand {
         return columnId;
     }
 
-    public TablesHandler getTablesHandler() {
-        return tablesHandler;
+    public UIHandler getUIHandler() {
+        return uiHandler;
     }
 
     public Supplier<String> getTypeSupplier() {
         return typeSupplier;
     }
 
+    public CommandBus getCommandBus() {
+        return commandBus;
+    }
+
     @Override
     public void execute() {
-        //TODO eventbus
-        getTablesHandler().setColumnType(getTableId(),getColumnId(),getTypeSupplier().get());
+        getUIHandler().setColumnType(getTableId(),getColumnId(),getTypeSupplier().get());
+        getCommandBus().post(this);
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
     }
 }
