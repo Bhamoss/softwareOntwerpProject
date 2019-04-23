@@ -120,14 +120,39 @@ package "widget" {
         CompositeWidget --|> Widget
 
         class TableWidget{
+            -occupancy: int
+            -lastAdded: int
+            #columnWidgets: LinkedList<ColumnWidget>
+            __Inspectors__
+
+            __Mutators__
+            +addColumn(w: int, resizable: boolean,
+                \t name:String): void
+            +addSelectorColumn(w: int, resizable: boolean,
+                \t name:String): void
+            +addEntry(w: Widget): void
+            +addEntry(id: int): void
+            -resizedColumn(): void
+            #paintWidgets(g: Graphics): void
+            +setX(x: int): void
+            +setY(y: int): void
+            +handleMouseEvent(id: int, x: int, y: int,
+                            \t clickCount: int): boolean
         }
 
         TableWidget --|> CompositeWidget
 
         class ColumnWidget{
+            -name: String
         }
 
         ColumnWidget --|> CompositeWidget
+
+        class SelectorColumnWidget {
+
+        }
+
+        SelectorColumnWidget --|> ColumnWidget
 
         class ComponentWidget{
         }

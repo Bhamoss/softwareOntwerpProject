@@ -248,6 +248,8 @@ public class SubWindowWidget extends ComponentWidget {
      */
     @Override
     protected void paintWidgets(Graphics g) {
+        Rectangle oldR = g.getClipBounds();
+
         g.setClip(this.getX() + MARGIN_LEFT, this.getY()+ MARGIN_TOP,
                 this.getWidth() - MARGIN_LEFT - MARGIN_RIGHT,
                 this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
@@ -259,6 +261,8 @@ public class SubWindowWidget extends ComponentWidget {
                         this.getHeight() - MARGIN_TOP - MARGIN_BOTTOM);
             //}
         }
+        g.setClip(oldR);
+
     }
 
 

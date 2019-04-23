@@ -339,18 +339,6 @@ public class UIHandler {
         return getTablesHandler().getColumnType(tableId, columnId);
     }
 
-    //TODO: change when the comments on iteration 1 have been implemented
-    /**
-     * Returns the possible types for a column.
-     * @return [String, Email, Boolean, Integer]
-     *
-     * @Note: order is significant (gui needs to show them in specific order)
-     */
-    public static List<String> getAvailableColumnTypes()
-    {
-        return TableManager.getColumnTypes();
-    }
-
     /**
      *
      * Returns the blanks allowed of the column in this table with the given column id.
