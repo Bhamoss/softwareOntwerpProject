@@ -22,12 +22,20 @@ public class OpenTableCommand extends UICommandWithReturn<Boolean> {
         return id;
     }
 
+    public WindowCompositor getCompositor() {
+        return compositor;
+    }
+
+    public UIHandler getUiHandler() {
+        return uiHandler;
+    }
+
     @Override
     public void execute(){
-        if (uiHandler.isTableEmpty(id))
-            compositor.addDesignSubWindow(id);
+        if (getUiHandler().isTableEmpty(getId()))
+            getCompositor().addDesignSubWindow(getId());
         else
-            compositor.addRowsSubWindow(id);
+            getCompositor().addRowsSubWindow(getId());
     }
 
     @Override

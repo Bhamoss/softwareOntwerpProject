@@ -1,31 +1,32 @@
 package ui.commands;
 
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
 public class AddTableCommand extends UICommandWithReturn<Boolean> {
 
-    public AddTableCommand(UIHandler uiHandler, CommandBus commandBus){
+    public AddTableCommand(UIHandler uiHandler, WindowCompositor windowCompositor){
         this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.windowCompositor = windowCompositor;
     }
 
     private UIHandler uiHandler;
 
-    private final CommandBus commandBus;
+    private final WindowCompositor windowCompositor;
 
     public UIHandler getUIHandler() {
         return uiHandler;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+    public WindowCompositor getWindowCompositor() {
+        return windowCompositor;
     }
 
     @Override
     public void execute() {
         getUIHandler().addTable();
-        getCommandBus().post(this);
+        getWindowCompositor().rebuildAllWidgets();
     }
 
     @Override

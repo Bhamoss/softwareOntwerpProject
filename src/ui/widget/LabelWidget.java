@@ -1,7 +1,6 @@
 package ui.widget;
 
 
-import ui.commandBus.Subscribe;
 import ui.commands.UICommand;
 import ui.commands.UpdateCommand;
 
@@ -43,7 +42,7 @@ public class LabelWidget extends Widget{
         return text;
     }
 
-    protected void setText(String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
