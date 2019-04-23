@@ -151,7 +151,7 @@ public class WindowCompositor extends CanvasWindow {
         if (clickedWindow.isActive()) {
             System.out.println("MOUSE TO SUBWINDOW");
             paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
-        } else if (id == MouseEvent.MOUSE_PRESSED){
+        } else if (id == MouseEvent.MOUSE_CLICKED) {
             System.out.println("CHANGING ACTIVE");
             setActiveSubWindow(clickedWindow);
             paintflag = true;

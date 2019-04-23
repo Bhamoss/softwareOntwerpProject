@@ -1,6 +1,9 @@
 package ui;
 
 import ui.commandBus.CommandBus;
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.SetColumnDefaultValueCommand;
+import ui.commands.SetColumnNameCommand;
 import ui.widget.*;
 
 import java.util.LinkedList;
@@ -49,8 +52,44 @@ public class TableDesignWindowBuilder {
      * @return A list of widgets, defining the geometry
      *         of the ui
      */
-    public SubWindowWidget build(int id){
+    public ComponentWidget build(int tableID){
 
+        CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
+        // Subwindow to build
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Design", onClose);
+
+        TableWidget table = new TableWidget(10, 10, 100, 200);
+        window.addWidget(table);
+
+        table.addSelectorColumn("S");
+        table.addColumn(80, true, "Name");
+        table.addColumn(80, true, "Blanks");
+        table.addColumn(80, true, "Default");
+
+
+        for (int columnID : uiHandler.getColumnIds(tableID)) {
+            EditorWidget editor = new EditorWidget(true);
+            editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
+            editor.setPushHandler(new SetColumnNameCommand(() -> editor.getText(), tableID, columnID, uiHandler, bus));
+            //editor.setGetHandler(new UpdateColumnNameCommand());
+            table.addEntry(editor);
+
+            //CheckBoxWidget blanks = new CheckBoxWidget();
+            //table.addEntry(blanks);
+
+            if (uiHandler.getColumnType(tableID, columnID).equals("Boolean")) {
+                //CheckBoxWidget defaultWidget = new CheckBoxWidget();
+                //table.addEntry(defaultWidget);
+            } else {
+                EditorWidget defaultWidget = new EditorWidget(true);
+                defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
+                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
+                //defaultWidget.setGetHandler(new UpdateColumnDefaultCommand());
+                table.addEntry(defaultWidget);
+            }
+
+
+        }
         /*
          // Define different columns
          ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
@@ -177,7 +216,7 @@ public class TableDesignWindowBuilder {
          }));
          **/
 
-        return null;
+        return window;
     }
 
 

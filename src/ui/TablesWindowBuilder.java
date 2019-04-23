@@ -62,7 +62,7 @@ public class TablesWindowBuilder {
         // TODO: tableLayout
         ColumnWidget tablesColumn = new ColumnWidget(46,10,80,250, "Tables", true, true, x->{});
         window.addWidget(tablesColumn);
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, tablesColumn.getHeight(), "S", false, true, x->{});
+        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, "S", false, x->{});
         window.addWidget(selectorColumn);
 
 

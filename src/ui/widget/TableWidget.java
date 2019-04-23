@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class TableWidget extends CompositeWidget {
 
+    // TODO: remove occupancy
     private int occupancy;
     private int lastAdded;
     protected LinkedList<ColumnWidget> columnWidgets;
@@ -49,19 +50,18 @@ public class TableWidget extends CompositeWidget {
     /**
      * add a columnWidget to this tableWidget with the given width, resizability and columnName
      *  if the width of the columnWidget cannot fit in the table, the table width is updated
-     * @param width
-     * @param resizable
      * @param name
      */
-    public void addSelectorColumn(int width, boolean resizable, String name) {
+    public void addSelectorColumn(String name) {
         // Check if space is available
+        int width = 25;
         if (occupancy+width > this.getWidth())
             setWidth(occupancy + width);
 
 
         columnWidgets.add(new SelectorColumnWidget(
-                getX()+occupancy,getY(),width,getHeight(),
-                name, resizable, true, x->resizedColumn()));
+                getX()+occupancy,getY(),getHeight(),
+                name, true, x->resizedColumn()));
         // 1 pixel margin so borders don't overlap
         occupancy += width + 1;
     }
