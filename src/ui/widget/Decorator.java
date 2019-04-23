@@ -9,6 +9,16 @@ public class Decorator extends ComponentWidget {
 
     protected ComponentWidget component;
 
+    @Override
+    public void setActive(boolean active) {
+        component.setActive(active);
+    }
+
+    @Override
+    public boolean isActive() {
+        return component.isActive();
+    }
+
     // klasse geeft gwn alles door naar zijn component van de onderstaande methods
 
     @Override

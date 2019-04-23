@@ -207,9 +207,12 @@ public class SubWindowWidget extends ComponentWidget {
      */
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (closeBtn.containsPoint(x, y))
-            return closeBtn.handleMouseEvent(id, x, y, clickCount);
-        return super.handleMouseEvent(id, x, y, clickCount);
+        //if (this.containsPoint(x,y)) {
+            if (closeBtn.containsPoint(x, y))
+                return closeBtn.handleMouseEvent(id, x, y, clickCount);
+            return super.handleMouseEvent(id, x, y, clickCount);
+//        }
+//        return false;
     }
 
 
@@ -231,6 +234,9 @@ public class SubWindowWidget extends ComponentWidget {
     @Override
     public void paint(Graphics g) {
         paintWithColor(g, Color.white, this);
+        if (isActive()) {
+            paintWithColor(g, Color.yellow, titleLabel);
+        }
         titleLabel.paint(g);
         closeBtn.paint(g);
         super.paint(g);
@@ -278,4 +284,6 @@ public class SubWindowWidget extends ComponentWidget {
     public static int getMarginRight() {
         return MARGIN_RIGHT;
     }
+
+
 }

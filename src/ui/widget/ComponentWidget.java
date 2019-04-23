@@ -228,7 +228,10 @@ public class ComponentWidget extends CompositeWidget {
             return false;
         }
 
-        return super.handleMouseEvent(id,x,y,clickCount);
+        if (this.containsPoint(x,y)) {
+            return super.handleMouseEvent(id,x,y,clickCount);
+        }
+        return false;
     }
 
     /**
