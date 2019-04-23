@@ -2,6 +2,8 @@ package ui.commandBus;
 
 import tablr.TablesHandler;
 import ui.WindowCompositor;
+import ui.commands.PushCommand;
+import ui.commands.UpdateCommand;
 import ui.widget.Widget;
 import ui.commands.UICommand;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class TestWidget extends Widget
+class TestUpCommand extends UpdateCommand
 {
 
 
@@ -36,9 +38,9 @@ class TestWidget extends Widget
 
     public int testvar = 0;
 
-    TestWidget()
-    {
-        super(1,1,1,1,true);
+    @Override
+    public void execute() {
+
     }
 }
 
@@ -50,7 +52,7 @@ class TestWidget extends Widget
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class TestCommand extends UICommand
+class TestCommand extends PushCommand
 {
 
     @Override
@@ -85,7 +87,7 @@ class SubTestCommand extends TestCommand
 class TestWindowCompositor extends WindowCompositor
 {
     @Subscribe
-    public void valid(UICommand c)
+    public void valid(PushCommand c)
     {
 
     }

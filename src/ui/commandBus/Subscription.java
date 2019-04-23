@@ -4,6 +4,7 @@ package ui.commandBus;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.taglet.*;
 import ui.WindowCompositor;
 import ui.commands.PushCommand;
 import ui.commands.UICommand;
@@ -45,19 +46,26 @@ class Subscription {
     Subscription(Object subscriber, Method onEvent)
             throws IllegalArgumentException
     {
+
+        // Checking if the subscriber is valid.
+
+
         if(!isValidSubscriber(subscriber)) {
             throw new IllegalArgumentException("The subscriber is invalid.");
         }
 
+        // Assigning the final variable.
+
         this.subscriber = subscriber;
 
-        // Checking if the subscriber and onEvent are valid.
+        // Checking if the onEvent is valid.
 
         if (!canHaveAsOnEvent(onEvent)) {
+            System.out.println(onEvent.getName());
             throw new IllegalArgumentException("The event is invalid.");
         }
 
-        // Assigning the final variables.
+        // Assigning the final variable.
 
         this.onEvent = onEvent;
     }
@@ -85,12 +93,13 @@ class Subscription {
             getOnEvent().invoke(getSubscriber(), command);
         }
         catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Illegal Access Exception");
+            throw new IllegalArgumentException("The onEvent method is not available to the Subscription class." +
+                    "Should never happens because onEvent is public.");
         }
         catch (InvocationTargetException e)
         {
             // Occurs when the subscribed method throws an exception
-            System.out.println("Invocation Target Exception");
+            System.out.println("The onEvent method has thrown an error.");
             System.out.println(e.getCause());
             throw new IllegalArgumentException("");
         }
@@ -164,7 +173,9 @@ class Subscription {
      *              - event has @Subscribe as its annotation
      *              - event is a public method
      *              - event has exactly 1 parameter
-     *              - the parameter of event is of (a subclass of) class UICommand
+     *              - the parameter of event is of (a subclass of) class PushCommand
+     *              - the event is a method of (a superclass, which is not overwritten,) of the subscriber.
+     *              Simply put, it can be called on the subscriber.
      */
     @Model
     private boolean canHaveAsOnEvent(Method event)
@@ -195,32 +206,13 @@ class Subscription {
         }
 
 
-        // LEAVING THIS HERE, THE OTHER IMPLEMENTATION SHOULD WORK, BUT JUST IN CASE.
-        /*
-        // if the method is no method which can be used on the subscriber, return false.
-        boolean isReachableMethod = false;
-        Class<?> currentClass = getSubscriber().getClass();
-        // navigate the object tree back to object to see if subscriber or one of its subclasses declared the method.
-        while (currentClass != null && !isReachableMethod) {
-            // IMPORTANT
-            // getMethods() only returns the public methods, this returns all, I can change this later
-            Method[] subscribeMethods = currentClass.getDeclaredMethods();
-            for (Method method : subscribeMethods) {
-                if (method.equals(event)) isReachableMethod = true;
-            }
-            currentClass = currentClass.getSuperclass();
-        }
-
-        if(!isReachableMethod) {
-            return false;
-        }
-        */
-
         // what getMethods() does:
         // Returns an array containing Method objects reflecting all the public methods of the
         // class or interface represented by this Class object, including those declared by the
         // class or interface and those inherited from superclasses and superinterfaces.
         // So because we only allow public methods this should work
+
+        // making sure the method can be called on the subscriber.
         boolean isReachableMethod = false;
         for (Method method :
                 getSubscriber().getClass().getMethods()) {
@@ -242,7 +234,7 @@ class Subscription {
      * The subscriber on which to invoke a method when a command to which it is subscribed is put on the bus.
      *
      * @invar subscriber is not null.
-     * @invar subscriber is a (subclass of) WindowCompositor or Widget.
+     * @invar subscriber is a (subclass of) WindowCompositor or UpdateCommand.
      */
     private final Object subscriber;
 
@@ -278,7 +270,7 @@ class Subscription {
      * @param sub
      *          The object to be checked.
      *
-     * @return True if and only if sub is not null and a subclass of WindowCompositor or Widget.
+     * @return True if and only if sub is not null and a subclass of WindowCompositor or UpdateCommand.
      *          | return == sub != null
      *          |           && (WindowCompositor.class.isAssignableFrom(sub.getClass()) || Widget.class.isAssignableFrom(sub.getClass()))
      */
@@ -288,10 +280,10 @@ class Subscription {
         // sub cannot be null
         if (sub == null) return false;
 
-        // sub must be (a subclass of) WindowCompositor or Widget or UpdateCommand
+        // sub must be (a subclass of) WindowCompositor or UpdateCommand
         if(!(WindowCompositor.class.isAssignableFrom(sub.getClass()) ||
-                Widget.class.isAssignableFrom(sub.getClass())) ||
-                UpdateCommand.class.isAssignableFrom(sub.getClass())
+                Widget.class.isAssignableFrom(sub.getClass()) ||
+                UpdateCommand.class.isAssignableFrom(sub.getClass()))
         ) return false;
 
         return true;

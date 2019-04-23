@@ -24,7 +24,7 @@ class CommandBusTest {
     CommandBus bus = null;
     TestCommand testCommand = null;
     SubTestCommand subTestCommand = null;
-    TestWidget testWidget = null;
+    TestUpCommand testWidget = null;
     TestWindowCompositor testWindowCompositor = null;
 
     @BeforeEach
@@ -32,7 +32,7 @@ class CommandBusTest {
         bus = new CommandBus();
         testCommand = new TestCommand();
         subTestCommand = new SubTestCommand();
-        testWidget = new TestWidget();
+        testWidget = new TestUpCommand();
         testWindowCompositor = new TestWindowCompositor();
     }
 
@@ -118,7 +118,7 @@ class CommandBusTest {
         long start = System.nanoTime();
         bus.subscribe(testWidget);
         long mid = System.nanoTime();
-        bus.subscribe(new TestWidget());
+        bus.subscribe(new TestUpCommand());
         long end = System.nanoTime();
         long speedup = Math.round(((double) mid - start)/((double) end - mid)*100) - 100;
         System.out.println("Subscribe time speedup in %:");
@@ -159,7 +159,7 @@ class CommandBusTest {
     @Test
     @DisplayName("unsubscribe() before subscribe.")
     void unsubscribeBeforeSubscribe() {
-        bus.subscribe(new TestWidget());
+        bus.subscribe(new TestUpCommand());
         assertThrows(IllegalArgumentException.class, () -> bus.unsubscribe(testWidget));
         try {
             bus.unsubscribe(testWidget);
@@ -184,10 +184,10 @@ class CommandBusTest {
     @DisplayName("lots of subscribe and unsubscribe.")
     void subscribeAndUnsubscribe() {
         int subs = 10000;
-        List<TestWidget> ws = new LinkedList<>();
+        List<TestUpCommand> ws = new LinkedList<>();
         long start = System.nanoTime();
         for (int i = 0; i < subs; i++) {
-            ws.add(new TestWidget());
+            ws.add(new TestUpCommand());
             bus.subscribe(ws.get(i));
         }
         long subTime = System.nanoTime();

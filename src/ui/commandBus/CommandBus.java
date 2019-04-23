@@ -2,6 +2,7 @@ package ui.commandBus;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.taglet.*;
 import ui.commands.PushCommand;
 import ui.commands.UICommand;
 
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A class modeled after the eventBus pattern usable only for commands and widgets or windowCompositor, pretty well optimized if I do say so myself.
+ * A class modeled after the eventBus pattern usable only for UpdateCommands and PushCommand or windowCompositor, pretty well optimized if I do say so myself.
  * The implementation follows after the standard Android application eventBus model.
  *
  * @author Thomas Bamelis
- * @version 0.0.1
+ * @version 1.0.0
  */
 public class CommandBus {
 
@@ -46,12 +47,12 @@ public class CommandBus {
 
     /**
      * Subscribes the subscriber so that its own and Inherited methods annotated with @Subscribe are triggered when
-     * someone posts a UICommand subclass corresponding to the parameter of the method on this bus.
+     * someone posts a PushCommand subclass corresponding to the parameter of the method on this bus.
      * The methods notated with @Subscribe have to fullfill the following rules:
      *      - method must be public
      *      - must have exactly 1 parameter
-     *      - the parameter has to be (a subclass of) UICommando
-     * The subscriber must be a Widget or WindowCompositor (subclass) object.
+     *      - the parameter has to be (a subclass of) UpdateCommand
+     * The subscriber must be a UpdateCommand or WindowCompositor (subclass) object.
      *
      * @param subscriber
      *          The object which wants to subscribe.
@@ -160,7 +161,8 @@ public class CommandBus {
 
     /**
      * Unsubscribes the subscriber so its @Subscribe methods are no longer called when a command gets posted to this bus.
-     * You must unsubscribe when terminating an object because this can leave "dangling pointers" here.
+     * You must unsubscribe when terminating an object because this can leave "dangling pointers" here, which
+     * causes the garbage collector to not remove the object and it bloats the subscription list.
      *
      * @param   subscriber
      *          The subscriber to unsubscribe.

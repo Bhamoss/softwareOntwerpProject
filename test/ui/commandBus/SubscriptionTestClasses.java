@@ -1,8 +1,8 @@
 package ui.commandBus;
 
 import ui.WindowCompositor;
-import ui.widget.Widget;
-import ui.commands.UICommand;
+import ui.commands.PushCommand;
+import ui.commands.UpdateCommand;
 
 /**
  * Class used in SubscriptionTest.
@@ -10,7 +10,7 @@ import ui.commands.UICommand;
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class SubWidget extends Widget
+class SubUpCommand extends UpdateCommand
 {
 
     //MUST STAY THE FIRST METHOD
@@ -48,10 +48,6 @@ class SubWidget extends Widget
 
     public int testvar = 0;
 
-    SubWidget()
-    {
-        super(1,1,1,1,true);
-    }
 }
 
 /**
@@ -60,7 +56,7 @@ class SubWidget extends Widget
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class SubclassSubWidget extends SubWidget
+class SubclassSubUpCommand extends SubUpCommand
 {
     public int m = 1;
 }
@@ -71,18 +67,19 @@ class SubclassSubWidget extends SubWidget
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class BrotherWidget extends Widget
+class BrotherUpCommand extends UpdateCommand
 {
 
     @Subscribe
-    public void notSubWidgetMethod(UICommand command)
+    public void notSubWidgetMethod(PushCommand command)
     {
 
     }
 
-    BrotherWidget()
-    {
-        super(1,1,1,1,true);
+
+    @Override
+    public void execute() {
+
     }
 }
 
@@ -92,7 +89,7 @@ class BrotherWidget extends Widget
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class SubCommand extends UICommand
+class SubCommand extends PushCommand
 {
 
     @Override
@@ -109,7 +106,7 @@ class SubCommand extends UICommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class BrotherCommand extends UICommand
+class BrotherCommand extends PushCommand
 {
 
     @Override
@@ -128,7 +125,7 @@ class BrotherCommand extends UICommand
 class SubWindowCompositor extends WindowCompositor
 {
     @Subscribe
-    public void valid(UICommand c)
+    public void valid(PushCommand c)
     {
 
     }

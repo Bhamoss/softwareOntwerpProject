@@ -14,17 +14,17 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for Subscription.
  *
  * @author Thomas Bamelis
- * @version 0.0.1
+ * @version 1.0.0
  */
 class SubscriptionTest {
 
     Subscription basicSub = null;
-    SubWidget otherWidget = null;
+    SubUpCommand otherSubscriber = null;
     SubCommand basicCommand = null;
-    SubWidget basicWidget = null;
-    BrotherWidget brotherWidget = null;
+    SubUpCommand basicSubscriber = null;
+    BrotherUpCommand brotherSubscriber = null;
     BrotherCommand brotherCommand = null;
-    SubclassSubWidget subclassSubWidget = null;
+    SubclassSubUpCommand subclassSubSubscriber = null;
     SubWindowCompositor subCom = null;
 
     Method noSubscribe = null;
@@ -39,8 +39,8 @@ class SubscriptionTest {
 
     @BeforeEach
     void setUp() {
-        basicWidget = new SubWidget();
-        Method[] methods = basicWidget.getClass().getDeclaredMethods();
+        basicSubscriber = new SubUpCommand();
+        Method[] methods = basicSubscriber.getClass().getDeclaredMethods();
         for (Method method:
              methods) {
             if (method.getName().equals("execute"))
@@ -64,11 +64,11 @@ class SubscriptionTest {
                 validMethod = method;
             }
         }
-        basicSub = new Subscription(basicWidget, validMethod);
-        otherWidget = new SubWidget();
+        basicSub = new Subscription(basicSubscriber, validMethod);
+        otherSubscriber = new SubUpCommand();
         basicCommand = new SubCommand();
-        brotherWidget = new BrotherWidget();
-        methods = brotherWidget.getClass().getDeclaredMethods();
+        brotherSubscriber = new BrotherUpCommand();
+        methods = brotherSubscriber.getClass().getDeclaredMethods();
         for (Method method:
                 methods) {
             if (method.getName().equals("notSubWidgetMethod"))
@@ -77,7 +77,7 @@ class SubscriptionTest {
             }
         }
         brotherCommand = new BrotherCommand();
-        subclassSubWidget = new SubclassSubWidget();
+        subclassSubSubscriber = new SubclassSubUpCommand();
 
         methods = SubWindowCompositor.class.getDeclaredMethods();
         for (Method method:
@@ -124,52 +124,52 @@ class SubscriptionTest {
     @Test
     @DisplayName("Constructor onEvent null.")
     void constructorOnEventNull() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, null));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, null));
     }
 
     @Test
     @DisplayName("Constructor onEvent no annotation.")
     void constructorOnEventNoAnnotation() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, noSubscribe));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, noSubscribe));
     }
 
     @Test
     @DisplayName("Constructor onEvent not public.")
     void constructorOnEventNotPublic() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, privMethod));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, privMethod));
     }
 
 
     @Test
     @DisplayName("Constructor onEvent 2 parameters.")
     void constructorOnEventTwoParams() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, twoMethod));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, twoMethod));
     }
 
     @Test
     @DisplayName("Constructor onEvent parameter not UICommand.")
     void constructorOnEventNotUICommand() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, intMethod));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, intMethod));
     }
 
     @Test
     @DisplayName("Constructor onEvent not a method reachable by the widget.")
     void constructorOnEventNotReachable() {
-        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicWidget, brotherMethod));
+        assertThrows(IllegalArgumentException.class, () -> new Subscription(basicSubscriber, brotherMethod));
     }
 
 
     @Test
     @DisplayName("Constructor success superclass method.")
     void constructorSuccessParentListen() {
-        Subscription s = new Subscription(subclassSubWidget, validMethod);
+        Subscription s = new Subscription(subclassSubSubscriber, validMethod);
     }
 
 
     @Test
     @DisplayName("Constructor success with Widget.")
     void constructorSuccessWidget() {
-        basicSub = new Subscription(basicWidget, validMethod);
+        basicSub = new Subscription(basicSubscriber, validMethod);
     }
 
 
@@ -201,7 +201,7 @@ class SubscriptionTest {
     @DisplayName("Trigger success.")
     void triggerSuccess() {
         basicSub.trigger(basicCommand);
-        assertEquals(basicCommand.t, basicWidget.testvar);
+        assertEquals(basicCommand.t, basicSubscriber.testvar);
     }
 
     /*
@@ -227,12 +227,12 @@ class SubscriptionTest {
     @Test
     @DisplayName("isSubscriber not the widget")
     void isSubscriberOtherWidget() {
-        assertFalse(basicSub.isSubscriber(otherWidget));
+        assertFalse(basicSub.isSubscriber(otherSubscriber));
     }
 
     @Test
     @DisplayName("isSubscriber success")
     void isSubscriberSuccess() {
-        assertTrue(basicSub.isSubscriber(basicWidget));
+        assertTrue(basicSub.isSubscriber(basicSubscriber));
     }
 }
