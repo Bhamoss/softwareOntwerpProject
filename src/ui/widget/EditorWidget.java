@@ -1,5 +1,6 @@
 package ui.widget;
 
+import ui.commands.PushCommand;
 import ui.commands.UICommand;
 
 import java.awt.*;
@@ -11,8 +12,8 @@ import java.util.function.Consumer;
 public class EditorWidget extends LabelWidget {
 
     private BiFunction<Integer, String, Boolean> isValidText;
-    private UICommand pushCommand;
-    private UICommand clickHandler;
+    private PushCommand pushCommand;
+    private PushCommand clickHandler;
     private boolean selected;
     private String oldText;
 
@@ -37,7 +38,7 @@ public class EditorWidget extends LabelWidget {
         this(0,0,0,25,border,id);
     }
 
-    public void setPushHandler(UICommand pushCommand) {
+    public void setPushHandler(PushCommand pushCommand) {
         this.pushCommand = pushCommand;
     }
 
@@ -46,7 +47,7 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    public void setClickHandler(UICommand clickHandler) {
+    public void setClickHandler(PushCommand clickHandler) {
         this.clickHandler = clickHandler;
     }
 

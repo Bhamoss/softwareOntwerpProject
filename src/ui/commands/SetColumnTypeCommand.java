@@ -4,7 +4,7 @@ import tablr.TablesHandler;
 
 import java.util.function.Supplier;
 
-public class SetColumnTypeCommand extends UICommand {
+public class SetColumnTypeCommand extends PushCommand {
 
     public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, TablesHandler tablesHandler){
         this.tableId = tableId;

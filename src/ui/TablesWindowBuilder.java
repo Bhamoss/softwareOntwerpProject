@@ -26,7 +26,6 @@ public class TablesWindowBuilder {
         this.compositor = compositor;
         this.uiHandler = uiHandler;
         this.bus = bus;
-
     }
 
     /**
