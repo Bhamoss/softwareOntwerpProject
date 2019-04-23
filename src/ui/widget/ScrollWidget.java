@@ -111,9 +111,7 @@ public class ScrollWidget extends Decorator {
             return true;
         }
 
-        boolean r = component.handleMouseEvent(id, x, y, clickCount);
-        r |= super.handleMouseEvent(id, x, y ,clickCount);
-        return r;
+        return super.handleMouseEvent(id, x, y ,clickCount);
     }
 
 
