@@ -105,7 +105,7 @@ public class UIHandler {
      *      If there is no table with that id.
      *      | !getTableManager().hasAsTable(id)
      */
-    String getTableName(int id) throws IllegalTableException
+    public String getTableName(int id) throws IllegalTableException
     {
         return getTablesHandler().getTableName(id);
     }

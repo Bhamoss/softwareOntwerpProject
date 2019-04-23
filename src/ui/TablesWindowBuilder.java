@@ -69,11 +69,13 @@ public class TablesWindowBuilder {
         // fill all 3 columns with corresponding widgets
         for(Integer tableID : uiHandler.getTableIds()) {
             // Create the editor widgets which holds the names for the tables and is able to change those names
-            EditorWidget editor = new EditorWidget(true, tableID);
+            EditorWidget editor = new EditorWidget(true);
 
-            editor.setValidHandler(uiHandler::canHaveAsName);
-            editor.setGetHandler(uiHandler::getTableName);
-            editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler));
+            editor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
+            UpdateCommand editorUpdater = new UpdateTableNameCommand(tableID, editor, uiHandler);
+            bus.subscribe(editorUpdater);
+            editor.setGetHandler(editorUpdater);
+            editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler, bus));
             editor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
 
             tablesColumn.addWidget(editor);

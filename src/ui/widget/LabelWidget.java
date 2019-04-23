@@ -3,6 +3,7 @@ package ui.widget;
 
 import ui.commandBus.Subscribe;
 import ui.commands.UICommand;
+import ui.commands.UpdateCommand;
 
 import java.awt.*;
 import java.lang.String;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 public class LabelWidget extends Widget{
 
     protected String text;
-    protected Integer id;
+    protected UpdateCommand command;
     protected Function<Integer, String> refreshText; //TODO: uicommand van maken
 
 
@@ -33,10 +34,8 @@ public class LabelWidget extends Widget{
         this.text = text;
     }
 
-    public LabelWidget(int x, int y, int width, int height, boolean border, Integer id) {
+    public LabelWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
-        this.id = id;
-        this.text = "";
     }
 
 
@@ -48,10 +47,10 @@ public class LabelWidget extends Widget{
         this.text = text;
     }
 
-    public void setGetHandler(Function<Integer, String> refreshText) {
-        assert(this.id != null);
-        this.refreshText = refreshText;
-        this.update();
+    public void setGetHandler(UpdateCommand command) {
+        assert(this.command == null);
+        this.command = command;
+        command.update();
     }
 
     /**
@@ -73,9 +72,4 @@ public class LabelWidget extends Widget{
     }
 
 
-    public void update() {
-        if (refreshText != null) {
-            setText(refreshText.apply(id));
-        }
-    }
 }
