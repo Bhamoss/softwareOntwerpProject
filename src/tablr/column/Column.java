@@ -490,18 +490,6 @@ public abstract class Column {
      */
     public abstract boolean canHaveAsType(String type);
 
-    /**
-     * returns an arraylist of all the possible types of columns
-     * ["String", "Email", "Boolean", "Integer"]
-     */
-    public static ArrayList<String> getColumnTypes() {
-        return new ArrayList<String>() {{
-            add("String");
-            add("Email");
-            add("Boolean");
-            add("Integer");
-        }};
-    }
 
     public Column setColumnType(String type) {
         Column newColumn;

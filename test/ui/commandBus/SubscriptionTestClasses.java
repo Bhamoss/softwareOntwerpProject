@@ -77,10 +77,7 @@ class BrotherUpCommand extends UpdateCommand
     }
 
 
-    @Override
-    public void execute() {
 
-    }
 }
 
 /**

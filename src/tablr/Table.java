@@ -822,11 +822,6 @@ public class Table {
         return getColumn(id).canHaveAsType(type);
     }
 
-    /**
-     * return a list of all the possible column types
-     */
-    public static ArrayList<String> getColumnTypes() {return Column.getColumnTypes(); }
-
 /*
  ************************************************************************************************************************
  *                                                       columnDV

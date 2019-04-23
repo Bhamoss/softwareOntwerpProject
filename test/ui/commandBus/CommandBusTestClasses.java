@@ -38,10 +38,7 @@ class TestUpCommand extends UpdateCommand
 
     public int testvar = 0;
 
-    @Override
-    public void execute() {
 
-    }
 }
 
 

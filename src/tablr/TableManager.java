@@ -399,11 +399,6 @@ public class TableManager {
         return table.getColumnType(columnId);
     }
 
-    /**
-     * return a list of all the possible column types
-     */
-    @Model
-    public static ArrayList<String> getColumnTypes() {return Table.getColumnTypes();}
 
     /**
      *
