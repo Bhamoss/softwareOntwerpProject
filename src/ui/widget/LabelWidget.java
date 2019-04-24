@@ -1,7 +1,6 @@
 package ui.widget;
 
 
-import ui.commands.UICommand;
 import ui.commands.UpdateCommand;
 
 import java.awt.*;
@@ -11,8 +10,6 @@ import java.util.function.Function;
 public class LabelWidget extends Widget{
 
     protected String text;
-    protected UpdateCommand command;
-    protected Function<Integer, String> refreshText; //TODO: uicommand van maken
 
 
     /**
@@ -44,12 +41,6 @@ public class LabelWidget extends Widget{
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setGetHandler(UpdateCommand command) {
-        assert(this.command == null);
-        this.command = command;
-        command.update();
     }
 
     /**

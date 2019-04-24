@@ -11,6 +11,7 @@ public class UpdateTableNameCommand extends UpdateCommand {
         this.id = id;
         this.widget = w;
         this.handler = handler;
+        update();
     }
 
     private final EditorWidget widget;

@@ -294,7 +294,7 @@ public class UIHandler {
      * | getTableManager().hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
+    public ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
     {
         return getTablesHandler().getColumnIds(tableId);
     }

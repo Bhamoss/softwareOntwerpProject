@@ -45,7 +45,7 @@ public class SubWindowWidget extends ComponentWidget {
         super(x,y,width,height,border);
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
 
-        // close command definieren
+        // close getCommand definieren
         HashMap<Integer, UICommandWithReturn<Boolean>> tmp = new HashMap<>();
         tmp.put(1, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
@@ -220,7 +220,7 @@ public class SubWindowWidget extends ComponentWidget {
      *  titleLabel is 3/4*width and closeBtn 1/4*width
      * @param w
      */
-    protected void resizeWidth(int w) {
+    public void resizeWidth(int w) {
         super.resizeWidth(w);
         this.titleLabel.setWidth(3*this.getWidth()/4);
         this.closeBtn.setX(3*this.getWidth()/4 + this.getX());

@@ -1,5 +1,7 @@
 package ui.widget;
 
+import ui.commands.PushCommand;
+
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -16,9 +18,14 @@ public class SelectorColumnWidget extends ColumnWidget {
 
     @Override
     public void addRow(int id) {
-        CheckBoxWidget w = new CheckBoxWidget((Boolean toggle)->
-            unCheckAll()
-        );
+        CheckBoxWidget w = new CheckBoxWidget();
+        w.setPushHandler(new PushCommand() {
+            @Override
+            public void execute() {
+                unCheckAll();
+            }
+        });
+
         super.addWidget(w);
         ids.add(id);
     }

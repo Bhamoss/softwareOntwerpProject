@@ -20,14 +20,14 @@ public class ScrollHorizontalWidget extends ScrollWidget {
     }
 
     @Override
-    protected void resizeHeight(int h) {
+    public void resizeHeight(int h) {
         super.resizeHeight(h);
         background.setY(component.getY()+ component.getHeight() - HEIGHT);
         bar.setY(component.getY()+ component.getHeight() - HEIGHT);
     }
 
     @Override
-    protected void resizeWidth(int w) {
+    public void resizeWidth(int w) {
         super.resizeWidth(w);
         int oldW = background.getWidth();
         background.setWidth(component.getWidth() - ScrollVerticalWidget.WIDTH);

@@ -7,7 +7,7 @@ import ui.commands.UICommandWithReturn;
 
 public class ButtonWidget extends LabelWidget {
 
-    //hashMap met de UICommandWithReturns, key is de clickCount, value is command
+    //hashMap met de UICommandWithReturns, key is de clickCount, value is getCommand
     //      die op die clickCount moet uitgevoerd worden
     private final HashMap<Integer, UICommandWithReturn<Boolean>> onClick;
 

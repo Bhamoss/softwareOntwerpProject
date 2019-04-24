@@ -1,6 +1,7 @@
 package ui.commands;
 
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
 /**
@@ -8,15 +9,15 @@ import ui.commandBus.CommandBus;
  */
 public class AddColumnCommand extends UICommandWithReturn<Boolean> {
 
-    public AddColumnCommand(int tableId, UIHandler uiHandler, CommandBus commandBus){
+    public AddColumnCommand(int tableId, UIHandler uiHandler, WindowCompositor compositor){
         this.tableId = tableId;
         this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.compositor = compositor;
     }
 
     private final int tableId;
 
-    private final CommandBus commandBus;
+    private final WindowCompositor compositor;
 
     private final UIHandler uiHandler;
 
@@ -28,14 +29,14 @@ public class AddColumnCommand extends UICommandWithReturn<Boolean> {
         return uiHandler;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+    public WindowCompositor getCompositor() {
+        return compositor;
     }
 
     @Override
     public void execute() {
         getUIHandler().addColumn(getTableId());
-        getCommandBus().post(this);
+        getCompositor().rebuildAllWidgets();
     }
 
     @Override

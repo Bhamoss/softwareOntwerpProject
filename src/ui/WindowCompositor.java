@@ -1,19 +1,26 @@
 package ui;
 
-import ui.commandBus.Subscribe;
-import ui.commands.AddTableCommand;
+import ui.builder.TableDesignWindowBuilder;
+import ui.builder.TableRowsWindowBuilder;
+import ui.builder.TablesWindowBuilder;
 import ui.commands.AddTableWindowCommand;
-import ui.commands.OpenTableCommand;
-import ui.commands.RemoveTableCommand;
 import ui.widget.ComponentWidget;
 import ui.widget.KeyEventWidget;
-import ui.widget.SubWindowWidget;
 import ui.widget.Widget;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+
+/**
+ * @author  Jaron Maene
+ * @version 1.0.0
+ *
+ * Composites the subwindows in a final image
+ *
+ * @resp    Managing subwindows, end-responsibilty of painting, mouse- and keyevents
+ */
 
 public class WindowCompositor extends CanvasWindow {
 
@@ -72,6 +79,13 @@ public class WindowCompositor extends CanvasWindow {
         subwindow.setActive(false);
     }
 
+    public void removeSubWindowWithID(int id) {
+        for (ComponentWidget subwindow : subWindows) {
+            if (subwindow.mode != "tables" && subwindow.id == id)
+                removeSubWindow(subwindow);
+        }
+    }
+
     public void rebuildAllWidgets() {
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
@@ -96,16 +110,15 @@ public class WindowCompositor extends CanvasWindow {
 
         newSubWindow.setX(subwindow.getX());
         newSubWindow.setY(subwindow.getY());
+        //newSubWindow.resize(subwindow.getWidth(), subwindow.getHeight());
+        newSubWindow.resizeWidth(subwindow.getWidth());
+        newSubWindow.resizeHeight(subwindow.getHeight());
         return newSubWindow;
     }
 
     public void setActiveSubWindow(ComponentWidget subwindow) {
         removeSubWindow(subwindow);
         addSubWindow(subwindow);
-    }
-
-    public boolean isSubWindowActive(ComponentWidget subwindow) {
-        return subwindow.equals(subWindows.getLast());
     }
 
     public ComponentWidget getActiveWindow() {
@@ -174,16 +187,4 @@ public class WindowCompositor extends CanvasWindow {
         if (paintflag)
             repaint();
     }
-
-
-    @Subscribe
-    public void update(AddTableCommand c) {
-        rebuildAllWidgets();
-    }
-
-    @Subscribe
-    public void update(RemoveTableCommand c) {
-        rebuildAllWidgets();
-    }
-
 }

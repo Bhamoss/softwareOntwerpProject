@@ -35,6 +35,7 @@ public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
     @Override
     public void execute() {
         getUiHandler().removeTable(getTableId());
+        getWindowCompositor().removeSubWindowWithID(getTableId());
         getWindowCompositor().rebuildAllWidgets();
     }
 

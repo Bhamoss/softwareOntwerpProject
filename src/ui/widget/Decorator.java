@@ -65,6 +65,18 @@ public class Decorator extends ComponentWidget {
     }
 
     @Override
+    public void resizeHeight(int h) {
+        super.resizeHeight(h);
+        component.resizeHeight(h);
+    }
+
+    @Override
+    public void resizeWidth(int w) {
+        super.resizeWidth(w);
+        component.resizeWidth(w);
+    }
+
+    @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         boolean r = component.handleMouseEvent(id, x, y, clickCount);
         r |= super.handleMouseEvent(id, x, y ,clickCount);

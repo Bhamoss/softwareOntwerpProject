@@ -1,6 +1,9 @@
 package ui;
 
 import tablr.TablesHandler;
+import ui.builder.TableDesignWindowBuilder;
+import ui.builder.TableRowsWindowBuilder;
+import ui.builder.TablesWindowBuilder;
 import ui.commandBus.CommandBus;
 
 /**
@@ -37,8 +40,6 @@ public class UIStarter extends CanvasWindow{
         compositor.setTablesWindowBuilder(tablesWindowBuilder);
         compositor.setTableDesignWindowBuilder(tableDesignWindowBuilder);
         compositor.setTableRowsWindowBuilder(tableRowsWindowBuilder);
-
-        commandBus.subscribe(compositor);
 
         compositor.addTablesSubWindow();
     }

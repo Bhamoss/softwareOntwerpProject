@@ -27,7 +27,7 @@ public class ComponentWidget extends CompositeWidget {
      * @param height
      * @param border
      */
-    // TODO: close command meegeven voor de close method, opgeroepen door subwindowWidget closebutton
+    // TODO: close getCommand meegeven voor de close method, opgeroepen door subwindowWidget closebutton
     public ComponentWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
         resizingBottomBorder = false;
@@ -114,7 +114,7 @@ public class ComponentWidget extends CompositeWidget {
      * @param w new width
      * @param h new height
      */
-    private void resize(int w, int h) {
+    public void resize(int w, int h) {
         resizeHeight(h);
         resizeWidth(w);
     }
@@ -126,7 +126,7 @@ public class ComponentWidget extends CompositeWidget {
      *  the height is not resized
      * @param h
      */
-    protected void resizeHeight(int h) {
+    public void resizeHeight(int h) {
         if (h < MINIMUM_SIZE)
             return;
         this.setHeight(h);
@@ -139,7 +139,7 @@ public class ComponentWidget extends CompositeWidget {
      *  the width is not resized
      * @param w
      */
-    protected void resizeWidth(int w) {
+    public void resizeWidth(int w) {
         if (w < MINIMUM_SIZE)
             return;
         this.setWidth(w);

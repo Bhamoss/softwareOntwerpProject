@@ -1,5 +1,8 @@
 package ui.widget;
 
+import ui.commands.PushCommand;
+import ui.commands.UpdateCommand;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -7,53 +10,58 @@ import java.util.function.Function;
 
 public class CheckBoxWidget extends Widget {
 
-    private boolean checked;
-
-    // TODO UICommand van maken
-    //      Voorstel:
-    //          Consumer wordt UICommand
-    //          Function wordt UICommandWithReturn
-    //          Alles wordt ipv setChecked(boolean)
-    //               toggleChecked(), gwn togglen met de negatie van wat er al instaat
-    private final Consumer<Boolean> toggleHandler;
-    private final Function<Boolean, Boolean> isValidToggle;
-
-    public Consumer<Boolean> getToggleHandler(){
-        return toggleHandler;
-    }
-    public Function<Boolean, Boolean> getValidHandler() {return isValidToggle;}
-
-
     private static int SIZE = 25;
-
 
     /**
      * Widget for a toggleable checkbox
      *
      * @param x x-coordinate of top-left of box
      * @param y y-coordinate of top-left of box
-     * @param toggleHandler function handler, called
-     *                      when checkbox gets toggled
      * @param isValidToggle function handler determining if
      *                      the current state of the checkbox
      *                      is legal
      */
-    public CheckBoxWidget(int x, int y, boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
+    public CheckBoxWidget(int x, int y, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
         this.isValidToggle = isValidToggle;
-        this.toggleHandler = toggleHandler;
-        this.blocked = !isValidToggle.apply(checked);
-        this.checked = checked;
     }
 
-    public CheckBoxWidget(boolean checked, Consumer<Boolean> toggleHandler, Function<Boolean, Boolean> isValidToggle) {
-        this(0,0, checked, toggleHandler, isValidToggle);
+    public CheckBoxWidget(Function<Boolean, Boolean> isValidToggle) {
+        this(0,0,isValidToggle);
     }
 
-    public CheckBoxWidget(Consumer<Boolean> toggleHandler) {
-        this(false, toggleHandler, x -> true);
+    public CheckBoxWidget() {
+        this(x->true);
     }
 
+
+    /**
+     * Checks if checkbox state is valid
+     */
+    private Function<Boolean, Boolean> isValidToggle;
+
+    public Function<Boolean, Boolean> getValidHandler() {
+        return isValidToggle;
+    }
+
+    /**
+     * Push command, executed on toggle
+     */
+    private PushCommand pushCommand;
+
+    public void setPushHandler(PushCommand pushCommand) {
+        this.pushCommand = pushCommand;
+    }
+
+    public PushCommand getPushHandler(){
+        return pushCommand;
+    }
+
+
+    /**
+     * Wheter the checkbox is checked
+     */
+    private boolean checked;
 
     public boolean isChecked() {
         return checked;
@@ -68,8 +76,9 @@ public class CheckBoxWidget extends Widget {
      */
     public void setChecked(boolean checked) {
         this.blocked = !isValidToggle.apply(checked);
-        if (!blocked)
-            getToggleHandler().accept(checked);
+        if (!blocked && pushCommand!=null) {
+            pushCommand.execute();
+        }
         this.checked = checked;
     }
 
