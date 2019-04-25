@@ -24,6 +24,11 @@ public class SelectorColumnWidget extends ColumnWidget {
             public void execute() {
                 unCheckAll();
             }
+
+            @Override
+            public Boolean getReturn() {
+                return true;
+            }
         });
 
         super.addWidget(w);

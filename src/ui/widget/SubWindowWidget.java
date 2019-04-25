@@ -1,9 +1,7 @@
 package ui.widget;
 
 
-import ui.commands.CloseSubWindowCommand;
-import ui.commands.UICommand;
-import ui.commands.UICommandWithReturn;
+import ui.commands.PushCommand;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -41,12 +39,12 @@ public class SubWindowWidget extends ComponentWidget {
      * @param border whether to draw a border
      * @param title titleLabel of the subwindow
      */
-    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, UICommandWithReturn<Boolean> onClose) {
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, PushCommand onClose) {
         super(x,y,width,height,border);
         this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
 
         // close getCommand definieren
-        HashMap<Integer, UICommandWithReturn<Boolean>> tmp = new HashMap<>();
+        HashMap<Integer, PushCommand> tmp = new HashMap<>();
         tmp.put(1, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 tmp);

@@ -1,13 +1,13 @@
 package ui.widget;
 
-import ui.commands.UICommandWithReturn;
+import ui.commands.PushCommand;
 
 import java.awt.event.KeyEvent;
 
 
 public class KeyEventWidget extends Widget {
 
-    private final UICommandWithReturn<Boolean> keyHandler;
+    private final PushCommand keyHandler;
     private final int key;
 
     /**
@@ -15,7 +15,7 @@ public class KeyEventWidget extends Widget {
      *
      * @param keyHandler function to call on key press
      */
-    public KeyEventWidget(UICommandWithReturn<Boolean> keyHandler, int key) {
+    public KeyEventWidget(PushCommand keyHandler, int key) {
         super(0,0,0,0,false);
         this.keyHandler = keyHandler;
         this.key = key;

@@ -1,21 +1,17 @@
 package ui.widget;
 
 import ui.commands.PushCommand;
-import ui.commands.UICommand;
-import ui.commands.UICommandWithReturn;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class EditorWidget extends LabelWidget {
 
     private Function<String, Boolean> isValidText;
     private PushCommand pushCommand;
-    private UICommandWithReturn<Boolean> clickHandler;
+    private PushCommand clickHandler;
     private boolean selected;
     private String oldText;
 
@@ -48,7 +44,7 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    public void setClickHandler(UICommandWithReturn clickHandler) {
+    public void setClickHandler(PushCommand clickHandler) {
         this.clickHandler = clickHandler;
     }
 
