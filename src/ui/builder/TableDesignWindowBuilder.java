@@ -67,10 +67,16 @@ public class TableDesignWindowBuilder {
         window.addWidget(table);
 
         table.addSelectorColumn("S");
-        table.addColumn(80, true, "Name");
-        table.addColumn(80, true, "Type");
-        table.addColumn(25, false, "B");
-        table.addColumn(80, true, "Default");
+        UpdateColumnSizeCommand  nameUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,1, uiHandler);
+        bus.subscribe(nameUpdateColumnSizeCommand);
+        UpdateColumnSizeCommand  typeUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,2, uiHandler);
+        bus.subscribe(typeUpdateColumnSizeCommand);
+        UpdateColumnSizeCommand  defaultUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,4, uiHandler);
+        bus.subscribe(defaultUpdateColumnSizeCommand);
+        table.addColumn(uiHandler.getColumnWidth(tableID,1), true, "Name", nameUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,1,uiHandler,bus));
+        table.addColumn(uiHandler.getColumnWidth(tableID,2), true, "Type",typeUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,2,uiHandler,bus));
+        table.addColumn(25, "B");
+        table.addColumn(uiHandler.getColumnWidth(tableID,4), true, "Default", defaultUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,4,uiHandler,bus));
 
 
         for (int columnID : uiHandler.getColumnIds(tableID)) {

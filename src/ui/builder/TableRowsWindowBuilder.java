@@ -78,7 +78,10 @@ public class TableRowsWindowBuilder {
         for (int columnID : getUIHandler().getColumnIds(tableID)) {
             LabelWidget topLabel = new LabelWidget(0,0,10,25,true);
             topLabel.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, topLabel, uiHandler), bus);
-            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true);
+            ResizeRowCommand resizeRowCommand = new ResizeRowCommand(tableID,columnID,getUIHandler(),bus);
+            UpdateRowSizeCommand updateRowSizeCommand = new UpdateRowSizeCommand(tableID,columnID,uiHandler);
+            bus.subscribe(updateRowSizeCommand);
+            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true,updateRowSizeCommand, resizeRowCommand);
         }
 
 

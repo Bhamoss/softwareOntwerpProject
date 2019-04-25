@@ -1,10 +1,9 @@
 package ui.widget;
 
-import ui.commandBus.CommandBus;
+import ui.commands.PushCommand;
+import ui.commands.ResizeCommand;
 import ui.commands.UpdateCommand;
-
-import java.awt.*;
-import java.util.LinkedList;
+import ui.commands.UpdateSizeCommand;
 
 public class TableWidget extends CompositeWidget {
 
@@ -35,20 +34,31 @@ public class TableWidget extends CompositeWidget {
      * @param resizable
      * @param name
      */
-    public void addColumn(int width, boolean resizable, String name) {
-        addWidget(
-                new ColumnWidget(
-                    getX()+getWidth(), getY(), width,
-                    name, resizable, x->resizedColumn())
-        );
+    public void addColumn(int width, boolean resizable, String name, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand) {
+        ColumnWidget columnWidget = new ColumnWidget(
+                getX()+getWidth(), getY(), width,
+                name, resizable, x-> resizedColumn(),updateCommand, onResizeCommand);
+        onResizeCommand.setColumnWidth(()->columnWidget.getWidth());
+        addWidget(columnWidget);
     }
 
-    public void addColumn(int width, LabelWidget topLabel, boolean resizable) {
-        addWidget(
-                new ColumnWidget(
-                        getX()+getWidth(), getY(), width,
-                        topLabel, resizable, x->resizedColumn())
-        );
+    public void addColumn(int width, LabelWidget topLabel, boolean resizable, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand) {
+        ColumnWidget columnWidget = new ColumnWidget(
+                getX()+getWidth(), getY(), width,
+                topLabel, resizable, x->
+            resizedColumn(),updateCommand, onResizeCommand);
+        onResizeCommand.setColumnWidth(()->columnWidget.getWidth());
+        addWidget(columnWidget);
+    }
+
+    public void addColumn(int width, LabelWidget topLabel) {
+        ColumnWidget columnWidget = new ColumnWidget(getX()+getWidth(), getY(), width, topLabel);
+        addWidget(columnWidget);
+    }
+
+    public void addColumn(int width, String name) {
+        ColumnWidget columnWidget = new ColumnWidget(getX()+getWidth(), getY(), width, name);
+        addWidget(columnWidget);
     }
 
 

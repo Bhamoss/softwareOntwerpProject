@@ -5,12 +5,12 @@ import java.util.HashMap;
 public class TableLayout {
 
     public TableLayout(){
-        tableWidths = new HashMap<>();
+        tableWidth = getDefaultWidth();
         columnWidths = new HashMap<>();
         rowWidths = new HashMap<>();
     }
 
-    private HashMap<Integer,Integer> tableWidths;
+    private Integer tableWidth;
 
     private HashMap<Integer,HashMap<Integer,Integer>> columnWidths;
 
@@ -22,16 +22,12 @@ public class TableLayout {
         return defaultWidth;
     }
 
-    public Integer getTableWidth(Integer tableId) {
-
-        if (tableWidths.containsKey(tableId))
-            return tableWidths.get(tableId);
-        else
-            return getDefaultWidth();
+    public Integer getTableWidth() {
+        return tableWidth;
     }
 
-    public void putTableWidth(Integer tableId, Integer tableWidth) {
-        this.tableWidths.put(tableId,tableWidth);
+    public void setTableWidth(Integer tableWidth) {
+        this.tableWidth = tableWidth;
     }
 
     public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
@@ -56,9 +52,9 @@ public class TableLayout {
     }
 
     public void putRowWidth(Integer tableId, Integer columnNumber, Integer columnWidth) {
-        if(!columnWidths.keySet().contains(tableId)){
-            columnWidths.put(tableId, new HashMap<>());
+        if(!rowWidths.keySet().contains(tableId)){
+            rowWidths.put(tableId, new HashMap<>());
         }
-        columnWidths.get(tableId).put(columnNumber,columnWidth);
+        rowWidths.get(tableId).put(columnNumber,columnWidth);
     }
 }

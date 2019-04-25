@@ -30,12 +30,12 @@ public class UIHandler {
     private final TableLayout tableLayout;
 
 
-    public Integer getTableWidth(Integer tableId) {
-        return getTableLayout().getTableWidth(tableId);
+    public Integer getTableWidth() {
+        return getTableLayout().getTableWidth();
     }
 
-    public void putTableWidth(Integer tableId, Integer tableWidth) {
-        getTableLayout().putTableWidth(tableId,tableWidth);
+    public void setTableWidth(Integer tableWidth) {
+        getTableLayout().setTableWidth(tableWidth);
     }
 
     public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
@@ -108,7 +108,7 @@ public class UIHandler {
      *
      * @return a list containing the ids of the tables.
      * | return == ArrayList<Integer>
-     * | && ∀table in getTablesHandler().tables: ∃! i: ArrayList<Integer>.get(i).equals(table.getId())
+     * | && ∀table in getTablesHandler().tables: ∃! i: ArrayList<Integer>.get(i).equals(table.getTableID())
      *
      */
     public ArrayList<Integer> getTableIds()

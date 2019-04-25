@@ -4,44 +4,22 @@ import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.ColumnWidget;
 
-public class UpdateTableSizeCommand extends UpdateCommand{
+public class UpdateTableSizeCommand extends UpdateSizeCommand{
 
-    public UpdateTableSizeCommand(int tableId, ColumnWidget w, UIHandler handler) {
-        this.tableId = tableId;
-        this.widget = w;
-        this.handler = handler;
+    public UpdateTableSizeCommand( ColumnWidget w, UIHandler handler) {
+        super(w,handler);
     }
 
-    private final ColumnWidget widget;
-
-    private final int tableId;
-
-    private final UIHandler handler;
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public ColumnWidget getWidget() {
-        return widget;
-    }
-
-    public UIHandler getHandler() {
-        return handler;
+    public UpdateTableSizeCommand(UIHandler handler) {
+        super(handler);
     }
 
     @Subscribe
-    public void update(RemoveTableCommand command) {
-        if (getTableId() == command.getTableId()) {
-            update();
-        }
-    }
+    public void update(ResizeTableCommand command) {update(); }
 
     @Override
     public void update() {
-        //TODO set width
-        getWidget();
-        getHandler().getTableWidth(getTableId());
+        getWidget().forceResize(getHandler().getTableWidth());
     }
 
 }

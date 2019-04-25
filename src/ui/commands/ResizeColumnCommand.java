@@ -5,25 +5,23 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class ResizeColumnCommand extends PushCommand{
+public class ResizeColumnCommand extends ResizeCommand{
 
     public ResizeColumnCommand(Integer tableId, Integer columnNumber, Supplier<Integer> columnWidth, UIHandler uiHandler, CommandBus commandBus){
+        super(columnWidth, uiHandler, commandBus);
         this.tableId = tableId;
         this.columnNumber = columnNumber;
-        this.columnWidth = columnWidth;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+    }
+
+    public ResizeColumnCommand(Integer tableId, Integer columnNumber,  UIHandler uiHandler, CommandBus commandBus){
+        super(uiHandler, commandBus);
+        this.tableId = tableId;
+        this.columnNumber = columnNumber;
     }
 
     private final Integer tableId;
 
     private final Integer columnNumber;
-
-    private final Supplier<Integer> columnWidth;
-
-    private final UIHandler uiHandler;
-
-    private final CommandBus commandBus;
 
     public Integer getTableId() {
         return tableId;
@@ -33,21 +31,10 @@ public class ResizeColumnCommand extends PushCommand{
         return columnNumber;
     }
 
-    public Integer getColumnWidth() {
-        return columnWidth.get();
-    }
-
-    public UIHandler getUiHandler() {
-        return uiHandler;
-    }
-
-    public CommandBus getCommandBus() {
-        return commandBus;
-    }
 
     @Override
     public void execute() {
-        getUiHandler().putColumnWidth(getTableId(),getColumnNumber(),getColumnWidth());
+        getUIHandler().putColumnWidth(getTableId(),getColumnNumber(), getColumnWidth());
         getCommandBus().post(this);
     }
 

@@ -5,42 +5,31 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class ResizeTableCommand extends PushCommand{
+public class ResizeTableCommand extends ResizeCommand{
 
-    public ResizeTableCommand(Integer tableId, Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
-        this.tableId = tableId;
+    public ResizeTableCommand( Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
+        super(uiHandler,commandBus);
         this.columnwidth = columnwidth;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
     }
 
-    private final Integer tableId;
+    public ResizeTableCommand(UIHandler uiHandler, CommandBus commandBus){
+        super(uiHandler,commandBus);
+    }
 
-    private final Supplier<Integer> columnwidth;
+    private Supplier<Integer> columnwidth;
 
-    private final UIHandler uiHandler;
-
-    private final CommandBus commandBus;
-
-    public Integer getTableId() {
-        return tableId;
+    public void setColumnwidth(Supplier<Integer> columnwidth) {
+        this.columnwidth = columnwidth;
     }
 
     public Integer getColumnwidth() {
         return columnwidth.get();
     }
 
-    public UIHandler getUiHandler() {
-        return uiHandler;
-    }
-
-    public CommandBus getCommandBus() {
-        return commandBus;
-    }
 
     @Override
     public void execute() {
-        getUiHandler().putTableWidth(getTableId(),getColumnwidth());
+        getUIHandler().setTableWidth(getColumnwidth());
         getCommandBus().post(this);
     }
 

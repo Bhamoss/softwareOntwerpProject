@@ -1,8 +1,9 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.UpdateColumnNameCommand;
+import ui.commands.ResizeCommand;
 import ui.commands.UpdateCommand;
+import ui.commands.UpdateSizeCommand;
 
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -12,14 +13,28 @@ public class ColumnWidget extends CompositeWidget {
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
+    private UpdateSizeCommand updateCommand;
 
-    public ColumnWidget(int x, int y, int width, LabelWidget topLabel, boolean resizable, Consumer<Integer> onResize) {
+    private ResizeCommand resizeCommand;
+
+
+    public ColumnWidget(int x, int y, int width, LabelWidget topLabel, boolean resizable, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
         super(x, y, width, 0, true);
         resizing = false;
         this.resizable = resizable;
         this.onResize = onResize;
-
+        this.updateCommand = updateCommand;
         this.addWidget(topLabel);
+        this.resizeCommand = resizeCommand;
+        updateCommand.setWidget(this);
+    }
+    //TODO resizable is false en toch kan je resizen? dafuq? zie selector column
+    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize) {
+        super(x, y, width, 0, true);
+        resizing = false;
+        this.resizable = resizable;
+        this.onResize = onResize;
+        this.addWidget(new LabelWidget(x,y,width,25,true,name));
     }
 
     /**
@@ -33,19 +48,34 @@ public class ColumnWidget extends CompositeWidget {
      * @param resizable whether the column can be resized
      * @param onResize function called when column is resized
      */
-    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize) {
-        this(x,y,width,new LabelWidget(x,y,width,25,true,name),resizable,onResize);
+    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
+        this(x,y,width,new LabelWidget(x,y,width,25,true,name),resizable,onResize, updateCommand, resizeCommand);
+    }
+
+    public ColumnWidget(int x, int y, int width,LabelWidget topLabel) {
+        super(x, y, width, 0, true);
+        resizing = false;
+        this.resizable = false;
+        this.onResize = null;
+        this.updateCommand = null;
+        this.addWidget(topLabel);
     }
 
     public ColumnWidget(int x, int y, int width, String name) {
-        this(x,y,width,name,false,(Integer n) -> {});
+        this(x,y,width,new LabelWidget(x,y,width,25,true,name));
     }
 
-    public ColumnWidget(int x, int y, int width, String name, Consumer<Integer> onResize) {
-        this(x,y,width,name,true,onResize);
+    public ColumnWidget(int x, int y, int width, String name, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
+        this(x,y,width,name,true,onResize, updateCommand, resizeCommand);
     }
 
+    public ResizeCommand getResizeCommand() {
+        return resizeCommand;
+    }
 
+    public void setResizeCommand(ResizeCommand resizeCommand) {
+        this.resizeCommand = resizeCommand;
+    }
 
     /**
      * Adds a widget to the bottom of the column.
@@ -89,7 +119,18 @@ public class ColumnWidget extends CompositeWidget {
      * Resizes the width of the column
      * @param w new width, needs be at least 5.
      */
-    private void resize(int w) {
+    public void resize(int w) {
+        forceResize(w);
+        getResizeCommand().execute();
+
+    }
+
+    /**
+     * Resizes the width of the column
+     * @param w new width, needs be at least 5.
+     */
+    //TODO comments ma kik, twas 00:17
+    public void forceResize(int w) {
         if (w <= 5)
             return;
         if (!resizable)
@@ -161,6 +202,17 @@ public class ColumnWidget extends CompositeWidget {
             return false;
         }
         return super.handleMouseEvent(id,x,y,clickCount);
+    }
+
+    public void setGetHandler(UpdateSizeCommand command, CommandBus bus) {
+        if (updateCommand != null)
+            unsubscribe(bus);
+        this.updateCommand = command;
+        bus.subscribe(command);
+    }
+
+    public void unsubscribe(CommandBus bus) {
+        bus.unsubscribe(updateCommand);
     }
 
 
