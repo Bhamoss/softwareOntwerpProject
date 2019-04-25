@@ -13,6 +13,7 @@ public class UpdateCellValueCommand extends UpdateCommand{
         this.rowId = rowId;
         this.widget = w;
         this.handler = handler;
+        update();
     }
 
     private final LabelWidget widget;

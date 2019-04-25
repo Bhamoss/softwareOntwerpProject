@@ -11,6 +11,7 @@ public class UpdateColumnAllowBlanksCommand extends UpdateCommand{
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
+        update();
     }
 
     private final CheckBoxWidget widget;
@@ -46,7 +47,7 @@ public class UpdateColumnAllowBlanksCommand extends UpdateCommand{
 
     @Override
     public void update() {
-        getWidget().setChecked(getHandler().getColumnAllowBlank(getTableId(),getColumnId()));
+        getWidget().forceSetChecked(getHandler().getColumnAllowBlank(getTableId(),getColumnId()));
     }
 
 }

@@ -1,11 +1,11 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
 import ui.commands.PushCommand;
 import ui.commands.UpdateCommand;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class CheckBoxWidget extends Widget {
@@ -59,7 +59,27 @@ public class CheckBoxWidget extends Widget {
 
 
     /**
-     * Wheter the checkbox is checked
+     * Get command
+     */
+    private UpdateCommand getCommand;
+
+    public void setGetHandler(UpdateCommand command, CommandBus bus) {
+        if (getCommand != null)
+            unsubscribe(bus);
+        this.getCommand = command;
+        bus.subscribe(command);
+    }
+
+    public UpdateCommand getUpdateHandler() {
+        return getCommand;
+    }
+
+    public void unsubscribe(CommandBus bus) {
+        bus.unsubscribe(getCommand);
+    }
+
+    /**
+     * Whether the checkbox is checked
      */
     private boolean checked;
 
@@ -74,7 +94,8 @@ public class CheckBoxWidget extends Widget {
      *
      * @param checked the new state
      */
-    public void setChecked(boolean checked) {
+    // TODO: update check before execution?
+    public void trySetChecked(boolean checked) {
         this.blocked = !isValidToggle.apply(checked);
         if (!blocked && pushCommand!=null) {
             pushCommand.execute();
@@ -82,12 +103,9 @@ public class CheckBoxWidget extends Widget {
         this.checked = checked;
     }
 
-    /**
-     * Forces the checkbox to uncheck, no matter
-     * its content, or whether it is valid.
-     */
-    public void forceUncheck() {
-        this.checked = false;
+    public void forceSetChecked(boolean checked) {
+        this.checked = checked;
+        this.blocked = false;
     }
 
     @Override
@@ -102,7 +120,7 @@ public class CheckBoxWidget extends Widget {
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (this.containsPoint(x,y) && id == MouseEvent.MOUSE_PRESSED) {
-            setChecked(!isChecked());
+            trySetChecked(!isChecked());
             return true;
         }
         return false;

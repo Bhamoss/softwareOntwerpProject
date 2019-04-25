@@ -51,7 +51,7 @@ public class SelectorColumnWidget extends ColumnWidget {
 //        for (int i = 0; i < ids.size(); i++){
 //            CheckBoxWidget w = (CheckBoxWidget)widgets.get(i);
 //            if (ids.get(i) == id){
-//                w.setChecked(toggle);
+//                w.trySetChecked(toggle);
 //                break;
 //            }
 //        }
@@ -60,7 +60,7 @@ public class SelectorColumnWidget extends ColumnWidget {
     private void unCheckAll() {
         for (int i = 1; i < widgets.size(); i++) {
             CheckBoxWidget w = (CheckBoxWidget)widgets.get(i);
-            w.forceUncheck();
+            w.forceSetChecked(false);
         }
     }
 

@@ -48,7 +48,6 @@ public class UpdateColumnNameCommand  extends UpdateCommand{
 
     @Override
     public void update() {
-        //getWidget().setText(getHandler().getColumnName(tableId, columnId));
-        getWidget().setText("todo");
+        getWidget().setText(getHandler().getColumnName(tableId, columnId));
     }
 }

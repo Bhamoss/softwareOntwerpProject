@@ -35,6 +35,7 @@ public class LabelWidget extends Widget{
 
     public LabelWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
+        // For safety (if no get handler is initialized before painting)
         this.text = "";
     }
 
