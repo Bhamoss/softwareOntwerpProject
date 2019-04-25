@@ -5,7 +5,7 @@ import tablr.column.*;
 public class ColumnConverter {
 
     public static StringColumn convertToStringColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!canConvertToStringColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -18,7 +18,7 @@ public class ColumnConverter {
     }
 
     public static EmailColumn convertToEmailColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("Email")) {
+        if (!canConvertToEmailColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -31,7 +31,7 @@ public class ColumnConverter {
     }
 
     public static IntegerColumn convertToIntegerColumn(BooleanColumn c) throws IllegalColumnException {
-        if (!c.canHaveAsType("Integer")) {
+        if (!canConvertToIntegerColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -44,7 +44,7 @@ public class ColumnConverter {
     }
 
     public static IntegerColumn convertToIntegerColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("Integer")) {
+        if (!canConvertToIntegerColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -57,7 +57,7 @@ public class ColumnConverter {
     }
 
     public static BooleanColumn convertToBooleanColumn(IntegerColumn c) throws IllegalColumnException {
-        if (!c.canHaveAsType("Boolean")) {
+        if (!canConvertToBooleanColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -70,7 +70,7 @@ public class ColumnConverter {
     }
 
     public static BooleanColumn convertToBooleanColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("Boolean")) {
+        if (!canConvertToBooleanColumn(c)) {
             throw new IllegalColumnException();
         }
 
@@ -82,21 +82,75 @@ public class ColumnConverter {
         return result;
     }
 
+    public static boolean canConvertToBooleanColumn(Column c) {
+        BooleanColumn b = new BooleanColumn(0, "test",0,"", true);
+        return canConvertTo(c, b);
+    }
+
+    public static boolean canConvertToBooleanColumn(IntegerColumn c) {
+        BooleanColumn b = new BooleanColumn(0, "test",0,"", true);
+        for (int i = 1; i <= c.getNbValues(); i++) {
+            if (!b.canHaveAsValue(intToBoolean(c.getValueAt(i)))) {
+                return false;
+            }
+        }
+        return b.canHaveAsValue(intToBoolean(c.getDefaultValue()));
+    }
+
+    public static boolean canConvertToStringColumn(Column c) {
+        StringColumn b = new StringColumn(0, "test",0,"", true);
+        return canConvertTo(c, b);
+    }
+
+    public static boolean canConvertToEmailColumn(Column c) {
+        EmailColumn b = new EmailColumn(0, "test",0,"", true);
+        return canConvertTo(c, b);
+    }
+
+    public static boolean canConvertToIntegerColumn(Column c) {
+        IntegerColumn b = new IntegerColumn(0, "test",0,"", true);
+        return canConvertTo(c, b);
+    }
+
+    public static boolean canConvertToIntegerColumn(BooleanColumn c) {
+        IntegerColumn b = new IntegerColumn(0, "test",0,"", true);
+        for (int i = 1; i <= c.getNbValues(); i++) {
+            if (!b.canHaveAsValue(booleanToInt(c.getValueAt(i)))) {
+                return false;
+            }
+        }
+        return b.canHaveAsValue(booleanToInt(c.getDefaultValue()));
+    }
+
+    private static boolean canConvertTo(Column c, Column c2) {
+        for (int i = 1; i <= c.getNbValues(); i++) {
+            if (!c2.canHaveAsValue(c.getValueAt(i))) {
+                return false;
+            }
+        }
+        return c2.canHaveAsValue(c.getDefaultValue());
+    }
+
+
+
+
+
+
     private static String booleanToInt(String b) {
-        if (b.equals("True")) {
+        if (b.equals("true")) {
             return "1";
-        } else if (b.equals("False")) {
+        } else if (b.equals("false")) {
             return "0";
         } else if (b.equals(""))
             return "";
-        else throw new IllegalArgumentException("Argument must be 'True', 'False' or the empty string.");
+        else throw new IllegalArgumentException("Argument must be 'true', 'false' or the empty string.");
     }
 
     private static String intToBoolean(String i) {
         if (i.equals("1")) {
-            return "True";
+            return "true";
         } else if (i.equals("0")) {
-            return "False";
+            return "false";
         } else if (i.equals(""))
             return "";
         else throw new IllegalArgumentException("Argument must be '1', '0' or the empty string.");

@@ -308,7 +308,7 @@ public abstract class Column {
      *          | result ==
      *          |   ( isValueBlank(value) && !isBlanksAllowed() )
      */
-    protected boolean canHaveAsValue(String value) {
+    public boolean canHaveAsValue(String value) {
         if (value == null)
             return false;
         else
