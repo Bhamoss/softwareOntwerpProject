@@ -7,13 +7,12 @@ import ui.commands.*;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author  Michiel Provoost -> excuse me what fuck
+ * @author  Jaron Maene
  * @version 1.0.0
  *
  * A ui generating widgets defining the table design mode.

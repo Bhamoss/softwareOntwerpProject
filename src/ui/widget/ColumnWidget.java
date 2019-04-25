@@ -1,11 +1,14 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
+import ui.commands.UpdateColumnNameCommand;
+import ui.commands.UpdateCommand;
+
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class ColumnWidget extends CompositeWidget {
 
-    private final String name;
     private int occupancy;
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
@@ -31,7 +34,6 @@ public class ColumnWidget extends CompositeWidget {
         resizing = false;
         this.resizable = resizable;
         this.onResize = onResize;
-        this.name = name;
 
         LabelWidget topLabel = new LabelWidget(x,y,width,25,visible,name);
         this.addWidget(topLabel);
@@ -47,6 +49,18 @@ public class ColumnWidget extends CompositeWidget {
 
     public ColumnWidget(int x, int y, int width, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
         this(x,y,width,25, name,resizable,visible,onResize);
+    }
+
+
+    public ColumnWidget(int x, int y, int width, int height, LabelWidget topLabel, boolean resizable, boolean visible, Consumer<Integer> onResize) {
+        super(x, y, width, height, true);
+        assert(height>=25);
+        occupancy = 0;
+        resizing = false;
+        this.resizable = resizable;
+        this.onResize = onResize;
+
+        this.addWidget(topLabel);
     }
 
 
@@ -125,7 +139,7 @@ public class ColumnWidget extends CompositeWidget {
     }
 
     public String getName() {
-        return name;
+        return ((LabelWidget) widgets.get(0)).getText();
     }
 
 

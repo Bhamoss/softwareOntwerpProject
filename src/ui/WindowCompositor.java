@@ -171,17 +171,13 @@ public class WindowCompositor extends CanvasWindow {
             repaint();
     }
 
-    private void updateCtrl(int id, int keyCode) {
-        if (keyCode == KeyEvent.VK_CONTROL)
-            if (id == KeyEvent.KEY_PRESSED)
-                ctrlPressed = true;
-            else
-                ctrlPressed = false;
-    }
 
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        updateCtrl(id, keyCode);
+        if (keyCode == KeyEvent.VK_CONTROL) {
+            ctrlPressed = true;
+            return;
+        }
 
         ComponentWidget activeWindow = getActiveWindow();
         boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar, ctrlPressed);
@@ -192,5 +188,6 @@ public class WindowCompositor extends CanvasWindow {
 
         if (paintflag)
             repaint();
+        ctrlPressed = false;
     }
 }

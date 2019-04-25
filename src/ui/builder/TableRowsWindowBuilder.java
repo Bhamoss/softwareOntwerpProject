@@ -7,13 +7,10 @@ import ui.commands.*;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
- * @author  Michiel Provoost
+ * @author  Jaron Maene
  * @version 1.0.0
  *
  * A ui generating widgets defining the table rows mode.
@@ -30,7 +27,6 @@ public class TableRowsWindowBuilder {
         this.compositor = compositor;
         this.uiHandler = uiHandler;
         this.bus = bus;
-
     }
 
     /**
@@ -75,16 +71,35 @@ public class TableRowsWindowBuilder {
         window.addWidget(table);
 
         table.addSelectorColumn("S");
-        for (Integer columnID : getUIHandler().getColumnIds(tableID)) {
-            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), true, getUIHandler().getColumnName(tableID,columnID));
-            for(Integer rowID = 0; rowID < getUIHandler().getNbRows(tableID);rowID ++){
-                // Adds selector box
-                table.addEntry(rowID);
 
+        // Add all columns
+        for (int columnID : getUIHandler().getColumnIds(tableID)) {
+            LabelWidget topLabel = new LabelWidget(0,0,10,25,true);
+            topLabel.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, topLabel, uiHandler), bus);
+            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true);
+        }
+
+
+        // Add cells
+        for (Integer rowID = 1; rowID <= getUIHandler().getNbRows(tableID);rowID ++) {
+            // Adds selector box
+            table.addEntry(rowID);
+            for(int columnID : getUIHandler().getColumnIds(tableID)){
+                int rid = rowID;
                 // Add cell editor
                 if(getUIHandler().getColumnType(tableID,columnID) == "Boolean") {
+                    List<String> options = getUIHandler().getColumnAllowBlank(tableID,columnID) ?
+                            Arrays.asList("true", "false", "") : Arrays.asList("true", "false");
+                    SwitchBoxWidget editor = new SwitchBoxWidget(true, options);
+                    editor.setValidHandler((String s) ->
+                            getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
+                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
+                    editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID,rowID, editor, uiHandler), bus);
+                    table.addEntry(editor);
+                } else {
                     EditorWidget editor = new EditorWidget(true);
-                    //editor.setValidHandler((String s) -> getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
+                    editor.setValidHandler((String s) ->
+                            getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
                     editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
                     editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID,rowID, editor, uiHandler), bus);
                     table.addEntry(editor);
@@ -93,120 +108,28 @@ public class TableRowsWindowBuilder {
         }
 
 
-        for (int columnID : uiHandler.getColumnIds(tableID)) {
-            // Adds selector box
-
-            table.addEntry(columnID);
-
-            // Add column name editor
-            EditorWidget editor = new EditorWidget(true);
-            editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
-            editor.setPushHandler(new SetColumnNameCommand(() -> editor.getText(), tableID, columnID, uiHandler, bus));
-            editor.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, editor, uiHandler), bus);
-            table.addEntry(editor);
-
-            //CheckBoxWidget blanks = new CheckBoxWidget();
-            //table.addEntry(blanks);
-
-            if (uiHandler.getColumnType(tableID, columnID).equals("Boolean")) {
-                //CheckBoxWidget defaultWidget = new CheckBoxWidget();
-                //table.addEntry(defaultWidget);
-            } else {
-                EditorWidget defaultWidget = new EditorWidget(true);
-                defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
-                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
-                defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
-                table.addEntry(defaultWidget);
-            }
-
-        }
+        window.addWidget(
+                new KeyEventWidget(new RemoveRowCommand(tableID, ()->table.getSelectedId(), uiHandler, compositor),
+                        KeyEvent.VK_DELETE, false
+                ));
+        window.addWidget(
+                new KeyEventWidget(new AddDesignSubWindowCommand(compositor, tableID),
+                        KeyEvent.VK_ENTER, true
+                ));
 
         // Create button at the bottom to add new tables on the bottom left
         HashMap<Integer, PushCommand> onClick = new HashMap<>();
-        onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor));
+        onClick.put(2, new AddRowCommand(tableID, uiHandler, compositor));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight()+5,105,30,
-                true,"Create column", onClick
+                true,"Create Row", onClick
         ));
 
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
         scrollWindow.id = tableID;
-        scrollWindow.mode = "design";
+        scrollWindow.mode = "rows";
         return scrollWindow;
-        /*
-        ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
-        layout.add(selectedColumn);
-        ColumnWidget column;
-        EditorWidget editor;
-        ArrayList<String> columnNames = uiHandler.getColumnNames();
-        LinkedList<ColumnWidget> traversedColumns = new LinkedList<>();
-        Collections.reverse(columnNames);
-        for (String columnName : columnNames) {
-            if (!getUIHandler().containsTableRowEntry(tableName,columnName)) {
-                getUIHandler().addTableRowsEntry(tableName,columnName,80);
-            }
-        }
-        for(String columnName : columnNames) {
-            ColumnWidget[] currentTraversed = traversedColumns.stream().toArray(ColumnWidget[]::new);
-            column = new ColumnWidget(calcPos(columnName, uiHandler.getColumnNames()), 10, getUIHandler().getTableRowsWidth(uiHandler.getOpenTable(),columnName), 500, columnName, true, true,
-                    (Integer w) -> {
-                        for( ColumnWidget cw : currentTraversed ) {
-                            cw.setX(calcPos(cw.getName(), uiHandler.getColumnNames()));
-                        }
-                        getUIHandler().addTableRowsEntry(tableName, columnName, w);
-                });
-            traversedColumns.add(column);
-            for (int i = 1; i<= uiHandler.getNbRows(); i++) {
-                int row = i;
-                editor = new EditorWidget(true, uiHandler.getCellValue(columnName,i),
-                        (String oldName, String newName) -> uiHandler.canHaveAsCellValue(columnName,row,newName),
-                        (String oldName, String newName) -> {
-                            uiHandler.setCellValue(columnName, row, newName);
-                            getUIHandler().changeSelectedItem("");
-                            unSelectAllBoxes();
-                        }
-                );
-                column.addWidget(editor);
-            }
-            layout.add(column);
-        }
-        for (int i = 1; i<= uiHandler.getNbRows(); i++) {
-            // Create a button left of the editor to select it
-            Integer row = i;
-            CheckBoxWidget selectButton = new CheckBoxWidget(
-                    (Boolean toggle) ->{
-                        unSelectAllBoxes();
-                        getUIHandler().changeSelectedItem(row.toString());
-                    });
-            selectedColumn.addWidget(selectButton);
-        }
-        ButtonWidget createButton = new ButtonWidget(20,500,105,30,true,"Create Row",
-                (Integer clickCount) ->{
-                    if(clickCount == 2){
-                        uiHandler.addRow();
-                        getUIHandler().loadTableRowsWindow(uiHandler.getOpenTable());
-                        return true;
-                    }
-                    return false;
-        });
-        layout.add(createButton);
-        layout.add(new KeyEventWidget((Integer id, Integer keyCode) -> {
-            if (keyCode == KeyEvent.VK_DELETE && getUIHandler().getSelectedItem() != null) {
-                uiHandler.removeRow(Integer.valueOf(getUIHandler().getSelectedItem()));
-                getUIHandler().loadTableRowsWindow(uiHandler.getOpenTable());
-                return true;
-            } else if (keyCode == 13) {
-                getUIHandler().loadTableDesignWindow(uiHandler.getOpenTable());
-                getUIHandler().repaint();
-            }else if (keyCode == KeyEvent.VK_ESCAPE) {
-                getUIHandler().loadTablesWindow();
-                getUIHandler().repaint();
-            }
-            return false;
-        }));
-         **/
-
     }
 
 

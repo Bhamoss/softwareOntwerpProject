@@ -1,5 +1,8 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
+import ui.commands.UpdateCommand;
+
 import java.awt.*;
 import java.util.LinkedList;
 
@@ -51,6 +54,15 @@ public class TableWidget extends CompositeWidget {
                     name, resizable, true, x->resizedColumn())
         );
     }
+
+    public void addColumn(int width, LabelWidget topLabel, boolean resizable) {
+        addWidget(
+                new ColumnWidget(
+                        getX()+occupancy, getY(), width, getHeight(),
+                        topLabel, resizable, true, x->resizedColumn())
+        );
+    }
+
 
     /**
      * add a columnWidget to this tableWidget with the given width, resizability and columnName
