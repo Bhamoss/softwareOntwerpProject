@@ -5,6 +5,7 @@ import ui.commandBus.Subscribe;
 import ui.widget.LabelWidget;
 
 public class UpdateDesignheaderCommand extends UpdateCommand {
+
     public UpdateDesignheaderCommand(int tableID, LabelWidget w, UIHandler handler) {
         this.tableID = tableID;
         this.widget = w;
