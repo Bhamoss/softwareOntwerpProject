@@ -83,12 +83,12 @@ public class ColumnConverter {
     }
 
     public static boolean canConvertToBooleanColumn(Column c) {
-        BooleanColumn b = new BooleanColumn(0, "test",0,"", true);
+        BooleanColumn b = new BooleanColumn(999999, "test",0,"", true);
         return canConvertTo(c, b);
     }
 
     public static boolean canConvertToBooleanColumn(IntegerColumn c) {
-        BooleanColumn b = new BooleanColumn(0, "test",0,"", true);
+        BooleanColumn b = new BooleanColumn(999999, "test",0,"", true);
         for (int i = 1; i <= c.getNbValues(); i++) {
             if (!b.canHaveAsValue(intToBoolean(c.getValueAt(i)))) {
                 return false;
@@ -98,22 +98,22 @@ public class ColumnConverter {
     }
 
     public static boolean canConvertToStringColumn(Column c) {
-        StringColumn b = new StringColumn(0, "test",0,"", true);
+        StringColumn b = new StringColumn(999999, "test",0,"", true);
         return canConvertTo(c, b);
     }
 
     public static boolean canConvertToEmailColumn(Column c) {
-        EmailColumn b = new EmailColumn(0, "test",0,"", true);
+        EmailColumn b = new EmailColumn(999999, "test",0,"", true);
         return canConvertTo(c, b);
     }
 
     public static boolean canConvertToIntegerColumn(Column c) {
-        IntegerColumn b = new IntegerColumn(0, "test",0,"", true);
+        IntegerColumn b = new IntegerColumn(999999, "test",0,"", true);
         return canConvertTo(c, b);
     }
 
     public static boolean canConvertToIntegerColumn(BooleanColumn c) {
-        IntegerColumn b = new IntegerColumn(0, "test",0,"", true);
+        IntegerColumn b = new IntegerColumn(999999, "test",0,"", true);
         for (int i = 1; i <= c.getNbValues(); i++) {
             if (!b.canHaveAsValue(booleanToInt(c.getValueAt(i)))) {
                 return false;
