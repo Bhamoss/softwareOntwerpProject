@@ -2,13 +2,10 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.EditorWidget;
 import ui.widget.LabelWidget;
 
-
-public class UpdateTableNameCommand extends UpdateCommand {
-
-    public UpdateTableNameCommand(int tableID, LabelWidget w, UIHandler handler) {
+public class UpdateDesignheaderCommand extends UpdateCommand {
+    public UpdateDesignheaderCommand(int tableID, LabelWidget w, UIHandler handler) {
         this.tableID = tableID;
         this.widget = w;
         this.handler = handler;
@@ -42,6 +39,6 @@ public class UpdateTableNameCommand extends UpdateCommand {
 
     @Override
     public void update() {
-        getWidget().setText(getHandler().getTableName(getTableID()));
+        getWidget().setText("Table Design "+getHandler().getTableName(getTableID()));
     }
 }
