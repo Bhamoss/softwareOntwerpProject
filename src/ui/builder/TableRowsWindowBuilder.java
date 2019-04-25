@@ -3,11 +3,13 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
+import ui.commands.*;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -46,6 +48,17 @@ public class TableRowsWindowBuilder {
      */
     private final CommandBus bus;
 
+    public WindowCompositor getCompositor() {
+        return compositor;
+    }
+
+    public UIHandler getUIHandler() {
+        return uiHandler;
+    }
+
+    public CommandBus getBus() {
+        return bus;
+    }
 
     /**
      * Constructs the UI for the rows ui.
@@ -53,7 +66,74 @@ public class TableRowsWindowBuilder {
      * @return A list of widgets, defining the geometry
      *         of the ui
      */
-    public SubWindowWidget build(int id){
+    public ComponentWidget build(int tableID){
+        CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
+        // Subwindow to build
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Rows", onClose);
+
+        TableWidget table = new TableWidget(10, 10, 100, 200);
+        window.addWidget(table);
+
+        table.addSelectorColumn("S");
+        for (Integer columnID : getUIHandler().getColumnIds(tableID)) {
+            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), true, getUIHandler().getColumnName(tableID,columnID));
+            for(Integer rowID = 0; rowID < getUIHandler().getNbRows(tableID);rowID ++){
+                // Adds selector box
+                table.addEntry(rowID);
+
+                // Add cell editor
+                if(getUIHandler().getColumnType(tableID,columnID) == "Boolean") {
+                    EditorWidget editor = new EditorWidget(true);
+                    //editor.setValidHandler((String s) -> getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
+                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
+                    editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID,rowID, editor, uiHandler), bus);
+                    table.addEntry(editor);
+                }
+            }
+        }
+
+
+        for (int columnID : uiHandler.getColumnIds(tableID)) {
+            // Adds selector box
+
+            table.addEntry(columnID);
+
+            // Add column name editor
+            EditorWidget editor = new EditorWidget(true);
+            editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
+            editor.setPushHandler(new SetColumnNameCommand(() -> editor.getText(), tableID, columnID, uiHandler, bus));
+            editor.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, editor, uiHandler), bus);
+            table.addEntry(editor);
+
+            //CheckBoxWidget blanks = new CheckBoxWidget();
+            //table.addEntry(blanks);
+
+            if (uiHandler.getColumnType(tableID, columnID).equals("Boolean")) {
+                //CheckBoxWidget defaultWidget = new CheckBoxWidget();
+                //table.addEntry(defaultWidget);
+            } else {
+                EditorWidget defaultWidget = new EditorWidget(true);
+                defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
+                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
+                defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
+                table.addEntry(defaultWidget);
+            }
+
+        }
+
+        // Create button at the bottom to add new tables on the bottom left
+        HashMap<Integer, PushCommand> onClick = new HashMap<>();
+        onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor));
+        window.addWidget(new ButtonWidget(
+                20,table.getY()+table.getHeight()+5,105,30,
+                true,"Create column", onClick
+        ));
+
+        ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
+        onClose.setSubwindow(scrollWindow);
+        scrollWindow.id = tableID;
+        scrollWindow.mode = "design";
+        return scrollWindow;
         /*
         ColumnWidget selectedColumn = new ColumnWidget(20, 10, 25, 500, "S");
         layout.add(selectedColumn);
@@ -127,8 +207,6 @@ public class TableRowsWindowBuilder {
         }));
          **/
 
-
-        return null;
     }
 
 
