@@ -74,8 +74,7 @@ public class TablesWindowBuilder {
             EditorWidget editor = new EditorWidget(true);
 
             editor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
-            UpdateCommand editorUpdater = new UpdateTableNameCommand(tableID, editor, uiHandler);
-            bus.subscribe(editorUpdater);
+            editor.setGetHandler(new UpdateTableNameCommand(tableID, editor, uiHandler), bus);
             editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler, bus));
             editor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
 
@@ -84,7 +83,7 @@ public class TablesWindowBuilder {
         }
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, UICommandWithReturn<Boolean>> onClick = new HashMap<>();
+        HashMap<Integer, PushCommand> onClick = new HashMap<>();
         onClick.put(2, new AddTableCommand(uiHandler, compositor));
         window.addWidget(new ButtonWidget(
                 20,selectorColumn.getY()+selectorColumn.getHeight()+5,105,30,

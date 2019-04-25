@@ -110,7 +110,6 @@ public class WindowCompositor extends CanvasWindow {
 
         newSubWindow.setX(subwindow.getX());
         newSubWindow.setY(subwindow.getY());
-        //newSubWindow.resize(subwindow.getWidth(), subwindow.getHeight());
         newSubWindow.resizeWidth(subwindow.getWidth());
         newSubWindow.resizeHeight(subwindow.getHeight());
         return newSubWindow;
@@ -162,10 +161,8 @@ public class WindowCompositor extends CanvasWindow {
         boolean paintflag = false;
 
         if (clickedWindow.isActive()) {
-            System.out.println("MOUSE TO SUBWINDOW");
             paintflag = clickedWindow.handleMouseEvent(id, x, y, clickCount);
         } else if (id == MouseEvent.MOUSE_CLICKED) {
-            System.out.println("CHANGING ACTIVE");
             setActiveSubWindow(clickedWindow);
             paintflag = true;
         }

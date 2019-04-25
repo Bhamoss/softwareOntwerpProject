@@ -74,11 +74,6 @@ public class ColumnWidget extends CompositeWidget {
         return widgets.getLast();
     }
 
-    public void addRow(int id) {
-
-    }
-
-
     /**
      * Sets the given y as y-value for this columnWidget
      *      Also updates the y-value for all the widgets inside this columnWidget

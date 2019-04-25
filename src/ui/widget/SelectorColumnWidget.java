@@ -16,7 +16,6 @@ public class SelectorColumnWidget extends ColumnWidget {
         ids = new LinkedList<>();
     }
 
-    @Override
     public void addRow(int id) {
         CheckBoxWidget w = new CheckBoxWidget();
         w.setPushHandler(new PushCommand() {

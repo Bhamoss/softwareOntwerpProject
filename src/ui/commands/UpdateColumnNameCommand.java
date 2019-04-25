@@ -12,6 +12,7 @@ public class UpdateColumnNameCommand  extends UpdateCommand{
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
+        update();
     }
 
     private final LabelWidget widget;
@@ -47,6 +48,7 @@ public class UpdateColumnNameCommand  extends UpdateCommand{
 
     @Override
     public void update() {
-        getWidget().setText(getHandler().getColumnNames(getTableId()).get(getColumnId()));
+        //getWidget().setText(getHandler().getColumnName(tableId, columnId));
+        getWidget().setText("todo");
     }
 }

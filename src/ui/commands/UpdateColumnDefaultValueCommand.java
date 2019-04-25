@@ -12,6 +12,7 @@ public class UpdateColumnDefaultValueCommand extends UpdateCommand{
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
+        update();
     }
 
     private final LabelWidget widget;
