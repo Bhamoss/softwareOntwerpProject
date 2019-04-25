@@ -69,7 +69,10 @@ public class ScrollVerticalWidget extends ScrollWidget {
 
     @Override
     protected void updateProcent() {
-        procent = ((double)background.getHeight() / (double)component.getTotalHeight());
+        //System.out.println(component.getHeight());
+        //System.out.println(component.getTotalHeight());
+
+        procent = ((double)component.getHeight() / (double)component.getTotalHeight());
         if (procent > 1) {
             procent = 1;
         }

@@ -16,6 +16,10 @@ public class SelectorColumnWidget extends ColumnWidget {
         ids = new LinkedList<>();
     }
 
+    public SelectorColumnWidget(int x, int y, String name, boolean visible, Consumer<Integer> onResize) {
+        this(x, y, 25, name, visible, onResize);
+    }
+
     @Override
     public void addRow(int id) {
         CheckBoxWidget w = new CheckBoxWidget();

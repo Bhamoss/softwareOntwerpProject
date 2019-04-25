@@ -92,7 +92,7 @@ public class TableDesignWindowBuilder {
         }
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, UICommandWithReturn<Boolean>> onClick = new HashMap<>();
+        HashMap<Integer, PushCommand> onClick = new HashMap<>();
         onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight()+5,105,30,

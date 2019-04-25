@@ -62,9 +62,9 @@ public class TablesWindowBuilder {
         // encapsulate in scrolling decorator
 
         // TODO: tableLayout
-        ColumnWidget tablesColumn = new ColumnWidget(46,10,80,250, "Tables", true, true, x->{});
+        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, true, x->{});
         window.addWidget(tablesColumn);
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, 25, "S", false, x->{});
+        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S", false, x->{});
         window.addWidget(selectorColumn);
 
 
@@ -84,7 +84,7 @@ public class TablesWindowBuilder {
         }
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, UICommandWithReturn<Boolean>> onClick = new HashMap<>();
+        HashMap<Integer, PushCommand> onClick = new HashMap<>();
         onClick.put(2, new AddTableCommand(uiHandler, compositor));
         window.addWidget(new ButtonWidget(
                 20,selectorColumn.getY()+selectorColumn.getHeight()+5,105,30,

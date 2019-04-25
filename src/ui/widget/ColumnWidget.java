@@ -45,6 +45,10 @@ public class ColumnWidget extends CompositeWidget {
         this(x,y,width,height,name,true,true,onResize);
     }
 
+    public ColumnWidget(int x, int y, int width, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
+        this(x,y,width,25, name,resizable,visible,onResize);
+    }
+
 
     /**
      * Adds a widget to the bottom of the column.

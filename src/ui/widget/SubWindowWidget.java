@@ -155,8 +155,10 @@ public class SubWindowWidget extends ComponentWidget {
     protected int getTotalHeight() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getY() + w.getHeight()- getVirtualY() - MARGIN_BOTTOM)
-                result = w.getY() + w.getHeight() - getVirtualY() - MARGIN_BOTTOM;
+            if (result < w.getY() + w.getHeight() - getVirtualY() +MARGIN_TOP + MARGIN_BOTTOM) {
+                result = w.getY() + w.getHeight() - getVirtualY() +MARGIN_TOP+ MARGIN_BOTTOM;
+            }
+
         }
         return result;
     }
@@ -172,8 +174,8 @@ public class SubWindowWidget extends ComponentWidget {
     protected int getTotalWidth() {
         int result = 0;
         for (Widget w: widgets) {
-            if (result < w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT)
-                result = w.getX() - getVirtualX() + w.getWidth() - MARGIN_LEFT;
+            if (result < w.getX() - getVirtualX() + w.getWidth() + MARGIN_LEFT)
+                result = w.getX() - getVirtualX() + w.getWidth() + MARGIN_LEFT;
         }
         return result;
     }
