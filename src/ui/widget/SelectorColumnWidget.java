@@ -20,7 +20,6 @@ public class SelectorColumnWidget extends ColumnWidget {
         this(x, y, 25, name, visible, onResize);
     }
 
-    @Override
     public void addRow(int id) {
         CheckBoxWidget w = new CheckBoxWidget();
         w.setPushHandler(new PushCommand() {
