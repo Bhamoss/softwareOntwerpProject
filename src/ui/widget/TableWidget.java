@@ -58,9 +58,15 @@ public class TableWidget extends CompositeWidget {
      * @param name
      */
     public void addSelectorColumn(String name) {
+        assert (widgets.size()==0);
         addWidget(new SelectorColumnWidget(
                 getX()+occupancy, getY(), getHeight(),
                 name, true, x->resizedColumn()));
+    }
+
+    public int getSelectedId() {
+        SelectorColumnWidget sc = (SelectorColumnWidget) getColumn(0);
+        return sc.getSelectedId();
     }
 
     private ColumnWidget getColumn(int id) {

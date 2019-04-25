@@ -116,7 +116,7 @@ public class EditorWidget extends LabelWidget {
             }
         }
 
-        if (id == MouseEvent.MOUSE_CLICKED && clickCount == 2 && this.containsPoint(x,y)) {
+        if (id == MouseEvent.MOUSE_CLICKED && clickCount == 2 && this.containsPoint(x,y) && clickHandler != null) {
             clickHandler.execute();
             return clickHandler.getReturn();
         }
@@ -124,7 +124,7 @@ public class EditorWidget extends LabelWidget {
     }
 
     @Override
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar, boolean ctrl) {
         if (selected && id == KeyEvent.KEY_PRESSED) {
             if (keyCode >= 48) { // Alphanumerical key
                 setText(text + keyChar);

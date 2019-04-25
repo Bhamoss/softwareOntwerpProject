@@ -135,7 +135,7 @@ public class Widget {
      * @param keyChar char of the key
      * @return true if frame needs to be repainted, else false
      */
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar, boolean ctrl) {
         return false;
     }
 
