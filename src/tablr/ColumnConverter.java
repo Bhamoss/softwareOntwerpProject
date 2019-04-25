@@ -18,7 +18,7 @@ public class ColumnConverter {
     }
 
     public static EmailColumn convertToEmailColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!c.canHaveAsType("Email")) {
             throw new IllegalColumnException();
         }
 
@@ -31,7 +31,7 @@ public class ColumnConverter {
     }
 
     public static IntegerColumn convertToIntegerColumn(BooleanColumn c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!c.canHaveAsType("Integer")) {
             throw new IllegalColumnException();
         }
 
@@ -44,7 +44,7 @@ public class ColumnConverter {
     }
 
     public static IntegerColumn convertToIntegerColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!c.canHaveAsType("Integer")) {
             throw new IllegalColumnException();
         }
 
@@ -57,7 +57,7 @@ public class ColumnConverter {
     }
 
     public static BooleanColumn convertToBooleanColumn(IntegerColumn c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!c.canHaveAsType("Boolean")) {
             throw new IllegalColumnException();
         }
 
@@ -70,7 +70,7 @@ public class ColumnConverter {
     }
 
     public static BooleanColumn convertToBooleanColumn(Column c) throws IllegalColumnException {
-        if (!c.canHaveAsType("String")) {
+        if (!c.canHaveAsType("Boolean")) {
             throw new IllegalColumnException();
         }
 
