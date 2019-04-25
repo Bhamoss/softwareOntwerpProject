@@ -2,7 +2,7 @@ package ui.commands;
 
 import ui.WindowCompositor;
 
-public class AddTableWindowCommand extends UICommandWithReturn<Boolean> {
+public class AddTableWindowCommand extends PushCommand {
 
     public AddTableWindowCommand(WindowCompositor compositor) {
         this.compositor = compositor;

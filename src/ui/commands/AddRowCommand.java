@@ -4,7 +4,7 @@ import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
-public class AddRowCommand extends UICommandWithReturn<Boolean> {
+public class AddRowCommand extends PushCommand {
 
     public AddRowCommand(int tableId, UIHandler uiHandler, WindowCompositor windowCompositor){
         this.tableId = tableId;

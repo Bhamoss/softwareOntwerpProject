@@ -6,7 +6,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class RemoveColumnCommand extends UICommandWithReturn<Boolean> {
+public class RemoveColumnCommand extends PushCommand {
 
     public RemoveColumnCommand(int tableId, Supplier<Integer> columnId, UIHandler uiHandler, WindowCompositor windowCompositor){
         this.tableId = tableId;

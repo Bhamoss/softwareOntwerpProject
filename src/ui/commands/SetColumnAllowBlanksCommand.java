@@ -51,4 +51,9 @@ public class SetColumnAllowBlanksCommand extends PushCommand {
         getUIHandler().setColumnAllowBlanks(getTableId(),getColumnId(),getBooleanSupplier().get());
         getCommandBus().post(this);
     }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
 }

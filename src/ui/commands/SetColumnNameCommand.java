@@ -6,7 +6,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnNameCommand extends UICommandWithReturn<Boolean> {
+public class SetColumnNameCommand extends PushCommand {
 
     public SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, UIHandler uiHandler, CommandBus commandBus){
         this.newNameSupplier = newNameSupplier;

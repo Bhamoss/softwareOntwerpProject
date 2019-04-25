@@ -3,17 +3,18 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.EditorWidget;
+import ui.widget.LabelWidget;
 import ui.widget.SwitchBoxWidget;
 
 public class UpdateColumnDefaultValueCommand extends UpdateCommand{
-    public UpdateColumnDefaultValueCommand(int tableId, int columnId, EditorWidget w, UIHandler handler) {
+    public UpdateColumnDefaultValueCommand(int tableId, int columnId, LabelWidget w, UIHandler handler) {
         this.tableId = tableId;
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
     }
 
-    private final EditorWidget widget;
+    private final LabelWidget widget;
 
     private final int tableId;
 
@@ -29,7 +30,7 @@ public class UpdateColumnDefaultValueCommand extends UpdateCommand{
         return columnId;
     }
 
-    public EditorWidget getWidget() {
+    public LabelWidget getWidget() {
         return widget;
     }
 

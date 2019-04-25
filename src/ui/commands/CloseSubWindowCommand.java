@@ -3,7 +3,7 @@ package ui.commands;
 import ui.WindowCompositor;
 import ui.widget.ComponentWidget;
 
-public class CloseSubWindowCommand extends UICommandWithReturn<Boolean> {
+public class CloseSubWindowCommand extends PushCommand {
 
     public CloseSubWindowCommand(WindowCompositor compositor){
         this.compositor = compositor;

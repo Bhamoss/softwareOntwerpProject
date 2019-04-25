@@ -50,4 +50,9 @@ public class ResizeColumnCommand extends PushCommand{
         getUiHandler().putColumnWidth(getTableId(),getColumnNumber(),getColumnWidth());
         getCommandBus().post(this);
     }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
 }

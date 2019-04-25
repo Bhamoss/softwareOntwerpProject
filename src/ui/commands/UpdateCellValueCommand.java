@@ -3,10 +3,11 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.EditorWidget;
+import ui.widget.LabelWidget;
 
 public class UpdateCellValueCommand extends UpdateCommand{
 
-    public UpdateCellValueCommand(int tableId, int columnid, int rowId, EditorWidget w, UIHandler handler) {
+    public UpdateCellValueCommand(int tableId, int columnid, int rowId, LabelWidget w, UIHandler handler) {
         this.tableId = tableId;
         this.columnid = columnid;
         this.rowId = rowId;
@@ -14,7 +15,7 @@ public class UpdateCellValueCommand extends UpdateCommand{
         this.handler = handler;
     }
 
-    private final EditorWidget widget;
+    private final LabelWidget widget;
 
     private final int tableId;
 
@@ -36,7 +37,7 @@ public class UpdateCellValueCommand extends UpdateCommand{
         return rowId;
     }
 
-    public EditorWidget getWidget() {
+    public LabelWidget getWidget() {
         return widget;
     }
 

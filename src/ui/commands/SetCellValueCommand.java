@@ -6,7 +6,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetCellValueCommand extends UICommandWithReturn<Boolean>{
+public class SetCellValueCommand extends PushCommand{
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
                                Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus){

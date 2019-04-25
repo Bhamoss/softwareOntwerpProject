@@ -3,18 +3,19 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.EditorWidget;
+import ui.widget.LabelWidget;
 
 
 public class UpdateTableNameCommand extends UpdateCommand {
 
-    public UpdateTableNameCommand(int id, EditorWidget w, UIHandler handler) {
+    public UpdateTableNameCommand(int id, LabelWidget w, UIHandler handler) {
         this.id = id;
         this.widget = w;
         this.handler = handler;
         update();
     }
 
-    private final EditorWidget widget;
+    private final LabelWidget widget;
 
     private final int id;
 
@@ -24,7 +25,7 @@ public class UpdateTableNameCommand extends UpdateCommand {
         return id;
     }
 
-    public EditorWidget getWidget() {
+    public LabelWidget getWidget() {
         return widget;
     }
 

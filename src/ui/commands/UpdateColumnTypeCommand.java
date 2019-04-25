@@ -3,18 +3,19 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.CheckBoxWidget;
+import ui.widget.LabelWidget;
 import ui.widget.SwitchBoxWidget;
 
 public class UpdateColumnTypeCommand extends UpdateCommand{
 
-    public UpdateColumnTypeCommand(int tableId, int columnId, SwitchBoxWidget w, UIHandler handler) {
+    public UpdateColumnTypeCommand(int tableId, int columnId, LabelWidget w, UIHandler handler) {
         this.tableId = tableId;
         this.columnId = columnId;
         this.widget = w;
         this.handler = handler;
     }
 
-    private final SwitchBoxWidget widget;
+    private final LabelWidget widget;
 
     private final int tableId;
 
@@ -30,7 +31,7 @@ public class UpdateColumnTypeCommand extends UpdateCommand{
             return columnId;
         }
 
-    public SwitchBoxWidget getWidget() {
+    public LabelWidget getWidget() {
             return widget;
         }
 

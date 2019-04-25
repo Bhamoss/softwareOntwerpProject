@@ -6,7 +6,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnTypeCommand extends UICommandWithReturn<Boolean> {
+public class SetColumnTypeCommand extends PushCommand {
 
     public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;

@@ -2,7 +2,7 @@ package ui.commands;
 
 import ui.WindowCompositor;
 
-public class AddRowsSubwindowCommand extends UICommandWithReturn<Boolean>{
+public class AddRowsSubwindowCommand extends PushCommand{
 
     public AddRowsSubwindowCommand(WindowCompositor compositor, Integer id) {
         this.compositor = compositor;

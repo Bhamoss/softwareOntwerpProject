@@ -50,4 +50,9 @@ public class ResizeRowCommand extends PushCommand{
         getUiHandler().putRowWidth(getTableId(),getColumnNumber(),getColumnwidth());
         getCommandBus().post(this);
     }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
 }

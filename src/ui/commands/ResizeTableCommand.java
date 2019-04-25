@@ -43,4 +43,9 @@ public class ResizeTableCommand extends PushCommand{
         getUiHandler().putTableWidth(getTableId(),getColumnwidth());
         getCommandBus().post(this);
     }
+
+    @Override
+    public Boolean getReturn() {
+        return null;
+    }
 }

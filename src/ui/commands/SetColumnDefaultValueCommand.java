@@ -51,4 +51,9 @@ public class SetColumnDefaultValueCommand extends PushCommand{
         getUIHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
         getCommandBus().post(this);
     }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
 }

@@ -4,7 +4,7 @@ import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
-public class AddTableCommand extends UICommandWithReturn<Boolean> {
+public class AddTableCommand extends PushCommand {
 
     public AddTableCommand(UIHandler uiHandler, WindowCompositor windowCompositor){
         this.uiHandler = uiHandler;

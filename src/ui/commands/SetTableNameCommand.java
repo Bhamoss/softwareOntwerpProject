@@ -43,4 +43,9 @@ public class SetTableNameCommand extends PushCommand{
         getCommandBus().post(this);
 
     }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
 }

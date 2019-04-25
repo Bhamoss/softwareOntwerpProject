@@ -6,7 +6,7 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class RemoveTableCommand extends UICommandWithReturn<Boolean> {
+public class RemoveTableCommand extends PushCommand {
 
     public RemoveTableCommand(Supplier<Integer> getTableId, UIHandler uiHandler, WindowCompositor windowCompositor){
         this.getTableId = getTableId;
