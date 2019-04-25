@@ -29,7 +29,6 @@ public class SubWindowWidget extends ComponentWidget {
     private int virtualX;
     private int virtualY;
 
-
     /**
      * creates a subwindow widget
      * @param x x-coordinate of top-left corner
@@ -37,11 +36,18 @@ public class SubWindowWidget extends ComponentWidget {
      * @param width width of rectangle
      * @param height height of rectangle
      * @param border whether to draw a border
-     * @param title titleLabel of the subwindow
+     * @param label title label displayed at right top
+     * @param onClose command executed when window closes
      */
-    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, PushCommand onClose) {
+
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, LabelWidget label, PushCommand onClose) {
         super(x,y,width,height,border);
-        this.titleLabel = new LabelWidget(x,y, 3*width/4, TITLE_HEIGHT, true, title);
+        label.setX(x);
+        label.setY(y);
+        label.setWidth(3*width/4);
+        label.setHeight(TITLE_HEIGHT);
+        this.titleLabel = label;
+
 
         // close getCommand definieren
         HashMap<Integer, PushCommand> tmp = new HashMap<>();
@@ -51,6 +57,11 @@ public class SubWindowWidget extends ComponentWidget {
         virtualY = y;
         virtualX = x;
     }
+
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, PushCommand onClose) {
+        this(x,y,width,height,border,new LabelWidget(0,0, 0,0, true, title),onClose);
+    }
+
 
     /**
      * returns the title height of a subWindowWidget

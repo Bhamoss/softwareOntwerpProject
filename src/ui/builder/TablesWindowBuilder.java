@@ -62,9 +62,9 @@ public class TablesWindowBuilder {
         // encapsulate in scrolling decorator
 
         // TODO: tableLayout
-        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, true, x->{});
+        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, x->{});
         window.addWidget(tablesColumn);
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S", false, x->{});
+        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S", x->{});
         window.addWidget(selectorColumn);
 
 

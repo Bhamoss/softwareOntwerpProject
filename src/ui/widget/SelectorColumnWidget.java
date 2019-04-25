@@ -10,15 +10,12 @@ public class SelectorColumnWidget extends ColumnWidget {
     //private LinkedList<CheckBoxWidget> checkBoxWidgets;
     private LinkedList<Integer> ids;
 
-    public SelectorColumnWidget(int x, int y, int height, String name, boolean visible, Consumer<Integer> onResize) {
-        super(x,y,25,height,name,false,visible,onResize);
+    public SelectorColumnWidget(int x, int y, String name, Consumer<Integer> onResize) {
+        super(x,y,25,name,false,onResize);
         //checkBoxWidgets = new LinkedList<>();
         ids = new LinkedList<>();
     }
 
-    public SelectorColumnWidget(int x, int y, String name, boolean visible, Consumer<Integer> onResize) {
-        this(x, y, 25, name, visible, onResize);
-    }
 
     public void addRow(int id) {
         CheckBoxWidget w = new CheckBoxWidget();

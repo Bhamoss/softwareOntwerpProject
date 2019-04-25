@@ -65,9 +65,11 @@ public class TableRowsWindowBuilder {
     public ComponentWidget build(int tableID){
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
-        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Rows", onClose);
+        LabelWidget titleLable = new LabelWidget(0,0,0,0,true);
+        titleLable.setGetHandler(new UpdateRowsHeaderCommand(tableID,titleLable,uiHandler),bus);
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLable, onClose);
 
-        TableWidget table = new TableWidget(10, 10, 100, 200);
+        TableWidget table = new TableWidget(10, 10);
         window.addWidget(table);
 
         table.addSelectorColumn("S");

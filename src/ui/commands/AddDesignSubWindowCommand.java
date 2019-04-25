@@ -23,7 +23,7 @@ public class AddDesignSubWindowCommand extends PushCommand{
 
     @Override
     public void execute() {
-        getCompositor().addRowsSubWindow(getId());
+        getCompositor().addDesignSubWindow(getId());
     }
 
     @Override

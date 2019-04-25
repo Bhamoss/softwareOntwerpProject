@@ -59,9 +59,11 @@ public class TableDesignWindowBuilder {
 
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
-        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, "Design", onClose);
+        LabelWidget titleLable = new LabelWidget(0,0,0,0,true);
+        titleLable.setGetHandler(new UpdateDesignheaderCommand(tableID,titleLable,uiHandler),bus);
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLable, onClose);
 
-        TableWidget table = new TableWidget(10, 10, 100, 0);
+        TableWidget table = new TableWidget(10, 10);
         window.addWidget(table);
 
         table.addSelectorColumn("S");
