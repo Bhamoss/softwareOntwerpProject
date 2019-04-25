@@ -356,6 +356,12 @@ public class TableManager {
         return table.getColumnNames();
     }
 
+    public String getColumnName(int tableId, int columnId) {
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        Table table = getTable(tableId);
+        return table.getColumnName(columnId);
+    }
+
     /**
      * Returns a new list of Integers with all the ids of the columns in it.
      *

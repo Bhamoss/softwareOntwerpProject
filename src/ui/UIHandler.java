@@ -54,6 +54,31 @@ public class UIHandler {
         getTableLayout().putRowWidth(tableId,columnNumber,columnWidth);
     }
 
+    public String getColumnName(int tableId, int columnId){
+        return getTablesHandler().getColumnName(tableId, columnId);
+    }
+
+    /**
+     * Returns a new list of all the possible types of columns.
+     */
+    @Basic
+    public static ArrayList<String> getAllTypes() {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 1; i <= allTypes.size(); i++)
+            result.add(allTypes.get(i - 1));
+        return result;
+    }
+
+    /**
+     * Static final list registering all the possible types that are possible for a column.
+     */
+    private static final ArrayList<String> allTypes = new ArrayList<>() {{
+        add("String");
+        add("Email");
+        add("Boolean");
+        add("Integer");
+    }};
+
     /*
      *  Common stuff
      * ****************************************************************************

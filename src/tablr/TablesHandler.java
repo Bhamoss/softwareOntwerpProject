@@ -258,6 +258,10 @@ public class TablesHandler {
         return getTableManager().getColumnNames(tableId);
     }
 
+    public String getColumnName(int tableId, int columnId){
+        return getTableManager().getColumnName(tableId, columnId);
+    }
+
 
 
     /**
