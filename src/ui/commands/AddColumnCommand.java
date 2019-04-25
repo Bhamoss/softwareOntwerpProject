@@ -16,7 +16,7 @@ public class AddColumnCommand extends PushCommand {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.
-     * @param tableId
+     * @param tableID
      *        The id of the table where you want to add the column to.
      *
      * @param uiHandler
@@ -25,8 +25,8 @@ public class AddColumnCommand extends PushCommand {
      * @param compositor
      *        The WindowCompositor to be called to rebuild the widgets.
      */
-    public AddColumnCommand(int tableId, UIHandler uiHandler, WindowCompositor compositor){
-        this.tableId = tableId;
+    public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
+        this.tableId = tableID;
         this.uiHandler = uiHandler;
         this.compositor = compositor;
     }
@@ -51,13 +51,13 @@ public class AddColumnCommand extends PushCommand {
      * @return The table id.
      */
     @Basic
-    public int getTableId() {
+    public int getTableID() {
         return tableId;
     }
 
     /**
-     *  Returns the table id.
-     * @return The table id.
+     *  Returns the UIHandler.
+     * @return The UIHandler.
      */
     @Basic
     public UIHandler getUIHandler() {
@@ -85,13 +85,13 @@ public class AddColumnCommand extends PushCommand {
      */
     @Override
     public void execute() {
-        getUIHandler().addColumn(getTableId());
+        getUIHandler().addColumn(getTableID());
         getCompositor().rebuildAllWidgets();
     }
 
     /**
-     *
-     * @return
+     * Returns if there should be repainted after this command.
+     * @return True
      */
     @Override
     public Boolean getReturn() {
