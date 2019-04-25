@@ -795,9 +795,18 @@ public class Table {
         if (!canHaveAsColumnType(id, type))
             throw new IllegalArgumentException();
         Column column = getColumn(id);
-        Column newColumn = column.setColumnType(type);
+        Column newColumn;
+        if (type.equals("Boolean")){
+            newColumn = ColumnConverter.convertToBooleanColumn(column);
+        } else if (type.equals("Integer")){
+            newColumn = ColumnConverter.convertToIntegerColumn(column);
+        } else if (type.equals("String")) {
+            newColumn = ColumnConverter.convertToStringColumn(column);
+        } else if (type.equals(("Email"))) {
+            newColumn = ColumnConverter.convertToEmailColumn(column);
+        } else
+            throw new IllegalArgumentException("Wrong type is given");
         int index = getColumnIndex(column.getId());
-
         // door michiel zijn implementatie MOET je de andere column eerst verwijderen als je switcht.
         removeColumn(column);
         addColumnAt(index, newColumn);
