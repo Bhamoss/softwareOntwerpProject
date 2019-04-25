@@ -69,10 +69,14 @@ public class TableDesignWindowBuilder {
 
 
         for (int columnID : uiHandler.getColumnIds(tableID)) {
+            // Adds selector box
+            table.addEntry(columnID);
+
+            // Add column name editor
             EditorWidget editor = new EditorWidget(true);
             editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
             editor.setPushHandler(new SetColumnNameCommand(() -> editor.getText(), tableID, columnID, uiHandler, bus));
-            //editor.setGetHandler(new UpdateColumnNameCommand());
+            editor.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, editor, uiHandler), bus);
             table.addEntry(editor);
 
             //CheckBoxWidget blanks = new CheckBoxWidget();
@@ -85,7 +89,7 @@ public class TableDesignWindowBuilder {
                 EditorWidget defaultWidget = new EditorWidget(true);
                 defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
                 defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
-                //defaultWidget.setGetHandler(new UpdateColumnDefaultCommand());
+                defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
                 table.addEntry(defaultWidget);
             }
 
@@ -225,7 +229,7 @@ public class TableDesignWindowBuilder {
          **/
 
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
-
+        onClose.setSubwindow(scrollWindow);
         scrollWindow.id = tableID;
         scrollWindow.mode = "design";
         return scrollWindow;

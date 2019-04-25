@@ -8,7 +8,6 @@ public class TableWidget extends CompositeWidget {
     // TODO: remove occupancy
     private int occupancy;
     private int lastAdded;
-    protected LinkedList<ColumnWidget> columnWidgets;
 
 
     /**
@@ -24,7 +23,18 @@ public class TableWidget extends CompositeWidget {
         assert(width>=25);
         occupancy = 0;
         lastAdded = 0;
-        columnWidgets = new LinkedList<>();
+    }
+
+
+    public void addWidget(Widget w) {
+        // Check if space is available
+        if (occupancy+w.getWidth() > this.getWidth())
+            setWidth(occupancy + getWidth());
+
+        super.addWidget(w);
+        // 1 pixel margin so borders don't overlap
+        occupancy += w.getWidth() + 1;
+
     }
 
     /**
@@ -35,16 +45,11 @@ public class TableWidget extends CompositeWidget {
      * @param name
      */
     public void addColumn(int width, boolean resizable, String name) {
-        // Check if space is available
-        if (occupancy+width > this.getWidth())
-            setWidth(occupancy + width);
-
-
-        columnWidgets.add(new ColumnWidget(
-                getX()+occupancy,getY(),width,getHeight(),
-                name, resizable, true, x->resizedColumn()));
-        // 1 pixel margin so borders don't overlap
-        occupancy += width + 1;
+        addWidget(
+                new ColumnWidget(
+                    getX()+occupancy, getY(), width, getHeight(),
+                    name, resizable, true, x->resizedColumn())
+        );
     }
 
     /**
@@ -53,17 +58,13 @@ public class TableWidget extends CompositeWidget {
      * @param name
      */
     public void addSelectorColumn(String name) {
-        // Check if space is available
-        int width = 25;
-        if (occupancy+width > this.getWidth())
-            setWidth(occupancy + width);
-
-
-        columnWidgets.add(new SelectorColumnWidget(
-                getX()+occupancy,getY(),getHeight(),
+        addWidget(new SelectorColumnWidget(
+                getX()+occupancy, getY(), getHeight(),
                 name, true, x->resizedColumn()));
-        // 1 pixel margin so borders don't overlap
-        occupancy += width + 1;
+    }
+
+    private ColumnWidget getColumn(int id) {
+        return ((ColumnWidget) widgets.get(id));
     }
 
     /**
@@ -72,21 +73,23 @@ public class TableWidget extends CompositeWidget {
      * @param w
      */
     public void addEntry(Widget w) {
-        if (columnWidgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
+        if (widgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
             return;
         }
-        columnWidgets.get(lastAdded).addWidget(w);
+        getColumn(lastAdded).addWidget(w);
         if (getHeight() < w.getY() + w.getHeight())
             setHeight(w.getY() + w.getHeight());
-        lastAdded = (lastAdded + 1) % columnWidgets.size();
+        lastAdded = (lastAdded + 1) % widgets.size();
     }
 
+
     public void addEntry(int id) {
-        if (columnWidgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
-            columnWidgets.get(lastAdded).addRow(id);
-            if (getHeight() < columnWidgets.get(lastAdded).getLastAdded().getY() + columnWidgets.get(lastAdded).getLastAdded().getHeight())
-                setHeight(columnWidgets.get(lastAdded).getLastAdded().getY() + columnWidgets.get(lastAdded).getLastAdded().getHeight());
-            lastAdded = (lastAdded + 1) % columnWidgets.size();
+        if (widgets.get(lastAdded).getClass() == SelectorColumnWidget.class) {
+            SelectorColumnWidget lastColumn = (SelectorColumnWidget) getColumn(lastAdded);
+            lastColumn.addRow(id);
+            if (getHeight() < lastColumn.getLastAdded().getY() + lastColumn.getLastAdded().getHeight())
+                setHeight(lastColumn.getLastAdded().getY() + lastColumn.getLastAdded().getHeight());
+            lastAdded = (lastAdded + 1) % widgets.size();
         }
 
     }
@@ -98,7 +101,7 @@ public class TableWidget extends CompositeWidget {
     private void resizedColumn() {
         int x = this.getX();
         occupancy = 0;
-        for (Widget c : columnWidgets) {
+        for (Widget c : widgets) {
             c.setX(x);
             x += c.getWidth();
             occupancy += c.getWidth() + 1;
@@ -106,15 +109,6 @@ public class TableWidget extends CompositeWidget {
         this.setWidth(occupancy);
     }
 
-    /**
-     * paint all the columnWidgets of this tableWidget
-     * @param g
-     */
-    protected void paintWidgets(Graphics g) {
-        for (Widget w: columnWidgets) {
-            w.paint(g);
-        }
-    }
 
     /**
      * Sets the given x as x-value for this tableWidget
@@ -125,7 +119,7 @@ public class TableWidget extends CompositeWidget {
     public void setX(int x) {
         super.setX(x);
         occupancy = 0;
-        for (ColumnWidget w: columnWidgets) {
+        for (Widget w: widgets) {
             w.setX(getX() + occupancy);
             occupancy += w.getWidth() + 1;
         }
@@ -139,28 +133,10 @@ public class TableWidget extends CompositeWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        if (columnWidgets == null) return;
-        for(ColumnWidget w: columnWidgets) {
+        if (widgets == null) return;
+        for(Widget w: widgets) {
             w.setY(y);
         }
     }
-
-    /**
-     * call the handleMouseEvent on all the columnWidgets in this tableWidget
-     * @param id
-     * @param x
-     * @param y
-     * @param clickCount
-     */
-    @Override
-    public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
-        boolean r = false;
-        for (ColumnWidget w: columnWidgets) {
-            if (!isBlocking() || w.isBlocking())
-                r |= w.handleMouseEvent(id, x, y, clickCount);
-        }
-        return r;
-    }
-
 
 }

@@ -1,6 +1,7 @@
 package ui.widget;
 
 
+import ui.commandBus.CommandBus;
 import ui.commands.UpdateCommand;
 
 import java.awt.*;
@@ -17,6 +18,8 @@ public class LabelWidget extends Widget{
      */
     private static final int OFFSET = 5;
 
+    protected UpdateCommand getCommand;
+
 
     /**
      * Widget displaying a static piece of text
@@ -32,6 +35,7 @@ public class LabelWidget extends Widget{
 
     public LabelWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
+        this.text = "";
     }
 
 
@@ -41,6 +45,18 @@ public class LabelWidget extends Widget{
 
     public void setText(String text) {
         this.text = text;
+    }
+
+
+    public void setGetHandler(UpdateCommand command, CommandBus bus) {
+        if (getCommand != null)
+            unsubscribe(bus);
+        this.getCommand = command;
+        bus.subscribe(command);
+    }
+
+    public void unsubscribe(CommandBus bus) {
+        bus.unsubscribe(getCommand);
     }
 
     /**

@@ -54,7 +54,6 @@ public class CompositeWidget extends Widget {
 
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
-        System.out.println(widgets);
         boolean r = false;
         for (Widget w: widgets) {
             r |= w.handleKeyEvent(id, keyCode, keyChar);

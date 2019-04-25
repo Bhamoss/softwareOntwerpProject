@@ -74,8 +74,7 @@ public class TablesWindowBuilder {
             EditorWidget editor = new EditorWidget(true);
 
             editor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
-            UpdateCommand editorUpdater = new UpdateTableNameCommand(tableID, editor, uiHandler);
-            bus.subscribe(editorUpdater);
+            editor.setGetHandler(new UpdateTableNameCommand(tableID, editor, uiHandler), bus);
             editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler, bus));
             editor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
 
