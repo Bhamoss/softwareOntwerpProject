@@ -53,10 +53,10 @@ public class CompositeWidget extends Widget {
 
 
     @Override
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar, boolean ctrl) {
         boolean r = false;
         for (Widget w: widgets) {
-            r |= w.handleKeyEvent(id, keyCode, keyChar);
+            r |= w.handleKeyEvent(id, keyCode, keyChar, ctrl);
         }
         return r;
     }

@@ -1,12 +1,13 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
+import ui.commands.UpdateCommand;
+
 import java.awt.*;
 import java.util.LinkedList;
 
 public class TableWidget extends CompositeWidget {
 
-    // TODO: remove occupancy
-    private int occupancy;
     private int lastAdded;
 
 
@@ -14,26 +15,16 @@ public class TableWidget extends CompositeWidget {
      * creates a tableWidget
      * @param x
      * @param y
-     * @param width
-     * @param height
      */
-    public TableWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, false);
-        assert(height>=25);
-        assert(width>=25);
-        occupancy = 0;
+    public TableWidget(int x, int y) {
+        super(x, y, 0, 0, false);
         lastAdded = 0;
     }
 
 
     public void addWidget(Widget w) {
-        // Check if space is available
-        if (occupancy+w.getWidth() > this.getWidth())
-            setWidth(occupancy + getWidth());
-
+        setWidth(this.getWidth()+w.getWidth()+1);
         super.addWidget(w);
-        // 1 pixel margin so borders don't overlap
-        occupancy += w.getWidth() + 1;
 
     }
 
@@ -47,10 +38,19 @@ public class TableWidget extends CompositeWidget {
     public void addColumn(int width, boolean resizable, String name) {
         addWidget(
                 new ColumnWidget(
-                    getX()+occupancy, getY(), width, getHeight(),
-                    name, resizable, true, x->resizedColumn())
+                    getX()+getWidth(), getY(), width,
+                    name, resizable, x->resizedColumn())
         );
     }
+
+    public void addColumn(int width, LabelWidget topLabel, boolean resizable) {
+        addWidget(
+                new ColumnWidget(
+                        getX()+getWidth(), getY(), width,
+                        topLabel, resizable, x->resizedColumn())
+        );
+    }
+
 
     /**
      * add a columnWidget to this tableWidget with the given width, resizability and columnName
@@ -58,9 +58,15 @@ public class TableWidget extends CompositeWidget {
      * @param name
      */
     public void addSelectorColumn(String name) {
+        assert (widgets.size()==0);
         addWidget(new SelectorColumnWidget(
-                getX()+occupancy, getY(), getHeight(),
-                name, true, x->resizedColumn()));
+                getX()+getWidth(), getY(),
+                name, x->resizedColumn()));
+    }
+
+    public int getSelectedId() {
+        SelectorColumnWidget sc = (SelectorColumnWidget) getColumn(0);
+        return sc.getSelectedId();
     }
 
     private ColumnWidget getColumn(int id) {
@@ -100,7 +106,7 @@ public class TableWidget extends CompositeWidget {
      */
     private void resizedColumn() {
         int x = this.getX();
-        occupancy = 0;
+        int occupancy = 0;
         for (Widget c : widgets) {
             c.setX(x);
             x += c.getWidth();
@@ -118,7 +124,7 @@ public class TableWidget extends CompositeWidget {
     @Override
     public void setX(int x) {
         super.setX(x);
-        occupancy = 0;
+        int occupancy = 0;
         for (Widget w: widgets) {
             w.setX(getX() + occupancy);
             occupancy += w.getWidth() + 1;
@@ -138,5 +144,4 @@ public class TableWidget extends CompositeWidget {
             w.setY(y);
         }
     }
-
 }

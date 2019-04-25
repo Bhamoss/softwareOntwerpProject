@@ -49,8 +49,6 @@ public class SwitchBoxWidget extends LabelWidget {
 
 
     public void setText(String text) {
-        System.out.println(text);
-        System.out.println(options);
         assert options.contains(text);
         setOption(options.indexOf(text));
     }

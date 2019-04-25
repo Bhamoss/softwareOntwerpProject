@@ -41,7 +41,7 @@ public class RemoveRowCommand extends PushCommand {
 
     @Override
     public void execute() {
-        getUIHandler().removeColumn(getTableId(),getRowId());
+        getUIHandler().removeRow(getTableId(),getRowId());
         getWindowCompositor().rebuildAllWidgets();
     }
 

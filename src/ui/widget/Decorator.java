@@ -84,9 +84,9 @@ public class Decorator extends ComponentWidget {
     }
 
     @Override
-    public boolean handleKeyEvent(int id, int keyCode, char keyChar) {
-        boolean r = component.handleKeyEvent(id, keyCode, keyChar);
-        r |= super.handleKeyEvent(id, keyCode, keyChar);
+    public boolean handleKeyEvent(int id, int keyCode, char keyChar, boolean ctrl) {
+        boolean r = component.handleKeyEvent(id, keyCode, keyChar, ctrl);
+        r |= super.handleKeyEvent(id, keyCode, keyChar, ctrl);
         return r;
     }
 

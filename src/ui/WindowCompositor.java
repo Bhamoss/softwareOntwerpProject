@@ -37,7 +37,7 @@ public class WindowCompositor extends CanvasWindow {
     public WindowCompositor() {
         super("Tablr");
         this.subWindows = new LinkedList<>();
-        globalKeyEvent = new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T);
+        globalKeyEvent = new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T, true);
     }
 
     public void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
@@ -171,17 +171,23 @@ public class WindowCompositor extends CanvasWindow {
             repaint();
     }
 
+
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+        if (keyCode == KeyEvent.VK_CONTROL) {
+            ctrlPressed = true;
+            return;
+        }
+
         ComponentWidget activeWindow = getActiveWindow();
-        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar);
+        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar, ctrlPressed);
         // Key events are always handled by the active ui
         if (activeWindow != null) {
-            System.out.println("Key active");
-            paintflag |= getActiveWindow().handleKeyEvent(id, keyCode, keyChar);
+            paintflag |= getActiveWindow().handleKeyEvent(id, keyCode, keyChar, ctrlPressed);
         }
 
         if (paintflag)
             repaint();
+        ctrlPressed = false;
     }
 }

@@ -1,15 +1,26 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
+import ui.commands.UpdateColumnNameCommand;
+import ui.commands.UpdateCommand;
+
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class ColumnWidget extends CompositeWidget {
 
-    private final String name;
-    private int occupancy;
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
+
+    public ColumnWidget(int x, int y, int width, LabelWidget topLabel, boolean resizable, Consumer<Integer> onResize) {
+        super(x, y, width, 0, true);
+        resizing = false;
+        this.resizable = resizable;
+        this.onResize = onResize;
+
+        this.addWidget(topLabel);
+    }
 
     /**
      * Creates a container widget with resizable width,
@@ -18,36 +29,22 @@ public class ColumnWidget extends CompositeWidget {
      * @param x x-coordinate of top-left corner
      * @param y y-coordinate of top-left corner
      * @param width initial width of column
-     * @param height height of column, needs be at least 25
      * @param name text to put at the top of the column
      * @param resizable whether the column can be resized
-     * @param visible whether there is a top label
      * @param onResize function called when column is resized
      */
-    public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
-        super(x, y, width, height, true);
-        assert(height>=25);
-        occupancy = 0;
-        resizing = false;
-        this.resizable = resizable;
-        this.onResize = onResize;
-        this.name = name;
-
-        LabelWidget topLabel = new LabelWidget(x,y,width,25,visible,name);
-        this.addWidget(topLabel);
+    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize) {
+        this(x,y,width,new LabelWidget(x,y,width,25,true,name),resizable,onResize);
     }
 
-    public ColumnWidget(int x, int y, int width, int height, String name) {
-        this(x,y,width,height,name,false, true,(Integer n) -> {});
+    public ColumnWidget(int x, int y, int width, String name) {
+        this(x,y,width,name,false,(Integer n) -> {});
     }
 
-    public ColumnWidget(int x, int y, int width, int height, String name, Consumer<Integer> onResize) {
-        this(x,y,width,height,name,true,true,onResize);
+    public ColumnWidget(int x, int y, int width, String name, Consumer<Integer> onResize) {
+        this(x,y,width,name,true,onResize);
     }
 
-    public ColumnWidget(int x, int y, int width, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
-        this(x,y,width,25, name,resizable,visible,onResize);
-    }
 
 
     /**
@@ -63,14 +60,9 @@ public class ColumnWidget extends CompositeWidget {
      * @param w widget to be added
      */
     public void addWidget(Widget w) {
-        if (occupancy+w.getHeight() > this.getHeight())
-            setHeight(occupancy+w.getHeight());
-
-        w.setPosition(getX(),getY()+occupancy);
+        w.setPosition(getX(),getY()+getHeight());
         w.setWidth(getWidth());
-        occupancy += w.getHeight();
-        // 1 pixel margin so borders don't overlap
-        occupancy += 1;
+        setHeight(getHeight()+w.getHeight()+1);
         super.addWidget(w);
     }
 
@@ -86,7 +78,7 @@ public class ColumnWidget extends CompositeWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        occupancy  = 0;
+        int occupancy = 0;
         for (Widget w: widgets) {
             w.setY(getY()+occupancy);
             occupancy += w.getHeight() + 1;
@@ -125,7 +117,7 @@ public class ColumnWidget extends CompositeWidget {
     }
 
     public String getName() {
-        return name;
+        return ((LabelWidget) widgets.get(0)).getText();
     }
 
 

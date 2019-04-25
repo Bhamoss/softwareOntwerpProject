@@ -62,9 +62,9 @@ public class TablesWindowBuilder {
         // encapsulate in scrolling decorator
 
         // TODO: tableLayout
-        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, true, x->{});
+        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, x->{});
         window.addWidget(tablesColumn);
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S", false, x->{});
+        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S", x->{});
         window.addWidget(selectorColumn);
 
 
@@ -91,7 +91,7 @@ public class TablesWindowBuilder {
                 ));
 
         // is an invisible widget which listens for key events
-        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor), KeyEvent.VK_DELETE));
+        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor), KeyEvent.VK_DELETE, false));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
         scrollWindow.mode = "tables";
