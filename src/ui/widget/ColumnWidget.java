@@ -25,7 +25,7 @@ public class ColumnWidget extends CompositeWidget {
      * @param onResize function called when column is resized
      */
     public ColumnWidget(int x, int y, int width, int height, String name, boolean resizable, boolean visible, Consumer<Integer> onResize) {
-        super(x, y, width, height, false);
+        super(x, y, width, height, true);
         assert(height>=25);
         occupancy = 0;
         resizing = false;
