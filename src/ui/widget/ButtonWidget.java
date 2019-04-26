@@ -46,7 +46,6 @@ public class ButtonWidget extends LabelWidget {
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (this.containsPoint(x,y) && id == MouseEvent.MOUSE_PRESSED) {
             if (onClick.containsKey(clickCount)) {
-                System.out.println("CLICKED BUTTON: "+text);
                 onClick.get(clickCount).execute();
                 return onClick.get(clickCount).getReturn();
             }

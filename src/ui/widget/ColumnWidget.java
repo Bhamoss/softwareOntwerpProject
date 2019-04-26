@@ -66,7 +66,6 @@ public class ColumnWidget extends CompositeWidget {
 
     public void unsubscribe(CommandBus bus) {
         if (updateCommand != null) {
-            System.out.println("Unsubscribing "+updateCommand + getName());
             bus.unsubscribe(updateCommand);
         }
     }
@@ -113,7 +112,7 @@ public class ColumnWidget extends CompositeWidget {
      * Resizes the width of the column
      * @param w new width, needs be at least 5.
      */
-    public void resize(int w) {
+    private void resize(int w) {
         if (resizable) {
             forceResize(w);
             getResizeCommand().execute();

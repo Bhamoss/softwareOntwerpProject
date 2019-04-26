@@ -34,7 +34,7 @@ public class WindowCompositor extends CanvasWindow {
     private final CommandBus bus;
 
     private KeyEventWidget globalKeyEvent;
-    boolean ctrlPressed = false;
+    private boolean ctrlPressed = false;
 
 
     public WindowCompositor(CommandBus bus) {
@@ -44,20 +44,20 @@ public class WindowCompositor extends CanvasWindow {
         this.bus = bus;
     }
 
-    public void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
+    void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
         this.tablesWindowBuilder = tablesWindowBuilder;
     }
 
-    public void setTableDesignWindowBuilder(TableDesignWindowBuilder tableDesignWindowBuilder) {
+    void setTableDesignWindowBuilder(TableDesignWindowBuilder tableDesignWindowBuilder) {
         this.tableDesignWindowBuilder = tableDesignWindowBuilder;
     }
 
-    public void setTableRowsWindowBuilder(TableRowsWindowBuilder tableRowsWindowBuilder) {
+    void setTableRowsWindowBuilder(TableRowsWindowBuilder tableRowsWindowBuilder) {
         this.tableRowsWindowBuilder = tableRowsWindowBuilder;
     }
 
 
-    public void addSubWindow(ComponentWidget subwindow) {
+    private void addSubWindow(ComponentWidget subwindow) {
         if (!subWindows.isEmpty())
             subWindows.getLast().setActive(false);
         subWindows.add(subwindow);
@@ -78,16 +78,16 @@ public class WindowCompositor extends CanvasWindow {
 
     public void removeSubWindow(ComponentWidget subwindow) {
         subWindows.remove(subwindow);
-        if (!subWindows.isEmpty()) {
+        if (!subWindows.isEmpty())
             subWindows.getLast().setActive(true);
-            subWindows.getLast().unsubscribe(bus);
-        }
+
         subwindow.setActive(false);
+        subwindow.unsubscribe(bus);
     }
 
     public void removeSubWindowWithID(int id) {
         for (ComponentWidget subwindow : subWindows) {
-            if (subwindow.mode != "tables" && subwindow.id == id)
+            if (!subwindow.mode.equals("tables") && subwindow.id == id)
                 removeSubWindow(subwindow);
         }
     }
@@ -101,15 +101,15 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     private ComponentWidget rebuildWindow(ComponentWidget subwindow) {
+        subwindow.unsubscribe(bus);
         ComponentWidget newSubWindow;
         String type = subwindow.mode;
-
         // TODO: make enum?
-        if (type == "tables")
+        if (type.equals("tables"))
             newSubWindow = tablesWindowBuilder.build();
-        else if (type == "design")
+        else if (type.equals("design"))
             newSubWindow = tableDesignWindowBuilder.build(subwindow.id);
-        else if (type == "rows")
+        else if (type.equals("rows"))
             newSubWindow = tableRowsWindowBuilder.build(subwindow.id);
         else
             throw new IllegalArgumentException("State not supported");
@@ -123,9 +123,13 @@ public class WindowCompositor extends CanvasWindow {
         return newSubWindow;
     }
 
-    public void setActiveSubWindow(ComponentWidget subwindow) {
-        removeSubWindow(subwindow);
-        addSubWindow(subwindow);
+    private void setActiveSubWindow(ComponentWidget subwindow) {
+        assert subWindows.contains(subwindow);
+        subWindows.getLast().setActive(false);
+        subWindows.remove(subwindow);
+        subWindows.add(subwindow);
+        subwindow.setActive(true);
+
     }
 
     public ComponentWidget getActiveWindow() {

@@ -59,9 +59,9 @@ public class TableDesignWindowBuilder {
 
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
-        LabelWidget titleLable = new LabelWidget(0,0,0,0,true);
-        titleLable.setGetHandler(new UpdateDesignheaderCommand(tableID,titleLable,uiHandler),bus);
-        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLable, onClose);
+        LabelWidget titleLabel = new LabelWidget(0,0,0,0,true);
+        titleLabel.setGetHandler(new UpdateDesignheaderCommand(tableID,titleLabel,uiHandler),bus);
+        ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLabel, onClose);
 
         TableWidget table = new TableWidget(10, 10);
         window.addWidget(table);
@@ -104,21 +104,21 @@ public class TableDesignWindowBuilder {
             // Add column name editor
             EditorWidget editor = new EditorWidget(true);
             editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
-            editor.setPushHandler(new SetColumnNameCommand(() -> editor.getText(), tableID, columnID, uiHandler, bus));
+            editor.setPushHandler(new SetColumnNameCommand(editor::getText, tableID, columnID, uiHandler, bus));
             editor.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, editor, uiHandler), bus);
             table.addEntry(editor);
 
             // Add type switchbox
-            SwitchBoxWidget type = new SwitchBoxWidget(true, uiHandler.getAllTypes());
+            SwitchBoxWidget type = new SwitchBoxWidget(true, UIHandler.getAllTypes());
             type.setValidHandler((String s) -> uiHandler.canHaveAsColumnType(tableID, columnID, s));
-            type.setPushHandler(new SetColumnTypeCommand(tableID, columnID, ()->type.getText(), uiHandler, bus, compositor));
+            type.setPushHandler(new SetColumnTypeCommand(tableID, columnID, type::getText, uiHandler, bus, compositor));
             type.setGetHandler(new UpdateColumnTypeCommand(tableID, columnID, type, uiHandler), bus);
             table.addEntry(type);
 
 
             // Add blanks checkbox
             CheckBoxWidget blanks = new CheckBoxWidget((b) ->uiHandler.canHaveAsColumnAllowBlanks(tableID, columnID, b));
-            blanks.setPushHandler(new SetColumnAllowBlanksCommand(tableID, columnID, ()->blanks.isChecked(), uiHandler, bus, compositor));
+            blanks.setPushHandler(new SetColumnAllowBlanksCommand(tableID, columnID, blanks::isChecked, uiHandler, bus, compositor));
             blanks.setGetHandler(new UpdateColumnAllowBlanksCommand(tableID, columnID, blanks, uiHandler), bus);
             table.addEntry(blanks);
 
@@ -126,13 +126,13 @@ public class TableDesignWindowBuilder {
                 List<String> options = blanks.isChecked() ? Arrays.asList("false", "true", "") : Arrays.asList("false", "true");
                 SwitchBoxWidget defaultWidget = new SwitchBoxWidget(true, options);
                 defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
-                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
+                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, defaultWidget::getText, uiHandler, bus));
                 defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
                 table.addEntry(defaultWidget);
             } else {
                 EditorWidget defaultWidget = new EditorWidget(true);
                 defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
-                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, () -> defaultWidget.getText(), uiHandler, bus));
+                defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, defaultWidget::getText, uiHandler, bus));
                 defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
                 table.addEntry(defaultWidget);
             }
@@ -148,7 +148,7 @@ public class TableDesignWindowBuilder {
         ));
 
         window.addWidget(
-                new KeyEventWidget(new RemoveColumnCommand(tableID, ()->table.getSelectedId(), uiHandler, compositor),
+                new KeyEventWidget(new RemoveColumnCommand(tableID, table::getSelectedId, uiHandler, compositor),
                 KeyEvent.VK_DELETE, false
         ));
         window.addWidget(
