@@ -1,0 +1,14 @@
+Paint
+Paint
+MouseEvent MOUSE_PRESSED 23 79 1
+Paint
+MouseEvent MOUSE_RELEASED 23 79 1
+MouseEvent MOUSE_CLICKED 23 79 1
+Paint
+KeyEvent KEY_PRESSED 127 127
+KeyEvent KEY_TYPED 0 127
+Paint
+KeyEvent KEY_PRESSED 17 65535
+KeyEvent KEY_PRESSED 10 10
+KeyEvent KEY_TYPED 0 10
+Paint

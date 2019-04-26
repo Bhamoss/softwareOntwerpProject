@@ -1,0 +1,10 @@
+Paint
+Paint
+MouseEvent MOUSE_PRESSED 70 49 1
+MouseEvent MOUSE_RELEASED 70 49 1
+MouseEvent MOUSE_CLICKED 70 49 1
+Paint
+MouseEvent MOUSE_PRESSED 70 49 2
+Paint
+MouseEvent MOUSE_RELEASED 70 49 2
+MouseEvent MOUSE_CLICKED 70 49 2
