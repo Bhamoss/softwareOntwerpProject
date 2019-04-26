@@ -30,12 +30,12 @@ public class DeleteTableTest {
     }
 
     @Test
-    void AddColumn() {
+    void DeleteTable() {
 
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
-                File file = new File(classLoader.getResource("resources/CreateTable/CreateTableMSS.txt").getFile());
+                File file = new File(classLoader.getResource("resources/DeleteTable/DeleteTableMSS.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
         } catch (InterruptedException e) {

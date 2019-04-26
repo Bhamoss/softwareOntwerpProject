@@ -30,7 +30,7 @@ public class CreateTableTest {
     }
 
     @Test
-    void AddColumn() {
+    void CreateTable() {
 
         try {
             java.awt.EventQueue.invokeAndWait(() -> {

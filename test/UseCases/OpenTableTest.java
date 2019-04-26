@@ -30,12 +30,20 @@ public class OpenTableTest {
     }
 
     @Test
-    void AddColumn() {
+    void OpenTable() {
 
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
-                File file = new File(classLoader.getResource("resources/CreateTable/CreateTableMSS.txt").getFile());
+                /**
+                 * double click op een table name
+                 */
+                File file = new File(classLoader.getResource("resources/OpenTable/OpenTableMSS1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
+                 * nieuw subwindow wordt aangemaakt met daarin de tableDesignMode van de aangeklikte table
+                 */
+                file = new File(classLoader.getResource("resources/OpenTable/OpenTableMSS2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
         } catch (InterruptedException e) {
