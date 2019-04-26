@@ -88,6 +88,10 @@ public class EditorWidget extends LabelWidget {
         setBlocking(!canHaveAsText(t));
     }
 
+    public void setOldText(String t) {
+        oldText = t;
+    }
+
 
     private void setBlocking(boolean b) {
         blocked = b;

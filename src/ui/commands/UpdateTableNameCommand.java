@@ -8,14 +8,14 @@ import ui.widget.LabelWidget;
 
 public class UpdateTableNameCommand extends UpdateCommand {
 
-    public UpdateTableNameCommand(int tableID, LabelWidget w, UIHandler handler) {
+    public UpdateTableNameCommand(int tableID, EditorWidget w, UIHandler handler) {
         this.tableID = tableID;
         this.widget = w;
         this.handler = handler;
         update();
     }
 
-    private final LabelWidget widget;
+    private final EditorWidget widget;
 
     private final int tableID;
 
@@ -25,7 +25,7 @@ public class UpdateTableNameCommand extends UpdateCommand {
         return tableID;
     }
 
-    public LabelWidget getWidget() {
+    public EditorWidget getWidget() {
         return widget;
     }
 
@@ -43,5 +43,6 @@ public class UpdateTableNameCommand extends UpdateCommand {
     @Override
     public void update() {
         getWidget().setText(getHandler().getTableName(getTableID()));
+        getWidget().setOldText(getHandler().getTableName(getTableID()));
     }
 }
