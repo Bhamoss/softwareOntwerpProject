@@ -1,9 +1,0 @@
-Paint
-Paint
-MouseEvent MOUSE_PRESSED 35 79 1
-Paint
-MouseEvent MOUSE_DRAGGED 36 79 0
-MouseEvent MOUSE_RELEASED 36 79 1
-KeyEvent KEY_PRESSED 127 127
-KeyEvent KEY_TYPED 0 127
-Paint
