@@ -308,6 +308,7 @@ public class CanvasWindow {
 		imageGraphics.setColor(Color.WHITE);
 		imageGraphics.fillRect(0, 0, width, height);
 		imageGraphics.setColor(Color.BLACK);
+		imageGraphics.setClip(0,0,width,height);
 		CanvasWindow.this.paint(imageGraphics);
 		return image;
 	}
