@@ -14,7 +14,7 @@ import ui.commandBus.CommandBus;
  *
  * @resp    Managing the correct windows.
  */
-public class UIStarter extends CanvasWindow{
+public class UIStarter{
 
     private WindowCompositor compositor;
 
@@ -23,7 +23,6 @@ public class UIStarter extends CanvasWindow{
      * @Effect loads tables ui.
      */
     public UIStarter(){
-        super("Tablr starting...");
 
         final UIHandler uiHandler;
         final CommandBus commandBus;
