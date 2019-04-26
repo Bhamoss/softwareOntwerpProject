@@ -80,8 +80,7 @@ public class TableRowsWindowBuilder {
             topLabel.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, topLabel, uiHandler), bus);
             ResizeRowCommand resizeRowCommand = new ResizeRowCommand(tableID,columnID,getUIHandler(),bus);
             UpdateRowSizeCommand updateRowSizeCommand = new UpdateRowSizeCommand(tableID,columnID,uiHandler);
-            bus.subscribe(updateRowSizeCommand);
-            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true,updateRowSizeCommand, resizeRowCommand);
+            table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true,updateRowSizeCommand, resizeRowCommand, bus);
         }
 
 

@@ -68,15 +68,33 @@ public class TableDesignWindowBuilder {
 
         table.addSelectorColumn("S");
         UpdateColumnSizeCommand  nameUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,1, uiHandler);
-        bus.subscribe(nameUpdateColumnSizeCommand);
         UpdateColumnSizeCommand  typeUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,2, uiHandler);
-        bus.subscribe(typeUpdateColumnSizeCommand);
         UpdateColumnSizeCommand  defaultUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,4, uiHandler);
-        bus.subscribe(defaultUpdateColumnSizeCommand);
-        table.addColumn(uiHandler.getColumnWidth(tableID,1), true, "Name", nameUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,1,uiHandler,bus));
-        table.addColumn(uiHandler.getColumnWidth(tableID,2), true, "Type",typeUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,2,uiHandler,bus));
+        table.addColumn(
+                uiHandler.getColumnWidth(tableID,1),
+                true,
+                "Name",
+                nameUpdateColumnSizeCommand,
+                new ResizeColumnCommand(tableID,1,uiHandler,bus),
+                bus
+        );
+        table.addColumn(
+                uiHandler.getColumnWidth(tableID,2),
+                true,
+                "Type",
+                typeUpdateColumnSizeCommand,
+                new ResizeColumnCommand(tableID,2,uiHandler,bus),
+                bus
+        );
         table.addColumn(25, "B");
-        table.addColumn(uiHandler.getColumnWidth(tableID,4), true, "Default", defaultUpdateColumnSizeCommand,new ResizeColumnCommand(tableID,4,uiHandler,bus));
+        table.addColumn(
+                uiHandler.getColumnWidth(tableID,4),
+                true,
+                "Default",
+                defaultUpdateColumnSizeCommand,
+                new ResizeColumnCommand(tableID,4,uiHandler,bus),
+                bus
+        );
 
 
         for (int columnID : uiHandler.getColumnIds(tableID)) {
@@ -134,7 +152,7 @@ public class TableDesignWindowBuilder {
                 KeyEvent.VK_DELETE, false
         ));
         window.addWidget(
-                new KeyEventWidget(new AddRowsSubwindowCommand(compositor, tableID),
+                new KeyEventWidget(new AddRowsSubWindowCommand(compositor, tableID),
                         KeyEvent.VK_ENTER, true
                 ));
 

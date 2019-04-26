@@ -27,7 +27,6 @@ public class ComponentWidget extends CompositeWidget {
      * @param height
      * @param border
      */
-    // TODO: close getCommand meegeven voor de close method, opgeroepen door subwindowWidget closebutton
     public ComponentWidget(int x, int y, int width, int height, boolean border) {
         super(x,y,width,height,border);
         resizingBottomBorder = false;

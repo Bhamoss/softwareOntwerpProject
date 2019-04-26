@@ -94,7 +94,6 @@ public class CheckBoxWidget extends Widget {
      *
      * @param checked the new state
      */
-    // TODO: update check before execution?
     public void trySetChecked(boolean checked) {
         this.blocked = !isValidToggle.apply(checked);
         if (!blocked && pushCommand!=null) {

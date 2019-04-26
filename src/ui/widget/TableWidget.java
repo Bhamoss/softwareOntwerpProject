@@ -1,5 +1,6 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
 import ui.commands.PushCommand;
 import ui.commands.ResizeCommand;
 import ui.commands.UpdateCommand;
@@ -24,7 +25,6 @@ public class TableWidget extends CompositeWidget {
     public void addWidget(Widget w) {
         setWidth(this.getWidth()+w.getWidth()+1);
         super.addWidget(w);
-
     }
 
     /**
@@ -34,19 +34,22 @@ public class TableWidget extends CompositeWidget {
      * @param resizable
      * @param name
      */
-    public void addColumn(int width, boolean resizable, String name, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand) {
+    public void addColumn(int width, boolean resizable, String name, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
         ColumnWidget columnWidget = new ColumnWidget(
                 getX()+getWidth(), getY(), width,
-                name, resizable, x-> resizedColumn(),updateCommand, onResizeCommand);
+                name, resizable, x-> resizedColumn());
+        columnWidget.setResizeCommand(onResizeCommand);
+        columnWidget.setGetHandler(updateCommand, bus);
         onResizeCommand.setColumnWidth(()->columnWidget.getWidth());
         addWidget(columnWidget);
     }
 
-    public void addColumn(int width, LabelWidget topLabel, boolean resizable, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand) {
+    public void addColumn(int width, LabelWidget topLabel, boolean resizable, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
         ColumnWidget columnWidget = new ColumnWidget(
                 getX()+getWidth(), getY(), width,
-                topLabel, resizable, x->
-            resizedColumn(),updateCommand, onResizeCommand);
+                topLabel, resizable, x-> resizedColumn());
+        columnWidget.setGetHandler(updateCommand, bus);
+        columnWidget.setResizeCommand(onResizeCommand);
         onResizeCommand.setColumnWidth(()->columnWidget.getWidth());
         addWidget(columnWidget);
     }

@@ -17,18 +17,6 @@ public class ColumnWidget extends CompositeWidget {
 
     private ResizeCommand resizeCommand;
 
-
-    public ColumnWidget(int x, int y, int width, LabelWidget topLabel, boolean resizable, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
-        super(x, y, width, 0, true);
-        resizing = false;
-        this.resizable = resizable;
-        this.onResize = onResize;
-        this.updateCommand = updateCommand;
-        this.addWidget(topLabel);
-        this.resizeCommand = resizeCommand;
-        updateCommand.setWidget(this);
-    }
-
     /**
      * Creates a container widget with resizable width,
      * containing other columnWidgets in a vertical fashion.
@@ -36,30 +24,31 @@ public class ColumnWidget extends CompositeWidget {
      * @param x x-coordinate of top-left corner
      * @param y y-coordinate of top-left corner
      * @param width initial width of column
-     * @param name text to put at the top of the column
+     * @param topLabel label to put at the top of the column
      * @param resizable whether the column can be resized
      * @param onResize function called when column is resized
      */
-    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
-        this(x,y,width,new LabelWidget(x,y,width,25,true,name),resizable,onResize, updateCommand, resizeCommand);
-    }
 
-    public ColumnWidget(int x, int y, int width,LabelWidget topLabel) {
+    public ColumnWidget(int x, int y, int width, LabelWidget topLabel, boolean resizable, Consumer<Integer> onResize) {
         super(x, y, width, 0, true);
         resizing = false;
-        this.resizable = false;
-        this.onResize = null;
-        this.updateCommand = null;
+        this.resizable = resizable;
+        this.onResize = onResize;
         this.addWidget(topLabel);
+    }
+
+    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize) {
+        this(x,y,width, new LabelWidget(x,y,width,25,true,name), resizable, onResize);
+    }
+
+    public ColumnWidget(int x, int y, int width, LabelWidget topLabel) {
+        this(x,y,width, topLabel, false, (n)->{});
     }
 
     public ColumnWidget(int x, int y, int width, String name) {
         this(x,y,width,new LabelWidget(x,y,width,25,true,name));
     }
 
-    public ColumnWidget(int x, int y, int width, String name, Consumer<Integer> onResize, UpdateSizeCommand updateCommand, ResizeCommand resizeCommand) {
-        this(x,y,width,name,true,onResize, updateCommand, resizeCommand);
-    }
 
     public ResizeCommand getResizeCommand() {
         return resizeCommand;
@@ -67,6 +56,19 @@ public class ColumnWidget extends CompositeWidget {
 
     public void setResizeCommand(ResizeCommand resizeCommand) {
         this.resizeCommand = resizeCommand;
+    }
+
+    public void setGetHandler(UpdateSizeCommand command, CommandBus bus) {
+        this.unsubscribe(bus);
+        this.updateCommand = command;
+        bus.subscribe(command);
+    }
+
+    public void unsubscribe(CommandBus bus) {
+        if (updateCommand != null) {
+            System.out.println("Unsubscribing "+updateCommand + getName());
+            bus.unsubscribe(updateCommand);
+        }
     }
 
     /**
@@ -112,9 +114,10 @@ public class ColumnWidget extends CompositeWidget {
      * @param w new width, needs be at least 5.
      */
     public void resize(int w) {
-        forceResize(w);
-        getResizeCommand().execute();
-
+        if (resizable) {
+            forceResize(w);
+            getResizeCommand().execute();
+        }
     }
 
     /**
@@ -196,17 +199,6 @@ public class ColumnWidget extends CompositeWidget {
         return super.handleMouseEvent(id,x,y,clickCount);
     }
 
-    public void setGetHandler(UpdateSizeCommand command, CommandBus bus) {
-        if (updateCommand != null)
-            unsubscribe(bus);
-        this.updateCommand = command;
-        bus.subscribe(command);
-    }
-
-    public void unsubscribe(CommandBus bus) {
-        if (updateCommand != null)
-            bus.unsubscribe(updateCommand);
-    }
 
 
 }
