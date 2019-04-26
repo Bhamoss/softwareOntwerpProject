@@ -16,6 +16,8 @@ import ui.commandBus.CommandBus;
  */
 public class UIStarter extends CanvasWindow{
 
+    private WindowCompositor compositor;
+
     /**
      * Creates a new UI ui with given tableManager.
      * @Effect loads tables ui.
@@ -24,7 +26,6 @@ public class UIStarter extends CanvasWindow{
         super("Tablr starting...");
 
         final UIHandler uiHandler;
-        final WindowCompositor compositor;
         final CommandBus commandBus;
 
         final TableDesignWindowBuilder tableDesignWindowBuilder;
@@ -53,6 +54,9 @@ public class UIStarter extends CanvasWindow{
         compositor.addTablesSubWindow();
     }
 
+    public WindowCompositor getCompositor(){
+        return compositor;
+    }
 
 
 
