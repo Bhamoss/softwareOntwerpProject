@@ -9,7 +9,7 @@ import ui.UIStarter;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class EditRowValue {
+public class CreateTableTest {
     static UIStarter uiStarter;
     @BeforeEach
     void setUp() {
@@ -35,11 +35,7 @@ public class EditRowValue {
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
-                File file = new File(classLoader.getResource("resources/AddRow/Setup.txt").getFile());
-                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
-                file = new File(classLoader.getResource("resources/AddRow/AddRow.txt").getFile());
-                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
-                file = new File(classLoader.getResource("resources/EditRowValue/EditRowValue.txt").getFile());
+                File file = new File(classLoader.getResource("resources/CreateTable/CreateTableMSS.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
         } catch (InterruptedException e) {
