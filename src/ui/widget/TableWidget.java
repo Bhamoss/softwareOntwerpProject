@@ -71,7 +71,7 @@ public class TableWidget extends CompositeWidget {
         assert (widgets.size()==0);
         addWidget(new SelectorColumnWidget(
                 getX()+getWidth(), getY(),
-                name, x->resizedColumn()));
+                name));
     }
 
     public int getSelectedId() {

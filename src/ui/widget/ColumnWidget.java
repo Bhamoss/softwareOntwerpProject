@@ -28,14 +28,6 @@ public class ColumnWidget extends CompositeWidget {
         this.resizeCommand = resizeCommand;
         updateCommand.setWidget(this);
     }
-    //TODO resizable is false en toch kan je resizen? dafuq? zie selector column
-    public ColumnWidget(int x, int y, int width, String name, boolean resizable, Consumer<Integer> onResize) {
-        super(x, y, width, 0, true);
-        resizing = false;
-        this.resizable = resizable;
-        this.onResize = onResize;
-        this.addWidget(new LabelWidget(x,y,width,25,true,name));
-    }
 
     /**
      * Creates a container widget with resizable width,

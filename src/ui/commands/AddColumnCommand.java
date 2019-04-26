@@ -16,14 +16,23 @@ public class AddColumnCommand extends PushCommand {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.
-     * @param tableID
-     *        The id of the table where you want to add the column to.
+     * @param   tableID
+     *          The id of the table where you want to add the column to.
      *
-     * @param uiHandler
-     *        The UIHandler used for adding the column in the backend.
+     * @param   uiHandler
+     *          The UIHandler used for adding the column in the backend.
      *
-     * @param compositor
-     *        The WindowCompositor to be called to rebuild the widgets.
+     * @param   compositor
+     *          The WindowCompositor to be called to rebuild the widgets.
+     *
+     * @post    The WindowCompositor is set to the given WindowCompositor.
+     *          |getCompositor() == compositor
+     *
+     * @post     The tableID is set to the given tableID.
+     *          |getTableID() == tableID
+     *
+     * @post     The UIHandler is set to the given UIHandler.
+     *          |getUIHandler() == uiHandler
      */
     public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
         this.tableId = tableID;
