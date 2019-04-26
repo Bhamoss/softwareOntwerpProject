@@ -1,5 +1,6 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
 import ui.commands.UICommand;
 
 import java.awt.*;
@@ -184,7 +185,13 @@ public class Widget {
      * Refreshes the widget's state from the backend
      */
     public void update(UICommand command) {
+    }
 
+    /**
+     * Unsubscribe any events from a commandbus
+     * @param bus commandbus to unsubscribe from
+     */
+    public void unsubscribe(CommandBus bus) {
     }
 
 

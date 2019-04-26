@@ -95,6 +95,14 @@ public class ScrollHorizontalWidget extends ScrollWidget {
         component.updateVisibleFrame((Math.toIntExact(Math.round(Math.pow(procent, -1) + procent)))*interval, 0);
     }
 
+    public int getHorizontalBarPosition() {
+        return bar.getX();
+    }
+
+    public void setHorizontalBarPosition(int x) {
+        moveBar(x,bar.getY(),bar.getX());
+    }
+
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         if (id == MouseEvent.MOUSE_CLICKED && !onBar(x,y) && onBackground(x,y)){

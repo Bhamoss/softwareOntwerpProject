@@ -23,14 +23,23 @@ public class UIStarter extends CanvasWindow{
     public UIStarter(){
         super("Tablr starting...");
 
+        final UIHandler uiHandler;
+        final WindowCompositor compositor;
+        final CommandBus commandBus;
+
+        final TableDesignWindowBuilder tableDesignWindowBuilder;
+        final TablesWindowBuilder tablesWindowBuilder;
+        final TableRowsWindowBuilder tableRowsWindowBuilder;
+
         // create handler (for all modes)
         TableLayout tableLayout = new TableLayout();
         TablesHandler tablesHandler = new TablesHandler();
+        commandBus = new CommandBus();
+
         uiHandler = new UIHandler(tableLayout, tablesHandler);
-        compositor = new WindowCompositor();
+        compositor = new WindowCompositor(commandBus);
         compositor.show();
 
-        commandBus = new CommandBus();
 
         // create a ui for all modes
         tablesWindowBuilder = new TablesWindowBuilder(compositor, uiHandler, commandBus);
@@ -45,20 +54,6 @@ public class UIStarter extends CanvasWindow{
     }
 
 
-    private final UIHandler uiHandler;
-
-    private final WindowCompositor compositor;
-
-
-    /**
-     * Windows
-     */
-    private final TableDesignWindowBuilder tableDesignWindowBuilder;
-    private final TablesWindowBuilder tablesWindowBuilder;
-    private final TableRowsWindowBuilder tableRowsWindowBuilder;
-
-
-    private final CommandBus commandBus;
 
 
 

@@ -95,6 +95,15 @@ public class ScrollVerticalWidget extends ScrollWidget {
                 (Math.toIntExact(Math.round(Math.pow(procent, -1) + procent)))*interval);
     }
 
+    public int getVerticalBarPosition() {
+        return bar.getY();
+    }
+
+    public void setVerticalBarPosition(int y) {
+        moveBar(bar.getX(),y,bar.getY());
+    }
+
+
     @Override
     protected void setBarMovedBegin(int x, int y) {
         barMovedBegin = y;

@@ -1,6 +1,8 @@
 package ui.widget;
 
 
+import ui.commandBus.CommandBus;
+
 public class Decorator extends ComponentWidget {
     public Decorator(ComponentWidget cw) {
         super(cw.getX(),cw.getY(),cw.getWidth(),cw.getHeight(),false);
@@ -76,6 +78,16 @@ public class Decorator extends ComponentWidget {
         component.resizeWidth(w);
     }
 
+
+    public int getVerticalBarPosition() {
+        return component.getVerticalBarPosition();
+    }
+
+    public void setVerticalBarPosition(int y) {
+        component.setVerticalBarPosition(y);
+    }
+
+
     @Override
     public boolean handleMouseEvent(int id, int x, int y, int clickCount) {
         boolean r = component.handleMouseEvent(id, x, y, clickCount);
@@ -90,4 +102,9 @@ public class Decorator extends ComponentWidget {
         return r;
     }
 
+    @Override
+    public void unsubscribe(CommandBus bus) {
+        super.unsubscribe(bus);
+        component.unsubscribe(bus);
+    }
 }

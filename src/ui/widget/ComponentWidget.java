@@ -50,6 +50,25 @@ public class ComponentWidget extends CompositeWidget {
         return isActive;
     }
 
+    /**
+     * Scrolling adjustements
+     */
+
+    public int getHorizontalBarPosition() {
+        return 0;
+    }
+
+    public void setHorizontalBarPosition(int x) {
+    }
+
+    public int getVerticalBarPosition() {
+        return 0;
+    }
+
+    public void setVerticalBarPosition(int y) {
+    }
+
+
 
     /**
      * check if the point (x,y) is in the bottom right corner

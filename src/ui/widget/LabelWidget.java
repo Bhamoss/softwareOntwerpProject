@@ -57,7 +57,8 @@ public class LabelWidget extends Widget{
     }
 
     public void unsubscribe(CommandBus bus) {
-        bus.unsubscribe(getCommand);
+        if (getCommand != null)
+            bus.unsubscribe(getCommand);
     }
 
     /**

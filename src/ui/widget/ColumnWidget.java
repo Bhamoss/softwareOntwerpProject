@@ -212,7 +212,8 @@ public class ColumnWidget extends CompositeWidget {
     }
 
     public void unsubscribe(CommandBus bus) {
-        bus.unsubscribe(updateCommand);
+        if (updateCommand != null)
+            bus.unsubscribe(updateCommand);
     }
 
 

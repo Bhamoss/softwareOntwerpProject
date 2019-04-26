@@ -3,6 +3,7 @@ package ui;
 import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
+import ui.commandBus.CommandBus;
 import ui.commands.AddTableWindowCommand;
 import ui.widget.ComponentWidget;
 import ui.widget.KeyEventWidget;
@@ -30,14 +31,17 @@ public class WindowCompositor extends CanvasWindow {
     private TableDesignWindowBuilder tableDesignWindowBuilder;
     private TableRowsWindowBuilder tableRowsWindowBuilder;
 
+    private final CommandBus bus;
+
     private KeyEventWidget globalKeyEvent;
     boolean ctrlPressed = false;
 
 
-    public WindowCompositor() {
+    public WindowCompositor(CommandBus bus) {
         super("Tablr");
         this.subWindows = new LinkedList<>();
         globalKeyEvent = new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T, true);
+        this.bus = bus;
     }
 
     public void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
@@ -74,8 +78,10 @@ public class WindowCompositor extends CanvasWindow {
 
     public void removeSubWindow(ComponentWidget subwindow) {
         subWindows.remove(subwindow);
-        if (!subWindows.isEmpty())
+        if (!subWindows.isEmpty()) {
             subWindows.getLast().setActive(true);
+            subWindows.getLast().unsubscribe(bus);
+        }
         subwindow.setActive(false);
     }
 
@@ -112,6 +118,8 @@ public class WindowCompositor extends CanvasWindow {
         newSubWindow.setY(subwindow.getY());
         newSubWindow.resizeWidth(subwindow.getWidth());
         newSubWindow.resizeHeight(subwindow.getHeight());
+        newSubWindow.setHorizontalBarPosition(subwindow.getHorizontalBarPosition());
+        newSubWindow.setVerticalBarPosition(subwindow.getVerticalBarPosition());
         return newSubWindow;
     }
 

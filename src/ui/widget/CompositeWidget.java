@@ -1,5 +1,7 @@
 package ui.widget;
 
+import ui.commandBus.CommandBus;
+
 import java.awt.*;
 import java.util.LinkedList;
 
@@ -69,6 +71,13 @@ public class CompositeWidget extends Widget {
             blocked |= w.isBlocking();
         }
         return blocked;
+    }
+
+    @Override
+    public void unsubscribe(CommandBus bus) {
+        for (Widget w: widgets) {
+            w.unsubscribe(bus);
+        }
     }
 
 
