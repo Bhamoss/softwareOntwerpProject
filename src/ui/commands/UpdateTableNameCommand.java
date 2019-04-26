@@ -3,7 +3,6 @@ package ui.commands;
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
 import ui.widget.EditorWidget;
-import ui.widget.LabelWidget;
 
 
 public class UpdateTableNameCommand extends UpdateCommand {
