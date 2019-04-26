@@ -59,7 +59,8 @@ public class ColumnWidget extends CompositeWidget {
     }
 
     public void setGetHandler(UpdateSizeCommand command, CommandBus bus) {
-        this.unsubscribe(bus);
+        if (updateCommand != null)
+            bus.unsubscribe(updateCommand);
         this.updateCommand = command;
         bus.subscribe(command);
     }

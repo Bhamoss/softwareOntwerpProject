@@ -1,6 +1,7 @@
 package ui.widget;
 
 
+import ui.commandBus.CommandBus;
 import ui.commands.PushCommand;
 
 import java.awt.*;
@@ -62,6 +63,13 @@ public class SubWindowWidget extends ComponentWidget {
         this(x,y,width,height,border,new LabelWidget(0,0, 0,0, true, title),onClose);
     }
 
+    @Override
+    public void unsubscribe(CommandBus bus) {
+        super.unsubscribe(bus);
+        try {
+            titleLabel.unsubscribe(bus);
+        } catch (Exception e) {}
+    }
 
     /**
      * returns the title height of a subWindowWidget
