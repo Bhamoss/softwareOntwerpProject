@@ -35,6 +35,9 @@ public class CreateTableTest {
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * creeert een table
+                 */
                 File file = new File(classLoader.getResource("resources/CreateTable/CreateTableMSS.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });

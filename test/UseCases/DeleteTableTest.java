@@ -35,6 +35,10 @@ public class DeleteTableTest {
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * Selecteert paar tables in verschillende subwindows
+                 *  delete er eentje van en subwindows worden geupdate
+                 */
                 File file = new File(classLoader.getResource("resources/DeleteTable/DeleteTableMSS.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });

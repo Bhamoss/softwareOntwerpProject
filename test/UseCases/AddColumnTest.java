@@ -35,6 +35,11 @@ public class AddColumnTest {
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * een designMode subwindow wordt geopend
+                 *      column wordt toegevoegd
+                 *      subwindow verbreden om alles zichtbaar te maken
+                 */
                 File file = new File(classLoader.getResource("resources/AddColumn/AddColumnMSS.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
