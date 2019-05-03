@@ -1,0 +1,24 @@
+@startuml
+activate Widget
+Widget -> RemoveRowCommand: execute()
+activate RemoveRowCommand
+RemoveRowCommand -> Widget: getRowID()
+Widget --> RemoveRowCommand: rowID : Integer
+
+RemoveRowCommand -> UIHandler: removeRow(tableID, rowID)
+activate UIHandler
+UIHandler -> TablesHandler: removeRow(tableID, rowID)
+activate TablesHandler
+deactivate
+deactivate
+RemoveRowCommand -> Compositor: rebuildAllWidgets()
+activate Compositor
+deactivate
+deactivate
+Widget -> RemoveRowCommand: getReturn()
+activate RemoveRowCommand
+return true
+
+
+
+@enduml

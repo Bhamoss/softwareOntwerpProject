@@ -1,0 +1,26 @@
+@startuml
+activate Widget
+Widget -> PushCommand: execute()
+activate PushCommand
+alt if pushCommand has lambda (remove alt als het zo is)
+PushCommand -> Widget: getValue()
+Widget --> PushCommand: value : String
+end
+
+PushCommand -> UIHandler: doThing(value)
+activate UIHandler
+UIHandler -> TablesHandler: doThing(value)
+activate TablesHandler
+deactivate
+deactivate
+PushCommand -> CommandBus: push(this)
+activate CommandBus
+deactivate
+deactivate
+Widget -> PushCommand: getReturn()
+activate PushCommand
+return true
+
+
+
+@enduml
