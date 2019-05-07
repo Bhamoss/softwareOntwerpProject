@@ -796,10 +796,17 @@ public class Table {
             throw new IllegalArgumentException();
         Column column = getColumn(id);
         Column newColumn;
+        //newColumn = column.setColumnType(type);
         if (type.equals("Boolean")){
-            newColumn = ColumnConverter.convertToBooleanColumn(column);
+            if (column instanceof IntegerColumn)
+                newColumn = ColumnConverter.convertToBooleanColumn((IntegerColumn) column);
+            else
+                newColumn = ColumnConverter.convertToBooleanColumn(column);
         } else if (type.equals("Integer")){
-            newColumn = ColumnConverter.convertToIntegerColumn(column);
+            if (column instanceof BooleanColumn)
+                newColumn = ColumnConverter.convertToIntegerColumn((BooleanColumn) column);
+            else
+                newColumn = ColumnConverter.convertToIntegerColumn(column);
         } else if (type.equals("String")) {
             newColumn = ColumnConverter.convertToStringColumn(column);
         } else if (type.equals(("Email"))) {

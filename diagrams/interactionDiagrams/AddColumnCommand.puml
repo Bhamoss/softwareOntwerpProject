@@ -1,0 +1,22 @@
+@startuml
+activate Widget
+Widget -> AddColumnCommand: execute()
+activate AddColumnCommand
+
+AddColumnCommand -> UIHandler: AddColumn(table)
+activate UIHandler
+UIHandler -> TablesHandler: AddColumn(table)
+activate TablesHandler
+deactivate
+deactivate
+AddColumnCommand -> Compositor: rebuildAllWidgets()
+activate Compositor
+deactivate
+deactivate
+Widget -> AddColumnCommand: getReturn()
+activate AddColumnCommand
+return true
+
+
+
+@enduml
