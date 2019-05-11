@@ -1,10 +1,10 @@
-package sqlparser;
+package tablr;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import static sqlparser.SQLParser.parseQuery;
+import static tablr.SQLParser.parseQuery;
 
 class SQLParserTest {
 
@@ -24,6 +24,11 @@ class SQLParserTest {
 				" INNER JOIN is_child_of AS link ON parent.id = link.parent_id" + 
 				" INNER JOIN persons AS child ON link.child_id = child.id" +
 				" WHERE TRUE");
+		System.out.println(parseQuery("SELECT parent.name AS parentName, child.name AS childName" +
+				" FROM persons AS parent" +
+				" INNER JOIN is_child_of AS link ON parent.id = link.parent_id" +
+				" INNER JOIN persons AS child ON link.child_id = child.id" +
+				" WHERE TRUE"));
 	}
 
 }

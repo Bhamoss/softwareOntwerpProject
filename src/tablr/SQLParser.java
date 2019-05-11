@@ -1,4 +1,4 @@
-package sqlparser;
+package tablr;
 
 import java.io.IOException;
 import java.io.StreamTokenizer;
@@ -8,8 +8,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SQLParser extends StreamTokenizer {
-	
+
+	/*
+	Stream Tokenizer commentaar:
+	The StreamTokenizer class takes an input stream and parses it into "tokens",
+	allowing the tokens to be read one at a time.
+	The parsing process is controlled by a table and a number of flags that can be set to various states.
+	The stream tokenizer can recognize identifiers, numbers, quoted strings, and various comment styles.
+	Each byte read from the input stream is regarded as a character in the range '\u0000' through '\u00FF'.
+	The character value is used to look up five possible attributes of the character: white space, alphabetic, numeric,
+	string quote, and comment character. Each character can have zero or more of these attributes.
+	In addition, an instance has four flags. These flags indicate:
+	Whether line terminators are to be returned as tokens or treated as white space that merely separates tokens.
+	Whether C-style comments are to be recognized and skipped.
+	Whether C++-style comments are to be recognized and skipped.
+	Whether the characters of identifiers are converted to lowercase.
+
+	Dit volgende is redelijk belangrijk:
+
+	A typical application first constructs an instance of this class, sets up the syntax tables,
+	and then repeatedly loops calling the nextToken method in each iteration of the loop until it returns
+	the value TT_EOF.
+	 */
+
 	private static HashMap<String, Integer> keywords = new HashMap<>();
+
+
 	public static final int
 		TT_IDENT = -9,
 		TT_SELECT = -10,
@@ -23,7 +47,10 @@ public class SQLParser extends StreamTokenizer {
 		TT_JOIN = -18,
 		TT_ON = -19,
 		TT_WHERE = -20;
-	
+
+	/*
+	 * The syntax table?
+	 */
 	static {
 		keywords.put("SELECT", TT_SELECT);
 		keywords.put("OR", TT_OR);
@@ -39,9 +66,28 @@ public class SQLParser extends StreamTokenizer {
 	}
 	
 	public static class ParseException extends RuntimeException {}
-	
+
+	/**
+	 * creates a new instance of this class with the text as parameter and calls parseQuery on it.
+	 *
+	 * @param text
+	 * 	The query to be parsed.
+	 *
+	 * @return
+	 * 	TODO zet hier de samenvatting van waarvoor heel dit spel dient.
+	 */
 	public static String parseQuery(String text) { return new SQLParser(text).parseQuery(); }
-	
+
+
+	/*
+	Commentaar van de nextToken functie van de StreamTokenizer classe:
+	Parses the next token from the input stream of this tokenizer.
+	The type of the next token is returned in the ttype field.
+	Additional information about the token may be in the nval field or the sval field of this tokenizer.
+	Typical clients of this class first set up the syntax tables and then sit in a loop calling nextToken
+	to parse successive tokens until TT_EOF is returned.
+	 */
+
 	@Override
 	public int nextToken() {
 		try {
@@ -58,7 +104,12 @@ public class SQLParser extends StreamTokenizer {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * creates a parser which passes a reader of the text to the StreamTokenizer superclass.
+	 * It removes the special meaning of . and ...?
+	 * @param text
+	 */
 	public SQLParser(String text) {
 		super(new StringReader(text));
 		ordinaryChar('.');
@@ -69,16 +120,28 @@ public class SQLParser extends StreamTokenizer {
 	public RuntimeException error() {
 		return new ParseException();
 	}
-	
+
+	/**
+	 * throws an error if the parameter is not equal to the type of the last read token.
+	 * @param ttype
+	 */
 	public void expect(int ttype) {
 		if (this.ttype != ttype)
 			throw new RuntimeException("Expected " + ttype + ", found " + this.ttype);
 		nextToken();
 	}
-	
+
+
 	public String expectIdent() {
 		if (ttype != TT_IDENT)
 			throw error();
+		/*
+		sval doc:
+		If the current token is a word token, this field contains a string giving the characters of the word token.
+		When the current token is a quoted string token, this field contains the body of the string.
+		The current token is a word when the value of the ttype field is TT_WORD. The current token is a quoted string token
+		when the value of the ttype field is a quote character.
+		 */
 		String result = sval;
 		nextToken();
 		return result;
@@ -180,6 +243,7 @@ public class SQLParser extends StreamTokenizer {
 	
 	public String parseQuery() {
 		StringBuilder result = new StringBuilder();
+		// dus dit kan enkel select queries aan?
 		expect(TT_SELECT);
 		result.append("SELECT ");
 		for (;;) {
