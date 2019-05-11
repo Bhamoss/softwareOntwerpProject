@@ -1,6 +1,12 @@
 @startuml
 
-package commandBus {
+abstract class UpdateCommand <<(A, lightgreen)>> {
+                        + update(pushCommand : PushCommand) : void
+                        + update() : void
+}
+UpdateCommand "1" <-- Subscription
+
+
 
 class Subscription {
 - subscriber : Object {final}
@@ -44,7 +50,7 @@ appropriate subscriptions (information expert).
 }
 
 CommandBus *-- Subscription
-}
+
 
 
 @enduml
