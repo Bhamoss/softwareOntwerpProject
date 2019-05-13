@@ -1,5 +1,5 @@
 @startuml
-
+scale 4000 width
 package "ui" {
 
 class CanvasWindow{
@@ -45,14 +45,23 @@ class CanvasWindow{
 
             PushCommand -|> UICommand
 
+
             UpdateCommand -|> UICommand
 
             class PushCommand <<(A, lightgreen)>> {
                 + execute() : void
                 + getReturn() : Boolean
+                + clone() : PushCommand
                 __resp__
                 All commands pushing data to the backend
             }
+            note left
+                execute() moet prototype
+                clone command posten.
+                Clone.setOldValeu(o)
+                clone.setNewVale(o)
+                post(clone)
+            end note
 
             class UpdateCommand <<(A, lightgreen)>> {
                         + update(pushCommand : PushCommand) : void
@@ -212,8 +221,7 @@ class CanvasWindow{
                                                     + build(): SubWindowWidget
                                                 }
                         note left
-                            Wat bij abstract factory
-                            bij de rest van de modes?
+                            michie
                         end note
 
                         class DesignModeBuilder{

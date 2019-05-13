@@ -38,7 +38,7 @@ package "tablr" {
 
 
 
-    class Table{
+    abstract class Table{
         -name
         -columns
         -isTerminated
@@ -48,22 +48,19 @@ package "tablr" {
         manage Column
     }
 
+    class StoredTable{
+    }
+    StoredTable --|> Table
+    class ComputedTable{
+    }
+    ComputedTable --|> Table
+
     package "sql" {
         class SQLParser {
 
         }
 
-        class SQLManager {
-        __Responsibility__
-        Handling and
-        distributing
-        getting and
-        setting requests using
-        sql (views)
-        }
-        TablesHandler --> SQLManager
-        SQLManager --> TableManager
-        SQLManager --> SQLParser
+
 
         class SQLInterpreter {
         __Responsibility__
@@ -72,7 +69,6 @@ package "tablr" {
         __Pattern__
         Interpreter
         }
-        SQLInterpreter <--> SQLManager
         class SQLInverter {
         undoQuery(query)?
         ____
@@ -82,8 +78,13 @@ package "tablr" {
                 sql by inverting
                 the sql
                 }
-        SQLInverter <--> SQLManager
+        SQLInverter -- SQLParser : hetzelfde?
         SQLInterpreter -- SQLParser : hetzelfde?
+        SQLInverter <-- ComputedTable
+        SQLInterpreter <-- ComputedTable
+        SQLInverter --> TableManager
+        SQLInterpreter --> TableManager
+        SQLInterpreter <--> SQLInverter : samenvoegen?
     }
 
     package "column" {
@@ -105,7 +106,7 @@ package "tablr" {
         Manage list with correct entries
         }
 
-        Table *-- "0..*" Column
+        StoredTable *-- "0..*" Column
 
         class BooleanColumn{
             -type: String = "Boolean"
