@@ -11,6 +11,10 @@ public class Widget {
     protected boolean border;
     protected boolean blocked;
 
+    private Color backgroundColor;
+
+    private Boolean isTransparent;
+
     /**
      * Construct a rectangular widget.
      *
@@ -22,14 +26,42 @@ public class Widget {
      * @param width width of rectangle
      * @param height height of rectangle
      * @param border whether to draw a border
+     * @param backgroundColor The color of the background of the widget
+     * @param isTransparent wether the widget has a transparent background
      */
-    public Widget(int x, int y, int width, int height, boolean border) {
+    public Widget(int x, int y, int width, int height, boolean border, Color backgroundColor, Boolean isTransparent) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.border = border;
         this.blocked = false;
+        this.backgroundColor = backgroundColor;
+        this.isTransparent = isTransparent;
+    }
+
+    /**
+     * Construct a rectangular widget at the origin.
+     *
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param border whether to draw a border
+     */
+    public Widget(int x, int y, int width, int height, boolean border) {
+        this(x,y,width,height,border, Color.WHITE, true);
+    }
+
+    /**
+     * Construct a rectangular widget at the origin.
+     *
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @param border whether to draw a border
+     * @param backgroundColor The color of the background of the widget
+     * @param isTransparent wether the widget has a transparent background
+     */
+    public Widget(int width, int height, boolean border, Color backgroundColor, Boolean isTransparent) {
+        this(0,0,width,height,border, backgroundColor, isTransparent);
     }
 
     /**
@@ -40,7 +72,7 @@ public class Widget {
      * @param border whether to draw a border
      */
     public Widget(int width, int height, boolean border) {
-        this(0,0,width,height,border);
+        this(0,0,width,height,border,Color.WHITE, true);
     }
 
     public int getX() {
@@ -59,6 +91,14 @@ public class Widget {
         return  height;
     }
 
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public Boolean isTransparent() {
+        return isTransparent;
+    }
+
     public void setX(int x) {
         this.x = x;
     }
@@ -73,6 +113,14 @@ public class Widget {
 
     public void setHeight(int h) {
         this.height = h;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public void setTransparency(Boolean isTransparent) {
+        this.isTransparent = isTransparent;
     }
 
     /**
@@ -101,28 +149,17 @@ public class Widget {
             g.setClip(intersection);
         }
         //g.setClip(x,y,width+1,height+1);
+
+        if(!isTransparent()){
+            g.setColor(getBackgroundColor());
+            g.fillRect(getX(),getY(),getWidth(),getHeight());
+        }
+        g.setColor(Color.black);
         if (isBlocking())
             g.setColor(Color.red);
         if (border)
             g.drawRect(x, y, width, height);
-        g.setColor(Color.black);
         g.setClip(oldRect);
-    }
-
-    void paintWithColor(Graphics g, Color c, Widget w) {
-        Rectangle oldRect = g.getClipBounds();
-
-        Color oldColor = g.getColor();
-
-        g.setColor(c);
-        g.setClip(w.getX(), w.getY(),
-                w.getWidth() + 1, w.getHeight() + 1);
-        g.fillRect(w.getX(), w.getY(),
-                w.getWidth(), w.getHeight());
-
-        g.setColor(oldColor);
-        g.setClip(oldRect);
-
     }
 
     /**

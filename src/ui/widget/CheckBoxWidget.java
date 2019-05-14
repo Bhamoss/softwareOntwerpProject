@@ -21,6 +21,20 @@ public class CheckBoxWidget extends Widget {
      *                      the current state of the checkbox
      *                      is legal
      */
+    public CheckBoxWidget(int x, int y,Color backgroundColor, Boolean isTransparent, Function<Boolean, Boolean> isValidToggle) {
+        super(x,y,SIZE,SIZE,true, backgroundColor, isTransparent);
+        this.isValidToggle = isValidToggle;
+    }
+
+    /**
+     * Widget for a toggleable checkbox
+     *
+     * @param x x-coordinate of top-left of box
+     * @param y y-coordinate of top-left of box
+     * @param isValidToggle function handler determining if
+     *                      the current state of the checkbox
+     *                      is legal
+     */
     public CheckBoxWidget(int x, int y, Function<Boolean, Boolean> isValidToggle) {
         super(x,y,SIZE,SIZE,true);
         this.isValidToggle = isValidToggle;

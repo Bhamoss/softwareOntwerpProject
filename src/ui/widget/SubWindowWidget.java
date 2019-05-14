@@ -48,6 +48,9 @@ public class SubWindowWidget extends ComponentWidget {
         label.setWidth(3*width/4);
         label.setHeight(TITLE_HEIGHT);
         this.titleLabel = label;
+        this.titleLabel.setBackgroundColor(Color.magenta);
+        this.setBackgroundColor(Color.WHITE);
+        this.setTransparency(false);
 
 
         // close getCommand definieren
@@ -55,6 +58,7 @@ public class SubWindowWidget extends ComponentWidget {
         tmp.put(1, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 tmp);
+        this.closeBtn.setBackgroundColor(Color.magenta);
         virtualY = y;
         virtualX = x;
     }
@@ -251,14 +255,17 @@ public class SubWindowWidget extends ComponentWidget {
 
     @Override
     public void paint(Graphics g) {
-        paintWithColor(g, Color.white, this);
+        super.paint(g);
         if (isActive()) {
-            paintWithColor(g, Color.magenta, titleLabel);
-            paintWithColor(g, Color.magenta, closeBtn);
+            titleLabel.setTransparency(false);
+            closeBtn.setTransparency(false);
+        }
+        else {
+            titleLabel.setTransparency(true);
+            closeBtn.setTransparency(true);
         }
         titleLabel.paint(g);
         closeBtn.paint(g);
-        super.paint(g);
     }
 
     /**

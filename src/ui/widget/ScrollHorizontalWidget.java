@@ -15,7 +15,7 @@ public class ScrollHorizontalWidget extends ScrollWidget {
                 cw.getWidth() - ScrollVerticalWidget.WIDTH, HEIGHT, true);
         bar = new Widget(cw.getX(),
                 cw.getY()+ cw.getHeight() - HEIGHT,
-                cw.getWidth() - ScrollVerticalWidget.WIDTH - 10, HEIGHT, false);
+                cw.getWidth() - ScrollVerticalWidget.WIDTH - 10, HEIGHT, true);
         updateBarLength();
     }
 
