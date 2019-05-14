@@ -9,7 +9,7 @@ import ui.UIStarter;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class DeleteColumnTest {
+public class AddRowTest {
     static UIStarter uiStarter;
     @BeforeEach
     void setUp() {

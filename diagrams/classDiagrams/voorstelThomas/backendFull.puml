@@ -1,0 +1,143 @@
+@startuml
+
+package "tablr" {
+
+    class ColumnConverter{
+        ____
+        +convertToIntegerColumn(column : Column) {static}
+        +canConvertToIntegerColumn(column : Column) {static}
+        ...
+    }
+    ColumnConverter -left...- Table
+
+    UIHandler -> TablesHandler : uses
+
+    class TablesHandler{
+        tableManager : TableManager {readOnly}
+        terminated : boolean
+        __Inspector__
+
+        __Responsibilities__
+        providing a controller for tables
+    }
+
+
+    class TableManager{
+        tables : List<Table> [*] = new LinkedList<Table>
+        currentTable : Table [0...1] = null
+        terminated : boolean = false
+        __
+
+        __Responsibility__
+        manage tables and manage access to tables
+    }
+
+    Table "0..*" <-- TableManager
+    TablesHandler --> "1" TableManager
+
+
+
+
+    abstract class Table{
+        -name
+        -columns
+        -isTerminated
+        __
+
+        __Responsibility__
+        manage Column
+    }
+
+    class StoredTable{
+    }
+    StoredTable --|> Table
+    class ComputedTable{
+    }
+    ComputedTable --|> Table
+
+    package "sql" {
+        class SQLParser {
+
+        }
+
+
+
+        class SQLInterpreter {
+        __Responsibility__
+        Retrieving "select"
+        query data
+        __Pattern__
+        Interpreter
+        }
+        class SQLInverter {
+        undoQuery(query)?
+        ____
+                __Responsibility__
+                Setting data
+                for views using
+                sql by inverting
+                the sql
+                }
+        SQLInverter -- SQLParser : hetzelfde?
+        SQLInterpreter -- SQLParser : hetzelfde?
+        SQLInverter <-- ComputedTable
+        SQLInterpreter <-- ComputedTable
+        SQLInverter --> TableManager
+        SQLInterpreter --> TableManager
+        SQLInterpreter <--> SQLInverter : samenvoegen?
+    }
+
+    package "column" {
+
+        Column <|-- BooleanColumn
+        Column <|-- IntegerColumn
+        Column <|-- EmailColumn
+        Column <|-- StringColumn
+
+        class Column <<(A, lightgreen)>>{
+            -name:String
+            -allowsBlanks: boolean
+            -defaultValue: String = ""
+            -values : List<String>
+            __
+
+
+        __Responsibility__
+        Manage list with correct entries
+        }
+
+        StoredTable *-- "0..*" Column
+
+        class BooleanColumn{
+            -type: String = "Boolean"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class StringColumn{
+            -type: String = "String"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class EmailColumn{
+            -type: String = "Email"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+        class IntegerColumn{
+            -type: String = "Integer"
+            __Inspectors__
+            +getType(): String
+            +canHaveAsType(type : String) : boolean
+            +canHaveAsValue(value : String) : boolean
+        }
+
+
+    }
+
+@enduml
