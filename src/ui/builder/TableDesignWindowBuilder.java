@@ -160,8 +160,8 @@ public class TableDesignWindowBuilder {
 
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
-        scrollWindow.id = tableID;
-        scrollWindow.mode = "design";
+        scrollWindow.setTableId(tableID);
+        scrollWindow.setMode("design");
         return scrollWindow;
     }
 

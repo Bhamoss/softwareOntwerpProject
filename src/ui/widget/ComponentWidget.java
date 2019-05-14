@@ -13,10 +13,33 @@ public class ComponentWidget extends CompositeWidget {
     public static final int MINIMUM_SIZE = 200;
 
 
-    public int id;
-    public String mode;
+    private int tableId;
+    private int rowId;
+    private String mode;
 
+    public int getTableId() {
+        return tableId;
+    }
 
+    public int getRowId() {
+        return rowId;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
+    }
+
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
 
     /**
      * creates a componentWidget

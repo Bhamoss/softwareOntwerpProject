@@ -97,9 +97,10 @@ public class TablesWindowBuilder {
 
         // is an invisible widget which listens for key events
         window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor), KeyEvent.VK_DELETE, false));
+        window.addWidget(new KeyEventWidget(new AddFormWindowCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor), KeyEvent.VK_F, true));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
-        scrollWindow.mode = "tables";
+        scrollWindow.setMode("tables");
         return scrollWindow;
     }
 }

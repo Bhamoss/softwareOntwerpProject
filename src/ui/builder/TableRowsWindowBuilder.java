@@ -131,8 +131,8 @@ public class TableRowsWindowBuilder {
 
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
-        scrollWindow.id = tableID;
-        scrollWindow.mode = "rows";
+        scrollWindow.setTableId(tableID);
+        scrollWindow.setMode("rows");
         return scrollWindow;
     }
 

@@ -1,5 +1,6 @@
 package ui;
 
+import ui.builder.FormWindowBuilder;
 import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
@@ -30,6 +31,7 @@ public class WindowCompositor extends CanvasWindow {
     private TablesWindowBuilder tablesWindowBuilder;
     private TableDesignWindowBuilder tableDesignWindowBuilder;
     private TableRowsWindowBuilder tableRowsWindowBuilder;
+    private FormWindowBuilder formWindowBuilder;
 
     private final CommandBus bus;
 
@@ -46,6 +48,10 @@ public class WindowCompositor extends CanvasWindow {
 
     void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
         this.tablesWindowBuilder = tablesWindowBuilder;
+    }
+
+    void setFormWindowBuilder(FormWindowBuilder formWindowBuilder) {
+        this.formWindowBuilder = formWindowBuilder;
     }
 
     void setTableDesignWindowBuilder(TableDesignWindowBuilder tableDesignWindowBuilder) {
@@ -72,6 +78,10 @@ public class WindowCompositor extends CanvasWindow {
         addSubWindow(tableDesignWindowBuilder.build(id));
     }
 
+    public void addFormSubWindow(int tableId, int rowId) {
+        addSubWindow(formWindowBuilder.build(tableId,rowId));
+    }
+
     public void addRowsSubWindow(int id) {
         addSubWindow(tableRowsWindowBuilder.build(id));
     }
@@ -87,7 +97,7 @@ public class WindowCompositor extends CanvasWindow {
 
     public void removeSubWindowWithID(int id) {
         for (ComponentWidget subwindow : subWindows) {
-            if (!subwindow.mode.equals("tables") && subwindow.id == id)
+            if (!subwindow.getMode().equals("tables") && subwindow.getTableId() == id)
                 removeSubWindow(subwindow);
         }
     }
@@ -103,14 +113,16 @@ public class WindowCompositor extends CanvasWindow {
     private ComponentWidget rebuildWindow(ComponentWidget subwindow) {
         subwindow.unsubscribe(bus);
         ComponentWidget newSubWindow;
-        String type = subwindow.mode;
+        String type = subwindow.getMode();
         // TODO: make enum?
         if (type.equals("tables"))
             newSubWindow = tablesWindowBuilder.build();
         else if (type.equals("design"))
-            newSubWindow = tableDesignWindowBuilder.build(subwindow.id);
+            newSubWindow = tableDesignWindowBuilder.build(subwindow.getTableId());
         else if (type.equals("rows"))
-            newSubWindow = tableRowsWindowBuilder.build(subwindow.id);
+            newSubWindow = tableRowsWindowBuilder.build(subwindow.getTableId());
+        else if (type.equals("form"))
+            newSubWindow = formWindowBuilder.build(subwindow.getTableId(),subwindow.getRowId());
         else
             throw new IllegalArgumentException("State not supported");
 
