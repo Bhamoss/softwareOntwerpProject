@@ -1,6 +1,7 @@
 package ui;
 
 import tablr.TablesHandler;
+import ui.builder.FormWindowBuilder;
 import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
@@ -30,6 +31,7 @@ public class UIStarter{
         final TableDesignWindowBuilder tableDesignWindowBuilder;
         final TablesWindowBuilder tablesWindowBuilder;
         final TableRowsWindowBuilder tableRowsWindowBuilder;
+        final FormWindowBuilder formWindowBuilder;
 
         // create handler (for all modes)
         TableLayout tableLayout = new TableLayout();
@@ -45,10 +47,12 @@ public class UIStarter{
         tablesWindowBuilder = new TablesWindowBuilder(compositor, uiHandler, commandBus);
         tableDesignWindowBuilder = new TableDesignWindowBuilder(compositor, uiHandler, commandBus);
         tableRowsWindowBuilder = new TableRowsWindowBuilder(compositor, uiHandler, commandBus);
+        formWindowBuilder = new FormWindowBuilder(compositor,uiHandler,commandBus);
 
         compositor.setTablesWindowBuilder(tablesWindowBuilder);
         compositor.setTableDesignWindowBuilder(tableDesignWindowBuilder);
         compositor.setTableRowsWindowBuilder(tableRowsWindowBuilder);
+        compositor.setFormWindowBuilder(formWindowBuilder);
 
         compositor.addTablesSubWindow();
     }

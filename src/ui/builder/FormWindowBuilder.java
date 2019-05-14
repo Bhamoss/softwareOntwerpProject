@@ -9,7 +9,6 @@ import ui.widget.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -110,17 +109,24 @@ public class FormWindowBuilder {
                         editor.setBackgroundColor(Color.WHITE);
                         window.addWidget(editor);
                     }
-                    Y += 30;
                 }
+
+                Y += 30;
             }
 
 
+        ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
+        onClose.setSubwindow(scrollWindow);
+        scrollWindow.setTableId(tableID);
+        scrollWindow.setRowId(rowID);
+        scrollWindow.setMode("form");
+
         window.addWidget(
-                new KeyEventWidget(new NextRowCommand(tableID, rowID, compositor, window),
+                new KeyEventWidget(new NextRowCommand(tableID, rowID, compositor, scrollWindow),
                         KeyEvent.VK_PAGE_UP, false
                 ));
         window.addWidget(
-                new KeyEventWidget(new PreviousRowCommand(tableID, rowID, compositor,window),
+                new KeyEventWidget(new PreviousRowCommand(tableID, rowID, compositor,scrollWindow),
                         KeyEvent.VK_PAGE_DOWN, false
                 ));
         window.addWidget(
@@ -133,11 +139,7 @@ public class FormWindowBuilder {
                 ));
 
 
-        ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
-        onClose.setSubwindow(scrollWindow);
-        scrollWindow.setTableId(tableID);
-        scrollWindow.setRowId(rowID);
-        scrollWindow.setMode("form");
+
         return scrollWindow;
     }
 

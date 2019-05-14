@@ -41,12 +41,11 @@ public class PreviousRowCommand extends PushCommand {
     public void execute() {
         getCompositor().removeSubWindow(getComponentWidget());
         getCompositor().addFormSubWindow(getTableID(),getRowID()-1);
-        getCompositor().rebuildAllWidgets();
 
     }
 
     @Override
     public Boolean getReturn() {
-        return null;
+        return true;
     }
 }
