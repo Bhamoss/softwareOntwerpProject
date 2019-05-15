@@ -6,10 +6,7 @@ import be.kuleuven.cs.som.taglet.*;
 import ui.commands.PushCommand;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A class modeled after the eventBus pattern usable only for UpdateCommands and PushCommand or windowCompositor, pretty well optimized if I do say so myself.
@@ -32,6 +29,7 @@ public class CommandBus {
         subscriptions = new HashMap<>();
         subscriberCache = new HashMap<>();
         subscriptionCache = new HashMap<>();
+        history = new LinkedList<>();
     }
 
 
@@ -209,6 +207,27 @@ public class CommandBus {
         getSubscriptionCache().remove(subscriber);
     }
 
+    /**
+     *
+     * Triggers the subscriptions for this command, with the command as parameter and adds the command to the history.
+     *
+     * @param command
+     *          The command of which you want to trigger its subscribers.
+     *
+     * @post The subscribers of the command are triggered, with the command as parameter.
+     *          | for each subscription in getSubscriptions().get(command): subscription.trigger(command)
+     * @post The command is added to the history.
+     *          | this.undo() <=> command.unexecute()
+     */
+    public void post(PushCommand command)
+    {
+        postWithoutHistory(command);
+        if(!historyIndexOnLastElement()){
+            overwriteHistory();
+        }
+        addHistory(command);
+        setHistoryIndex(getHistoryIndex() + 1);
+    }
 
     /**
      *
@@ -220,7 +239,7 @@ public class CommandBus {
      * @post The subscribers of the command are triggered, with the command as parameter.
      *          | for each subscription in getSubscriptions().get(command): subscription.trigger(command)
      */
-    public void post(PushCommand command) {
+    void postWithoutHistory(PushCommand command) {
 
         // Get the exact class of the command
         Class<?> commandClass = command.getClass();
@@ -283,5 +302,118 @@ public class CommandBus {
     private Map<Object, List<Subscription>> getSubscriptionCache()
     {
         return subscriptionCache;
+    }
+
+    /**
+     * A list containing the commands previously executed in chronological order.
+     */
+    private List<PushCommand> history;
+
+    private PushCommand getHistoryAt(int index){
+        return history.get(index);
+    }
+
+    public void flushHistory()
+    {
+        history = new LinkedList<>();
+        historyIndex = -1;
+    }
+
+    public boolean canUndo()
+    {
+        if (history.isEmpty() || historyIndex == -1) return false;
+        return true;
+
+    }
+
+    public void undo() throws IllegalStateException
+    {
+        if(!canUndo()) throw new IllegalStateException();
+        getHistoryAt(getHistoryIndex()).unexecute();
+        postWithoutHistory(getHistoryAt(getHistoryIndex()));
+        setHistoryIndex(getHistoryIndex() - 1);
+
+    }
+
+    public boolean canRedo()
+    {
+        if (history.isEmpty() || historyIndex < history.size() - 1) return false;
+        return true;
+    }
+
+    public void redo() throws IllegalStateException
+    {
+        if(!canRedo()) throw new IllegalStateException();
+        setHistoryIndex(getHistoryIndex() + 1);
+        getHistoryAt(getHistoryIndex()).execute();
+        postWithoutHistory(getHistoryAt(getHistoryIndex()));
+    }
+
+    private boolean canHaveAsHistoryAt(int index, PushCommand command){
+        if (index < 0 || index > history.size() || command == null) return false;
+        return true;
+    }
+
+    private void addHistoryAt(int index, PushCommand command) throws IllegalArgumentException
+    {
+        if (!canHaveAsHistoryAt(index, command)) throw new IllegalArgumentException();
+        history.add(index, command);
+    }
+
+
+    /**
+     * Appends the command at the end of history.
+     *
+     * @param command
+     */
+    private void addHistory(PushCommand command)
+    {
+        addHistoryAt(history.size(), command);
+    }
+
+    private boolean canRemoveHistoryAt(int index){
+        if (index < 0 || index > history.size()) return false;
+        return true;
+    }
+
+    private void removeHistoryAt(int index) throws IllegalArgumentException
+    {
+        if (!canRemoveHistoryAt(index)) throw new IllegalArgumentException();
+        history.remove(index);
+    }
+
+
+    /**
+     * Removes all commands after the current index of history
+     */
+    private void overwriteHistory()
+    {
+        for (int i = getHistoryIndex(); i < history.size() - 1; i++) {
+            removeHistoryAt(getHistoryIndex() + 1);
+        }
+    }
+
+    /**
+     * The current position of the history.
+     */
+    private int historyIndex;
+
+    private int getHistoryIndex()
+    {
+        return historyIndex;
+    }
+
+    private boolean canHaveAsHistoryIndex(int index){
+        if (index < -1 || index >= history.size()) return false;
+        return true;
+    }
+
+    private void setHistoryIndex(int index) throws IllegalArgumentException{
+        if (!canHaveAsHistoryIndex(index)) throw new IllegalArgumentException();
+        historyIndex = index;
+    }
+
+    private boolean historyIndexOnLastElement(){
+        return getHistoryIndex() == history.size() - 1;
     }
 }
