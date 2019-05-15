@@ -78,6 +78,7 @@ public class TableManager {
         return getTable(id).getQuery();
     }
 
+    // TODO ComputedTable naar StoredTable of omgekeerd, naargelang de geg query
     void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
         getTable(id).setQuery(q);
