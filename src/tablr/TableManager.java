@@ -73,6 +73,18 @@ public class TableManager {
     static final int MAX_TABLES = 100;
 
 
+    String getQuery(int id) throws  IllegalTableException {
+        if (!hasAsTable(id)) throw  new IllegalTableException();
+        return getTable(id).getQuery();
+    }
+
+    void setQuery(int id, String q) throws  IllegalTableException {
+        if(!hasAsTable(id)){throw new IllegalTableException();}
+        getTable(id).setQuery(q);
+    }
+
+
+
 /*
 ************************************************************************************************************************
 *                                                   TableHandler interface functions

@@ -34,7 +34,14 @@ public class TablesHandler {
         // safety check, should always be true
         assert (canHaveAsTableManager(mng));
         this.tableManager = mng;
+    }
 
+    public String getQuery(int id) {
+        return getTableManager().getQuery(id);
+    }
+
+    public void setQuery(int id, String q) {
+        getTableManager().setQuery(id, q);
     }
 
 
