@@ -2,6 +2,7 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
+import ui.commands.pushCommands.postCommands.SetTableNameCommand;
 import ui.widget.LabelWidget;
 
 public class UpdateRowsHeaderCommand extends UpdateCommand {

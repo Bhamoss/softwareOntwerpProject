@@ -2,9 +2,8 @@ package ui.commandBus;
 
 import tablr.TablesHandler;
 import ui.WindowCompositor;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 import ui.commands.UpdateCommand;
-import ui.widget.Widget;
 import ui.commands.UICommand;
 
 import java.util.ArrayList;

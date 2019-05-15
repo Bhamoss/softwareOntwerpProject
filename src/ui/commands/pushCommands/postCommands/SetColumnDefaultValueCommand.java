@@ -1,27 +1,24 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.function.Supplier;
 
-public class SetCellValueCommand extends PushCommand{
+public class SetColumnDefaultValueCommand extends PostCommand {
 
-    public SetCellValueCommand(int tableId, int columnId, int rowId,
-                               Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus){
+    public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, UIHandler uiHandler, CommandBus commandBus){
         this.tableId = tableId;
         this.columnId = columnId;
-        this.rowId = rowId;
         this.stringSupplier = stringSupplier;
         this.uiHandler = uiHandler;
         this.commandBus = commandBus;
     }
+
     private final int tableId;
 
     private final int columnId;
-
-    private final int rowId;
 
     private final Supplier<String> stringSupplier;
 
@@ -37,15 +34,11 @@ public class SetCellValueCommand extends PushCommand{
         return columnId;
     }
 
-    public int getRowId() {
-        return rowId;
-    }
-
     public Supplier<String> getStringSupplier() {
         return stringSupplier;
     }
 
-    public UIHandler getUiHandler() {
+    public UIHandler getUIHandler() {
         return uiHandler;
     }
 
@@ -55,9 +48,8 @@ public class SetCellValueCommand extends PushCommand{
 
     @Override
     public void execute() {
-        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
+        getUIHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
         getCommandBus().post(this);
-
     }
 
     @Override

@@ -1,9 +1,7 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.PushCommand;
-import ui.commands.ResizeCommand;
-import ui.commands.UpdateCommand;
+import ui.commands.pushCommands.ResizeCommand;
 import ui.commands.UpdateSizeCommand;
 
 public class TableWidget extends CompositeWidget {

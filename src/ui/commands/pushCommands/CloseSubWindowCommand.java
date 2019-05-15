@@ -1,7 +1,8 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.WindowCompositor;
+import ui.commands.pushCommands.PushCommand;
 import ui.widget.ComponentWidget;
 /**
  * A subclass of PushCommand representing the command for closing a sub window.

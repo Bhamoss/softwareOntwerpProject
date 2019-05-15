@@ -2,7 +2,7 @@ package ui.widget;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 
 import java.awt.event.MouseEvent;
 

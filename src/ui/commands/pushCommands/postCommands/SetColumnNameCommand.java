@@ -1,19 +1,18 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.function.Supplier;
 
-public class SetColumnNameCommand extends PushCommand {
+public class SetColumnNameCommand extends PostCommand {
 
     public SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, UIHandler uiHandler, CommandBus commandBus){
+        super(commandBus, uiHandler)
         this.newNameSupplier = newNameSupplier;
         this.tableId = tableId;
         this.columnId = columnId;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
     }
 
     final private Supplier<String> newNameSupplier;
@@ -22,17 +21,11 @@ public class SetColumnNameCommand extends PushCommand {
 
     final private int columnId;
 
-    final private UIHandler uiHandler;
-
-    final private CommandBus commandBus;
 
     public Supplier<String> getNewNameSupplier(){
         return newNameSupplier;
     }
 
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
 
     public int getTableId() {
         return tableId;
@@ -42,13 +35,9 @@ public class SetColumnNameCommand extends PushCommand {
         return columnId;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
-    }
 
     public void execute(){
-        getUIHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
-        getCommandBus().post(this);
+        getUiHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
     }
 
     @Override

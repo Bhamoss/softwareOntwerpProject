@@ -4,7 +4,7 @@ import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
 import ui.commandBus.CommandBus;
-import ui.commands.AddTableWindowCommand;
+import ui.commands.pushCommands.AddTableWindowCommand;
 import ui.widget.ComponentWidget;
 import ui.widget.KeyEventWidget;
 import ui.widget.Widget;

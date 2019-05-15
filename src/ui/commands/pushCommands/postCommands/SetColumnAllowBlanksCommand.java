@@ -1,13 +1,13 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.function.Supplier;
 
-public class SetColumnAllowBlanksCommand extends PushCommand {
+public class SetColumnAllowBlanksCommand extends PostCommand {
 
     public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
                                        UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor){
