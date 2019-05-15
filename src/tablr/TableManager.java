@@ -263,7 +263,7 @@ public class TableManager {
 
     /**
      *
-     * Adds a new table to the front of tables with name TableN,
+     * Adds a new stored table to the front of tables with name TableN,
      * with N the smallest strictly positive integer
      * such that there is no other table with name TableN,
      * and with an id which is the smallest strictly positive id smaller then MAX_TABLES which is not used by
@@ -306,7 +306,7 @@ public class TableManager {
             }
         }
 
-        Table t = new Table(i,name);
+        Table t = new StoredTable(i,name);
         insertAtFrontTable(t);
     }
 

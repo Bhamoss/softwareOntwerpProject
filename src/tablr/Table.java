@@ -594,7 +594,6 @@ abstract public class Table {
         return getName();
     }
 
-    //wat moet deze functie returnen? ale waarop moet gechecked worden?
     public boolean canBeTerminated()
     {
         return true;

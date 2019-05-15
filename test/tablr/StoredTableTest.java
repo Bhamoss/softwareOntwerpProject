@@ -9,19 +9,15 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Thomas Bamelis
- * @version 0.0.1
- */
-class TableTest {
+class StoredTableTest {
 
     private Table emptyTable;
     private Table tenTable;
 
     @BeforeEach
     void setUp() {
-        emptyTable = new Table(1,"Table0");
-        tenTable = new Table(2,"Table10");
+        emptyTable = new StoredTable(1,"Table0");
+        tenTable = new StoredTable(2,"Table10");
         for (int i = 1; i <= 10; i++)
             tenTable.addColumn();
         for (int i = 1; i <= 10; i++)
@@ -102,8 +98,8 @@ class TableTest {
     @DisplayName("Negative or zero id IllegalArgumentException.")
     void illegalId()
     {
-        assertThrows(IllegalArgumentException.class, () -> new Table(-1, "name"));
-        assertThrows(IllegalArgumentException.class, () -> new Table(0, "name"));
+        assertThrows(IllegalArgumentException.class, () -> new StoredTable(-1, "name"));
+        assertThrows(IllegalArgumentException.class, () -> new StoredTable(0, "name"));
     }
 
     @Test
@@ -291,7 +287,8 @@ class TableTest {
         assertEquals("Boolean", tenTable.getColumnType(1));
 
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType(3, "Boolean"));
-        assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType(4, "Boolean"));
+        tenTable.setColumnType(4, "Boolean");
+        assertEquals("Boolean", tenTable.getColumnType(4));
 
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType(5, "Boolean"));
         assertThrows(IllegalArgumentException.class, () -> tenTable.setColumnType(6, "Boolean"));
