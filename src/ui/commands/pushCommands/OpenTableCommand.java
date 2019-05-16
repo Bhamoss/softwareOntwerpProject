@@ -1,7 +1,8 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import ui.UIHandler;
 import ui.WindowCompositor;
+import ui.commands.pushCommands.PushCommand;
 
 /**
  * A subclass of PushCommand representing the command for opening the correct subwindow for a table.
@@ -10,7 +11,7 @@ import ui.WindowCompositor;
  * @author  Michiel Provoost
  * @version 1.0.0
  */
-public class OpenTableCommand extends PushCommand{
+public class OpenTableCommand extends PushCommand {
 
     /**
      * Generates an OpenTableCommand with e given tableID, WindowCompositor and UIHandler.

@@ -1,7 +1,7 @@
 package ui.commandBus;
 
 import ui.WindowCompositor;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 import ui.commands.UpdateCommand;
 
 /**

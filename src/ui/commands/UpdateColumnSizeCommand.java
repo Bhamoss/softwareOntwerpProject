@@ -2,8 +2,8 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
+import ui.commands.pushCommands.ResizeColumnCommand;
 import ui.widget.ColumnWidget;
-import ui.widget.LabelWidget;
 
 public class UpdateColumnSizeCommand  extends UpdateSizeCommand{
 

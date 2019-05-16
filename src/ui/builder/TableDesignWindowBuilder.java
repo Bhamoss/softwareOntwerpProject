@@ -4,6 +4,8 @@ import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 import ui.commands.*;
+import ui.commands.pushCommands.*;
+import ui.commands.pushCommands.postCommands.*;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;

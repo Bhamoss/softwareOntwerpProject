@@ -1,7 +1,7 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 import ui.commands.UpdateCommand;
 
 import java.awt.*;

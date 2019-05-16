@@ -2,7 +2,7 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.EditorWidget;
+import ui.commands.pushCommands.postCommands.SetColumnNameCommand;
 import ui.widget.LabelWidget;
 
 public class UpdateColumnNameCommand  extends UpdateCommand{

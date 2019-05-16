@@ -1,9 +1,9 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
-import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.function.Supplier;
 
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class RemoveRowCommand extends PushCommand {
+public class RemoveRowCommand extends PostCommand {
 
     /**
      * Creates an RemoveRowCommand with a given tableId rowIDSupplier, UIHandler and WindowCompositor.

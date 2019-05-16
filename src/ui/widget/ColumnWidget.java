@@ -1,8 +1,7 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.ResizeCommand;
-import ui.commands.UpdateCommand;
+import ui.commands.pushCommands.ResizeCommand;
 import ui.commands.UpdateSizeCommand;
 
 import java.awt.event.MouseEvent;

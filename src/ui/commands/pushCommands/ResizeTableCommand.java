@@ -1,4 +1,4 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import ui.UIHandler;
 import ui.commandBus.CommandBus;

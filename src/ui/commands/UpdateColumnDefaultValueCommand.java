@@ -2,9 +2,8 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.EditorWidget;
+import ui.commands.pushCommands.postCommands.SetColumnDefaultValueCommand;
 import ui.widget.LabelWidget;
-import ui.widget.SwitchBoxWidget;
 
 public class UpdateColumnDefaultValueCommand extends UpdateCommand{
     public UpdateColumnDefaultValueCommand(int tableId, int columnId, LabelWidget w, UIHandler handler) {

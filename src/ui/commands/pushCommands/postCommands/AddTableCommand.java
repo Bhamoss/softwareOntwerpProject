@@ -1,9 +1,9 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
-import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 /**
  * A subclass of PushCommand representing the command for adding a table.
@@ -12,7 +12,7 @@ import ui.commandBus.CommandBus;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class AddTableCommand extends PushCommand {
+public class AddTableCommand extends PostCommand {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.

@@ -2,9 +2,8 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.CheckBoxWidget;
+import ui.commands.pushCommands.postCommands.SetColumnTypeCommand;
 import ui.widget.LabelWidget;
-import ui.widget.SwitchBoxWidget;
 
 public class UpdateColumnTypeCommand extends UpdateCommand{
 

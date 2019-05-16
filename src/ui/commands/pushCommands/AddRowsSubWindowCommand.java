@@ -1,21 +1,22 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.WindowCompositor;
+import ui.commands.pushCommands.PushCommand;
 
 /**
- * A subclass of PushCommand representing the command for adding a design sub window.
+ * A subclass of PushCommand representing the command for adding a row sub window.
  *
- * @resp    The command for adding a design sub window.
+ * @resp    The command for adding a a row sub window.
  * @author  Michiel Provoost
  * @version 1.0.0
  */
-public class AddDesignSubWindowCommand extends PushCommand{
+public class AddRowsSubWindowCommand extends PushCommand {
 
     /**
-     * Creates an AddDesignSubWindowCommand with a given WindowCompositor and tableID.
+     * Creates an AddRowsSubWindowCommand with a given WindowCompositor and tableID.
      * @param   compositor
-     *          The windowCompositor to ask to build a new design sub window.
+     *          The windowCompositor to ask to build a new rows sub window.
      * @param   tableID
      *          The ID of the table to create the new design sub window of.
      *
@@ -24,18 +25,18 @@ public class AddDesignSubWindowCommand extends PushCommand{
      * @post     The tableID is set to the given tableID.
      *          |getTableID() == tableID
      */
-    public AddDesignSubWindowCommand(WindowCompositor compositor, Integer tableID) {
+    public AddRowsSubWindowCommand(WindowCompositor compositor, Integer tableID) {
         this.compositor = compositor;
         this.tableID = tableID;
     }
 
     /**
-     * The windowCompositor to ask to build a new design sub window.
+     * The windowCompositor to ask to build a new rows sub window.
      */
     private final WindowCompositor compositor;
 
     /**
-     * The ID of the table to create the new design sub window of.
+     * The ID of the table to create the new rows sub window of.
      */
     private final Integer tableID;
 
@@ -58,7 +59,7 @@ public class AddDesignSubWindowCommand extends PushCommand{
     }
 
     /**
-     * Gets the compositor and asks to add a new design sub window of the table with the given id.
+     * Gets the compositor and asks to add a new rows sub window of the table with the given id.
      *
      * @effect  Gets the compositor.
      *          |getCompositor()
@@ -66,13 +67,13 @@ public class AddDesignSubWindowCommand extends PushCommand{
      * @effect  Gets the ID of the table.
      *          |getTableID()
      *
-     * @effect  Uses the compositor to add a new design sub window of the table with the given id.
-     *          |getCompositor().addDesignSubWindow(getTableID())
+     * @effect  Uses the compositor to add a new rows sub window of the table with the given id.
+     *          |getCompositor().addRowsSubWindow(getTableID())
      *
      */
     @Override
     public void execute() {
-        getCompositor().addDesignSubWindow(getTableID());
+        getCompositor().addRowsSubWindow(getTableID());
     }
 
     /**

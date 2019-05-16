@@ -1,7 +1,8 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.WindowCompositor;
+import ui.commands.pushCommands.PushCommand;
 
 /**
  * A subclass of PushCommand representing the command for adding a tables sub window.

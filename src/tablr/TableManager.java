@@ -73,6 +73,19 @@ public class TableManager {
     static final int MAX_TABLES = 100;
 
 
+    String getQuery(int id) throws  IllegalTableException {
+        if (!hasAsTable(id)) throw  new IllegalTableException();
+        return getTable(id).getQuery();
+    }
+
+    // TODO ComputedTable naar StoredTable of omgekeerd, naargelang de geg query
+    void setQuery(int id, String q) throws  IllegalTableException {
+        if(!hasAsTable(id)){throw new IllegalTableException();}
+        getTable(id).setQuery(q);
+    }
+
+
+
 /*
 ************************************************************************************************************************
 *                                                   TableHandler interface functions
@@ -263,7 +276,7 @@ public class TableManager {
 
     /**
      *
-     * Adds a new table to the front of tables with name TableN,
+     * Adds a new stored table to the front of tables with name TableN,
      * with N the smallest strictly positive integer
      * such that there is no other table with name TableN,
      * and with an id which is the smallest strictly positive id smaller then MAX_TABLES which is not used by
@@ -306,7 +319,7 @@ public class TableManager {
             }
         }
 
-        Table t = new Table(i,name);
+        Table t = new StoredTable(i,name);
         insertAtFrontTable(t);
     }
 

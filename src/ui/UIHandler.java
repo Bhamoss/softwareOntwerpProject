@@ -135,6 +135,14 @@ public class UIHandler {
         return getTablesHandler().getTableName(id);
     }
 
+    public String getQuery(int id) {
+        return getTablesHandler().getQuery(id);
+    }
+
+    public void setQuery(int id, String q) {
+        getTablesHandler().setQuery(id, q);
+    }
+
 
 
     /**
