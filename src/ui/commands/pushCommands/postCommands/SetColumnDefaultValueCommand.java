@@ -9,51 +9,110 @@ import java.util.function.Supplier;
 public class SetColumnDefaultValueCommand extends PostCommand {
 
     public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, UIHandler uiHandler, CommandBus commandBus){
+        super(commandBus, uiHandler);
         this.tableId = tableId;
         this.columnId = columnId;
         this.stringSupplier = stringSupplier;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.oldDefault = null;
+        this.newDefault = null;
     }
 
-    private final int tableId;
+    private SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier,
+                                         UIHandler uiHandler, CommandBus commandBus, String oldDefault, String newDefault){
+        super(commandBus, uiHandler);
+        this.tableId = tableId;
+        this.columnId = columnId;
+        this.stringSupplier = stringSupplier;
+        this.oldDefault = oldDefault;
+        this.newDefault = newDefault;
+    }
 
-    private final int columnId;
+    /**
+     * The supplier which can provide the default value to set.
+     */
+    final private Supplier<String> stringSupplier;
 
-    private final Supplier<String> stringSupplier;
+    /**
+     * Returns the stringSupplier.
+     */
+    private Supplier<String> getStringSupplier(){
+        return stringSupplier;
+    }
 
-    private final UIHandler uiHandler;
+    /**
+     * The id of the table.
+     */
+    private  final int tableId;
 
-    private final CommandBus commandBus;
-
+    /**
+     * Returns the id of the table.
+     */
     public int getTableId() {
         return tableId;
     }
 
+
+    /**
+     * The id of the column.
+     */
+    private final int columnId;
+
+    /**
+     * Returns the id of the column.
+     */
     public int getColumnId() {
         return columnId;
     }
 
-    public Supplier<String> getStringSupplier() {
-        return stringSupplier;
+
+
+
+    /**
+     * The old default value of the column before this command was executed.
+     */
+    private final String oldDefault;
+
+    /**
+     * Returns the old default value of this command.
+     */
+    public String getOldDefault(){
+        return oldDefault;
     }
 
-    public UIHandler getUIHandler() {
-        return uiHandler;
+
+    /**
+     * Returns the new default value this command set its default value to.
+     */
+    private final String newDefault;
+
+    /**
+     * Returns the new default value of this command.
+     */
+    private String getNewDefault(){
+        return newDefault;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+
+    @Override
+    protected PostCommand cloneWithValues() {
+        String oldD = getUiHandler().getColumnDefaultValue(getTableId(), getColumnId());
+        String newD = getStringSupplier().get();
+        return new SetColumnDefaultValueCommand(getTableId(), getColumnId(), getStringSupplier(), getUiHandler(),
+                getBus(), oldD, newD);
     }
 
     @Override
-    public void execute() {
-        getUIHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
-        getCommandBus().post(this);
+    protected void doWork() {
+        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
     }
 
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getOldDefault());
+    }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getNewDefault());
     }
 }

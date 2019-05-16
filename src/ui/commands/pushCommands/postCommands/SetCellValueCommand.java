@@ -10,58 +10,104 @@ public class SetCellValueCommand extends PostCommand {
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
                                Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus){
+        super(commandBus, uiHandler);
         this.tableId = tableId;
         this.columnId = columnId;
         this.rowId = rowId;
         this.stringSupplier = stringSupplier;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
+        this.oldValue = null;
+        this.newValue = null;
     }
-    private final int tableId;
 
-    private final int columnId;
+    private SetCellValueCommand(int tableId, int columnId, int rowId,
+                               Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus,
+                                String oldValue, String newValue){
+        super(commandBus, uiHandler);
+        this.tableId = tableId;
+        this.columnId = columnId;
+        this.rowId = rowId;
+        this.stringSupplier = stringSupplier;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+    }
 
-    private final int rowId;
+    /**
+     * The id of the table.
+     */
+    private  final int tableId;
 
-    private final Supplier<String> stringSupplier;
-
-    private final UIHandler uiHandler;
-
-    private final CommandBus commandBus;
-
+    /**
+     * Returns the id of the table.
+     */
     public int getTableId() {
         return tableId;
     }
 
+
+    /**
+     * The id of the column.
+     */
+    private final int columnId;
+
+    /**
+     * Returns the id of the column.
+     */
     public int getColumnId() {
         return columnId;
     }
 
-    public int getRowId() {
+    /**
+     * The row of the column.
+     */
+    private final int rowId;
+
+    /**
+     * Returns the row of the column.
+     */
+    public int getRowId(){
         return rowId;
     }
 
-    public Supplier<String> getStringSupplier() {
+    private final Supplier<String> stringSupplier;
+
+
+    private Supplier<String> getStringSupplier() {
         return stringSupplier;
     }
 
-    public UIHandler getUiHandler() {
-        return uiHandler;
+    private final String oldValue;
+
+    public String getOldValue(){
+        return oldValue;
     }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
+    private final String newValue;
+
+    public String getNewValue(){
+        return newValue;
+    }
+
+
+    @Override
+    protected PostCommand cloneWithValues() {
+        String o = getUiHandler().getCellValue(getTableId(), getColumnId(), getRowId());
+        String n = getStringSupplier().get();
+        return new SetCellValueCommand(getTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
+                getBus(), o, n);
     }
 
     @Override
-    public void execute() {
+    protected void doWork() {
         getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
-        getCommandBus().post(this);
-
     }
 
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getOldValue());
+    }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getNewValue());
     }
 }

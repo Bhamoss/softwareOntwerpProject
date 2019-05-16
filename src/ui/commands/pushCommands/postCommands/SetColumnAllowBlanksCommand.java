@@ -11,63 +11,107 @@ public class SetColumnAllowBlanksCommand extends PostCommand {
 
     public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
                                        UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor){
+        super(commandBus, uiHandler);
         this.tableId = tableId;
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
-        this.uiHandler = uiHandler;
-        this.commandBus = commandBus;
         this.windowCompositor = windowCompositor;
+        this.oldBlank = false;
+        this.newBlank = false;
     }
 
-    private final int tableId;
+    public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
+                                       UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor,
+                                       boolean oldBlank, boolean newBlank){
+        super(commandBus, uiHandler);
+        this.tableId = tableId;
+        this.columnId = columnId;
+        this.booleanSupplier = booleanSupplier;
+        this.windowCompositor = windowCompositor;
+        this.oldBlank = oldBlank;
+        this.newBlank = newBlank;
+    }
 
-    private final int columnId;
+    /**
+     * The id of the table.
+     */
+    private  final int tableId;
 
-    private final Supplier<Boolean> booleanSupplier;
-
-    private final UIHandler uiHandler;
-
-    private final CommandBus commandBus;
-
-    private final WindowCompositor windowCompositor;
-
+    /**
+     * Returns the id of the table.
+     */
     public int getTableId() {
         return tableId;
     }
 
+
+    /**
+     * The id of the column.
+     */
+    private final int columnId;
+
+    /**
+     * Returns the id of the column.
+     */
     public int getColumnId() {
         return columnId;
     }
 
-    public Supplier<Boolean> getBooleanSupplier() {
+    private final Supplier<Boolean> booleanSupplier;
+
+    private Supplier<Boolean> getBooleanSupplier() {
         return booleanSupplier;
     }
 
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
 
-    public CommandBus getCommandBus() {
-        return commandBus;
-    }
+    private final WindowCompositor windowCompositor;
 
-    public WindowCompositor getWindowCompositor() {
+    private WindowCompositor getWindowCompositor() {
         return windowCompositor;
     }
 
+    private final boolean oldBlank;
+
+    private boolean getOldBlank(){
+        return oldBlank;
+    }
+
+    private final boolean newBlank;
+
+    private boolean getNewBlank(){
+        return newBlank;
+    }
+
+
     @Override
-    public void execute() {
-        getUIHandler().setColumnAllowBlanks(getTableId(),getColumnId(),!getBooleanSupplier().get());
-        if(getUIHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
+    protected PostCommand cloneWithValues() {
+        boolean o = getUiHandler().getColumnAllowBlank(getTableId(), getColumnId());
+        boolean n = !getBooleanSupplier().get();
+        return new SetColumnAllowBlanksCommand(getTableId(), getColumnId(), getBooleanSupplier(),
+                getUiHandler(), getBus(), getWindowCompositor(), o, n);
+    }
+
+    @Override
+    protected void doWork() {
+        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(),!getBooleanSupplier().get());
+        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
             getWindowCompositor().rebuildAllWidgets();
-        }
-        else {
-            getCommandBus().post(this);
         }
     }
 
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(), getOldBlank());
+        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
+            getWindowCompositor().rebuildAllWidgets();
+        }
+    }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(), getNewBlank());
+        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
+            getWindowCompositor().rebuildAllWidgets();
+        }
     }
 }

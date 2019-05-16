@@ -150,7 +150,7 @@ public class SetColumnTypeCommand extends PostCommand {
      * Sets the type of the column to the type given by the type supplier, and rebuilds all widgets.
      */
     @Override
-    public void doWork() {
+    protected void doWork() {
         getUiHandler().setColumnType(getTableId(),getColumnId(),getTypeSupplier().get());
         getCompositor().rebuildAllWidgets();
     }
