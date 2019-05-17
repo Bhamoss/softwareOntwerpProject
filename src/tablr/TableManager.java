@@ -104,10 +104,19 @@ public class TableManager {
      *      If there is no table with that id.
      *      | !hasAsTable(id)
      */
-    String getTableName(int id) throws IllegalTableException
+    public String getTableName(int id) throws IllegalTableException
     {
         if (!hasAsTable(id)) throw new IllegalTableException();
         return getTable(id).getName();
+    }
+
+    public int getTableId(String name) throws IllegalTableException
+    {
+        for (int id : getTableIds()) {
+            if (getTable(id).getName() == name)
+                return id;
+        }
+        throw new IllegalTableException();
     }
 
     /**
@@ -189,7 +198,7 @@ public class TableManager {
      *
      */
     @Model
-    ArrayList<Integer> getTableIds()
+    public ArrayList<Integer> getTableIds()
     {
         ArrayList<Integer> list = new ArrayList<Integer>();
         for(Table table: tables)
@@ -362,7 +371,7 @@ public class TableManager {
      * | hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
+    public ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -387,7 +396,7 @@ public class TableManager {
      * | hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
+    public ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -411,7 +420,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
+    public String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -758,7 +767,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
+    public String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -828,7 +837,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setCellValue(int tableId, int columnId, int row, String value)
+    public void setCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}

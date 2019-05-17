@@ -320,11 +320,12 @@ public class StoredTable extends Table {
      *          | getNbColumns() >= MAX_COLUMNS
      */
     @Override
-    public void addColumn()
+    public int addColumn()
             throws IllegalStateException
     {
         if (getNbColumns() >= MAX_COLUMNS) throw new IllegalStateException();
         addColumnAt(getNbColumns() + 1);
+        return getNbColumns() + 1;
     }
 
     /**

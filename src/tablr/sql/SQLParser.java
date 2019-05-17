@@ -10,14 +10,16 @@ import java.util.LinkedList;
  * SQLParser implements a simple recursive descent parser, converting a
  * string into a SQLQuery (see TreeModule).
  *
- * As the SQL grammar is LL(1), there is no need for backtracking, and parsing
- * is possible in O(n).
+ * Note: As the SQL grammar is LL(1), there is no need for backtracking,
+ * and parsing is possible in O(n). This is also why the parser is build
+ * on StreamTokenizer, which is usually used for lexing instead of parsing.
  */
 public class SQLParser extends StreamTokenizer {
 
 	private static HashMap<String, Integer> keywords = new HashMap<>();
 
 
+    // Keywords
 	public static final int
 		TT_IDENT = -9,
 		TT_SELECT = -10,
@@ -32,7 +34,6 @@ public class SQLParser extends StreamTokenizer {
 		TT_ON = -19,
 		TT_WHERE = -20;
 
-	// Keywords
 	static {
 		keywords.put("SELECT", TT_SELECT);
 		keywords.put("OR", TT_OR);

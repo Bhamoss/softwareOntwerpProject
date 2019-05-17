@@ -380,7 +380,7 @@ abstract public class Table {
     /**
      * Add a new column as a column for this table at the end of the columns list
      */
-    abstract public void addColumn();
+    abstract public int addColumn();
 
 
     /**
@@ -432,6 +432,14 @@ abstract public class Table {
      */
     public String getColumnName(int id) throws IndexOutOfBoundsException {
         return getColumn(id).getName();
+    }
+
+    public int getColumnId(String name) throws IllegalArgumentException {
+        for (int id : getColumnIds()) {
+            if (getColumnName(id) == name)
+                return id;
+        }
+        throw  new IllegalArgumentException();
     }
 
 
