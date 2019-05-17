@@ -1,7 +1,8 @@
-package ui.commands;
+package ui.commands.pushCommands;
 
 import ui.UIHandler;
 import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.function.Supplier;
 

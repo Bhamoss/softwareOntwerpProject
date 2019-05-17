@@ -2,8 +2,7 @@ package ui.commandBus;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
-import be.kuleuven.cs.som.taglet.*;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 
 import java.lang.reflect.Method;
 import java.util.*;

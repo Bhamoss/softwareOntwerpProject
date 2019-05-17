@@ -1,9 +1,8 @@
 package ui.widget;
 
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 
 import java.util.LinkedList;
-import java.util.function.Consumer;
 
 public class SelectorColumnWidget extends ColumnWidget {
 

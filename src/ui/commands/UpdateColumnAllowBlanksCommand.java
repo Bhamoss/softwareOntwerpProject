@@ -2,6 +2,7 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
+import ui.commands.pushCommands.postCommands.SetColumnAllowBlanksCommand;
 import ui.widget.CheckBoxWidget;
 
 public class UpdateColumnAllowBlanksCommand extends UpdateCommand{

@@ -2,7 +2,7 @@ package ui.widget;
 
 
 import ui.commandBus.CommandBus;
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 
 import java.awt.*;
 import java.util.HashMap;

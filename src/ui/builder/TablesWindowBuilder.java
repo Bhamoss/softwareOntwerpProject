@@ -1,15 +1,17 @@
 package ui.builder;
 
-import tablr.TablesHandler;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 import ui.commands.*;
+import ui.commands.pushCommands.*;
+import ui.commands.pushCommands.postCommands.AddTableCommand;
+import ui.commands.pushCommands.postCommands.RemoveTableCommand;
+import ui.commands.pushCommands.postCommands.SetTableNameCommand;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * @author  Michiel Provoost

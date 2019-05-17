@@ -1,23 +1,23 @@
-package ui.commands;
+package ui.commands.pushCommands.postCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
-import ui.commandBus.CommandBus;
+import ui.commands.pushCommands.PushCommand;
 
 /**
- * A subclass of PushCommand representing the command for adding a column.
+ * A subclass of PushCommand representing the command for adding a row.
  *
- * @resp    The command for adding a column.
+ * @resp    The command for adding a row.
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class AddColumnCommand extends PushCommand {
+public class AddRowCommand extends PostCommand {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.
      * @param   tableID
-     *          The id of the table where you want to add the column to.
+     *          The id of the table where you want to add the row to.
      *
      * @param   uiHandler
      *          The UIHandler used for adding the column in the backend.
@@ -34,8 +34,8 @@ public class AddColumnCommand extends PushCommand {
      * @post     The UIHandler is set to the given UIHandler.
      *          |getUIHandler() == uiHandler
      */
-    public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
-        this.tableId = tableID;
+    public AddRowCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
+        this.tableID = tableID;
         this.uiHandler = uiHandler;
         this.compositor = compositor;
     }
@@ -43,12 +43,7 @@ public class AddColumnCommand extends PushCommand {
     /**
      * The id of the table where you want to add the column to.
      */
-    private final int tableId;
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
+    private final int tableID;
 
     /**
      * The UIHandler used for adding the column in the backend.
@@ -56,12 +51,17 @@ public class AddColumnCommand extends PushCommand {
     private final UIHandler uiHandler;
 
     /**
+     * The WindowCompositor to be called to rebuild the widgets.
+     */
+    private final WindowCompositor compositor;
+
+    /**
      *  Returns the table id.
      * @return The table id.
      */
     @Basic
     public int getTableID() {
-        return tableId;
+        return tableID;
     }
 
     /**
@@ -78,15 +78,24 @@ public class AddColumnCommand extends PushCommand {
      * @return The window compositor.
      */
     @Basic
-    public WindowCompositor getCompositor() {
+    public WindowCompositor getWindowCompositor() {
         return compositor;
     }
 
     /**
-     * Adds a column to the table and asks the window compositor to rebuild all widgets.
+     * Adds a row to the table and asks the window compositor to rebuild all widgets.
      *
-     * @effect  Adds a column to the table with the tableId using the UIHandler.
-     *          |getUIHandler().addColumn(getTableId())
+     * @effect  Gets the compositor.
+     *          |getCompositor()
+     *
+     * @effect  Gets the UIHandler.
+     *          |getUIHandler()
+     *
+     * @effect  Gets the table id.
+     *          |getTableID()
+     *
+     * @effect  Adds a row to the table with the tableId using the UIHandler.
+     *          |getUIHandler().addRow(getTableID())
      *
      * @effect  Rebuilds the widgets using the WindowCompositor
      *          |getCompositor().rebuildAllWidgets()
@@ -94,8 +103,8 @@ public class AddColumnCommand extends PushCommand {
      */
     @Override
     public void execute() {
-        getUIHandler().addColumn(getTableID());
-        getCompositor().rebuildAllWidgets();
+        getUIHandler().addRow(getTableID());
+        getWindowCompositor().rebuildAllWidgets();
     }
 
     /**

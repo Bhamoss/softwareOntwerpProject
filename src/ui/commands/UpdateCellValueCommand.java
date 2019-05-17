@@ -2,7 +2,7 @@ package ui.commands;
 
 import ui.UIHandler;
 import ui.commandBus.Subscribe;
-import ui.widget.EditorWidget;
+import ui.commands.pushCommands.postCommands.SetCellValueCommand;
 import ui.widget.LabelWidget;
 
 public class UpdateCellValueCommand extends UpdateCommand{

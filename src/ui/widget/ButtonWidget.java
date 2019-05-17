@@ -1,6 +1,6 @@
 package ui.widget;
 
-import ui.commands.PushCommand;
+import ui.commands.pushCommands.PushCommand;
 
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
