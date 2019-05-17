@@ -245,8 +245,8 @@ public class SQLParser extends StreamTokenizer {
 		}
 		expect(TT_WHERE);
 		Expr cond = parseExpr();
-		tableSpecs = new Filter(tableSpecs, cond);
-		return new SQLQuery(tableSpecs, columnSpecs);
+		Filter filter = new Filter(tableSpecs, cond);
+		return new SQLQuery(filter, columnSpecs);
 	}
 	
 }

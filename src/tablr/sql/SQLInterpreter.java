@@ -13,20 +13,39 @@ public class SQLInterpreter {
     private TableManager tableManager;
     private StoredTable result;
 
-    public SQLInterpreter(TableManager tableManager) {
+    SQLInterpreter(TableManager tableManager) {
         this.tableManager = tableManager;
     }
 
-    public Table interpret(SQLQuery query) {
+    StoredTable interpret(SQLQuery query) {
         initTable(query.columnSpecs);
-        interpretFilter(query.tableSpecs, rec -> addRecord(rec, query.columnSpecs));
+        query.tableSpecs.interpret(rec -> addRecord(rec, query.columnSpecs), this::recordify);
         return result;
     }
 
-    // TODO
-    public void reverseInterpret(SQLQuery query, int colId, int rowId, String val) {
-        initTable(query.columnSpecs);
-        //interpretFilter(query.tableSpecs, rec -> reverse);
+    void reverseInterpret(SQLQuery query, int colId, int rowId, Value val) {
+        inverseCount = 0;
+        query.tableSpecs.interpret(
+                rec -> inverter(rec, query.columnSpecs, query.tableSpecs, colId,rowId,val),
+                this::recordify
+        );
+    }
+
+    //TODO: cleanup
+    private int inverseCount;
+    public void inverter(Record rec, List<ColumnSpec> columnSpecs, TableSpecs tableSpecs, int colId, int rowId, Value val) {
+        inverseCount++;
+        if (inverseCount != rowId)
+            return;
+        rec.write(colId,val);
+        String invval = columnSpecs.get(colId).expr.inverseEval(rec).toString();
+
+        CellId refCellId = rec.getName(colId);
+        int refTableId = tableManager.getTableId(tableSpecs.getTName(refCellId.tRef));
+        int refRowId = rec.getId(refCellId);
+        int refColId = tableManager.getColumnId(refTableId, refCellId.columnName);
+        tableManager.setCellValue(refTableId, refColId, refRowId, invval);
+
     }
 
     private void initTable(List<ColumnSpec> columnSpecs) {
@@ -46,41 +65,14 @@ public class SQLInterpreter {
         }
     }
 
-    private void interpretFilter(Filter filter, Consumer<Record> yld) {
-        interpretTableSpecs(filter.specs, record -> {
-            if (filter.pred.eval(record).asBool())
-                yld.accept(record);
-        });
-    }
 
-    private void interpretJoin(Join join, Consumer<Record> yld) {
-        interpretTableSpecs(join.specs, rec1 -> {
-            interpretScan(join.as, rec2 -> {
-                if (join.cell1.eval(rec1).equals(join.cell2.eval(rec2)))
-                    yld.accept(rec1.join(rec2));
-            });
-        });
-    }
+    // UTILITY
 
-    private void interpretScan(Scan scan, Consumer<Record> yld) {
+    private void recordify(Consumer<Record> yld, Scan scan) {
         int tableId = tableManager.getTableId(scan.tRef);
         for (int i=0; i<tableManager.getNbRows(tableId); i++)
             yld.accept(getRecord(tableId,i,scan.tableName));
     }
-
-    // TODO: Ugly because of lack of matching,
-    // probably best to move this to treemodule
-    private void interpretTableSpecs(TableSpecs specs, Consumer<Record> yld) {
-        if (specs instanceof Join)
-            interpretJoin((Join)specs, yld);
-        else if (specs instanceof Scan)
-            interpretScan((Scan)specs, yld);
-        else
-            throw new RuntimeException("Illegal filter");
-    }
-
-
-    // UTILITY
 
     // TODO: use less maps in java?
     private Record getRecord(int tableId, int rowId, String name) {
@@ -98,7 +90,7 @@ public class SQLInterpreter {
     }
 
     // TODO: Move to columns?
-    private Value toValue(String value, String type) {
+    static Value toValue(String value, String type) {
         if (type == "Boolean")
             return new BooleanValue(Boolean.valueOf(value));
         else if (type == "Integer")

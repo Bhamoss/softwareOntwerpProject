@@ -23,6 +23,14 @@ class Record {
         return ids.get(names.indexOf(name));
     }
 
+    CellId getName(int n) {
+        return names.get(n);
+    }
+
+    void write(int ind, Value val) {
+        vector.set(ind, val);
+    }
+
     Record join(Record other) {
         this.vector.addAll(other.vector);
         this.names.addAll(other.names);
@@ -44,6 +52,7 @@ abstract class Value<T> {
         return ((StringValue) this).value;
     }
 
+    // TODO: check consistency with column casing
     @Override
     public String toString() {
         return value.toString();

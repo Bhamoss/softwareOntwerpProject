@@ -17,9 +17,9 @@ Operator     ::= OR | AND | = | < | > | + | -
 CellId       ::= RowId . ColumnName
  */
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 
 class SQLQuery {
@@ -36,6 +36,8 @@ class SQLQuery {
 // TABLE SPECS
 
 interface TableSpecs {
+    String getTName(String tRef);
+    void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier);
 }
 
 class Scan implements TableSpecs {
@@ -47,6 +49,15 @@ class Scan implements TableSpecs {
         this.tRef = tRef;
     }
 
+    public String getTName(String tRef) {
+        if (tRef == this.tRef)
+            return this.tableName;
+        return null;
+    }
+
+    public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
+        recordifier.accept(yld, this);
+    }
 }
 
 class Join implements TableSpecs {
@@ -62,6 +73,22 @@ class Join implements TableSpecs {
         this.cell2 = cell2;
     }
 
+    public String getTName(String tRef) {
+        if (tRef == as.tRef)
+            return as.tableName;
+        return specs.getTName(tRef);
+    }
+
+    // whould be nicer with implicits
+    public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
+        specs.interpret(rec1 -> {
+            as.interpret(rec2 -> {
+                if (cell1.eval(rec1).equals(cell2.eval(rec2)))
+                    yld.accept(rec1.join(rec2));
+            }, recordifier);
+        }, recordifier);
+
+    }
 
 }
 
@@ -73,6 +100,20 @@ class Filter implements TableSpecs {
         this.specs = specs;
         this.pred = pred;
     }
+
+    public String getTName(String tRef) {
+        return specs.getTName(tRef);
+    }
+
+    public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
+        specs.interpret(record -> {
+            if (pred.eval(record).asBool())
+                yld.accept(record);
+        },recordifier);
+    }
+
+
+
 
 }
 
@@ -91,6 +132,13 @@ class ColumnSpec {
 // EXPRESSIONS
 abstract class Expr {
     abstract Value eval(Record rec);
+    boolean isInvertible() {
+        return false;
+    }
+
+    Value inverseEval(Record rec) {
+        throw new RuntimeException();
+    }
 }
 
 // OPERATIONS
@@ -108,6 +156,20 @@ class Plus extends BinOp {
     IntValue eval(Record rec) {
         return new IntValue(lhs.eval(rec).asInt() + rhs.eval(rec).asInt());
     }
+
+    @Override
+    boolean isInvertible() {
+        if (lhs instanceof CellId && rhs instanceof IntLiteral)
+            return true;
+        if (rhs instanceof CellId && lhs instanceof IntLiteral)
+            return true;
+        return false;
+    }
+
+    @Override
+    IntValue inverseEval(Record rec) {
+        return new Minus(lhs,rhs).eval(rec);
+    }
 }
 
 class Minus extends BinOp {
@@ -119,6 +181,21 @@ class Minus extends BinOp {
     IntValue eval(Record rec) {
         return new IntValue(lhs.eval(rec).asInt() - rhs.eval(rec).asInt());
     }
+
+    @Override
+    boolean isInvertible() {
+        if (lhs instanceof CellId && rhs instanceof IntLiteral)
+            return true;
+        if (rhs instanceof CellId && lhs instanceof IntLiteral)
+            return true;
+        return false;
+    }
+
+    @Override
+    IntValue inverseEval(Record rec) {
+        return new Plus(lhs,rhs).eval(rec);
+    }
+
 }
 
 class Equals extends BinOp {
@@ -184,6 +261,17 @@ class CellId extends Expr {
     Value eval(Record rec) {
         return rec.getValue(this);
     }
+
+    @Override
+    boolean isInvertible() {
+        return true;
+    }
+
+    @Override
+    Value inverseEval(Record rec) {
+        return eval(rec);
+    }
+
 }
 
 
