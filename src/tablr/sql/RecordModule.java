@@ -15,12 +15,26 @@ class Record {
         this.ids = ids;
     }
 
+    // todo code refactoring
     Value getValue(CellId name) {
-        return vector.get(names.indexOf(name));
+        // return vector.get(vector.indexOf(name));
+        int index = -1;
+        for (CellId n : names) {
+            if (n.tRef.equals(name.tRef) && n.columnName.equals(name.columnName))
+                index = names.indexOf(n);
+        }
+        return vector.get(index);
     }
 
     Integer getId(CellId name) {
-        return ids.get(names.indexOf(name));
+        // TODO klopt niet
+        //  return ids.get(names.indexOf(name));
+        int index = -1;
+        for (CellId n : names) {
+            if (n.tRef.equals(name.tRef) && n.columnName.equals(name.columnName))
+                index = names.indexOf(n);
+        }
+        return ids.get(index);
     }
 
     CellId getName(int n) {

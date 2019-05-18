@@ -3,13 +3,33 @@ package tablr;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import tablr.column.Column;
+import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
 
 public class ComputedTable extends Table {
 
-    public ComputedTable(int id, String name, String query) {
+    private StoredTable storedTable;
+    private SQLManager sqlManager;
+
+    public ComputedTable(int id, String name, String query, SQLManager sqlManager) {
         super(id, name, query);
+        this.sqlManager = sqlManager;
+        this.storedTable = sqlManager.interpretQuery(query);
+    }
+
+    /*
+     ************************************************************************************************************************
+     *                                                       storedTable
+     ************************************************************************************************************************
+     */
+
+    public StoredTable getStoredTable() {
+        return storedTable;
+    }
+
+    public void updateStoredTable() {
+        this.storedTable = sqlManager.interpretQuery(this.getQuery());
     }
 
     /*
@@ -20,7 +40,11 @@ public class ComputedTable extends Table {
 
     @Override
     public Boolean isValidQuery(String q){
-        // TODO write method
+        return sqlManager.isValidQuery(q);
+    }
+
+    @Override
+    public Boolean queryRefersTo(Table t) {
         return false;
     }
 
@@ -34,8 +58,8 @@ public class ComputedTable extends Table {
      * Returns a list of all the column ID's
      */
     public ArrayList<Integer> getColumnIds() {
-        // TODO write method
-        return null;
+        updateStoredTable();
+        return storedTable.getColumnIds();
     }
 
     /*
@@ -48,16 +72,58 @@ public class ComputedTable extends Table {
      * Adds a row at the end of this table.
      */
     public void addRow() {
-        // TODO write method
+
     }
 
     /**
      * Remove the given row of this table.
      */
     public void removeRow(int row){
-        // TODO write method
+
     }
 
+    /**
+     * Sets the given value as value for the cell
+     * of the given column (given column id) at the given row.
+     *
+     * @param id    The id of the column.
+     * @param row   The row number of the row.
+     * @param value The value to be set.
+     * @throws IllegalColumnException There isn't a column with the given columnName in this table.
+     *                                | !isAlreadyUsedColumnName(columnName)
+     * @throws IllegalRowException    The row doesn't exists.
+     *                                | row > getNbRows() || row < 1
+     * @throws IllegalArgumentException The given column is not editable
+     * @effect The value of the cell of the given column at the given row,
+     * is set to the given value.
+     * | getColumn(columnName).setValueAt(row, value)
+     */
+    @Override
+    public void setCellValue(int id, int row, String value) throws IllegalColumnException, IllegalRowException, IllegalArgumentException {
+        if (sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
+            throw new IllegalArgumentException("Given column is not editable.");
+        super.setCellValue(id, row, value);
+    }
+
+    /**
+     * Checks whether the given value can be the value for the cell
+     * of the given column (given column id) at the given row.
+     *  False if the given column is not an editable column
+     *
+     * @param id    The id of the column.
+     * @param row   The row number of the row.
+     * @param value The value to be checked.
+     * @throws IllegalColumnException There isn't a column with the given id in this table.
+     *                                | !hasAsColumn(id)
+     * @throws IllegalRowException    The row doesn't exists.
+     *                                | row > getNbRows() || row < 1
+     */
+    @Override
+    public boolean canHaveAsCellValue(int id, int row, String value) throws IllegalColumnException, IllegalRowException {
+        if (sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
+            return false;
+        return super.canHaveAsCellValue(id, row, value);
+    }
 
     /*
      ************************************************************************************************************************
@@ -70,8 +136,8 @@ public class ComputedTable extends Table {
      */
     @Basic
     public int getNbColumns(){
-        // TODO write method
-        return -1;
+        updateStoredTable();
+        return storedTable.getNbColumns();
     }
 
 
@@ -79,8 +145,8 @@ public class ComputedTable extends Table {
      * Return the column of this table at the given index.
      */
     Column getColumnAt(int index){
-        // TODO write method
-        return null;
+        updateStoredTable();
+        return storedTable.getColumnAt(index);
     }
 
     /**
@@ -88,16 +154,14 @@ public class ComputedTable extends Table {
      */
     @Model
     boolean canHaveAsColumn(Column column){
-        // TODO write method
-        return false;
+        return storedTable.canHaveAsColumn(column);
     }
 
     /**
      * Check whether this table has proper columns associated with it.
      */
     public boolean hasProperColumns(){
-        // TODO write method
-        return false;
+        return storedTable.hasProperColumns();
     }
 
 
@@ -105,16 +169,14 @@ public class ComputedTable extends Table {
      * Returns whether or not the given Id is already in use.
      */
     boolean hasAsColumn(int id){
-        // TODO write method
-        return false;
+        return storedTable.hasAsColumn(id);
     }
 
     /**
      * Returns the column with the given column id
      */
     Column getColumn(int id){
-        // TODO write method
-        return null;
+        return storedTable.getColumn(id);
     }
 
     /*
@@ -126,8 +188,9 @@ public class ComputedTable extends Table {
     /**
      * Add a new column as a column for this table at the end of the columns list
      */
-    public void addColumn(){
+    public int addColumn(){
         // bij computed table kan er geen column toegevoegd worden
+        return -1;
     }
 
 
@@ -163,8 +226,9 @@ public class ComputedTable extends Table {
      * Check whether the column with given id can have the given name.
      */
     protected boolean canHaveAsColumnName(int id, String name){
-        // TODO write method
-        return false;
+        if (!sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
+            return false;
+        return storedTable.canHaveAsColumnName(id, name);
     }
 
 
@@ -185,8 +249,7 @@ public class ComputedTable extends Table {
      * Check whether the column with given column id can have the given type.
      */
     public boolean canHaveAsColumnType(int id, String type) {
-        // TODO write method
-        return false;
+        return storedTable.canHaveAsColumnType(id, type);
     }
 
     /*
@@ -207,8 +270,7 @@ public class ComputedTable extends Table {
      * Check whether the column with given column id can have the given default value.
      */
     public boolean canHaveAsDefaultValue(int id, String defaultValue){
-        // TODO write method
-        return false;
+        return storedTable.canHaveAsDefaultValue(id, defaultValue);
     }
 
 
@@ -222,8 +284,7 @@ public class ComputedTable extends Table {
      * Check whether the column with given column name can have the given id.
      */
     public boolean canHaveAsColumnAllowBlanks(int id, boolean blanksAllowed){
-        // TODO write method
-        return false;
+        return storedTable.canHaveAsColumnAllowBlanks(id, blanksAllowed);
     }
 
     /**
@@ -247,7 +308,8 @@ public class ComputedTable extends Table {
      * @post    All the columns of this table will also be terminated
      */
     public void terminate() {
-        // TODO write method
+        super.terminate();
+        storedTable.terminate();
     }
 
 

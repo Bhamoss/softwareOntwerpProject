@@ -28,6 +28,11 @@ public class StoredTable extends Table {
         return q.equals("");
     }
 
+    @Override
+    public Boolean queryRefersTo(Table t) {
+        return false;
+    }
+
     /*
      ************************************************************************************************************************
      *                                                       id
@@ -251,7 +256,7 @@ public class StoredTable extends Table {
      *              blanksAllowed   true
      *          | addColumnAt(index, new StringColumn("ColumnN", getNbRows(), "", true))
      */
-    private void addColumnAt(int index) throws IllegalArgumentException
+    private int addColumnAt(int index) throws IllegalArgumentException
     {
 
         int i = 0;
@@ -279,6 +284,7 @@ public class StoredTable extends Table {
             }
         }
         addColumnAt(index, new StringColumn(i, name, getNbRows(), "", true));
+        return i;
     }
 
     /**
@@ -324,8 +330,7 @@ public class StoredTable extends Table {
             throws IllegalStateException
     {
         if (getNbColumns() >= MAX_COLUMNS) throw new IllegalStateException();
-        addColumnAt(getNbColumns() + 1);
-        return getNbColumns() + 1;
+        return addColumnAt(getNbColumns() + 1);
     }
 
     /**
