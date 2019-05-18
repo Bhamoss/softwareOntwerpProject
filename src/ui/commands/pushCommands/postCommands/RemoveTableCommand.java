@@ -241,6 +241,7 @@ public class RemoveTableCommand extends PostCommand {
 
     @Override
     protected void undoWork() {
+        //TODO: set the table layout
         //TODO: addTable met keuze waar hij staat in de lijst en id en addcolumn met column id
         getUiHandler().addTable(getTableId(), getTablePlace());
         getUiHandler().setTableName(getTableId(), getTableName());

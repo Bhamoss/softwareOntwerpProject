@@ -216,6 +216,7 @@ public class RemoveColumnCommand extends PostCommand {
 
     @Override
     protected void undoWork() {
+        //TODO: set the column layout
         //TODO: ik moet kunnen een column met een bepaalde id hermaken en hem kunnen zetten op een bepaalde plaats
         getUiHandler().addColumn(getTableID(), getColumnId(), getColumnSpace());
         getUiHandler().setColumnType(getTableID(), getColumnId(), getType());

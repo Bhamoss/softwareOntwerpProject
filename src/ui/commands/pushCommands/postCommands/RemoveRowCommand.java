@@ -164,6 +164,7 @@ public class RemoveRowCommand extends PostCommand {
 
     @Override
     protected void undoWork() {
+        //TODO: set the row layout
         // TODO: ik moet kunnen een row inserten
         getUiHandler().addRow(getTableID(), getRowId());
         int i = 0;

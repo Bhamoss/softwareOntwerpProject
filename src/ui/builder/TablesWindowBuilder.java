@@ -91,14 +91,14 @@ public class TablesWindowBuilder {
 
         // Create button at the bottom to add new tables on the bottom left
         HashMap<Integer, PushCommand> onClick = new HashMap<>();
-        onClick.put(2, new AddTableCommand(uiHandler, compositor));
+        onClick.put(2, new AddTableCommand(uiHandler, bus, compositor));
         window.addWidget(new ButtonWidget(
                 20,selectorColumn.getY()+selectorColumn.getHeight()+5,105,30,
                 true,"Create table", onClick
                 ));
 
         // is an invisible widget which listens for key events
-        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor), KeyEvent.VK_DELETE, false));
+        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor, bus), KeyEvent.VK_DELETE, false));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
         scrollWindow.mode = "tables";

@@ -143,14 +143,14 @@ public class TableDesignWindowBuilder {
 
         // Create button at the bottom to add new tables on the bottom left
         HashMap<Integer, PushCommand> onClick = new HashMap<>();
-        onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor));
+        onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor, bus));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight(),105,30,
                 true,"Create column", onClick
         ));
 
         window.addWidget(
-                new KeyEventWidget(new RemoveColumnCommand(tableID, table::getSelectedId, uiHandler, compositor),
+                new KeyEventWidget(new RemoveColumnCommand(tableID, table::getSelectedId, uiHandler, compositor, bus),
                 KeyEvent.VK_DELETE, false
         ));
         window.addWidget(
