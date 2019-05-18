@@ -83,6 +83,8 @@ abstract public class Table {
 
     abstract public Boolean isValidQuery(String q);
 
+    abstract public Boolean queryRefersTo(Table t);
+
 
     /*
      ************************************************************************************************************************

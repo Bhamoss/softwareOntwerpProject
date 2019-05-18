@@ -49,7 +49,7 @@ public class SQLInterpreter {
     }
 
     private void initTable(List<ColumnSpec> columnSpecs) {
-        result = new StoredTable(0, "");
+        result = new StoredTable(999999999, "initTableInterpreter");
         columnSpecs.forEach(spec ->  {
             int id = result.addColumn();
             result.setColumnName(id, spec.columnName);
@@ -70,7 +70,7 @@ public class SQLInterpreter {
 
     private void recordify(Consumer<Record> yld, Scan scan) {
         int tableId = tableManager.getTableId(scan.tRef);
-        for (int i=0; i<tableManager.getNbRows(tableId); i++)
+        for (int i=1; i<=tableManager.getNbRows(tableId); i++)
             yld.accept(getRecord(tableId,i,scan.tableName));
     }
 

@@ -254,7 +254,7 @@ class CellId extends Expr {
     String columnName;
 
     CellId(String tableName, String columnName) {
-        this.tRef = tRef;
+        this.tRef = tableName;
         this.columnName = columnName;
     }
 

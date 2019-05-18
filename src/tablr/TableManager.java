@@ -4,6 +4,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -81,7 +82,27 @@ public class TableManager {
     // TODO ComputedTable naar StoredTable of omgekeerd, naargelang de geg query
     void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
-        getTable(id).setQuery(q);
+        Table table = getTable(id);
+        int index = getTableIndex(table);
+        for (Table t : tables) {
+            if (t.queryRefersTo(table))
+                throw new IllegalStateException();
+        }
+        // maak nieuwe table aan als er van computed naar stored gaat of omgekeerd
+        //  en voeg er de juiste nieuwe terug aan toe op de juiste index
+        // Indien niet geswitcht wordt --> gewoon setquery van de table.
+        if (q.equals("") && !table.getQuery().equals("")) {
+            // computed naar stored
+            removeTableAt(index);
+            addTableAt(index, new StoredTable(table.getId(), table.getName()));
+        }
+        else if (!q.equals("") && table.getQuery().equals("")){
+            // stored naar computed
+            removeTableAt(index);
+            addTableAt(index, new ComputedTable(table.getId(), table.getName(), q, new SQLManager(this)));
+        }
+        else
+            table.setQuery(q);
     }
 
 
@@ -113,7 +134,7 @@ public class TableManager {
     public int getTableId(String name) throws IllegalTableException
     {
         for (int id : getTableIds()) {
-            if (getTable(id).getName() == name)
+            if (getTable(id).getName().equals(name))
                 return id;
         }
         throw new IllegalTableException();
