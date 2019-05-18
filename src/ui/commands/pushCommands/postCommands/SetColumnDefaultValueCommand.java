@@ -94,7 +94,7 @@ public class SetColumnDefaultValueCommand extends PostCommand {
 
 
     @Override
-    protected PostCommand cloneWithValues() {
+    protected SetColumnDefaultValueCommand cloneWithValues() {
         String oldD = getUiHandler().getColumnDefaultValue(getTableId(), getColumnId());
         String newD = getStringSupplier().get();
         return new SetColumnDefaultValueCommand(getTableId(), getColumnId(), getStringSupplier(), getUiHandler(),

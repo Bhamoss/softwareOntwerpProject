@@ -89,7 +89,7 @@ public class SetCellValueCommand extends PostCommand {
 
 
     @Override
-    protected PostCommand cloneWithValues() {
+    protected SetCellValueCommand cloneWithValues() {
         String o = getUiHandler().getCellValue(getTableId(), getColumnId(), getRowId());
         String n = getStringSupplier().get();
         return new SetCellValueCommand(getTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),

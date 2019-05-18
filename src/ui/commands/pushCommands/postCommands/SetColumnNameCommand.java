@@ -121,7 +121,7 @@ public class SetColumnNameCommand extends PostCommand {
      * @return
      */
     @Override
-    protected PostCommand cloneWithValues() {
+    protected SetColumnNameCommand cloneWithValues() {
         String old = getUiHandler().getColumnName(getTableId(), getColumnId());
         String newn = getNewNameSupplier().get();
         return new SetColumnNameCommand(getNewNameSupplier(), getTableId(), getColumnId(), getUiHandler(), getBus(), getOldName(), getNewName());

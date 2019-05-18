@@ -84,7 +84,7 @@ public class SetColumnAllowBlanksCommand extends PostCommand {
 
 
     @Override
-    protected PostCommand cloneWithValues() {
+    protected SetColumnAllowBlanksCommand cloneWithValues() {
         boolean o = getUiHandler().getColumnAllowBlank(getTableId(), getColumnId());
         boolean n = !getBooleanSupplier().get();
         return new SetColumnAllowBlanksCommand(getTableId(), getColumnId(), getBooleanSupplier(),
