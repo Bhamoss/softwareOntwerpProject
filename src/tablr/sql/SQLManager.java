@@ -48,7 +48,7 @@ public class SQLManager {
     public boolean isColumnEditable(String query, String columnName) {
         SQLQuery sqlQuery = SQLParser.parseQuery(query);
         for (ColumnSpec spec : sqlQuery.columnSpecs)
-            if (spec.columnName == columnName)
+            if (spec.columnName.equals(columnName))
                 return spec.expr.isInvertible();
 
         throw new RuntimeException("Invalid columnName");
@@ -64,8 +64,8 @@ public class SQLManager {
      * @param rowId the row Id of the change value
      * @param sval the string of the new value
      */
-    public void inverseInterpret(String query, int tableId, int colId, int rowId, String sval) {
-        Value val = SQLInterpreter.toValue(sval, tableManager.getColumnType(tableId,colId));
+    public void inverseInterpret(String query, int colId, int rowId, Value val) {
+        //Value val = SQLInterpreter.toValue(sval, tableManager.getColumnType(tableId,colId));
         interpreter.reverseInterpret(SQLParser.parseQuery(query),colId,rowId,val);
     }
 }

@@ -4,6 +4,7 @@ import tablr.StoredTable;
 import tablr.Table;
 import tablr.TableManager;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,6 +27,7 @@ public class SQLInterpreter {
     }
 
     void reverseInterpret(SQLQuery query, int colId, int rowId, Value val) {
+        initTable(query);
         inverseCount = 0;
         query.tableSpecs.interpret(
                 rec -> inverter(rec, query.columnSpecs, colId,rowId,val),
@@ -39,10 +41,16 @@ public class SQLInterpreter {
         inverseCount++;
         if (inverseCount != rowId)
             return;
-        rec.write(colId,val);
-        String invval = columnSpecs.get(colId).expr.inverseEval(rec).toString();
-
-        CellId refCellId = rec.getName(colId);
+        rec.write(colId+1,val);
+        Expr rExpr = columnSpecs.get(colId-1).expr;
+        String invval = rExpr.inverseEval(rec).toString();
+        CellId refCellId;
+        if (rExpr instanceof CellId)
+            refCellId = (CellId) rExpr;
+        else if (((BinOp)rExpr).lhs instanceof CellId)
+            refCellId = (CellId) ((BinOp)rExpr).lhs;
+        else
+            refCellId = (CellId) ((BinOp)rExpr).rhs;
         int refTableId = tableManager.getTableId(TRMap.get(refCellId.tRef));
         int refRowId = rec.getId(refCellId);
         int refColId = tableManager.getColumnId(refTableId, refCellId.columnName);

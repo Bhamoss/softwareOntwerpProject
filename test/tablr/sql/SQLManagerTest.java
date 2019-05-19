@@ -6,8 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tablr.Table;
 import tablr.TableManager;
-import tablr.sql.SQLInterpreter;
-import tablr.sql.SQLManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,6 +58,10 @@ class SQLManagerTest {
         tableManager.setCellValue(tableId,1,2,"3");
         tableManager.setCellValue(tableId,2,2,"ipsum");
 
+        tableId = tableManager.addTable();
+        tableManager.setTableName(tableId,"ctable");
+
+
     }
 
     @AfterEach
@@ -111,6 +113,13 @@ class SQLManagerTest {
             res += "\n";
         }
         System.out.println(res);
+    }
+
+    @Test
+    void inverseQuery() {
+        interpreter.inverseInterpret("SELECT test.ints + 1 AS ids FROM testTable1 AS test WHERE TRUE", 1, 1, new IntValue(42));
+        assertEquals("41", tableManager.getCellValue(1,3,1));
+
     }
 
 

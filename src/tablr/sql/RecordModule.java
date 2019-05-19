@@ -32,10 +32,6 @@ class Record {
         return ids.get(getIndex(name));
     }
 
-    CellId getName(int n) {
-        return names.get(n);
-    }
-
     void write(int ind, Value val) {
         vector.set(ind, val);
     }
@@ -53,7 +49,7 @@ class Record {
 
     @Override
     public String toString() {
-        return vector.toString();
+        return vector.toString()+names.toString();
     }
 }
 
