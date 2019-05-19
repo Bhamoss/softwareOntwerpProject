@@ -1,8 +1,8 @@
 package tablr.sql;
 
-import scala.Int;
-
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class Record {
     private List<CellId> names;
@@ -15,26 +15,21 @@ class Record {
         this.ids = ids;
     }
 
-    // todo code refactoring
-    Value getValue(CellId name) {
-        // return vector.get(vector.indexOf(name));
+    private int getIndex(CellId name) {
         int index = -1;
-        for (CellId n : names) {
-            if (n.tRef.equals(name.tRef) && n.columnName.equals(name.columnName))
-                index = names.indexOf(n);
+        for (CellId ci : names) {
+            if (ci.equals(name))
+                index = names.indexOf(ci);
         }
-        return vector.get(index);
+        return index;
+    }
+
+    Value getValue(CellId name) {
+        return vector.get(getIndex(name));
     }
 
     Integer getId(CellId name) {
-        // TODO klopt niet
-        //  return ids.get(names.indexOf(name));
-        int index = -1;
-        for (CellId n : names) {
-            if (n.tRef.equals(name.tRef) && n.columnName.equals(name.columnName))
-                index = names.indexOf(n);
-        }
-        return ids.get(index);
+        return ids.get(getIndex(name));
     }
 
     CellId getName(int n) {
@@ -46,10 +41,19 @@ class Record {
     }
 
     Record join(Record other) {
-        this.vector.addAll(other.vector);
-        this.names.addAll(other.names);
-        this.ids.addAll(other.ids);
-        return this;
+        return new Record(
+                Stream.concat(this.vector.stream(), other.vector.stream())
+                        .collect(Collectors.toList()),
+                Stream.concat(this.names.stream(), other.names.stream())
+                        .collect(Collectors.toList()),
+                Stream.concat(this.ids.stream(), other.ids.stream())
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @Override
+    public String toString() {
+        return vector.toString();
     }
 }
 
@@ -75,7 +79,7 @@ abstract class Value<T> {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Value)
-            return this.toString() == o.toString();
+            return ((Value) o).value.equals(this.value);
         return false;
     }
 }
@@ -95,5 +99,14 @@ class IntValue extends Value<Integer> {
 class StringValue extends Value<String> {
     StringValue(String s) {
         this.value = s;
+    }
+}
+
+class BlankValue extends Value {
+    BlankValue() {}
+
+    @Override
+    public String toString() {
+        return "";
     }
 }

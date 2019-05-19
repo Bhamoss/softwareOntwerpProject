@@ -438,7 +438,7 @@ abstract public class Table {
 
     public int getColumnId(String name) throws IllegalArgumentException {
         for (int id : getColumnIds()) {
-            if (getColumnName(id) == name)
+            if (getColumnName(id).equals(name))
                 return id;
         }
         throw  new IllegalArgumentException();

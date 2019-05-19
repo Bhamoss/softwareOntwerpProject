@@ -296,7 +296,7 @@ public class TableManager {
      *  | !canHaveAsName(tableId, newName)
      */
     @Model
-    void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
+    public void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         if(!canHaveAsName(tableId, newName)){throw new IllegalArgumentException("The new name is not valid.");}
@@ -320,7 +320,7 @@ public class TableManager {
      *
      */
     @Model
-    void addTable() throws IllegalStateException
+    public int addTable() throws IllegalStateException
     {
         if (getNbTables() == MAX_TABLES) throw new IllegalStateException("Already maximum amount of tables present.");
 
@@ -351,6 +351,7 @@ public class TableManager {
 
         Table t = new StoredTable(i,name);
         insertAtFrontTable(t);
+        return i;
     }
 
     /**
@@ -630,7 +631,7 @@ public class TableManager {
      *
      */
     @Model
-    void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -660,7 +661,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -686,7 +687,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -713,7 +714,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -733,7 +734,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void addColumn(int tableId) throws IllegalTableException
+    public void addColumn(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -885,7 +886,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void addRow(int tableId) throws IllegalTableException
+    public void addRow(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);

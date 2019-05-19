@@ -23,7 +23,9 @@ CellId       ::= RowId . ColumnName
        genoeg voor wat hier nodig is.
  */
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -37,13 +39,28 @@ class SQLQuery {
         this.columnSpecs = columnSpecs;
         this.tableSpecs = tableSpecs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SQLQuery))
+            return false;
+        if (!((SQLQuery) o).tableSpecs.equals(tableSpecs))
+            return false;
+        if (((SQLQuery) o).columnSpecs.size() != columnSpecs.size())
+            return false;
+        for (int i=0;i<columnSpecs.size();i++) {
+            if (!((SQLQuery) o).columnSpecs.get(i).equals(columnSpecs.get(i)))
+                return false;
+        }
+        return true;
+    }
 }
 
 
 // TABLE SPECS
 
 interface TableSpecs {
-    String getTName(String tRef);
+    Map<String, String> getTRMap();
     void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier);
 }
 
@@ -56,14 +73,21 @@ class Scan implements TableSpecs {
         this.tRef = tRef;
     }
 
-    public String getTName(String tRef) {
-        if (tRef == this.tRef)
-            return this.tableName;
-        return null;
+    public Map<String, String> getTRMap() {
+        Map<String, String> TRMap = new HashMap<>();
+        TRMap.put(tRef,tableName);
+        return TRMap;
     }
 
     public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
         recordifier.accept(yld, this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Scan)
+                && ((Scan) o).tRef.equals(tRef)
+                && ((Scan) o).tableName.equals(tableName);
     }
 }
 
@@ -80,21 +104,30 @@ class Join implements TableSpecs {
         this.cell2 = cell2;
     }
 
-    public String getTName(String tRef) {
-        if (tRef == as.tRef)
-            return as.tableName;
-        return specs.getTName(tRef);
+    public Map<String, String> getTRMap() {
+        Map<String, String> TRMap = specs.getTRMap();
+        TRMap.put(as.tRef,as.tableName);
+        return TRMap;
     }
 
     // whould be nicer with implicits
     public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
         specs.interpret(rec1 -> {
             as.interpret(rec2 -> {
-                if (cell1.eval(rec1).equals(cell2.eval(rec2)))
+                if (cell1.eval(rec1).equals(cell2.eval(rec2))) {
                     yld.accept(rec1.join(rec2));
+                }
             }, recordifier);
         }, recordifier);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Join)
+                && ((Join) o).specs.equals(specs)
+                && ((Join) o).as.equals(as)
+                && ((Join) o).cell1.equals(cell1)
+                && ((Join) o).cell2.equals(cell2);
     }
 
 }
@@ -108,8 +141,8 @@ class Filter implements TableSpecs {
         this.pred = pred;
     }
 
-    public String getTName(String tRef) {
-        return specs.getTName(tRef);
+    public Map<String, String> getTRMap() {
+        return specs.getTRMap();
     }
 
     public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
@@ -119,9 +152,10 @@ class Filter implements TableSpecs {
         },recordifier);
     }
 
-
-
-
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Filter) && ((Filter) o).specs.equals(specs) && ((Filter) o).pred.equals(pred);
+    }
 }
 
 // COLUMN SPECS
@@ -132,6 +166,13 @@ class ColumnSpec {
     ColumnSpec(Expr expr, String columnName) {
         this.expr = expr;
         this.columnName = columnName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof ColumnSpec)
+                && ((ColumnSpec) o).expr.equals(expr)
+                && ((ColumnSpec) o).columnName.equals(columnName);
     }
 }
 
@@ -157,6 +198,14 @@ abstract class BinOp extends Expr {
     CType getType(Function<CellId,CType> cellResolver) {
         return new BoolType();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BinOp))
+            return false;
+        return ((BinOp) o).lhs.equals(this.lhs) && ((BinOp) o).rhs.equals(this.rhs);
+    }
+
 }
 
 class Plus extends BinOp {
@@ -186,6 +235,11 @@ class Plus extends BinOp {
     @Override
     CType getType(Function<CellId,CType> cellResolver) {
         return new IntType();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Plus) && super.equals(o);
     }
 
 }
@@ -218,6 +272,12 @@ class Minus extends BinOp {
     CType getType(Function<CellId,CType> cellResolver) {
         return new IntType();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Minus) && super.equals(o);
+    }
+
 }
 
 class Equals extends BinOp {
@@ -226,8 +286,14 @@ class Equals extends BinOp {
         this.rhs = rhs;
     }
     BooleanValue eval(Record rec) {
-        return new BooleanValue(lhs.eval(rec).equals(rhs.eval(rec).asInt()));
+        return new BooleanValue(lhs.eval(rec).equals(rhs.eval(rec)));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Equals) && super.equals(o);
+    }
+
 }
 
 class Or extends BinOp {
@@ -238,6 +304,12 @@ class Or extends BinOp {
     BooleanValue eval(Record rec) {
         return new BooleanValue(lhs.eval(rec).asBool() || rhs.eval(rec).asBool());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Or) && super.equals(o);
+    }
+
 }
 
 class And extends BinOp {
@@ -248,6 +320,12 @@ class And extends BinOp {
     BooleanValue eval(Record rec) {
         return new BooleanValue(lhs.eval(rec).asBool() && rhs.eval(rec).asBool());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof And) && super.equals(o);
+    }
+
 }
 
 class Less extends BinOp {
@@ -258,6 +336,12 @@ class Less extends BinOp {
     BooleanValue eval(Record rec) {
         return new BooleanValue(lhs.eval(rec).asInt() < rhs.eval(rec).asInt());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Less) && super.equals(o);
+    }
+
 }
 
 class Greater extends BinOp {
@@ -268,6 +352,12 @@ class Greater extends BinOp {
     BooleanValue eval(Record rec) {
         return new BooleanValue(lhs.eval(rec).asInt() > rhs.eval(rec).asInt());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Greater) && super.equals(o);
+    }
+
 }
 
 // CELL ID
@@ -299,12 +389,35 @@ class CellId extends Expr {
         return cellResolver.apply(this);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CellId))
+            return false;
+        return ((CellId) o).tRef.equals(tRef) && ((CellId) o).columnName.equals(columnName);
+    }
+
+    @Override
+    public String toString() {
+        return tRef+"."+columnName;
+    }
 }
 
 
 // LITERALS
 abstract class Literal<T> extends Expr {
     T value;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Literal)
+            return ((Literal)o).value.equals(this.value);
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }
 class BooleanLiteral extends Literal<Boolean> {
     BooleanLiteral(Boolean value) {
@@ -356,11 +469,21 @@ class IntType extends CType{
     public String toString() {
         return "Integer";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof IntType);
+    }
 }
 class BoolType extends CType {
     @Override
     public String toString() {
         return "Boolean";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof BoolType);
     }
 
 }
@@ -370,6 +493,12 @@ class StringType extends CType {
         return "String";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof StringType);
+    }
+
+
 }
 class EmailType extends CType {
     @Override
@@ -377,4 +506,8 @@ class EmailType extends CType {
         return "Email";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof EmailType);
+    }
 }
