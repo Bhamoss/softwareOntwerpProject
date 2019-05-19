@@ -18,7 +18,7 @@ public class SQLInterpreter {
     }
 
     StoredTable interpret(SQLQuery query) {
-        initTable(query.columnSpecs);
+        initTable(query);
         query.tableSpecs.interpret(rec -> addRecord(rec, query.columnSpecs), this::recordify);
         return result;
     }
@@ -48,10 +48,11 @@ public class SQLInterpreter {
 
     }
 
-    private void initTable(List<ColumnSpec> columnSpecs) {
-        result = new StoredTable(999999999, "initTableInterpreter");
-        columnSpecs.forEach(spec ->  {
+    private void initTable(SQLQuery query) {
+        result = new StoredTable(Integer.MAX_VALUE, "initTableInterpreter");
+        query.columnSpecs.forEach(spec ->  {
             int id = result.addColumn();
+            result.setColumnType(id, spec.expr.getType(cellId -> getCellType(query.tableSpecs, cellId)).toString());
             result.setColumnName(id, spec.columnName);
         });
     }
@@ -89,6 +90,12 @@ public class SQLInterpreter {
         );
     }
 
+    private CType getCellType(TableSpecs specs, CellId cellId) {
+        int tableId = tableManager.getTableId(specs.getTName(cellId.tRef));
+        int columnId = tableManager.getColumnId(tableId, cellId.columnName);
+        return toType(tableManager.getColumnType(tableId,columnId));
+    }
+
     // TODO: Move to columns?
     static Value toValue(String value, String type) {
         if (type == "Boolean")
@@ -99,5 +106,16 @@ public class SQLInterpreter {
             return new StringValue(value);
     }
 
+    static CType toType(String type) {
+        if (type == "Boolean")
+            return new BoolType();
+        else if (type == "Integer")
+            return new IntType();
+        else if (type == "Email")
+            return new EmailType();
+        else if (type == "String")
+            return new StringType();
+        throw new IllegalArgumentException("Illegal type");
+    }
 }
 

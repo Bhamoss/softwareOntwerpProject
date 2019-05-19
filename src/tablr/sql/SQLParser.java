@@ -103,7 +103,6 @@ public class SQLParser extends StreamTokenizer {
 		nextToken();
 	}
 
-	// TODO: might be better with explicit identifiers?
 	public String expectIdent() {
 		if (ttype != TT_IDENT)
 			throw error();

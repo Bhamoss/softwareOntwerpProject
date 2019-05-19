@@ -3,8 +3,8 @@ package tablr.sql;
 /**
 This contains the data classes for the SQL AST
 
-Note: Door de beperkingen van java is dit vooral boilerplate
-      Deze file bevat gewoon alle case classes voor de volgende grammatica:
+Note: Door de beperkingen van java is dit vooral boilerplate,
+      met alle case classes voor de volgende grammatica:
 
 Query        ::= SELECT ColumnSpecs FROM TableSpecs WHERE Expr
 ColumnSpecs  ::= ColumnSpec | ColumnSpec , ColumnSpecs
@@ -15,11 +15,18 @@ Expr         ::= TRUE | FALSE | LiteralNumber | LiteralString
                  | CellId | Expr Operator Expr | ( Expr )
 Operator     ::= OR | AND | = | < | > | + | -
 CellId       ::= RowId . ColumnName
+
+ Note: Deze impelementatie zou beter kunnen op vlak van cohesion,
+       maar aangezien java geen pattern-matching heeft weet ik niet
+       hoe je het beter zou doen. Visitor-pattern is het enige dat
+       in mijn weten in de buurt komt, maar is helaas niet krachtig
+       genoeg voor wat hier nodig is.
  */
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 class SQLQuery {
@@ -135,16 +142,21 @@ abstract class Expr {
     boolean isInvertible() {
         return false;
     }
-
     Value inverseEval(Record rec) {
         throw new RuntimeException();
     }
+    abstract CType getType(Function<CellId,CType> cellResolver);
 }
 
 // OPERATIONS
 abstract class BinOp extends Expr {
     Expr lhs;
     Expr rhs;
+
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new BoolType();
+    }
 }
 
 class Plus extends BinOp {
@@ -170,6 +182,12 @@ class Plus extends BinOp {
     IntValue inverseEval(Record rec) {
         return new Minus(lhs,rhs).eval(rec);
     }
+
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new IntType();
+    }
+
 }
 
 class Minus extends BinOp {
@@ -196,6 +214,10 @@ class Minus extends BinOp {
         return new Plus(lhs,rhs).eval(rec);
     }
 
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new IntType();
+    }
 }
 
 class Equals extends BinOp {
@@ -272,6 +294,11 @@ class CellId extends Expr {
         return eval(rec);
     }
 
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return cellResolver.apply(this);
+    }
+
 }
 
 
@@ -286,7 +313,13 @@ class BooleanLiteral extends Literal<Boolean> {
     BooleanValue eval(Record rec) {
         return new BooleanValue(value);
     }
+
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new BoolType();
+    }
 }
+
 class IntLiteral extends Literal<Integer> {
     IntLiteral(Integer value) {
         this.value = value;
@@ -294,7 +327,13 @@ class IntLiteral extends Literal<Integer> {
     IntValue eval(Record rec) {
         return new IntValue(value);
     }
+
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new IntType();
+    }
 }
+
 class StringLiteral extends Literal<String> {
     StringLiteral(String value) {
         this.value = value;
@@ -302,4 +341,40 @@ class StringLiteral extends Literal<String> {
     StringValue eval(Record rec) {
         return new StringValue(value);
     }
+
+    @Override
+    CType getType(Function<CellId,CType> cellResolver) {
+        return new StringType();
+    }
+}
+
+// TYPES
+abstract class CType {}
+
+class IntType extends CType{
+    @Override
+    public String toString() {
+        return "Integer";
+    }
+}
+class BoolType extends CType {
+    @Override
+    public String toString() {
+        return "Boolean";
+    }
+
+}
+class StringType extends CType {
+    @Override
+    public String toString() {
+        return "String";
+    }
+
+}
+class EmailType extends CType {
+    @Override
+    public String toString() {
+        return "Email";
+    }
+
 }
