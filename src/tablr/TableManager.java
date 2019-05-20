@@ -79,7 +79,6 @@ public class TableManager {
         return getTable(id).getQuery();
     }
 
-    // TODO ComputedTable naar StoredTable of omgekeerd, naargelang de geg query
     void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
         Table table = getTable(id);
@@ -294,14 +293,31 @@ public class TableManager {
      *
      * @throws IllegalArgumentException if the new name is not valid for the given table.
      *  | !canHaveAsName(tableId, newName)
+     *
+     * @throws  IllegalArgumentException if there is a reference in a query to the given table
+     *  | queryRefersToTable(tableId)
      */
     @Model
     public void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         if(!canHaveAsName(tableId, newName)){throw new IllegalArgumentException("The new name is not valid.");}
+        if (queryRefersToTable(tableId)) throw new IllegalArgumentException("There is a reference in a query to the given table, the name cannot be edited");
         getTable(tableId).setName(newName);
+    }
 
+    /**
+     * checks whether the query of a table in the tables refers to the given table
+     * @param tableId table id of the table which should be checked on
+     */
+    public boolean queryRefersToTable(int tableId) {
+        Table table = getTable(tableId);
+        for (Table t :tables) {
+            if (t.queryRefersTo(table)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -364,6 +380,8 @@ public class TableManager {
      * |    new.getTableIds.contains(tableId) == false &&
      * |    old.getNbTables() + 1 == new.getNbTables()
      * |}
+     *
+     * @effect all the tables that refer to the given table are removed
      *
      * @throws IllegalTableException if there is no table with the given id.
      * | !getTableIds().contains(tableId)
@@ -635,6 +653,9 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
+        for (Table t:tables) {
+            // todo check if for all tables the query doesn't refer to the column
+        }
         table.setColumnName(columnId, newColumnName);
 
     }
@@ -764,6 +785,7 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
+        // TODO remove all tables that refer to the column that should be deleted
         table.removeColumn(columnId);
     }
 
@@ -1174,6 +1196,8 @@ public class TableManager {
      * |    table.isTerminated == true && hasAsTable(table) == false
      * |}
      *
+     * @post removes all the tables that refer to the given table
+     *
      * @throws IllegalArgumentException if the index is not strictly positive or larger then
      *  the amount of tables.
      *  | 1 > i || i > getNbTables()
@@ -1186,6 +1210,13 @@ public class TableManager {
             throw new IllegalArgumentException("Illegal index.");
         }
         Table t = getTableAt(index);
+        // kijk of er een andere table referred naar de table die verwijdert moet wordne
+        //  verwijder eerst die, daarna pas de gegeven table.
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i).queryRefersTo(t)){
+                removeTableAt(i);
+            }
+        }
         t.terminate();
         tables.remove(index-1);
 
@@ -1200,6 +1231,8 @@ public class TableManager {
      *
      * @effect removes the table or throws an IllegalArgumentException if the table is not in tables.
      *  | removeTableAt(getTableIndex(table))
+     *
+     * @effect all the tables that refer to the given table are removed
      *
      * @throws IllegalArgumentException table is not in tables.
      *  | !hasAsTable()

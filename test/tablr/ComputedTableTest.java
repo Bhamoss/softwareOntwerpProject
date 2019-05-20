@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ComputedTableTest {
 
-    private Table computedTable;
-    private Table storedTable;
     private TableManager mng;
     private SQLManager sqlMng;
 
@@ -26,17 +24,18 @@ class ComputedTableTest {
         mng.setColumnName(1, 1, "column");
         mng.setColumnType(1,1, "Integer");
 
-        mng.addRow(1);
-        mng.setCellValue(1,1,1,"1");
-
+        for (int i = 1; i < 11; i++) {
+            mng.addRow(1);
+            mng.setCellValue(1,1,i,String.valueOf(i));
+        }
         mng.setTableName(2, "computed");
 
-        mng.setQuery(2, "SELECT stored.column AS storedColumn FROM stored AS stored " +
-                "WHERE stored.column = 1");
+        mng.setQuery(2, "SELECT s.column AS c FROM stored AS s " +
+                "WHERE s.column > 5");
     }
 
     @Test
     void test() {
-
+        System.out.println(mng.getCellValue(2, 1, 1));
     }
 }
