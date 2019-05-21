@@ -3,8 +3,11 @@ package ui.commands.pushCommands.postCommands;
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
+import ui.commandBus.CommandBus;
 import ui.commands.pushCommands.PushCommand;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -42,32 +45,44 @@ public class RemoveRowCommand extends PostCommand {
      * @post     The UIHandler is set to the given UIHandler.
      *          |getUIHandler() == uiHandler
      */
-    public RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler, WindowCompositor compositor ){
+    public RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
+        super(commandBus, uiHandler);
         this.tableID = tableID;
         this.rowIDSupplier = rowIDSupplier;
-        this.uiHandler = uiHandler;
         this.compositor = compositor;
+        this.rowValues = null;
+        this.rowId = -1;
+    }
+
+    private RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler,
+                             WindowCompositor compositor, CommandBus commandBus, List<String> rowValues, int rowId){
+        super(commandBus, uiHandler);
+        this.tableID = tableID;
+        this.rowIDSupplier = rowIDSupplier;
+        this.compositor = compositor;
+        this.rowValues = rowValues;
+        this.rowId = rowId;
+    }
+
+    private final List<String> rowValues;
+
+    private List<String> getRowValues(){
+        return rowValues;
+    }
+
+    /**
+     * The id, aka where the row is/was.
+     */
+    private final int rowId;
+
+    private int getRowId(){
+        return rowId;
     }
 
     /**
      * The id of the table of which you want to remove the row.
      */
     private final int tableID;
-
-    /**
-     * The supplier of the id of the row which you want to remove.
-     */
-    private final Supplier<Integer> rowIDSupplier;
-
-    /**
-     * The UIHandler used for removing the row in the backend.
-     */
-    private final UIHandler uiHandler;
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
 
     /**
      * Returns the id of the table.
@@ -79,41 +94,44 @@ public class RemoveRowCommand extends PostCommand {
     }
 
     /**
+     * The supplier of the id of the row which you want to remove.
+     */
+    private final Supplier<Integer> rowIDSupplier;
+
+    /**
      * Returns the supplier of the id of the row.
      * @return The supplier of the id of the row.
      */
     @Basic
-    public Supplier<Integer> getRowIDSupplier() {
+    private Supplier<Integer> getRowIDSupplier() {
         return rowIDSupplier;
     }
 
-    /**
-     * Returns the id of the row.
-     * @return The id of the row.
-     *
-     * @effect  Gets the supplier of the id of the row.
-     *          |getRowIDSupplier()
-     */
-    public int getRowId() {
-        return getRowIDSupplier().get();
-    }
 
     /**
-     * Return the UIHandler.
-     * @return The UIHandler.
+     * The WindowCompositor to be called to rebuild the widgets.
      */
-    @Basic
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
+    private final WindowCompositor compositor;
+
 
     /**
      * Return the WindowCompositor.
      * @return The WindowCompositor.
      */
     @Basic
-    public WindowCompositor getWindowCompositor() {
+    private WindowCompositor getWindowCompositor() {
         return compositor;
+    }
+
+    @Override
+    protected RemoveRowCommand cloneWithValues() {
+        List<String> values = new LinkedList<>();
+        for (int column :
+                getUiHandler().getColumnIds(getTableID())) {
+            values.add(getUiHandler().getCellValue(getTableID(), column, getRowIDSupplier().get()));
+        }
+        return new RemoveRowCommand(getTableID(), getRowIDSupplier(), getUiHandler(),
+                getWindowCompositor(), getBus(), values, getRowIDSupplier().get());
     }
 
     /**
@@ -139,17 +157,27 @@ public class RemoveRowCommand extends PostCommand {
      *
      */
     @Override
-    public void execute() {
-        getUIHandler().removeRow(getTableID(),getRowId());
+    protected void doWork() {
+        getUiHandler().removeRow(getTableID(),getRowIDSupplier().get());
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    /**
-     * Returns if there should be repainted after this command.
-     * @return True
-     */
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        //TODO: set the row layout
+        // TODO: ik moet kunnen een row inserten
+        getUiHandler().addRow(getTableID(), getRowId());
+        int i = 0;
+        for (int column :
+                getUiHandler().getColumnIds(getTableID())) {
+            getUiHandler().setCellValue(getTableID(), column, getRowId(), getRowValues().get(i));
+            i++;
+        }
+    }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().removeRow(getTableID(), getRowId());
+        getWindowCompositor().rebuildAllWidgets();
     }
 }

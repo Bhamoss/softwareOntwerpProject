@@ -1,7 +1,7 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.UICommand;
+import ui.commands.UpdateCommand;
 
 import java.awt.*;
 
@@ -220,7 +220,7 @@ public class Widget {
     /**
      * Refreshes the widget's state from the backend
      */
-    public void update(UICommand command) {
+    public void update(UpdateCommand command) {
     }
 
     /**

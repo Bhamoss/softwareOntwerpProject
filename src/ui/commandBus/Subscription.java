@@ -6,8 +6,8 @@ import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 import ui.WindowCompositor;
 import ui.commands.pushCommands.PushCommand;
-import ui.commands.UICommand;
 import ui.commands.UpdateCommand;
+import ui.commands.pushCommands.postCommands.PostCommand;
 import ui.widget.Widget;
 
 import java.lang.reflect.InvocationTargetException;
@@ -83,7 +83,7 @@ class Subscription {
      *          If the command is not valid.
      *              | !canBeParameter(command)
      */
-    void trigger(UICommand command) throws IllegalArgumentException
+    void trigger(PostCommand command) throws IllegalArgumentException
     {
         if (!canBeParameter(command))
             throw new IllegalArgumentException("The given command is invalid.");
@@ -115,7 +115,7 @@ class Subscription {
      *          | result == command != null && getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())
      */
     @Model
-    private boolean canBeParameter(UICommand command)
+    private boolean canBeParameter(PostCommand command)
     {
         // command can not be null
         if(command == null) return false;

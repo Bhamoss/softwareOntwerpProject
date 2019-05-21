@@ -4,7 +4,7 @@ import tablr.TablesHandler;
 import ui.WindowCompositor;
 import ui.commands.pushCommands.PushCommand;
 import ui.commands.UpdateCommand;
-import ui.commands.UICommand;
+import ui.commands.pushCommands.postCommands.PostCommand;
 
 import java.util.ArrayList;
 
@@ -112,7 +112,7 @@ class TestWindowCompositor extends WindowCompositor
 class SubTablesHandler extends TablesHandler
 {
     @Subscribe
-    public void val(UICommand u)
+    public void val(PostCommand u)
     {
 
     }

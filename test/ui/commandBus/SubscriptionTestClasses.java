@@ -3,6 +3,7 @@ package ui.commandBus;
 import ui.WindowCompositor;
 import ui.commands.pushCommands.PushCommand;
 import ui.commands.UpdateCommand;
+import ui.commands.pushCommands.postCommands.PostCommand;
 
 /**
  * Class used in SubscriptionTest.
@@ -116,7 +117,7 @@ class SubCommand extends PushCommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class BrotherCommand extends PushCommand
+class BrotherCommand extends PostCommand
 {
 
     @Override

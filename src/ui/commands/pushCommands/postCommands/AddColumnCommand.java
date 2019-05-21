@@ -3,6 +3,7 @@ package ui.commands.pushCommands.postCommands;
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
+import ui.commandBus.CommandBus;
 import ui.commands.pushCommands.PushCommand;
 
 /**
@@ -34,9 +35,9 @@ public class AddColumnCommand extends PostCommand {
      * @post     The UIHandler is set to the given UIHandler.
      *          |getUIHandler() == uiHandler
      */
-    public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
+    public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
+        super(commandBus, uiHandler);
         this.tableId = tableID;
-        this.uiHandler = uiHandler;
         this.compositor = compositor;
     }
 
@@ -44,16 +45,6 @@ public class AddColumnCommand extends PostCommand {
      * The id of the table where you want to add the column to.
      */
     private final int tableId;
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
-    /**
-     * The UIHandler used for adding the column in the backend.
-     */
-    private final UIHandler uiHandler;
 
     /**
      *  Returns the table id.
@@ -65,13 +56,11 @@ public class AddColumnCommand extends PostCommand {
     }
 
     /**
-     *  Returns the UIHandler.
-     * @return The UIHandler.
+     * The WindowCompositor to be called to rebuild the widgets.
      */
-    @Basic
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
+    private final WindowCompositor compositor;
+
+
 
     /**
      *  Returns the window compositor.
@@ -80,6 +69,11 @@ public class AddColumnCommand extends PostCommand {
     @Basic
     public WindowCompositor getCompositor() {
         return compositor;
+    }
+
+    @Override
+    protected AddColumnCommand cloneWithValues() {
+        return new AddColumnCommand(getTableID(), getUiHandler(), getCompositor(), getBus());
     }
 
     /**
@@ -93,17 +87,20 @@ public class AddColumnCommand extends PostCommand {
      *
      */
     @Override
-    public void execute() {
-        getUIHandler().addColumn(getTableID());
+    protected void doWork() {
+        getUiHandler().addColumn(getTableID());
         getCompositor().rebuildAllWidgets();
     }
 
-    /**
-     * Returns if there should be repainted after this command.
-     * @return True
-     */
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        getUiHandler().removeColumn(getTableID(), getUiHandler().getColumnIds(getTableID()).get(getUiHandler().getColumnIds(getTableID()).size() - 1));
+        getCompositor().rebuildAllWidgets();
+    }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().addColumn(getTableID());
+        getCompositor().rebuildAllWidgets();
     }
 }

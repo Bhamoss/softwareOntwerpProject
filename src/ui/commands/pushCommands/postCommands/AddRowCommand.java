@@ -3,6 +3,7 @@ package ui.commands.pushCommands.postCommands;
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
+import ui.commandBus.CommandBus;
 import ui.commands.pushCommands.PushCommand;
 
 /**
@@ -34,26 +35,16 @@ public class AddRowCommand extends PostCommand {
      * @post     The UIHandler is set to the given UIHandler.
      *          |getUIHandler() == uiHandler
      */
-    public AddRowCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor){
+    public AddRowCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
+        super(commandBus, uiHandler);
         this.tableID = tableID;
-        this.uiHandler = uiHandler;
         this.compositor = compositor;
     }
 
     /**
-     * The id of the table where you want to add the column to.
+     * The id of the table where you want to add the row to.
      */
     private final int tableID;
-
-    /**
-     * The UIHandler used for adding the column in the backend.
-     */
-    private final UIHandler uiHandler;
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
 
     /**
      *  Returns the table id.
@@ -64,14 +55,11 @@ public class AddRowCommand extends PostCommand {
         return tableID;
     }
 
+
     /**
-     *  Returns the UIHandler.
-     * @return The UIHandler.
+     * The WindowCompositor to be called to rebuild the widgets.
      */
-    @Basic
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
+    private final WindowCompositor compositor;
 
     /**
      *  Returns the window compositor.
@@ -80,6 +68,12 @@ public class AddRowCommand extends PostCommand {
     @Basic
     public WindowCompositor getWindowCompositor() {
         return compositor;
+    }
+
+
+    @Override
+    protected AddRowCommand cloneWithValues() {
+        return new AddRowCommand(getTableID(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -102,17 +96,22 @@ public class AddRowCommand extends PostCommand {
      *
      */
     @Override
-    public void execute() {
-        getUIHandler().addRow(getTableID());
+    public void doWork() {
+        getUiHandler().addRow(getTableID());
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    /**
-     * Returns if there should be repainted after this command.
-     * @return True
-     */
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void undoWork() {
+        getUiHandler().removeRow(getTableID(), getUiHandler().getNbRows(getTableID()));
+        getWindowCompositor().rebuildAllWidgets();
     }
+
+    @Override
+    protected void redoWork() {
+        getUiHandler().addRow(getTableID());
+        getWindowCompositor().rebuildAllWidgets();
+    }
+
+
 }

@@ -4,6 +4,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -78,10 +79,29 @@ public class TableManager {
         return getTable(id).getQuery();
     }
 
-    // TODO ComputedTable naar StoredTable of omgekeerd, naargelang de geg query
     void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
-        getTable(id).setQuery(q);
+        Table table = getTable(id);
+        int index = getTableIndex(table);
+        for (Table t : tables) {
+            if (t.queryRefersTo(table))
+                throw new IllegalStateException();
+        }
+        // maak nieuwe table aan als er van computed naar stored gaat of omgekeerd
+        //  en voeg er de juiste nieuwe terug aan toe op de juiste index
+        // Indien niet geswitcht wordt --> gewoon setquery van de table.
+        if (q.equals("") && !table.getQuery().equals("")) {
+            // computed naar stored
+            removeTableAt(index);
+            addTableAt(index, new StoredTable(table.getId(), table.getName()));
+        }
+        else if (!q.equals("") && table.getQuery().equals("")){
+            // stored naar computed
+            removeTableAt(index);
+            addTableAt(index, new ComputedTable(table.getId(), table.getName(), q, new SQLManager(this)));
+        }
+        else
+            table.setQuery(q);
     }
 
 
@@ -104,10 +124,19 @@ public class TableManager {
      *      If there is no table with that id.
      *      | !hasAsTable(id)
      */
-    String getTableName(int id) throws IllegalTableException
+    public String getTableName(int id) throws IllegalTableException
     {
         if (!hasAsTable(id)) throw new IllegalTableException();
         return getTable(id).getName();
+    }
+
+    public int getTableId(String name) throws IllegalTableException
+    {
+        for (int id : getTableIds()) {
+            if (getTable(id).getName().equals(name))
+                return id;
+        }
+        throw new IllegalTableException();
     }
 
     /**
@@ -189,7 +218,7 @@ public class TableManager {
      *
      */
     @Model
-    ArrayList<Integer> getTableIds()
+    public ArrayList<Integer> getTableIds()
     {
         ArrayList<Integer> list = new ArrayList<Integer>();
         for(Table table: tables)
@@ -264,14 +293,31 @@ public class TableManager {
      *
      * @throws IllegalArgumentException if the new name is not valid for the given table.
      *  | !canHaveAsName(tableId, newName)
+     *
+     * @throws  IllegalArgumentException if there is a reference in a query to the given table
+     *  | queryRefersToTable(tableId)
      */
     @Model
-    void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
+    public void setTableName(int tableId, String newName) throws IllegalTableException, IllegalArgumentException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         if(!canHaveAsName(tableId, newName)){throw new IllegalArgumentException("The new name is not valid.");}
+        if (queryRefersToTable(tableId)) throw new IllegalArgumentException("There is a reference in a query to the given table, the name cannot be edited");
         getTable(tableId).setName(newName);
+    }
 
+    /**
+     * checks whether the query of a table in the tables refers to the given table
+     * @param tableId table id of the table which should be checked on
+     */
+    public boolean queryRefersToTable(int tableId) {
+        Table table = getTable(tableId);
+        for (Table t : tables) {
+            if (t.queryRefersTo(table)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -290,7 +336,7 @@ public class TableManager {
      *
      */
     @Model
-    void addTable() throws IllegalStateException
+    public int addTable() throws IllegalStateException
     {
         if (getNbTables() == MAX_TABLES) throw new IllegalStateException("Already maximum amount of tables present.");
 
@@ -321,6 +367,7 @@ public class TableManager {
 
         Table t = new StoredTable(i,name);
         insertAtFrontTable(t);
+        return i;
     }
 
     /**
@@ -333,6 +380,8 @@ public class TableManager {
      * |    new.getTableIds.contains(tableId) == false &&
      * |    old.getNbTables() + 1 == new.getNbTables()
      * |}
+     *
+     * @effect all the tables that refer to the given table are removed
      *
      * @throws IllegalTableException if there is no table with the given id.
      * | !getTableIds().contains(tableId)
@@ -362,7 +411,7 @@ public class TableManager {
      * | hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
+    public ArrayList<String> getColumnNames(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -373,6 +422,11 @@ public class TableManager {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
         return table.getColumnName(columnId);
+    }
+
+    public int getColumnId(int tableId, String columnName) {
+        if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        return getTable(tableId).getColumnId(columnName);
     }
 
     /**
@@ -387,7 +441,7 @@ public class TableManager {
      * | hasAsTable(tableId) == false
      */
     @Model
-    ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
+    public ArrayList<Integer> getColumnIds(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -411,7 +465,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
+    public String getColumnType(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -595,10 +649,13 @@ public class TableManager {
      *
      */
     @Model
-    void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
+        for (Table t:tables) {
+            // todo check if for all tables the query doesn't refer to the column
+        }
         table.setColumnName(columnId, newColumnName);
 
     }
@@ -625,7 +682,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -651,7 +708,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -678,7 +735,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
+    public void setColumnDefaultValue(int tableId, int columnId, String defaultValue) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -698,7 +755,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void addColumn(int tableId) throws IllegalTableException
+    public void addColumn(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -728,6 +785,7 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
+        // TODO remove all tables that refer to the column that should be deleted
         table.removeColumn(columnId);
     }
 
@@ -758,7 +816,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
+    public String getCellValue(int tableId, int columnId, int row) throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -828,7 +886,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void setCellValue(int tableId, int columnId, int row, String value)
+    public void setCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
@@ -850,7 +908,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void addRow(int tableId) throws IllegalTableException
+    public void addRow(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -1138,6 +1196,8 @@ public class TableManager {
      * |    table.isTerminated == true && hasAsTable(table) == false
      * |}
      *
+     * @post removes all the tables that refer to the given table
+     *
      * @throws IllegalArgumentException if the index is not strictly positive or larger then
      *  the amount of tables.
      *  | 1 > i || i > getNbTables()
@@ -1150,6 +1210,13 @@ public class TableManager {
             throw new IllegalArgumentException("Illegal index.");
         }
         Table t = getTableAt(index);
+        // kijk of er een andere table referred naar de table die verwijdert moet wordne
+        //  verwijder eerst die, daarna pas de gegeven table.
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i).queryRefersTo(t)){
+                removeTableAt(i);
+            }
+        }
         t.terminate();
         tables.remove(index-1);
 
@@ -1164,6 +1231,8 @@ public class TableManager {
      *
      * @effect removes the table or throws an IllegalArgumentException if the table is not in tables.
      *  | removeTableAt(getTableIndex(table))
+     *
+     * @effect all the tables that refer to the given table are removed
      *
      * @throws IllegalArgumentException table is not in tables.
      *  | !hasAsTable()

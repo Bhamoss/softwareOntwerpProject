@@ -117,7 +117,7 @@ public class TableRowsWindowBuilder {
 
 
         window.addWidget(
-                new KeyEventWidget(new RemoveRowCommand(tableID, ()->table.getSelectedId(), uiHandler, compositor),
+                new KeyEventWidget(new RemoveRowCommand(tableID, ()->table.getSelectedId(), uiHandler, compositor, bus),
                         KeyEvent.VK_DELETE, false
                 ));
         window.addWidget(
@@ -127,7 +127,7 @@ public class TableRowsWindowBuilder {
 
         // Create button at the bottom to add new tables on the bottom left
         HashMap<Integer, PushCommand> onClick = new HashMap<>();
-        onClick.put(2, new AddRowCommand(tableID, uiHandler, compositor));
+        onClick.put(2, new AddRowCommand(tableID, uiHandler, compositor, bus));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight()+5,105,30,
                 true,"Create Row", onClick

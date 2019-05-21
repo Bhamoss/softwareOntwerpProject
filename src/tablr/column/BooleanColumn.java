@@ -27,7 +27,6 @@ public class BooleanColumn extends Column {
      */
     @Override
     public boolean canHaveAsType(String type) {
-        // TODO: this is wrong
         /*
         Als je van boolean naar integer gaat (de enige mogelijk transitie vanuit boolean in de gui)
         is die enkel valid als de default+values blanks zijn && blanks toegelaten zijn

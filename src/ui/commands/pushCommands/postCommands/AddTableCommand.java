@@ -3,6 +3,7 @@ package ui.commands.pushCommands.postCommands;
 import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.WindowCompositor;
+import ui.commandBus.CommandBus;
 import ui.commands.pushCommands.PushCommand;
 
 /**
@@ -29,37 +30,34 @@ public class AddTableCommand extends PostCommand {
      * @post     The UIHandler is set to the given UIHandler.
      *          |getUIHandler() == uiHandler
      */
-    public AddTableCommand(UIHandler uiHandler, WindowCompositor compositor){
-        this.uiHandler = uiHandler;
+    public AddTableCommand(UIHandler uiHandler, CommandBus commandBus, WindowCompositor compositor){
+        super(commandBus, uiHandler);
         this.compositor = compositor;
     }
 
-    /**
-     * The UIHandler used for adding the column in the backend.
-     */
-    private UIHandler uiHandler;
+
 
     /**
      * The WindowCompositor to be called to rebuild the widgets.
      */
     private final WindowCompositor compositor;
 
-    /**
-     *  Returns the UIHandler.
-     * @return The UIHandler.
-     */
-    @Basic
-    public UIHandler getUIHandler() {
-        return uiHandler;
-    }
+
+
+
 
     /**
      *  Returns the window compositor.
      * @return The window compositor.
      */
     @Basic
-    public WindowCompositor getWindowCompositor() {
+    private WindowCompositor getWindowCompositor() {
         return compositor;
+    }
+
+    @Override
+    protected AddTableCommand cloneWithValues() {
+        return new AddTableCommand(getUiHandler(), getBus(), getWindowCompositor());
     }
 
     /**
@@ -79,17 +77,55 @@ public class AddTableCommand extends PostCommand {
      *
      */
     @Override
-    public void execute() {
-        getUIHandler().addTable();
+    protected void doWork() {
+        getUiHandler().addTable();
         getWindowCompositor().rebuildAllWidgets();
     }
 
     /**
-     * Returns if there should be repainted after this command.
-     * @return True
+     * Adds a row to the table and asks the window compositor to rebuild all widgets.
+     *
+     * @effect  Gets the compositor.
+     *          |getWindowCompositor()
+     *
+     * @effect  Gets the UIHandler.
+     *          |getUIHandler()
+     *
+     * @effect  Adds a table using the UIHandler.
+     *          |getUIHandler().addTable()
+     *
+     * @effect  Rebuilds the widgets using the WindowCompositor
+     *          |getWindowCompositor().rebuildAllWidgets()
+     *
      */
     @Override
-    public Boolean getReturn() {
-        return true;
+    protected void redoWork() {
+        getUiHandler().addTable();
+        getWindowCompositor().rebuildAllWidgets();
     }
+
+    /**
+     * Adds a row to the table and asks the window compositor to rebuild all widgets.
+     *
+     * @effect  Gets the compositor.
+     *          |getWindowCompositor()
+     *
+     * @effect  Gets the UIHandler.
+     *          |getUIHandler()
+     *
+     * @effect  Adds a table using the UIHandler.
+     *          |getUIHandler().addTable()
+     *
+     * @effect  Rebuilds the widgets using the WindowCompositor
+     *          |getWindowCompositor().rebuildAllWidgets()
+     *
+     */
+    @Override
+    protected void undoWork() {
+        //TODO: is het de eerste of de laatste als je een nieuwe table toevoegd
+        // voor het moment is het de laatste.
+        getUiHandler().removeTable(getUiHandler().getTableIds().get(getUiHandler().getTableIds().size() - 1));
+        getWindowCompositor().rebuildAllWidgets();
+    }
+
 }
