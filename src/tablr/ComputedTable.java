@@ -6,6 +6,9 @@ import tablr.column.Column;
 import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ComputedTable extends Table {
 
@@ -46,6 +49,16 @@ public class ComputedTable extends Table {
     @Override
     public Boolean queryRefersTo(Table t) {
         return sqlManager.queryRefersTo(getQuery(), t.getName());
+    }
+
+    @Override
+    public Collection<String> getTableRefs() {
+        return sqlManager.getTableRefs(getQuery());
+    }
+
+    @Override
+    public List<String> getColumnRefs(String tableName) {
+        return sqlManager.getColumnRefs(getQuery(), tableName);
     }
 
     /**

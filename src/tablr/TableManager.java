@@ -7,6 +7,7 @@ import be.kuleuven.cs.som.taglet.*;
 import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,25 +106,46 @@ public class TableManager {
     }
 
     /**
-     * checks whether the second given table is relevant to the first given table.
+     * checks whether the first given table is relevant to the second given table.
      *
      * @param table1Id
      * @param table2Id
      */
     public boolean isRelevantTo(int table1Id, int table2Id){
+        if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
+            throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
+        Table table2 = getTable(table2Id);
+        for (String tableName : table2.getTableRefs()){
+            if (tableName.equals(getTableName(table1Id)) ||
+                    isRelevantTo(table1Id, getTableId(tableName))) {
+                return true;
+            }
+        }
         return false;
     }
 
     /**
-     * checks whether the second given column is relevant to the first given column.
+     * checks whether the first given column is relevant to the second given column.
      *
      * @param table1Id
      * @param table2Id
      * @param column1Id
-     * @param column2Id
      * @return
      */
-    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id, int column2Id){
+    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id){
+        if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
+            throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
+        if (!getTable(table1Id).hasAsColumn(column1Id))
+            throw new IllegalArgumentException("the given column doesnt exist in the given table");
+        Table table2 = getTable(table2Id);
+        for (String tableName : table2.getTableRefs()) {
+            for (String columnName : table2.getColumnRefs(tableName)){
+                if (columnName.equals(getColumnName(table1Id, column1Id)))
+                    return true;
+            }
+            if (isRelevantTo(table1Id, getTableId(tableName), column1Id))
+                return true;
+        }
         return false;
     }
 
