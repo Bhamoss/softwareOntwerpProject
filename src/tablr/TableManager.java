@@ -104,9 +104,32 @@ public class TableManager {
             table.setQuery(q);
     }
 
+    /**
+     * checks whether the second given table is relevant to the first given table.
+     *
+     * @param table1Id
+     * @param table2Id
+     */
+    public boolean isRelevantTo(int table1Id, int table2Id){
+        return false;
+    }
+
+    /**
+     * checks whether the second given column is relevant to the first given column.
+     *
+     * @param table1Id
+     * @param table2Id
+     * @param column1Id
+     * @param column2Id
+     * @return
+     */
+    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id, int column2Id){
+        return false;
+    }
 
 
-/*
+
+    /*
 ************************************************************************************************************************
 *                                                   TableHandler interface functions
 ************************************************************************************************************************
