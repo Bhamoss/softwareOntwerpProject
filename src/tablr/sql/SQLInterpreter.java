@@ -3,6 +3,7 @@ package tablr.sql;
 import tablr.StoredTable;
 import tablr.TableManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -69,30 +70,25 @@ class SQLInterpreter {
     }
 
 
-    boolean refersTo(SQLQuery query, String tableName) {
-        TRMap = query.tableSpecs.getTRMap();
-        return TRMap.values().contains(tableName);
+    Collection<String> getTables(SQLQuery query) {
+        return query.tableSpecs.getTRMap().values();
     }
 
-    boolean refersTo(SQLQuery query, String tableName, String columnName) {
-        TRMap = query.tableSpecs.getTRMap();
-        String TRef = null;
-        for (String k : TRMap.keySet())
-            if (TRMap.get(k).equals(tableName))
-                TRef = k;
-        if (TRef == null)
-            return false;
-        return containsCellId(query, new CellId(TRef, columnName));
-    }
 
-    private boolean containsCellId(SQLQuery query, CellId cellId) {
-        for (ColumnSpec cspec : query.columnSpecs) {
-            if (cspec.expr.refersTo(cellId))
-                return true;
-        }
-        if (query.tableSpecs.refersTo(cellId))
-                return true;
-        return false;
+    /**
+     * Returns whether a query contains a cellId.
+     * @param query
+     * @return
+     */
+    List<CellId> getCellIds(SQLQuery query) {
+        TRMap = query.tableSpecs.getTRMap();
+        List<CellId> res = query.tableSpecs.getCellIds();
+        for (ColumnSpec cspec : query.columnSpecs)
+            res.addAll(cspec.expr.getCellIds());
+        return res
+                .stream()
+                .map(cellId -> new CellId(TRMap.get(cellId.tRef), cellId.columnName))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -139,7 +135,6 @@ class SQLInterpreter {
             yld.accept(getRecord(tableId,i,scan.tRef));
     }
 
-    // TODO: use less maps in java?
 
     /**
      * Get a record (=row) from a table
@@ -162,6 +157,11 @@ class SQLInterpreter {
         );
     }
 
+    /**
+     * Get the type of the column referred to by the cellId.
+     * @param cellId
+     * @return the found type
+     */
     private CType getCellType(CellId cellId) {
         int tableId = tableManager.getTableId(TRMap.get(cellId.tRef));
         int columnId = tableManager.getColumnId(tableId, cellId.columnName);
@@ -179,7 +179,7 @@ class SQLInterpreter {
         }
     }
 
-    static CType toType(String type) {
+    private static CType toType(String type) {
         switch (type) {
             case "Boolean": return new BoolType();
             case "Integer": return new IntType();

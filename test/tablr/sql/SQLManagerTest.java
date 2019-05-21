@@ -4,8 +4,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import scala.collection.immutable.List;
 import tablr.Table;
 import tablr.TableManager;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -166,12 +169,20 @@ class SQLManagerTest {
     void refersToTable() {
         assertTrue(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1"));
         assertFalse(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "test"));
+
+        Collection<String> res = interpreter.getTableRefs("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE");
+        assertEquals(1, res.size());
+        assertTrue(res.contains("testTable1"));
     }
 
     @Test
     void refersToColumn() {
         assertTrue(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1", "bools1"));
         assertFalse(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1", "bools"));
+
+        Collection<String> res = interpreter.getColumnRefs("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1");
+        assertEquals(1, res.size());
+        assertTrue(res.contains("bools1"));
     }
 
 

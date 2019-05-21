@@ -3,6 +3,10 @@ package tablr.sql;
 import tablr.StoredTable;
 import tablr.TableManager;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Facade for all SQL functionality
  */
@@ -98,7 +102,20 @@ public class SQLManager {
      * @pre Query needs to be parsable
      */
     public boolean queryRefersTo(String query, String tableName) {
-        return interpreter.refersTo(SQLParser.parseQuery(query), tableName);
+        return this.getTableRefs(query).contains(tableName);
+    }
+
+
+    /**
+     * Returns all tables that are refered to by a given query.
+     *
+     * @param query query to be checked
+     * @return collection of all tables
+     *
+     * @pre Query needs to be parsable
+     */
+    public Collection<String> getTableRefs(String query) {
+        return interpreter.getTables(SQLParser.parseQuery(query));
     }
 
     /**
@@ -106,12 +123,30 @@ public class SQLManager {
      *
      * @param query
      * @param tableName
+     * @param columnName
      * @return true if it refers else false
      *
      * @pre query needs to be parsable
      */
-
     public boolean queryRefersTo(String query, String tableName, String columnName) {
-        return interpreter.refersTo(SQLParser.parseQuery(query), tableName, columnName);
+        return getColumnRefs(query, tableName).contains(columnName);
+    }
+
+
+    /**
+     * Returns all the column references used from a certain table in a query.
+     * @param query
+     * @param tableName
+     * @return
+     *
+     * @pre query needs to be parsable
+     */
+    public List<String> getColumnRefs(String query, String tableName) {
+        return interpreter.getCellIds(SQLParser.parseQuery(query))
+                .stream()
+                .filter(cellId -> cellId.tRef.equals(tableName))
+                .map(cellId -> cellId.columnName)
+                .collect(Collectors.toList());
+
     }
 }
