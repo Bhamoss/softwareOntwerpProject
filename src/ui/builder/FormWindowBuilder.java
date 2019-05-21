@@ -3,7 +3,15 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
-import ui.commands.*;
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.NextRowCommand;
+import ui.commands.PreviousRowCommand;
+import ui.commands.undoableCommands.AddRowCommand;
+import ui.commands.undoableCommands.RemoveRowCommand;
+import ui.commands.undoableCommands.SetCellValueCommand;
+import ui.updaters.CellValueUpdater;
+import ui.updaters.ColumnNameUpdater;
+import ui.updaters.FormHeaderUpdater;
 import ui.widget.*;
 
 import java.awt.*;
@@ -68,7 +76,7 @@ public class FormWindowBuilder {
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(getCompositor());
         // Subwindow to build
         LabelWidget titleLable = new LabelWidget(0,0,0,0,true);
-        titleLable.setGetHandler(new UpdateFormHeaderCommand(tableID, rowID,titleLable,uiHandler),bus);
+        titleLable.setGetHandler(new FormHeaderUpdater(tableID, rowID,titleLable,uiHandler),bus);
         ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLable, onClose);
         window.setTransparency(false);
         window.setBackgroundColor(Color.lightGray);
@@ -77,7 +85,7 @@ public class FormWindowBuilder {
             for(int columnID : getUIHandler().getColumnIds(tableID)) {
 
                 LabelWidget columnNameLabel = new LabelWidget(10, Y, 60, 20, true);
-                columnNameLabel.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, columnNameLabel, uiHandler), bus);
+                columnNameLabel.setGetHandler(new ColumnNameUpdater(tableID, columnID, columnNameLabel, uiHandler), bus);
                 columnNameLabel.setTransparency(false);
                 columnNameLabel.setBackgroundColor(Color.WHITE);
                 window.addWidget(columnNameLabel);
@@ -95,7 +103,7 @@ public class FormWindowBuilder {
                         editor.setValidHandler((String s) ->
                                 getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
                         editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus));
-                        editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID, rowID, editor, uiHandler), bus);
+                        editor.setGetHandler(new CellValueUpdater(tableID, columnID, rowID, editor, uiHandler), bus);
                         editor.setTransparency(false);
                         editor.setBackgroundColor(Color.WHITE);
                         window.addWidget(editor);
@@ -104,7 +112,7 @@ public class FormWindowBuilder {
                         editor.setValidHandler((String s) ->
                                 getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
                         editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus));
-                        editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID, rowID, editor, uiHandler), bus);
+                        editor.setGetHandler(new CellValueUpdater(tableID, columnID, rowID, editor, uiHandler), bus);
                         editor.setTransparency(false);
                         editor.setBackgroundColor(Color.WHITE);
                         window.addWidget(editor);
@@ -130,11 +138,11 @@ public class FormWindowBuilder {
                         KeyEvent.VK_PAGE_DOWN, false
                 ));
         window.addWidget(
-                new KeyEventWidget(new AddRowCommand(tableID, getUIHandler(),compositor),
+                new KeyEventWidget(new AddRowCommand(tableID, getUIHandler(),compositor, getBus()),
                         KeyEvent.VK_N, true
                 ));
         window.addWidget(
-                new KeyEventWidget(new RemoveRowCommand(tableID,()->rowID,getUIHandler(),getCompositor()),
+                new KeyEventWidget(new RemoveRowCommand(tableID,()->rowID,getUIHandler(),getCompositor(), getBus()),
                         KeyEvent.VK_D, true
                 ));
 

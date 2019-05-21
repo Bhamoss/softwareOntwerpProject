@@ -5,9 +5,8 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 import ui.WindowCompositor;
-import ui.commands.pushCommands.PushCommand;
-import ui.commands.UpdateCommand;
-import ui.commands.pushCommands.postCommands.PostCommand;
+import ui.updaters.Updater;
+import ui.commands.UICommand;
 import ui.widget.Widget;
 
 import java.lang.reflect.InvocationTargetException;
@@ -83,7 +82,7 @@ class Subscription {
      *          If the command is not valid.
      *              | !canBeParameter(command)
      */
-    void trigger(PostCommand command) throws IllegalArgumentException
+    void trigger(UICommand command) throws IllegalArgumentException
     {
         if (!canBeParameter(command))
             throw new IllegalArgumentException("The given command is invalid.");
@@ -115,7 +114,7 @@ class Subscription {
      *          | result == command != null && getOnEvent().getParameterTypes()[0].isAssignableFrom(command.getClass())
      */
     @Model
-    private boolean canBeParameter(PostCommand command)
+    private boolean canBeParameter(UICommand command)
     {
         // command can not be null
         if(command == null) return false;
@@ -172,7 +171,7 @@ class Subscription {
      *              - event has @Subscribe as its annotation
      *              - event is a public method
      *              - event has exactly 1 parameter
-     *              - the parameter of event is of (a subclass of) class PushCommand
+     *              - the parameter of event is of (a subclass of) class UICommand
      *              - the event is a method of (a superclass, which is not overwritten,) of the subscriber.
      *              Simply put, it can be called on the subscriber.
      */
@@ -200,7 +199,7 @@ class Subscription {
         }
 
         // if the parameter of the method is not (a subclass of) UICommand, return false.
-        if(!PushCommand.class.isAssignableFrom(event.getParameterTypes()[0])) {
+        if(!UICommand.class.isAssignableFrom(event.getParameterTypes()[0])) {
             return false;
         }
 
@@ -282,7 +281,7 @@ class Subscription {
         // sub must be (a subclass of) WindowCompositor or UpdateCommand
         if(!(WindowCompositor.class.isAssignableFrom(sub.getClass()) ||
                 Widget.class.isAssignableFrom(sub.getClass()) ||
-                UpdateCommand.class.isAssignableFrom(sub.getClass()))
+                Updater.class.isAssignableFrom(sub.getClass()))
         ) return false;
 
         return true;

@@ -1,8 +1,8 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.pushCommands.ResizeCommand;
-import ui.commands.UpdateSizeCommand;
+import ui.updaters.SizeUpdater;
+import ui.commands.ResizeCommand;
 
 public class TableWidget extends CompositeWidget {
 
@@ -32,7 +32,7 @@ public class TableWidget extends CompositeWidget {
      * @param resizable
      * @param name
      */
-    public void addColumn(int width, boolean resizable, String name, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
+    public void addColumn(int width, boolean resizable, String name, SizeUpdater updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
         ColumnWidget columnWidget = new ColumnWidget(
                 getX()+getWidth(), getY(), width,
                 name, resizable, x-> resizedColumn());
@@ -42,7 +42,7 @@ public class TableWidget extends CompositeWidget {
         addWidget(columnWidget);
     }
 
-    public void addColumn(int width, LabelWidget topLabel, boolean resizable, UpdateSizeCommand updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
+    public void addColumn(int width, LabelWidget topLabel, boolean resizable, SizeUpdater updateCommand, ResizeCommand onResizeCommand, CommandBus bus) {
         ColumnWidget columnWidget = new ColumnWidget(
                 getX()+getWidth(), getY(), width,
                 topLabel, resizable, x-> resizedColumn());

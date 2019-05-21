@@ -3,11 +3,15 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
-import ui.commands.*;
-import ui.commands.pushCommands.*;
-import ui.commands.pushCommands.postCommands.AddTableCommand;
-import ui.commands.pushCommands.postCommands.RemoveTableCommand;
-import ui.commands.pushCommands.postCommands.SetTableNameCommand;
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.OpenTableCommand;
+import ui.commands.UICommand;
+import ui.commands.ResizeTableCommand;
+import ui.commands.undoableCommands.AddTableCommand;
+import ui.commands.undoableCommands.RemoveTableCommand;
+import ui.commands.undoableCommands.SetTableNameCommand;
+import ui.updaters.TableNameUpdater;
+import ui.updaters.TableSizeUpdater;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
@@ -63,7 +67,7 @@ public class TablesWindowBuilder {
 
         // encapsulate in scrolling decorator
 
-        UpdateTableSizeCommand updateTableSizeCommand = new UpdateTableSizeCommand(uiHandler);
+        TableSizeUpdater updateTableSizeCommand = new TableSizeUpdater(uiHandler);
         ResizeTableCommand resizeTableCommand = new ResizeTableCommand(uiHandler, bus);
         ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, x->{});
         tablesColumn.setResizeCommand(resizeTableCommand);
@@ -81,7 +85,7 @@ public class TablesWindowBuilder {
             EditorWidget editor = new EditorWidget(true);
 
             editor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
-            editor.setGetHandler(new UpdateTableNameCommand(tableID, editor, uiHandler), bus);
+            editor.setGetHandler(new TableNameUpdater(tableID, editor, uiHandler), bus);
             editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler, bus));
             editor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
 
@@ -90,7 +94,7 @@ public class TablesWindowBuilder {
         }
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, PushCommand> onClick = new HashMap<>();
+        HashMap<Integer, UICommand> onClick = new HashMap<>();
         onClick.put(2, new AddTableCommand(uiHandler, bus, compositor));
         window.addWidget(new ButtonWidget(
                 20,selectorColumn.getY()+selectorColumn.getHeight()+5,105,30,
@@ -101,7 +105,7 @@ public class TablesWindowBuilder {
         window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor, bus), KeyEvent.VK_DELETE, false));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
-        scrollWindow.mode = "tables";
+        scrollWindow.setMode("tables");
         return scrollWindow;
     }
 }

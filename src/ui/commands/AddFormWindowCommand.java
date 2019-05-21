@@ -7,13 +7,13 @@ import ui.WindowCompositor;
 import java.util.function.Supplier;
 
 /**
- * A subclass of PushCommand representing the command for removing a table.
+ * A subclass of UICommand representing the command for removing a table.
  *
  * @resp    The command for removing a table.
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class AddFormWindowCommand extends PushCommand {
+public class AddFormWindowCommand extends UICommand {
 
     /**
      * Creates an RemoveTableCommand with a given tableIDSupplier, UIHandler and WindowCompositor.

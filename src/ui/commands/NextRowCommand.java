@@ -2,9 +2,8 @@ package ui.commands;
 
 import ui.WindowCompositor;
 import ui.widget.ComponentWidget;
-import ui.widget.SubWindowWidget;
 
-public class NextRowCommand extends PushCommand{
+public class NextRowCommand extends UICommand {
 
     public NextRowCommand(Integer tableID, Integer rowID, WindowCompositor compositor, ComponentWidget componentWidget){
         this.tableID =tableID;

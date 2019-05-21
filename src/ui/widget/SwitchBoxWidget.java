@@ -1,6 +1,6 @@
 package ui.widget;
 
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -11,7 +11,7 @@ public class SwitchBoxWidget extends LabelWidget {
     List<String> options;
 
     private Function<String, Boolean> isValidOption;
-    private PushCommand pushCommand;
+    private UICommand UICommand;
     int optionIndex;
 
     /**
@@ -39,8 +39,8 @@ public class SwitchBoxWidget extends LabelWidget {
     }
 
 
-    public void setPushHandler(PushCommand pushCommand) {
-        this.pushCommand = pushCommand;
+    public void setPushHandler(UICommand UICommand) {
+        this.UICommand = UICommand;
     }
 
     public void setValidHandler(Function<String,Boolean> isValidText) {
@@ -78,7 +78,7 @@ public class SwitchBoxWidget extends LabelWidget {
         if (id == MouseEvent.MOUSE_PRESSED && clickCount == 1 && containsPoint(x,y)) {
             cycleOption();
             if (!blocked)
-                pushCommand.execute();
+                UICommand.execute();
             return true;
         }
         return false;

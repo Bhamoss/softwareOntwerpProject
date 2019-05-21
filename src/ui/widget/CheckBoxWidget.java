@@ -1,8 +1,8 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.pushCommands.PushCommand;
-import ui.commands.UpdateCommand;
+import ui.commands.UICommand;
+import ui.updaters.Updater;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -61,30 +61,30 @@ public class CheckBoxWidget extends Widget {
     /**
      * Push command, executed on toggle
      */
-    private PushCommand pushCommand;
+    private UICommand UICommand;
 
-    public void setPushHandler(PushCommand pushCommand) {
-        this.pushCommand = pushCommand;
+    public void setPushHandler(UICommand UICommand) {
+        this.UICommand = UICommand;
     }
 
-    public PushCommand getPushHandler(){
-        return pushCommand;
+    public UICommand getPushHandler(){
+        return UICommand;
     }
 
 
     /**
      * Get command
      */
-    private UpdateCommand getCommand;
+    private Updater getCommand;
 
-    public void setGetHandler(UpdateCommand command, CommandBus bus) {
+    public void setGetHandler(Updater command, CommandBus bus) {
         if (getCommand != null)
             unsubscribe(bus);
         this.getCommand = command;
         bus.subscribe(command);
     }
 
-    public UpdateCommand getUpdateHandler() {
+    public Updater getUpdateHandler() {
         return getCommand;
     }
 
@@ -111,8 +111,8 @@ public class CheckBoxWidget extends Widget {
      */
     public void trySetChecked(boolean checked) {
         this.blocked = !isValidToggle.apply(checked);
-        if (!blocked && pushCommand!=null) {
-            pushCommand.execute();
+        if (!blocked && UICommand !=null) {
+            UICommand.execute();
         }
         this.checked = checked;
     }

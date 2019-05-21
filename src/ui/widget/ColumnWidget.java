@@ -1,8 +1,8 @@
 package ui.widget;
 
 import ui.commandBus.CommandBus;
-import ui.commands.pushCommands.ResizeCommand;
-import ui.commands.UpdateSizeCommand;
+import ui.commands.ResizeCommand;
+import ui.updaters.SizeUpdater;
 
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -12,7 +12,7 @@ public class ColumnWidget extends CompositeWidget {
     private boolean resizing, resizable;
     private final Consumer<Integer> onResize;
 
-    private UpdateSizeCommand updateCommand;
+    private SizeUpdater updateCommand;
 
     private ResizeCommand resizeCommand;
 
@@ -57,7 +57,7 @@ public class ColumnWidget extends CompositeWidget {
         this.resizeCommand = resizeCommand;
     }
 
-    public void setGetHandler(UpdateSizeCommand command, CommandBus bus) {
+    public void setGetHandler(SizeUpdater command, CommandBus bus) {
         if (updateCommand != null)
             bus.unsubscribe(updateCommand);
         this.updateCommand = command;

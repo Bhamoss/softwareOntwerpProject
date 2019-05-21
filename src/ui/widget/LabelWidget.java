@@ -2,11 +2,10 @@ package ui.widget;
 
 
 import ui.commandBus.CommandBus;
-import ui.commands.UpdateCommand;
+import ui.updaters.Updater;
 
 import java.awt.*;
 import java.lang.String;
-import java.util.function.Function;
 
 public class LabelWidget extends Widget{
 
@@ -18,7 +17,7 @@ public class LabelWidget extends Widget{
      */
     private static final int OFFSET = 5;
 
-    protected UpdateCommand getCommand;
+    protected Updater getCommand;
 
 
     /**
@@ -49,7 +48,7 @@ public class LabelWidget extends Widget{
     }
 
 
-    public void setGetHandler(UpdateCommand command, CommandBus bus) {
+    public void setGetHandler(Updater command, CommandBus bus) {
         if (getCommand != null)
             unsubscribe(bus);
         this.getCommand = command;

@@ -1,6 +1,6 @@
 package ui.widget;
 
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -10,8 +10,8 @@ import java.util.function.Function;
 public class EditorWidget extends LabelWidget {
 
     private Function<String, Boolean> isValidText;
-    private PushCommand pushCommand;
-    private PushCommand clickHandler;
+    private UICommand UICommand;
+    private UICommand clickHandler;
     private boolean selected;
     private String oldText;
 
@@ -35,8 +35,8 @@ public class EditorWidget extends LabelWidget {
         this(0,0,0,25,border);
     }
 
-    public void setPushHandler(PushCommand pushCommand) {
-        this.pushCommand = pushCommand;
+    public void setPushHandler(UICommand UICommand) {
+        this.UICommand = UICommand;
     }
 
     public void setValidHandler(Function<String,Boolean> isValidText) {
@@ -44,7 +44,7 @@ public class EditorWidget extends LabelWidget {
     }
 
 
-    public void setClickHandler(PushCommand clickHandler) {
+    public void setClickHandler(UICommand clickHandler) {
         this.clickHandler = clickHandler;
     }
 
@@ -67,8 +67,8 @@ public class EditorWidget extends LabelWidget {
     public boolean attemptDeselect() {
         if (!isBlocking()) {
             selected = false;
-            pushCommand.execute();
-            //pushCommand.accept(id, getText());
+            UICommand.execute();
+            //UICommand.accept(id, getText());
             oldText = text;
             return true;
         }

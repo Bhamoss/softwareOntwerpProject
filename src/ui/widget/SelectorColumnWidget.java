@@ -1,6 +1,6 @@
 package ui.widget;
 
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.util.LinkedList;
 
@@ -18,7 +18,7 @@ public class SelectorColumnWidget extends ColumnWidget {
 
     public void addRow(int id) {
         CheckBoxWidget w = new CheckBoxWidget();
-        w.setPushHandler(new PushCommand() {
+        w.setPushHandler(new UICommand() {
             @Override
             public void execute() {
                 unCheckAll();

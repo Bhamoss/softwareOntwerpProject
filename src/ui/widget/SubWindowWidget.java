@@ -2,7 +2,7 @@ package ui.widget;
 
 
 import ui.commandBus.CommandBus;
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class SubWindowWidget extends ComponentWidget {
      * @param onClose command executed when window closes
      */
 
-    public SubWindowWidget(int x, int y, int width, int height, boolean border, LabelWidget label, PushCommand onClose) {
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, LabelWidget label, UICommand onClose) {
         super(x,y,width,height,border);
         label.setX(x);
         label.setY(y);
@@ -54,7 +54,7 @@ public class SubWindowWidget extends ComponentWidget {
 
 
         // close getCommand definieren
-        HashMap<Integer, PushCommand> tmp = new HashMap<>();
+        HashMap<Integer, UICommand> tmp = new HashMap<>();
         tmp.put(1, onClose);
         this.closeBtn = new ButtonWidget(x + titleLabel.getWidth(), y, width/4, TITLE_HEIGHT, true, "Close",
                 tmp);
@@ -63,7 +63,7 @@ public class SubWindowWidget extends ComponentWidget {
         virtualX = x;
     }
 
-    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, PushCommand onClose) {
+    public SubWindowWidget(int x, int y, int width, int height, boolean border, String title, UICommand onClose) {
         this(x,y,width,height,border,new LabelWidget(0,0, 0,0, true, title),onClose);
     }
 

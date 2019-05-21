@@ -2,13 +2,14 @@ package ui.commandBus;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
+import ui.commands.undoableCommands.UndoableCommand;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * A class modeled after the eventBus pattern usable only for UpdateCommands and PushCommand or windowCompositor, pretty well optimized if I do say so myself.
+ * A class modeled after the eventBus pattern usable only for UpdateCommands and UICommand or windowCompositor, pretty well optimized if I do say so myself.
  * The implementation follows after the standard Android application eventBus model.
  *
  * @author Thomas Bamelis
@@ -43,7 +44,7 @@ public class CommandBus {
 
     /**
      * Subscribes the subscriber so that its own and Inherited methods annotated with @Subscribe are triggered when
-     * someone posts a PushCommand subclass corresponding to the parameter of the method on this bus.
+     * someone posts a UICommand subclass corresponding to the parameter of the method on this bus.
      * The methods notated with @Subscribe have to fullfill the following rules:
      *      - method must be public
      *      - must have exactly 1 parameter
@@ -218,9 +219,27 @@ public class CommandBus {
      * @post The command is added to the history.
      *          | this.undo() <=> command.unexecute()
      */
-    public void post(PushCommand command)
+    public void post(UICommand command)
     {
         postWithoutHistory(command);
+    }
+
+    /**
+     *
+     * Triggers the subscriptions for this command, with the command as parameter and adds the command to the history.
+     *
+     * @param command
+     *          The command of which you want to trigger its subscribers.
+     *
+     * @post The subscribers of the command are triggered, with the command as parameter.
+     *          | for each subscription in getSubscriptions().get(command): subscription.trigger(command)
+     * @post The command is added to the history.
+     *          | this.undo() <=> command.unexecute()
+     */
+    public void post(UndoableCommand command)
+    {
+        postWithoutHistory(command);
+
         if(!historyIndexOnLastElement()){
             overwriteHistory();
         }
@@ -238,7 +257,7 @@ public class CommandBus {
      * @post The subscribers of the command are triggered, with the command as parameter.
      *          | for each subscription in getSubscriptions().get(command): subscription.trigger(command)
      */
-    void postWithoutHistory(PushCommand command) {
+    void postWithoutHistory(UICommand command) {
 
         // Get the exact class of the command
         Class<?> commandClass = command.getClass();
@@ -306,9 +325,9 @@ public class CommandBus {
     /**
      * A list containing the commands previously executed in chronological order.
      */
-    private List<PushCommand> history;
+    private List<UndoableCommand> history;
 
-    private PushCommand getHistoryAt(int index){
+    private UndoableCommand getHistoryAt(int index){
         return history.get(index);
     }
 
@@ -328,7 +347,7 @@ public class CommandBus {
     public void undo() throws IllegalStateException
     {
         if(!canUndo()) throw new IllegalStateException();
-        getHistoryAt(getHistoryIndex()).unexecute();
+        getHistoryAt(getHistoryIndex()).undo();
         postWithoutHistory(getHistoryAt(getHistoryIndex()));
         setHistoryIndex(getHistoryIndex() - 1);
 
@@ -348,12 +367,12 @@ public class CommandBus {
         postWithoutHistory(getHistoryAt(getHistoryIndex()));
     }
 
-    private boolean canHaveAsHistoryAt(int index, PushCommand command){
+    private boolean canHaveAsHistoryAt(int index, UICommand command){
         if (index < 0 || index > history.size() || command == null) return false;
         return true;
     }
 
-    private void addHistoryAt(int index, PushCommand command) throws IllegalArgumentException
+    private void addHistoryAt(int index, UndoableCommand command) throws IllegalArgumentException
     {
         if (!canHaveAsHistoryAt(index, command)) throw new IllegalArgumentException();
         history.add(index, command);
@@ -365,7 +384,7 @@ public class CommandBus {
      *
      * @param command
      */
-    private void addHistory(PushCommand command)
+    private void addHistory(UndoableCommand command)
     {
         addHistoryAt(history.size(), command);
     }

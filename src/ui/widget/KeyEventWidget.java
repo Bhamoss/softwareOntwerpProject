@@ -1,13 +1,13 @@
 package ui.widget;
 
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.event.KeyEvent;
 
 
 public class KeyEventWidget extends Widget {
 
-    private final PushCommand keyHandler;
+    private final UICommand keyHandler;
     private final int key;
     private final boolean ctrlRequired;
 
@@ -16,7 +16,7 @@ public class KeyEventWidget extends Widget {
      *
      * @param keyHandler function to call on key press
      */
-    public KeyEventWidget(PushCommand keyHandler, int key, boolean ctrlRequired) {
+    public KeyEventWidget(UICommand keyHandler, int key, boolean ctrlRequired) {
         super(0,0,0,0,false);
         this.keyHandler = keyHandler;
         this.key = key;

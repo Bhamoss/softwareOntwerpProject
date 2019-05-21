@@ -3,9 +3,12 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
-import ui.commands.*;
-import ui.commands.pushCommands.*;
-import ui.commands.pushCommands.postCommands.*;
+import ui.commands.AddRowsSubWindowCommand;
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.UICommand;
+import ui.commands.ResizeColumnCommand;
+import ui.commands.undoableCommands.*;
+import ui.updaters.*;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
@@ -62,16 +65,16 @@ public class TableDesignWindowBuilder {
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
         LabelWidget titleLabel = new LabelWidget(0,0,0,0,true);
-        titleLabel.setGetHandler(new UpdateDesignheaderCommand(tableID,titleLabel,uiHandler),bus);
+        titleLabel.setGetHandler(new DesignHeaderUpdater(tableID,titleLabel,uiHandler),bus);
         ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLabel, onClose);
 
         TableWidget table = new TableWidget(10, 10);
         window.addWidget(table);
 
         table.addSelectorColumn("S");
-        UpdateColumnSizeCommand  nameUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,1, uiHandler);
-        UpdateColumnSizeCommand  typeUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,2, uiHandler);
-        UpdateColumnSizeCommand  defaultUpdateColumnSizeCommand =  new UpdateColumnSizeCommand(tableID,4, uiHandler);
+        ColumnSizeUpdater nameUpdateColumnSizeCommand =  new ColumnSizeUpdater(tableID,1, uiHandler);
+        ColumnSizeUpdater typeUpdateColumnSizeCommand =  new ColumnSizeUpdater(tableID,2, uiHandler);
+        ColumnSizeUpdater defaultUpdateColumnSizeCommand =  new ColumnSizeUpdater(tableID,4, uiHandler);
         table.addColumn(
                 uiHandler.getColumnWidth(tableID,1),
                 true,
@@ -107,21 +110,21 @@ public class TableDesignWindowBuilder {
             EditorWidget editor = new EditorWidget(true);
             editor.setValidHandler((String s) -> uiHandler.canHaveAsColumnName(tableID, columnID, s));
             editor.setPushHandler(new SetColumnNameCommand(editor::getText, tableID, columnID, uiHandler, bus));
-            editor.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, editor, uiHandler), bus);
+            editor.setGetHandler(new ColumnNameUpdater(tableID, columnID, editor, uiHandler), bus);
             table.addEntry(editor);
 
             // Add type switchbox
             SwitchBoxWidget type = new SwitchBoxWidget(true, UIHandler.getAllTypes());
             type.setValidHandler((String s) -> uiHandler.canHaveAsColumnType(tableID, columnID, s));
             type.setPushHandler(new SetColumnTypeCommand(tableID, columnID, type::getText, uiHandler, bus, compositor));
-            type.setGetHandler(new UpdateColumnTypeCommand(tableID, columnID, type, uiHandler), bus);
+            type.setGetHandler(new ColumnTypeUpdater(tableID, columnID, type, uiHandler), bus);
             table.addEntry(type);
 
 
             // Add blanks checkbox
             CheckBoxWidget blanks = new CheckBoxWidget((b) ->uiHandler.canHaveAsColumnAllowBlanks(tableID, columnID, b));
             blanks.setPushHandler(new SetColumnAllowBlanksCommand(tableID, columnID, blanks::isChecked, uiHandler, bus, compositor));
-            blanks.setGetHandler(new UpdateColumnAllowBlanksCommand(tableID, columnID, blanks, uiHandler), bus);
+            blanks.setGetHandler(new ColumnAllowBlanksUpdater(tableID, columnID, blanks, uiHandler), bus);
             table.addEntry(blanks);
 
             if (uiHandler.getColumnType(tableID, columnID).equals("Boolean")) {
@@ -129,20 +132,20 @@ public class TableDesignWindowBuilder {
                 SwitchBoxWidget defaultWidget = new SwitchBoxWidget(true, options);
                 defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
                 defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, defaultWidget::getText, uiHandler, bus));
-                defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
+                defaultWidget.setGetHandler(new ColumnDefaultValueUpdater(tableID, columnID, defaultWidget, uiHandler), bus);
                 table.addEntry(defaultWidget);
             } else {
                 EditorWidget defaultWidget = new EditorWidget(true);
                 defaultWidget.setValidHandler((String s) -> uiHandler.canHaveAsDefaultValue(tableID, columnID, s));
                 defaultWidget.setPushHandler(new SetColumnDefaultValueCommand(tableID, columnID, defaultWidget::getText, uiHandler, bus));
-                defaultWidget.setGetHandler(new UpdateColumnDefaultValueCommand(tableID, columnID, defaultWidget, uiHandler), bus);
+                defaultWidget.setGetHandler(new ColumnDefaultValueUpdater(tableID, columnID, defaultWidget, uiHandler), bus);
                 table.addEntry(defaultWidget);
             }
 
         }
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, PushCommand> onClick = new HashMap<>();
+        HashMap<Integer, UICommand> onClick = new HashMap<>();
         onClick.put(2, new AddColumnCommand(tableID, uiHandler, compositor, bus));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight(),105,30,

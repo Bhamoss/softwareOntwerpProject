@@ -1,6 +1,6 @@
 package ui.widget;
 
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ public class ButtonWidget extends LabelWidget {
 
     //hashMap met de UICommandWithReturns, key is de clickCount, value is getCommand
     //      die op die clickCount moet uitgevoerd worden
-    private final HashMap<Integer, PushCommand> onClick;
+    private final HashMap<Integer, UICommand> onClick;
 
     /**
      * Constructs a button widget, allowing clicking events.
@@ -22,7 +22,7 @@ public class ButtonWidget extends LabelWidget {
      * @param text string drawn on the button
      * @param onClick handler firing when button is clicked
      */
-    public ButtonWidget(int x, int y, int width, int height, boolean border, String text, HashMap<Integer, PushCommand> onClick) {
+    public ButtonWidget(int x, int y, int width, int height, boolean border, String text, HashMap<Integer, UICommand> onClick) {
         super(x, y, width, height, border, text);
         this.onClick = onClick;
     }
@@ -38,7 +38,7 @@ public class ButtonWidget extends LabelWidget {
      * @param onClick handler firing when button is clicked
      */
 
-    public ButtonWidget(boolean border, String text, HashMap<Integer, PushCommand> onClick) {
+    public ButtonWidget(boolean border, String text, HashMap<Integer, UICommand> onClick) {
         this(0,0,0,25,border,text,onClick);
     }
 

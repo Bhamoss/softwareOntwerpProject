@@ -5,7 +5,7 @@ import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
 import ui.commandBus.CommandBus;
-import ui.commands.pushCommands.AddTableWindowCommand;
+import ui.commands.AddTableWindowCommand;
 import ui.widget.ComponentWidget;
 import ui.widget.KeyEventWidget;
 import ui.widget.Widget;
@@ -88,6 +88,7 @@ public class WindowCompositor extends CanvasWindow {
 
     public void removeSubWindow(ComponentWidget subwindow) {
         subWindows.remove(subwindow);
+        System.out.println("removing: "+subwindow.getTableId() + ", " + subwindow.getRowId());
         if (!subWindows.isEmpty())
             subWindows.getLast().setActive(true);
 

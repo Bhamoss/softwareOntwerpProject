@@ -3,11 +3,17 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
-import ui.commands.*;
-import ui.commands.pushCommands.*;
-import ui.commands.pushCommands.postCommands.AddRowCommand;
-import ui.commands.pushCommands.postCommands.RemoveRowCommand;
-import ui.commands.pushCommands.postCommands.SetCellValueCommand;
+import ui.commands.AddDesignSubWindowCommand;
+import ui.commands.CloseSubWindowCommand;
+import ui.commands.UICommand;
+import ui.commands.ResizeRowCommand;
+import ui.commands.undoableCommands.AddRowCommand;
+import ui.commands.undoableCommands.RemoveRowCommand;
+import ui.commands.undoableCommands.SetCellValueCommand;
+import ui.updaters.CellValueUpdater;
+import ui.updaters.ColumnNameUpdater;
+import ui.updaters.RowSizeUpdater;
+import ui.updaters.RowsHeaderUpdater;
 import ui.widget.*;
 
 import java.awt.event.KeyEvent;
@@ -70,7 +76,7 @@ public class TableRowsWindowBuilder {
         CloseSubWindowCommand onClose = new CloseSubWindowCommand(compositor);
         // Subwindow to build
         LabelWidget titleLable = new LabelWidget(0,0,0,0,true);
-        titleLable.setGetHandler(new UpdateRowsHeaderCommand(tableID,titleLable,uiHandler),bus);
+        titleLable.setGetHandler(new RowsHeaderUpdater(tableID,titleLable,uiHandler),bus);
         ComponentWidget window = new SubWindowWidget(10, 10, 200, 400, true, titleLable, onClose);
 
         TableWidget table = new TableWidget(10, 10);
@@ -81,9 +87,9 @@ public class TableRowsWindowBuilder {
         // Add all columns
         for (int columnID : getUIHandler().getColumnIds(tableID)) {
             LabelWidget topLabel = new LabelWidget(0,0,10,25,true);
-            topLabel.setGetHandler(new UpdateColumnNameCommand(tableID, columnID, topLabel, uiHandler), bus);
+            topLabel.setGetHandler(new ColumnNameUpdater(tableID, columnID, topLabel, uiHandler), bus);
             ResizeRowCommand resizeRowCommand = new ResizeRowCommand(tableID,columnID,getUIHandler(),bus);
-            UpdateRowSizeCommand updateRowSizeCommand = new UpdateRowSizeCommand(tableID,columnID,uiHandler);
+            RowSizeUpdater updateRowSizeCommand = new RowSizeUpdater(tableID,columnID,uiHandler);
             table.addColumn(getUIHandler().getRowWidth(tableID, columnID), topLabel, true,updateRowSizeCommand, resizeRowCommand, bus);
         }
 
@@ -102,14 +108,14 @@ public class TableRowsWindowBuilder {
                     editor.setValidHandler((String s) ->
                             getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
                     editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
-                    editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID,rowID, editor, uiHandler), bus);
+                    editor.setGetHandler(new CellValueUpdater(tableID, columnID,rowID, editor, uiHandler), bus);
                     table.addEntry(editor);
                 } else {
                     EditorWidget editor = new EditorWidget(true);
                     editor.setValidHandler((String s) ->
                             getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
                     editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
-                    editor.setGetHandler(new UpdateCellValueCommand(tableID, columnID,rowID, editor, uiHandler), bus);
+                    editor.setGetHandler(new CellValueUpdater(tableID, columnID,rowID, editor, uiHandler), bus);
                     table.addEntry(editor);
                 }
             }
@@ -126,7 +132,7 @@ public class TableRowsWindowBuilder {
                 ));
 
         // Create button at the bottom to add new tables on the bottom left
-        HashMap<Integer, PushCommand> onClick = new HashMap<>();
+        HashMap<Integer, UICommand> onClick = new HashMap<>();
         onClick.put(2, new AddRowCommand(tableID, uiHandler, compositor, bus));
         window.addWidget(new ButtonWidget(
                 20,table.getY()+table.getHeight()+5,105,30,
