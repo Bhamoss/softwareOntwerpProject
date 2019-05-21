@@ -115,13 +115,7 @@ public class TableManager {
         if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
             throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
         Table table2 = getTable(table2Id);
-        for (String tableName : table2.getTableRefs()){
-            if (tableName.equals(getTableName(table1Id)) ||
-                    isRelevantTo(table1Id, getTableId(tableName))) {
-                return true;
-            }
-        }
-        return false;
+        return table2.uses(getTable(table1Id));
     }
 
     /**
@@ -138,15 +132,15 @@ public class TableManager {
         if (!getTable(table1Id).hasAsColumn(column1Id))
             throw new IllegalArgumentException("the given column doesnt exist in the given table");
         Table table2 = getTable(table2Id);
-        for (String tableName : table2.getTableRefs()) {
-            for (String columnName : table2.getColumnRefs(tableName)){
-                if (columnName.equals(getColumnName(table1Id, column1Id)))
-                    return true;
-            }
-            if (isRelevantTo(table1Id, getTableId(tableName), column1Id))
-                return true;
-        }
-        return false;
+        return table2.uses(getTable(table1Id), column1Id);
+    }
+
+    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id, int row1Id) {
+        if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
+            throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
+        if (!getTable(table1Id).hasAsColumn(column1Id))
+            throw new IllegalArgumentException("the given column doesnt exist in the given table");
+        return getTable(table2Id).uses(getTable(table1Id), column1Id,row1Id);
     }
 
 
@@ -1096,7 +1090,7 @@ public class TableManager {
      *  | !hasAsTable(tableId)
      */
     @Model
-    private Table getTable(int tableId) throws IllegalTableException
+    public Table getTable(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         for(Table table: tables)

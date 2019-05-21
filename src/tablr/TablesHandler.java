@@ -807,7 +807,7 @@ public class TablesHandler {
     }
 
     /**
-     * checks whether the first given column is relevant to the second given column.
+     * checks whether the first given column is relevant to the second given table.
      *
      * @param table1Id
      * @param table2Id
@@ -816,6 +816,19 @@ public class TablesHandler {
      */
     public boolean isRelevantTo (int table1Id, int table2Id, int column1Id) {
         return tableManager.isRelevantTo(table1Id,table2Id,column1Id);
+    }
+
+    /**
+     * checks whether the first given row is relevant to the second given table.
+     *
+     * @param table1Id
+     * @param table2Id
+     * @param column1Id
+     * @param row1Id
+     * @return
+     */
+    public boolean isRelevantTo (int table1Id, int table2Id, int column1Id, int row1Id) {
+        return tableManager.isRelevantTo(table1Id,table2Id,column1Id, row1Id);
     }
 
     /**
