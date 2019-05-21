@@ -85,14 +85,13 @@ abstract public class Table {
 
     abstract public Boolean queryRefersTo(Table t);
 
+    abstract public Boolean queryRefersTo(Table t, int columnId);
+
     /**
      * Check whether the column at the given index is already used in
      *  a query or not.
      */
-    boolean columnIsUsedInQuery(int id) {
-        //TODO write this method
-        return false;
-    }
+    abstract boolean columnIsUsedInQuery(int id) ;
 
 
     /*
