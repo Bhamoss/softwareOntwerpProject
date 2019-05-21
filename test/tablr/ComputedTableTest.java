@@ -57,11 +57,15 @@ class ComputedTableTest {
 
         tableId = tableManager.addTable();
         tableManager.setTableName(tableId,"ctable");
+        System.out.println(tableId);
     }
 
     @Test
     void test() {
-
-        System.out.println(tableManager.getCellValue(2, 2, 1));
+        tableManager.setQuery(3,
+                "SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
+                        "INNER JOIN table2 AS test2 ON test.ints = test2.id " +
+                            "WHERE test2.name = \"Lorem\"");
+        assertTrue(tableManager.isRelevantTo(2, 3));
     }
 }

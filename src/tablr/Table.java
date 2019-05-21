@@ -4,9 +4,7 @@ import be.kuleuven.cs.som.annotate.*;
 import be.kuleuven.cs.som.taglet.*;
 import tablr.column.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Michiel Jonckheere, Thomas Bamelis
@@ -86,6 +84,14 @@ abstract public class Table {
     abstract public Boolean queryRefersTo(Table t);
 
     abstract public Boolean queryRefersTo(Table t, int columnId);
+
+    public Collection<String> getTableRefs() {
+        return Collections.EMPTY_LIST;
+    }
+
+    public List<String> getColumnRefs(String tableName) {
+        return Collections.EMPTY_LIST;
+    }
 
     /**
      * Check whether the column at the given index is already used in
