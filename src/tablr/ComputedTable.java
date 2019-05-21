@@ -15,6 +15,10 @@ public class ComputedTable extends Table {
     private StoredTable storedTable;
     private SQLManager sqlManager;
 
+    public SQLManager getSqlManager(){
+        return this.sqlManager;
+    }
+
     public ComputedTable(int id, String name, String query, SQLManager sqlManager) {
         super(id, name, query);
         this.sqlManager = sqlManager;
@@ -350,6 +354,18 @@ public class ComputedTable extends Table {
      */
     public void setColumnAllowBlanks(int id, boolean blanksAllowed){
         // bij computed table kan er geen column allow blanks veranderd worden
+    }
+
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+
+    @Override
+    public Table copy() {
+        ComputedTable computedTable = new ComputedTable(getId(),getName(), getQuery(), getSqlManager());
+        return computedTable;
     }
 
 

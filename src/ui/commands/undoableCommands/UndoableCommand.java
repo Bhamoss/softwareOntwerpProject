@@ -1,5 +1,6 @@
 package ui.commands.undoableCommands;
 
+import tablr.TableMemento;
 import ui.UIHandler;
 import ui.commandBus.CommandBus;
 import ui.commands.UICommand;
@@ -42,6 +43,30 @@ public abstract class UndoableCommand extends UICommand {
      * The commandBus to which this command will be posted.
      */
     private final CommandBus bus;
+
+    public abstract Integer getOldTableId();
+
+    public abstract Integer getNewTableId();
+
+    public TableMemento getPreTableMemento() {
+        return preTableMemento;
+    }
+
+    private void setPreTableMemento(TableMemento preTableMemento) {
+        this.preTableMemento = preTableMemento;
+    }
+
+    private TableMemento preTableMemento;
+
+    public TableMemento getPostTableMemento() {
+        return postTableMemento;
+    }
+
+    private void setPostTableMemento(TableMemento postTableMemento) {
+        this.postTableMemento = postTableMemento;
+    }
+
+    private TableMemento postTableMemento;
 
     /**
      * Returns the commandBus.
@@ -90,7 +115,10 @@ public abstract class UndoableCommand extends UICommand {
         setUndone(false);
         // you must clone before you do the work
         UndoableCommand clone = cloneWithValues();
-        doWork();
+        if(getOldTableId() != null)
+            System.out.println("old Table name: "+ getUiHandler().getTableName(getOldTableId()));
+        clone.setPreTableMemento(getUiHandler().createTableMemento(getOldTableId()));
+        clone.doWork();
         getBus().post(clone);
     }
 
@@ -99,7 +127,7 @@ public abstract class UndoableCommand extends UICommand {
      * Redoes what execute() did.
      */
     public void redo(){
-        redoWork();
+        getUiHandler().setTableMemento(getPostTableMemento());
         setUndone(false);
     }
 
@@ -107,7 +135,8 @@ public abstract class UndoableCommand extends UICommand {
      * Undoes what execute() did.
      */
     public void undo(){
-        undoWork();
+        setPostTableMemento(getUiHandler().createTableMemento(getNewTableId()));
+        getUiHandler().setTableMemento(getPreTableMemento());
         setUndone(true);
     }
 
@@ -132,7 +161,6 @@ public abstract class UndoableCommand extends UICommand {
     }
 
 
-    //TODO: klopt dit? want alle subclasses geven true terug.
     /**
      * Returns if there should be repainted after this command.
      * @return True
@@ -161,13 +189,4 @@ public abstract class UndoableCommand extends UICommand {
      */
     protected abstract void doWork();
 
-    /**
-     * Undo the work done in doWork/redoWork.
-     */
-    protected abstract void undoWork();
-
-    /**
-     * Redo the work undone by undoWork().
-     */
-    protected abstract void redoWork();
 }

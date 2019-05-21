@@ -2,7 +2,7 @@ package ui.widget;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.commands.pushCommands.PushCommand;
+import ui.commands.UICommand;
 
 import java.awt.event.MouseEvent;
 
@@ -17,7 +17,7 @@ class SubWindowWidgetTest {
 
     @BeforeEach
     void setUp() {
-        swEmpty = new SubWindowWidget(0, 0, 200, 200, true, "emptySW", new PushCommand() {
+        swEmpty = new SubWindowWidget(0, 0, 200, 200, true, "emptySW", new UICommand() {
             @Override
             public void execute() {
             }
@@ -28,7 +28,7 @@ class SubWindowWidgetTest {
             }
         });
 
-        swFilled = new SubWindowWidget(300, 300, 300, 300, true, "filledSW", new PushCommand() {
+        swFilled = new SubWindowWidget(300, 300, 300, 300, true, "filledSW", new UICommand() {
             @Override
             public void execute() {
             }

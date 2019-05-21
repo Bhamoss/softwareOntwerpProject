@@ -148,4 +148,18 @@ public class StringColumn extends Column {
         return super.canHaveAsValue(value);
     }
 
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+    @Override
+    public Column copy(){
+        StringColumn stringColumn = new StringColumn(getId(),getName(),0,getDefaultValue(),isBlanksAllowed());
+        for(int i = 1; i <= getNbValues(); i++){
+            stringColumn.addValueAt(i,getValueAt(i));
+        }
+        return stringColumn;
+    }
+
 }

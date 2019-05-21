@@ -1,5 +1,6 @@
 package ui.commands.undoableCommands;
 
+import be.kuleuven.cs.som.annotate.Basic;
 import ui.UIHandler;
 import ui.commandBus.CommandBus;
 import java.util.function.Supplier;
@@ -65,7 +66,16 @@ public class SetTableNameCommand extends UndoableCommand {
     /**
      * Returns the id of the table.
      */
-    public int getId() {
+    @Basic
+    public Integer getOldTableId() {
+        return id;
+    }
+
+    /**
+     * Returns the id of the table.
+     */
+    @Basic
+    public Integer getNewTableId() {
         return id;
     }
 
@@ -114,11 +124,11 @@ public class SetTableNameCommand extends UndoableCommand {
      */
     @Override
     protected SetTableNameCommand cloneWithValues() {
-        String old = getUiHandler().getTableName(getId());
+        String old = getUiHandler().getTableName(getOldTableId());
         String newN = getNewNameSupplier().get();
-        SetTableNameCommand clone = new SetTableNameCommand(getNewNameSupplier(), getId(), getUiHandler(),
+        SetTableNameCommand clone = new SetTableNameCommand(getNewNameSupplier(), getOldTableId(), getUiHandler(),
                 getBus(), old, newN);
-        return null;
+        return clone;
     }
 
     /**
@@ -126,22 +136,22 @@ public class SetTableNameCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().setTableName(getId(),getNewNameSupplier().get());
+        getUiHandler().setTableName(getOldTableId(),getNewNameSupplier().get());
     }
 
     /**
      * Sets the name of the table with the id held by this command to the old name.
      */
-    @Override
+
     protected void undoWork() {
-        getUiHandler().setTableName(getId(), getOldName());
+        getUiHandler().setTableName(getOldTableId(), getOldName());
     }
 
     /**
      * Sets the name of the table with the id held by this command to the original new name.
      */
-    @Override
+
     protected void redoWork() {
-        getUiHandler().setTableName(getId(), getNewName());
+        getUiHandler().setTableName(getOldTableId(), getNewName());
     }
 }

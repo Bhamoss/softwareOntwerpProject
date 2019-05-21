@@ -1352,6 +1352,36 @@ public class TableManager {
      */
     private List<Table> tables = new LinkedList<Table>();
 
+    //TODO Commentaar
+    public TableMemento createTableMemento(Integer tableId){
+        if(tableId  != null){
+
+                TableMemento memento = new TableMemento();
+                memento.setIndex(getTableIndex(getTable(tableId)));
+                memento.setTable(getTable(tableId).copy());
+                return memento;
+        }
+        else{
+            TableMemento memento = new TableMemento();
+            memento.setIndex(getNbTables()+1);
+            return memento;
+        }
+    }
+
+    //TODO Commentaar
+    public void setTableMemento(TableMemento memento){
+        if(memento.getTable() != null) {
+            if (canHaveAsTableAt(memento.getIndex(), memento.getTable())) {
+                addTableAt(memento.getIndex(), memento.getTable());
+            } else {
+                removeTable(memento.getTable().getId());
+                addTableAt(memento.getIndex(), memento.getTable());
+            }
+        }
+        else{
+            removeTableAt(memento.getIndex());
+        }
+    }
 
 
 

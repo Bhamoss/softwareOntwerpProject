@@ -1,9 +1,9 @@
 package ui.commandBus;
 
 import ui.WindowCompositor;
-import ui.commands.pushCommands.PushCommand;
-import ui.commands.UpdateCommand;
-import ui.commands.pushCommands.postCommands.PostCommand;
+import ui.commands.UICommand;
+import ui.commands.undoableCommands.UndoableCommand;
+import ui.updaters.Updater;
 
 /**
  * Class used in SubscriptionTest.
@@ -11,7 +11,7 @@ import ui.commands.pushCommands.postCommands.PostCommand;
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class SubUpCommand extends UpdateCommand
+class SubUpCommand extends Updater
 {
 
     @Override
@@ -73,11 +73,11 @@ class SubclassSubUpCommand extends SubUpCommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class BrotherUpCommand extends UpdateCommand
+class BrotherUpCommand extends Updater
 {
 
     @Subscribe
-    public void notSubWidgetMethod(PushCommand command)
+    public void notSubWidgetMethod(UICommand command)
     {
 
     }
@@ -95,7 +95,7 @@ class BrotherUpCommand extends UpdateCommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class SubCommand extends PushCommand
+class SubCommand extends UICommand
 {
 
     @Override
@@ -117,7 +117,7 @@ class SubCommand extends PushCommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class BrotherCommand extends PostCommand
+class BrotherCommand extends UICommand
 {
 
     @Override
@@ -145,7 +145,7 @@ class SubWindowCompositor extends WindowCompositor
     }
 
     @Subscribe
-    public void valid(PushCommand c)
+    public void valid(UICommand c)
     {
 
     }

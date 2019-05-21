@@ -50,7 +50,16 @@ public class AddColumnCommand extends UndoableCommand {
      * @return The table id.
      */
     @Basic
-    public int getTableID() {
+    public Integer getOldTableId() {
+        return tableId;
+    }
+
+    /**
+     *  Returns the table id.
+     * @return The table id.
+     */
+    @Basic
+    public Integer getNewTableId() {
         return tableId;
     }
 
@@ -72,14 +81,14 @@ public class AddColumnCommand extends UndoableCommand {
 
     @Override
     protected AddColumnCommand cloneWithValues() {
-        return new AddColumnCommand(getTableID(), getUiHandler(), getCompositor(), getBus());
+        return new AddColumnCommand(getOldTableId(), getUiHandler(), getCompositor(), getBus());
     }
 
     /**
      * Adds a column to the table and asks the window compositor to rebuild all widgets.
      *
      * @effect  Adds a column to the table with the tableId using the UIHandler.
-     *          |getUIHandler().addColumn(getTableId())
+     *          |getUIHandler().addColumn(getOldTableId())
      *
      * @effect  Rebuilds the widgets using the WindowCompositor
      *          |getCompositor().rebuildAllWidgets()
@@ -87,19 +96,8 @@ public class AddColumnCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().addColumn(getTableID());
+        getUiHandler().addColumn(getOldTableId());
         getCompositor().rebuildAllWidgets();
     }
 
-    @Override
-    protected void undoWork() {
-        getUiHandler().removeColumn(getTableID(), getUiHandler().getColumnIds(getTableID()).get(getUiHandler().getColumnIds(getTableID()).size() - 1));
-        getCompositor().rebuildAllWidgets();
-    }
-
-    @Override
-    protected void redoWork() {
-        getUiHandler().addColumn(getTableID());
-        getCompositor().rebuildAllWidgets();
-    }
 }

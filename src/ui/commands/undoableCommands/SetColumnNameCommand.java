@@ -64,12 +64,19 @@ public class SetColumnNameCommand extends UndoableCommand {
     /**
      * The id of the table.
      */
-    private  final int tableId;
+    private final int tableId;
 
     /**
      * Returns the id of the table.
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
+        return tableId;
+    }
+
+    /**
+     * Returns the id of the table.
+     */
+    public Integer getNewTableId() {
         return tableId;
     }
 
@@ -121,9 +128,9 @@ public class SetColumnNameCommand extends UndoableCommand {
      */
     @Override
     protected SetColumnNameCommand cloneWithValues() {
-        String old = getUiHandler().getColumnName(getTableId(), getColumnId());
+        String old = getUiHandler().getColumnName(getOldTableId(), getColumnId());
         String newn = getNewNameSupplier().get();
-        return new SetColumnNameCommand(getNewNameSupplier(), getTableId(), getColumnId(), getUiHandler(), getBus(), getOldName(), getNewName());
+        return new SetColumnNameCommand(getNewNameSupplier(), getOldTableId(), getColumnId(), getUiHandler(), getBus(), getOldName(), getNewName());
     }
 
     /**
@@ -131,24 +138,7 @@ public class SetColumnNameCommand extends UndoableCommand {
      */
     @Override
     protected void doWork(){
-        getUiHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
+        getUiHandler().setColumnName(getOldTableId(),getColumnId(),getNewNameSupplier().get());
     }
-
-    /**
-     * Sets the name of the column with the ids held by this command to the old name.
-     */
-    @Override
-    protected void undoWork() {
-        getUiHandler().setColumnName(getTableId(),getColumnId(),getOldName());
-    }
-
-    /**
-     * Sets the name of the column with the ids held by this command to the original new name.
-     */
-    @Override
-    protected void redoWork() {
-        getUiHandler().setColumnName(getTableId(),getColumnId(),getNewName());
-    }
-
 
 }

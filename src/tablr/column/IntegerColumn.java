@@ -126,5 +126,19 @@ public class IntegerColumn extends Column {
         return true;
     }
 
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+    @Override
+    public Column copy(){
+        IntegerColumn integerColumn = new IntegerColumn(getId(),getName(),0,getDefaultValue(),isBlanksAllowed());
+        for(int i = 1; i <= getNbValues(); i++){
+            integerColumn.addValueAt(i,getValueAt(i));
+        }
+        return integerColumn;
+    }
+
 }
 

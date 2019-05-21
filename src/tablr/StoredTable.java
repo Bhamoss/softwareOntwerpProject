@@ -163,7 +163,7 @@ public class StoredTable extends Table {
         if(getNbColumns() >= MAX_COLUMNS) return false;
         if (column == null || column.isTerminated())
             return false;
-        if (column.getNbValues() != getNbRows()) return false;
+        if (getNbRows() > -1 && column.getNbValues() != getNbRows()) return false;
         for (Column existingColumn:
                 columns) {
             // next statement is needed for has proper colums
@@ -678,6 +678,20 @@ public class StoredTable extends Table {
         if (!hasAsColumn(id))
             throw new IllegalColumnException();
         getColumn(id).setBlanksAllowed(blanksAllowed);
+    }
+
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+
+    @Override
+    public Table copy() {
+        StoredTable storedTable = new StoredTable(getId(),getName());
+        for( int i =1; i <= getNbColumns(); i++)
+            storedTable.addColumnAt(i, getColumnAt(i).copy());
+        return storedTable;
     }
 
     /*

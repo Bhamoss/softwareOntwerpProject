@@ -42,8 +42,15 @@ public class AddTableCommand extends UndoableCommand {
     private final WindowCompositor compositor;
 
 
+    @Override
+    public Integer getNewTableId() {
+        return getUiHandler().getTableIds().get(getUiHandler().getNbTables()-1);
+    }
 
-
+    @Override
+    public Integer getOldTableId() {
+        return null;
+    }
 
     /**
      *  Returns the window compositor.
@@ -97,7 +104,6 @@ public class AddTableCommand extends UndoableCommand {
      *          |getWindowCompositor().rebuildAllWidgets()
      *
      */
-    @Override
     protected void redoWork() {
         getUiHandler().addTable();
         getWindowCompositor().rebuildAllWidgets();
@@ -119,7 +125,6 @@ public class AddTableCommand extends UndoableCommand {
      *          |getWindowCompositor().rebuildAllWidgets()
      *
      */
-    @Override
     protected void undoWork() {
         //TODO: is het de eerste of de laatste als je een nieuwe table toevoegd
         // voor het moment is het de laatste.

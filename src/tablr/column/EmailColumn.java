@@ -129,6 +129,18 @@ public class EmailColumn extends Column {
     }
 
 
-
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+    @Override
+    public Column copy(){
+        EmailColumn emailColumn = new EmailColumn(getId(),getName(),0,getDefaultValue(),isBlanksAllowed());
+        for(int i = 1; i <= getNbValues(); i++){
+            emailColumn.addValueAt(i,getValueAt(i));
+        }
+        return emailColumn;
+    }
 
 }

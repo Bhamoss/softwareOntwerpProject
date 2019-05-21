@@ -2,7 +2,9 @@ package tablr.column;
 
 import be.kuleuven.cs.som.annotate.*;
 import be.kuleuven.cs.som.taglet.*;
+import tablr.ComputedTable;
 import tablr.IllegalColumnException;
+import tablr.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -578,4 +580,12 @@ public abstract class Column {
         }
         return newColumn;
     }
+
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+
+    public abstract Column copy();
 }

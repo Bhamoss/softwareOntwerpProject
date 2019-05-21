@@ -218,7 +218,7 @@ abstract public class Table {
     public int getNbRows() {
 
         if(getNbColumns() == 0)
-            return 0;
+            return -1;
         else    // there should always be a column at one if there are columns.
             return getColumnAt(1).getNbValues();
     }
@@ -571,6 +571,14 @@ abstract public class Table {
      * Set the blanksAllowed allowed of the column with the given column id to the given blanksAllowed.
      */
     abstract public void setColumnAllowBlanks(int id, boolean blanksAllowed);
+
+/*
+************************************************************************************************************************
+*                                                       copy
+************************************************************************************************************************
+*/
+
+public abstract Table copy();
 
 
 

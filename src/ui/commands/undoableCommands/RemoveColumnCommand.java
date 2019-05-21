@@ -144,7 +144,16 @@ public class RemoveColumnCommand extends UndoableCommand {
      * @return The id of the table.
      */
     @Basic
-    public int getTableID() {
+    public Integer getOldTableId() {
+        return tableID;
+    }
+
+    /**
+     * Returns the id of the table.
+     * @return The id of the table.
+     */
+    @Basic
+    public Integer getNewTableId() {
         return tableID;
     }
 
@@ -172,16 +181,16 @@ public class RemoveColumnCommand extends UndoableCommand {
     @Override
     protected RemoveColumnCommand cloneWithValues() {
         List<String> values = new LinkedList<>();
-        for (int i = 0; i < getUiHandler().getNbRows(getTableID()); i++) {
-            values.add(getUiHandler().getCellValue(getTableID(), getColumnIDSupplier().get(), i));
+        for (int i = 0; i < getUiHandler().getNbRows(getOldTableId()); i++) {
+            values.add(getUiHandler().getCellValue(getOldTableId(), getColumnIDSupplier().get(), i));
         }
         int id = getColumnIDSupplier().get();
-        int place = getUiHandler().getColumnIds(getTableID()).indexOf(id);
-        boolean blanks = getUiHandler().getColumnAllowBlank(getTableID(), getColumnIDSupplier().get());
-        String defaultValue = getUiHandler().getColumnDefaultValue(getTableID(), getColumnIDSupplier().get());
-        String name = getUiHandler().getColumnName(getTableID(), getColumnIDSupplier().get());
-        String type = getUiHandler().getColumnType(getTableID(), getColumnIDSupplier().get());
-        return new RemoveColumnCommand(getTableID(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus(),
+        int place = getUiHandler().getColumnIds(getOldTableId()).indexOf(id);
+        boolean blanks = getUiHandler().getColumnAllowBlank(getOldTableId(), getColumnIDSupplier().get());
+        String defaultValue = getUiHandler().getColumnDefaultValue(getOldTableId(), getColumnIDSupplier().get());
+        String name = getUiHandler().getColumnName(getOldTableId(), getColumnIDSupplier().get());
+        String type = getUiHandler().getColumnType(getOldTableId(), getColumnIDSupplier().get());
+        return new RemoveColumnCommand(getOldTableId(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus(),
                 values, id, place, blanks, defaultValue, name, type);
     }
 
@@ -209,30 +218,29 @@ public class RemoveColumnCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().removeColumn(getTableID(), getColumnIDSupplier().get());
+        getUiHandler().removeColumn(getOldTableId(), getColumnIDSupplier().get());
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
+
     protected void undoWork() {
         //TODO: set the column layout
         //TODO: ik moet kunnen een column met een bepaalde id hermaken en hem kunnen zetten op een bepaalde plaats
         //getUiHandler().addColumn(getTableID(), getColumnId(), getColumnSpace());
-        getUiHandler().setColumnType(getTableID(), getColumnId(), getType());
+        getUiHandler().setColumnType(getOldTableId(), getColumnId(), getType());
         // a new column has blanks true, so no problem if there are blanks in the values, because the blanks are set after it.
-        for (int i = 1; i <= getUiHandler().getNbRows(getTableID()); i++) {
-            getUiHandler().setCellValue(getTableID(), getColumnId(), i, getcolumnValues().get(i));
+        for (int i = 1; i <= getUiHandler().getNbRows(getOldTableId()); i++) {
+            getUiHandler().setCellValue(getOldTableId(), getColumnId(), i, getcolumnValues().get(i));
         }
-        getUiHandler().setColumnAllowBlanks(getTableID(), getColumnId(), getBlanks());
-        getUiHandler().setColumnDefaultValue(getTableID(), getColumnId(), getDefaultValue());
-        getUiHandler().setColumnName(getTableID(), getColumnId(), getName());
+        getUiHandler().setColumnAllowBlanks(getOldTableId(), getColumnId(), getBlanks());
+        getUiHandler().setColumnDefaultValue(getOldTableId(), getColumnId(), getDefaultValue());
+        getUiHandler().setColumnName(getOldTableId(), getColumnId(), getName());
 
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
     protected void redoWork() {
-        getUiHandler().removeColumn(getTableID(), getColumnId());
+        getUiHandler().removeColumn(getOldTableId(), getColumnId());
         getWindowCompositor().rebuildAllWidgets();
     }
 

@@ -30,6 +30,7 @@ public class CommandBus {
         subscriberCache = new HashMap<>();
         subscriptionCache = new HashMap<>();
         history = new LinkedList<>();
+        historyIndex = -1;
     }
 
 

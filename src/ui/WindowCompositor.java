@@ -6,7 +6,10 @@ import ui.builder.TableRowsWindowBuilder;
 import ui.builder.TablesWindowBuilder;
 import ui.commandBus.CommandBus;
 import ui.commands.AddTableWindowCommand;
+import ui.commands.RedoCommand;
+import ui.commands.UndoCommand;
 import ui.widget.ComponentWidget;
+import ui.widget.CompositeWidget;
 import ui.widget.KeyEventWidget;
 import ui.widget.Widget;
 
@@ -35,15 +38,18 @@ public class WindowCompositor extends CanvasWindow {
 
     private final CommandBus bus;
 
-    private KeyEventWidget globalKeyEvent;
+    private CompositeWidget globalKeyEvents;
     private boolean ctrlPressed = false;
 
 
     public WindowCompositor(CommandBus bus) {
         super("Tablr");
+        globalKeyEvents = new CompositeWidget(0,0,0,0,false);
         this.subWindows = new LinkedList<>();
-        globalKeyEvent = new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T, true);
+        globalKeyEvents.addWidget(new KeyEventWidget(new AddTableWindowCommand(this), KeyEvent.VK_T, true));
         this.bus = bus;
+        globalKeyEvents.addWidget(new KeyEventWidget(new UndoCommand(bus), KeyEvent.VK_Z, true));
+        globalKeyEvents.addWidget(new KeyEventWidget(new RedoCommand(bus), KeyEvent.VK_Y, true));
     }
 
     void setTablesWindowBuilder(TablesWindowBuilder tablesWindowBuilder) {
@@ -205,7 +211,7 @@ public class WindowCompositor extends CanvasWindow {
         }
 
         ComponentWidget activeWindow = getActiveWindow();
-        boolean paintflag = globalKeyEvent.handleKeyEvent(id, keyCode, keyChar, ctrlPressed);
+        boolean paintflag = globalKeyEvents.handleKeyEvent(id, keyCode, keyChar, ctrlPressed);
         // Key events are always handled by the active ui
         if (activeWindow != null) {
             paintflag |= getActiveWindow().handleKeyEvent(id, keyCode, keyChar, ctrlPressed);

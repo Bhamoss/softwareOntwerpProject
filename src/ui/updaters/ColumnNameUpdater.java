@@ -41,7 +41,7 @@ public class ColumnNameUpdater extends Updater {
 
     @Subscribe
     public void update(SetColumnNameCommand command) {
-        if (getTableId() == command.getTableId() && getColumnId() == command.getColumnId()) {
+        if (getTableId() == command.getOldTableId() && getColumnId() == command.getColumnId()) {
             update();
         }
     }

@@ -109,4 +109,18 @@ public class BooleanColumn extends Column {
                         value.equals("false") || value.equals(""));
     }
 
+    /*
+     ************************************************************************************************************************
+     *                                                       copy
+     ************************************************************************************************************************
+     */
+    @Override
+    public Column copy(){
+        BooleanColumn booleanColumn = new BooleanColumn(getId(),getName(),0,getDefaultValue(),isBlanksAllowed());
+        for(int i = 1; i <= getNbValues(); i++){
+            booleanColumn.addValueAt(i,getValueAt(i));
+        }
+        return booleanColumn;
+    }
+
 }

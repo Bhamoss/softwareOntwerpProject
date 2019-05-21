@@ -759,6 +759,16 @@ public class TablesHandler {
     }
 
 
+    //TODO comentaar
+    public TableMemento createTableMemento(Integer tableId){
+        return getTableManager().createTableMemento(tableId);
+    }
+
+    public void setTableMemento(TableMemento memento) {
+        getTableManager().setTableMemento(memento);
+    }
+
+
     /*
      *  Common stuff
      * ****************************************************************************

@@ -798,6 +798,15 @@ public class UIHandler {
         getTablesHandler().removeRow(tableId, row);
     }
 
+    //TODO comentaar
+    public TableMemento createTableMemento(Integer tableId){
+        return getTablesHandler().createTableMemento(tableId);
+    }
+
+    public void setTableMemento(TableMemento memento) {
+        getTablesHandler().setTableMemento(memento);
+    }
+
 
     /**
      * Returns whether the given TablesHandler is valid as tablesHandler.

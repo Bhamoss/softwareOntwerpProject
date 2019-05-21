@@ -50,7 +50,16 @@ public class AddRowCommand extends UndoableCommand {
      * @return The table id.
      */
     @Basic
-    public int getTableID() {
+    public Integer getOldTableId() {
+        return tableID;
+    }
+
+    /**
+     *  Returns the table id.
+     * @return The table id.
+     */
+    @Basic
+    public Integer getNewTableId() {
         return tableID;
     }
 
@@ -72,7 +81,7 @@ public class AddRowCommand extends UndoableCommand {
 
     @Override
     protected AddRowCommand cloneWithValues() {
-        return new AddRowCommand(getTableID(), getUiHandler(), getWindowCompositor(), getBus());
+        return new AddRowCommand(getOldTableId(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -96,19 +105,19 @@ public class AddRowCommand extends UndoableCommand {
      */
     @Override
     public void doWork() {
-        getUiHandler().addRow(getTableID());
+        getUiHandler().addRow(getOldTableId());
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
+
     protected void undoWork() {
-        getUiHandler().removeRow(getTableID(), getUiHandler().getNbRows(getTableID()));
+        getUiHandler().removeRow(getOldTableId(), getUiHandler().getNbRows(getOldTableId()));
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
+
     protected void redoWork() {
-        getUiHandler().addRow(getTableID());
+        getUiHandler().addRow(getOldTableId());
         getWindowCompositor().rebuildAllWidgets();
     }
 

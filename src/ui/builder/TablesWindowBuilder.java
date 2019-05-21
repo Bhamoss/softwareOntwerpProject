@@ -3,10 +3,7 @@ package ui.builder;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
-import ui.commands.CloseSubWindowCommand;
-import ui.commands.OpenTableCommand;
-import ui.commands.UICommand;
-import ui.commands.ResizeTableCommand;
+import ui.commands.*;
 import ui.commands.undoableCommands.AddTableCommand;
 import ui.commands.undoableCommands.RemoveTableCommand;
 import ui.commands.undoableCommands.SetTableNameCommand;
@@ -103,6 +100,10 @@ public class TablesWindowBuilder {
 
         // is an invisible widget which listens for key events
         window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor, bus), KeyEvent.VK_DELETE, false));
+        window.addWidget(
+                new KeyEventWidget(new AddFormWindowCommand(()->selectorColumn.getSelectedId(),uiHandler,compositor),
+                        KeyEvent.VK_F, true
+                ));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));
         onClose.setSubwindow(scrollWindow);
         scrollWindow.setMode("tables");

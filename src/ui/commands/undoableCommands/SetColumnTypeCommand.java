@@ -62,7 +62,14 @@ public class SetColumnTypeCommand extends UndoableCommand {
     /**
      * Returns the id of the table.
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
+        return tableId;
+    }
+
+    /**
+     * Returns the id of the table.
+     */
+    public Integer getNewTableId() {
         return tableId;
     }
 
@@ -139,9 +146,9 @@ public class SetColumnTypeCommand extends UndoableCommand {
      */
     @Override
     protected SetColumnTypeCommand cloneWithValues() {
-        String old = getUiHandler().getColumnType(getTableId(), getColumnId());
+        String old = getUiHandler().getColumnType(getOldTableId(), getColumnId());
         String newType = getTypeSupplier().get();
-        return new SetColumnTypeCommand(getTableId(), getColumnId(), getTypeSupplier(),
+        return new SetColumnTypeCommand(getOldTableId(), getColumnId(), getTypeSupplier(),
                 getUiHandler(), getBus(), getCompositor(), old, newType);
     }
 
@@ -150,25 +157,23 @@ public class SetColumnTypeCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().setColumnType(getTableId(),getColumnId(),getTypeSupplier().get());
+        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getTypeSupplier().get());
         getCompositor().rebuildAllWidgets();
     }
 
     /**
      * Sets the type of the column to the type before this command was executed, and rebuilds all widgets.
      */
-    @Override
     protected void undoWork() {
-        getUiHandler().setColumnType(getTableId(),getColumnId(),getOldType());
+        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getOldType());
         getCompositor().rebuildAllWidgets();
     }
 
     /**
      * Sets the type of the column to the type to which it was originally set, and rebuilds all widgets.
      */
-    @Override
     protected void redoWork() {
-        getUiHandler().setColumnType(getTableId(),getColumnId(),getNewType());
+        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getNewType());
         getCompositor().rebuildAllWidgets();
     }
 

@@ -2,9 +2,8 @@ package ui.commandBus;
 
 import tablr.TablesHandler;
 import ui.WindowCompositor;
-import ui.commands.pushCommands.PushCommand;
-import ui.commands.UpdateCommand;
-import ui.commands.pushCommands.postCommands.PostCommand;
+import ui.commands.UICommand;
+import ui.updaters.Updater;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class TestUpCommand extends UpdateCommand
+class TestUpCommand extends Updater
 {
 
     @Override
@@ -52,7 +51,7 @@ class TestUpCommand extends UpdateCommand
  * @author Thomas Bamelis
  * @version 0.0.1
  */
-class TestCommand extends PushCommand
+class TestCommand extends UICommand
 {
 
     @Override
@@ -96,7 +95,7 @@ class TestWindowCompositor extends WindowCompositor
     }
 
     @Subscribe
-    public void valid(PushCommand c)
+    public void valid(UICommand c)
     {
 
     }
@@ -112,7 +111,7 @@ class TestWindowCompositor extends WindowCompositor
 class SubTablesHandler extends TablesHandler
 {
     @Subscribe
-    public void val(PostCommand u)
+    public void val(UICommand u)
     {
 
     }

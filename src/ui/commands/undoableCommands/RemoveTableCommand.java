@@ -161,8 +161,12 @@ public class RemoveTableCommand extends UndoableCommand {
      * @effect  Gets the supplier of the id of the table.
      *          |getTableIDSupplier()
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
         return getTableIDSupplier().get();
+    }
+
+    public Integer getNewTableId(){
+        return null;
     }
 
     /**
@@ -233,21 +237,20 @@ public class RemoveTableCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().removeTable(getTableId());
-        getWindowCompositor().removeSubWindowWithID(getTableId());
+        getUiHandler().removeTable(getOldTableId());
+        getWindowCompositor().removeSubWindowWithID(getOldTableId());
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
     protected void undoWork() {
         //TODO: set the table layout
         //TODO: addTable met keuze waar hij staat in de lijst en id en addcolumn met column id
-        //getUiHandler().addTable(getTableId(), getTablePlace());
-        getUiHandler().setTableName(getTableId(), getTableName());
-        //getUiHandler().addColumn(getTableId(), getColumnIds().get(0));
+        //getUiHandler().addTable(getOldTableId(), getTablePlace());
+        getUiHandler().setTableName(getOldTableId(), getTableName());
+        //getUiHandler().addColumn(getOldTableId(), getColumnIds().get(0));
         for (String val :
                 getValues().get(0)) {
-            getUiHandler().addRow(getTableId());
+            getUiHandler().addRow(getOldTableId());
         }
         boolean firstRun = true;
         int i = 0;
@@ -257,18 +260,18 @@ public class RemoveTableCommand extends UndoableCommand {
                 firstRun = false;
             }
             else {
-                //getUiHandler().addColumn(getTableId(), columnId);
+                //getUiHandler().addColumn(getOldTableId(), columnId);
             }
-            getUiHandler().setColumnType(getTableId(), columnId, getColumnTypes().get(i));
-            getUiHandler().setColumnName(getTableId(), columnId, getColumnNames().get(i));
+            getUiHandler().setColumnType(getOldTableId(), columnId, getColumnTypes().get(i));
+            getUiHandler().setColumnName(getOldTableId(), columnId, getColumnNames().get(i));
             int row = 1;
             for (String value:
                  values.get(i)) {
-                getUiHandler().setCellValue(getTableId(), columnId, row, value);
+                getUiHandler().setCellValue(getOldTableId(), columnId, row, value);
                 row++;
             }
-            getUiHandler().setColumnAllowBlanks(getTableId(), columnId, getColumnBlanks().get(i));
-            getUiHandler().setColumnDefaultValue(getTableId(), columnId, getColumnDefaults().get(i));
+            getUiHandler().setColumnAllowBlanks(getOldTableId(), columnId, getColumnBlanks().get(i));
+            getUiHandler().setColumnDefaultValue(getOldTableId(), columnId, getColumnDefaults().get(i));
 
             i++;
         }
@@ -279,10 +282,9 @@ public class RemoveTableCommand extends UndoableCommand {
         getWindowCompositor().rebuildAllWidgets();
     }
 
-    @Override
     protected void redoWork() {
-        getUiHandler().removeTable(getTableId());
-        getWindowCompositor().removeSubWindowWithID(getTableId());
+        getUiHandler().removeTable(getOldTableId());
+        getWindowCompositor().removeSubWindowWithID(getOldTableId());
         getWindowCompositor().rebuildAllWidgets();
     }
 }

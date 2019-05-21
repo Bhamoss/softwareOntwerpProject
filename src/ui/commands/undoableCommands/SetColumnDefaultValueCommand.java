@@ -46,10 +46,16 @@ public class SetColumnDefaultValueCommand extends UndoableCommand {
     /**
      * Returns the id of the table.
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
         return tableId;
     }
 
+    /**
+     * Returns the id of the table.
+     */
+    public Integer getNewTableId() {
+        return tableId;
+    }
 
     /**
      * The id of the column.
@@ -94,24 +100,14 @@ public class SetColumnDefaultValueCommand extends UndoableCommand {
 
     @Override
     protected SetColumnDefaultValueCommand cloneWithValues() {
-        String oldD = getUiHandler().getColumnDefaultValue(getTableId(), getColumnId());
+        String oldD = getUiHandler().getColumnDefaultValue(getOldTableId(), getColumnId());
         String newD = getStringSupplier().get();
-        return new SetColumnDefaultValueCommand(getTableId(), getColumnId(), getStringSupplier(), getUiHandler(),
+        return new SetColumnDefaultValueCommand(getOldTableId(), getColumnId(), getStringSupplier(), getUiHandler(),
                 getBus(), oldD, newD);
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
-    }
-
-    @Override
-    protected void undoWork() {
-        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getOldDefault());
-    }
-
-    @Override
-    protected void redoWork() {
-        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getNewDefault());
+        getUiHandler().setColumnDefaultValue(getOldTableId(),getColumnId(),getStringSupplier().get());
     }
 }

@@ -41,7 +41,7 @@ public class FormHeaderUpdater extends Updater {
 
     @Subscribe
     public void update(SetTableNameCommand command) {
-        if (getTableID() == command.getId()) {
+        if (getTableID() == command.getOldTableId()) {
             update();
         }
     }

@@ -38,7 +38,14 @@ public class SetCellValueCommand extends UndoableCommand {
     /**
      * Returns the id of the table.
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
+        return tableId;
+    }
+
+    /**
+     * Returns the id of the table.
+     */
+    public Integer getNewTableId() {
         return tableId;
     }
 
@@ -89,24 +96,24 @@ public class SetCellValueCommand extends UndoableCommand {
 
     @Override
     protected SetCellValueCommand cloneWithValues() {
-        String o = getUiHandler().getCellValue(getTableId(), getColumnId(), getRowId());
+        String o = getUiHandler().getCellValue(getOldTableId(), getColumnId(), getRowId());
         String n = getStringSupplier().get();
-        return new SetCellValueCommand(getTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
+        return new SetCellValueCommand(getOldTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
                 getBus(), o, n);
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
+        getUiHandler().setCellValue(getOldTableId(),getColumnId(),getRowId(),getStringSupplier().get());
     }
 
-    @Override
+
     protected void undoWork() {
-        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getOldValue());
+        getUiHandler().setCellValue(getOldTableId(),getColumnId(),getRowId(),getOldValue());
     }
 
-    @Override
+
     protected void redoWork() {
-        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getNewValue());
+        getUiHandler().setCellValue(getOldTableId(),getColumnId(),getRowId(),getNewValue());
     }
 }

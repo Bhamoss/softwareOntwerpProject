@@ -39,7 +39,14 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
     /**
      * Returns the id of the table.
      */
-    public int getTableId() {
+    public Integer getOldTableId() {
+        return tableId;
+    }
+
+    /**
+     * Returns the id of the table.
+     */
+    public Integer getNewTableId() {
         return tableId;
     }
 
@@ -84,32 +91,16 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
 
     @Override
     protected SetColumnAllowBlanksCommand cloneWithValues() {
-        boolean o = getUiHandler().getColumnAllowBlank(getTableId(), getColumnId());
+        boolean o = getUiHandler().getColumnAllowBlank(getOldTableId(), getColumnId());
         boolean n = !getBooleanSupplier().get();
-        return new SetColumnAllowBlanksCommand(getTableId(), getColumnId(), getBooleanSupplier(),
+        return new SetColumnAllowBlanksCommand(getOldTableId(), getColumnId(), getBooleanSupplier(),
                 getUiHandler(), getBus(), getWindowCompositor(), o, n);
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(),!getBooleanSupplier().get());
-        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
-            getWindowCompositor().rebuildAllWidgets();
-        }
-    }
-
-    @Override
-    protected void undoWork() {
-        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(), getOldBlank());
-        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
-            getWindowCompositor().rebuildAllWidgets();
-        }
-    }
-
-    @Override
-    protected void redoWork() {
-        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(), getNewBlank());
-        if(getUiHandler().getColumnType(getTableId(),getColumnId()) =="Boolean"){
+        getUiHandler().setColumnAllowBlanks(getOldTableId(),getColumnId(),!getBooleanSupplier().get());
+        if(getUiHandler().getColumnType(getOldTableId(),getColumnId()) =="Boolean"){
             getWindowCompositor().rebuildAllWidgets();
         }
     }
