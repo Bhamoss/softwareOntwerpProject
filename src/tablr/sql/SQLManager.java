@@ -1,9 +1,11 @@
 package tablr.sql;
 
 import tablr.StoredTable;
+import tablr.Table;
 import tablr.TableManager;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
 public class SQLManager {
 
     private SQLInterpreter interpreter;
+    private TableManager tableManager;
 
     public SQLManager(TableManager tableManager) {
         this.interpreter = new SQLInterpreter(tableManager);
+        this.tableManager = tableManager;
     }
 
     /**
@@ -110,12 +114,28 @@ public class SQLManager {
      * Returns all tables that are refered to by a given query.
      *
      * @param query query to be checked
-     * @return collection of all tables
+     * @return collection of all tableNames
      *
      * @pre Query needs to be parsable
      */
     public Collection<String> getTableRefs(String query) {
         return interpreter.getTables(SQLParser.parseQuery(query));
+    }
+
+    /**
+     * Returns all tables that are refered to by a given query.
+     *
+     * @param query query to be checked
+     * @return collection of all tables
+     *
+     * @pre Query needs to be parsable
+     */
+    public Collection<Table> getTables(String query) {
+        Collection<Table> result = new LinkedList<>();
+        for (String tableName : getTableRefs(query))
+            result.add(tableManager.getTable(tableManager.getTableId(tableName)));
+
+        return result;
     }
 
     /**

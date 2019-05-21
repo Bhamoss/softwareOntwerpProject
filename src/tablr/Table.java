@@ -85,6 +85,25 @@ abstract public class Table {
 
     abstract public Boolean queryRefersTo(Table t, int columnId);
 
+    /**
+     * checks whether this table uses directly or indirectly the given table in his query
+     * @param table
+     * @return
+     */
+    abstract public boolean uses(Table table);
+    /**
+     * checks whether this table uses directly or indirectly the given column in his query
+     * @param table
+     * @return
+     */
+    abstract public boolean uses(Table table, int columnId);
+    /**
+     * checks whether this table uses directly or indirectly the given row in his query
+     * @param table
+     * @return
+     */
+    abstract public boolean uses(Table table, int columnId, int rowId);
+
     public Collection<String> getTableRefs() {
         return Collections.EMPTY_LIST;
     }

@@ -479,6 +479,26 @@ public class StoredTable extends Table {
     }
 
     @Override
+    public boolean uses(Table table) {
+        return table.getId() == this.getId();
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId) {
+        if (table.getId() == this.getId())
+            return hasAsColumn(columnId);
+        return false;
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId, int rowId) {
+        if (table.getId() == this.getId() && hasAsColumn(columnId)){
+            return getColumn(columnId).hasAsValue(rowId);
+        }
+        return false;
+    }
+
+    @Override
     public Boolean queryRefersTo(Table t, int columnId) {
         return false;
     }

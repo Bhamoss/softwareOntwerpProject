@@ -56,6 +56,39 @@ public class ComputedTable extends Table {
         return sqlManager.getTableRefs(getQuery());
     }
 
+    public Collection<Table> getTables() {
+        return sqlManager.getTables(getQuery());
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId) {
+        for (Table t : getTables()) {
+            for (String columnName : getColumnRefs(t.getName())){
+                if (columnName.equals(t.getColumnName(columnId)))
+                    return true;
+            }
+            if (t.uses(table, columnId))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId, int rowId) {
+        return uses(table, columnId);
+    }
+
+    @Override
+    public boolean uses(Table table) {
+        for (Table t : getTables()){
+            if (t.getName().equals(table.getName()) ||
+                    t.uses(table)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public List<String> getColumnRefs(String tableName) {
         return sqlManager.getColumnRefs(getQuery(), tableName);

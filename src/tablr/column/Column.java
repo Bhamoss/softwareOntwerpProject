@@ -269,6 +269,10 @@ public abstract class Column {
      */
     private List<String> values = new ArrayList<String>();
 
+    public boolean hasAsValue(int id) {
+        return !(id < 1 || id > getNbValues());
+    }
+
     /**
      * Return the number of values of this column
      */
