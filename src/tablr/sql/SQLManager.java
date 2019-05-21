@@ -4,7 +4,7 @@ import tablr.StoredTable;
 import tablr.TableManager;
 
 /**
- * SQL Facade
+ * Facade for all SQL functionality
  */
 public class SQLManager {
 
@@ -16,8 +16,8 @@ public class SQLManager {
 
     /**
      * Checks if a given query has valid grammar
-     * @param query
-     * @return true if valid else false
+     * @param query string to be checked
+     * @return true if query is valid else false
      */
     public boolean isParsableQuery(String query) {
         try {
@@ -30,7 +30,7 @@ public class SQLManager {
 
     /**
      * Checks if a given query is valid
-     * @param query
+     * @param query string to be checked
      * @return true if the query is valid else false
      */
     public boolean isValidQuery(String query) {
@@ -44,8 +44,8 @@ public class SQLManager {
 
     /**
      * Interprets a SQL query
-     * @param query
-     * @return a table, containing the result of the query
+     * @param query string to be interpreted
+     * @return table, containing the result of the query
      */
     public StoredTable interpretQuery(String query) {
         return interpreter.interpret(SQLParser.parseQuery(query));
@@ -54,12 +54,12 @@ public class SQLManager {
     /**
      * Checks if a given column can be edited (by reverse interpreting)
      *
+     * @param query query to be checked
+     * @param columnName
+     * @return true if the column can be edited else false
+     *
      * @pre query needs to be parsable
      * @throws RuntimeException if the column does not exist in the query
-     *
-     * @param query
-     * @param columnName
-     * @return
      */
     public boolean isColumnEditable(String query, String columnName) {
         SQLQuery sqlQuery = SQLParser.parseQuery(query);
@@ -74,14 +74,14 @@ public class SQLManager {
      * Allows for editing a computed table. It will reverse interpret the query, and
      * perform the change to the underlying stored table
      *
-     * @pre The query needs to be valid
-     * @pre The column needs to be editable
-     *
      * @param query of computed table where value was changed
      * @param colId the column Id of the changed value
      * @param rowId the row Id of the change value
      * @param sval the string of the new value
      * @param type the type of the column of the changed value
+     *
+     * @pre The query needs to be valid
+     * @pre The column needs to be editable
      */
     public void inverseInterpret(String query, int colId, int rowId, String sval, String type) {
         interpreter.reverseInterpret(SQLParser.parseQuery(query),colId,rowId,SQLInterpreter.toValue(sval,type));
@@ -91,11 +91,11 @@ public class SQLManager {
     /**
      * Checks if a query refers to a certain table.
      *
-     * @pre Query needs to be parsable
-     *
-     * @param query
+     * @param query query to be checked
      * @param tableName
      * @return true if it refers else false
+     *
+     * @pre Query needs to be parsable
      */
     public boolean queryRefersTo(String query, String tableName) {
         return interpreter.refersTo(SQLParser.parseQuery(query), tableName);
@@ -104,11 +104,11 @@ public class SQLManager {
     /**
      * Checks if a query refers to a certain table and column.
      *
-     * @pre query needs to be parsable
-     *
      * @param query
      * @param tableName
      * @return true if it refers else false
+     *
+     * @pre query needs to be parsable
      */
 
     public boolean queryRefersTo(String query, String tableName, String columnName) {

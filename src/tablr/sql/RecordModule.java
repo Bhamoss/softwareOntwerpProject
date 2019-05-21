@@ -4,10 +4,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Records are a intermediate representation a row of data.
+ */
 class Record {
-    private List<CellId> names;
-    private List<Integer> ids;
+    /**
+     * List of data.
+     */
     private List<Value> vector;
+    /**
+     * Name of each data value.
+     */
+    private List<CellId> names;
+    /**
+     * Original rowId of each data value.
+     * (Needed to for reverse interpretation)
+     */
+    private List<Integer> ids;
 
     Record(List<Value> vector, List<CellId> names, List<Integer> ids) {
         this.vector = vector;
@@ -36,6 +49,11 @@ class Record {
         vector.set(ind, val);
     }
 
+    /**
+     * Appends two records.
+     * @param other record to append to this
+     * @return a record having the combined values
+     */
     Record join(Record other) {
         return new Record(
                 Stream.concat(this.vector.stream(), other.vector.stream())
@@ -46,15 +64,14 @@ class Record {
                         .collect(Collectors.toList())
         );
     }
-
-    @Override
-    public String toString() {
-        return vector.toString()+names.toString();
-    }
 }
 
+/**
+ * A representation of values of cell, used at interpretation level.
+ * @param <T> The type of the value
+ */
 abstract class Value<T> {
-    // Unsafe conversions
+    // Unsafe conversions, for type constraints at runtime
     T value;
     int asInt() {
         return ((IntValue) this).value;

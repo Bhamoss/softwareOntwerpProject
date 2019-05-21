@@ -1,10 +1,8 @@
 package tablr.sql;
 
 /**
-This contains the data classes for the SQL AST
-
-Note: Door de beperkingen van java is dit vooral boilerplate,
-      met alle case classes voor de volgende grammatica:
+This contains the data classes for the SQL AST. This roughly
+ maps to the following grammar
 
 Query        ::= SELECT ColumnSpecs FROM TableSpecs WHERE Expr
 ColumnSpecs  ::= ColumnSpec | ColumnSpec , ColumnSpecs
@@ -16,11 +14,9 @@ Expr         ::= TRUE | FALSE | LiteralNumber | LiteralString
 Operator     ::= OR | AND | = | < | > | + | -
 CellId       ::= RowId . ColumnName
 
- Note: Deze impelementatie zou beter kunnen op vlak van cohesion,
-       maar aangezien java geen pattern-matching heeft weet ik niet
-       hoe je het beter zou doen. Visitor-pattern is het enige dat
-       in mijn weten in de buurt komt, maar is helaas niet krachtig
-       genoeg voor wat hier nodig is.
+ Note: Door de beperkingen van java bevat dit veel boilerplate, maar
+       ik zie geen betere manier om dat te doen in java.
+
  */
 
 import java.util.HashMap;
@@ -31,6 +27,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 
+/**
+ * Data class for:
+ * Query ::= SELECT ColumnSpecs FROM TableSpecs WHERE Expr
+ *
+ * Note that WHERE is implemented as the Filter TableSpecs
+ */
 class SQLQuery {
     Filter tableSpecs;
     List<ColumnSpec> columnSpecs;
@@ -60,11 +62,31 @@ class SQLQuery {
 // TABLE SPECS
 
 interface TableSpecs {
+    /**
+     * @return Map from the table names to the tRef
+     */
     Map<String, String> getTRMap();
+
+    /**
+     * Let's the tableSpec recordify itself.
+     * @param yld consumer of the records
+     * @param recordifier handler to recordify a scan
+     */
     void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier);
+
+    /**
+     * Checks if a given cellId is refered to by this tableSpec
+     *
+     * @param cellId cellId to check
+     * @return true if it refers else false
+     */
     boolean refersTo(CellId cellId);
 }
 
+/**
+ * Grammar for:
+ * TableSpecs ::= TableName AS tRef
+ */
 class Scan implements TableSpecs {
     String tableName;
     String tRef;
@@ -97,6 +119,10 @@ class Scan implements TableSpecs {
     }
 }
 
+/**
+ * Grammar for:
+ * TableSpecs ::= TableSpecs INNER JOIN TableName AS tRef ON CellId = CellId
+ */
 class Join implements TableSpecs {
     TableSpecs specs;
     Scan as;
@@ -143,6 +169,9 @@ class Join implements TableSpecs {
 
 }
 
+/**
+ * Grammar for where expression
+ */
 class Filter implements TableSpecs {
     TableSpecs specs;
     Expr pred;
@@ -176,6 +205,11 @@ class Filter implements TableSpecs {
 }
 
 // COLUMN SPECS
+
+/**
+ * Grammar for:
+ * ColumnSpec ::= Expr AS ColumnName
+ */
 class ColumnSpec {
     Expr expr;
     String columnName;
@@ -196,18 +230,49 @@ class ColumnSpec {
 
 // EXPRESSIONS
 abstract class Expr {
+
+    /**
+     * Lets a expression interpret itself on a given record.
+     * @param rec context
+     * @return the value
+     */
     abstract Value eval(Record rec);
+
+    /**
+     * Checks if an expression if invertible.
+     *
+     * @return true if the expression is a CellId, or Plus/Minus
+     *         with one CellId and one Literal.
+     */
     boolean isInvertible() {
         return false;
     }
+
+    /**
+     * Inverse evaluates.
+     *
+     * @param rec context
+     * @return the inverse evaluated value
+     *
+     * @throws RuntimeException if the expr is not invertible
+     */
     Value inverseEval(Record rec) {
         throw new RuntimeException();
     }
+
+    /**
+     * @param cellResolver handler resolving the type of a cellId from the tableManager.
+     * @return The return type of this expression
+     */
     abstract CType getType(Function<CellId,CType> cellResolver);
     abstract boolean refersTo(CellId cellId);
 }
 
 // OPERATIONS
+
+/**
+ * Grammar for binary operation.
+ */
 abstract class BinOp extends Expr {
     Expr lhs;
     Expr rhs;
@@ -230,6 +295,9 @@ abstract class BinOp extends Expr {
     }
 }
 
+/**
+ * Grammar addition.
+ */
 class Plus extends BinOp {
     Plus(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -266,6 +334,9 @@ class Plus extends BinOp {
 
 }
 
+/**
+ * Grammar for subtraction.
+ */
 class Minus extends BinOp {
     Minus(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -302,6 +373,9 @@ class Minus extends BinOp {
 
 }
 
+/**
+ * Grammar for equality.
+ */
 class Equals extends BinOp {
     Equals(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -318,6 +392,9 @@ class Equals extends BinOp {
 
 }
 
+/**
+ * Grammar for binary OR.
+ */
 class Or extends BinOp {
     Or(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -334,6 +411,9 @@ class Or extends BinOp {
 
 }
 
+/**
+ * Grammar for binary AND.
+ */
 class And extends BinOp {
     And(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -350,6 +430,9 @@ class And extends BinOp {
 
 }
 
+/**
+ * Grammar for integer comparison.
+ */
 class Less extends BinOp {
     Less(Expr lhs, Expr rhs) {
         this.lhs = lhs;
@@ -383,6 +466,11 @@ class Greater extends BinOp {
 }
 
 // CELL ID
+
+/**
+ * Grammar for:
+ * CellId ::= RowId . ColumnName
+ */
 class CellId extends Expr {
     String tRef;
     String columnName;
@@ -431,6 +519,11 @@ class CellId extends Expr {
 
 
 // LITERALS
+
+/**
+ * Data classes for the AST literals
+ * @param <T> type of literal
+ */
 abstract class Literal<T> extends Expr {
     T value;
 
@@ -494,6 +587,10 @@ class StringLiteral extends Literal<String> {
 }
 
 // TYPES
+
+/**
+ * Data classes for types.
+ */
 abstract class CType {}
 
 class IntType extends CType{
