@@ -45,9 +45,21 @@ public class ComputedTable extends Table {
 
     @Override
     public Boolean queryRefersTo(Table t) {
+        return sqlManager.queryRefersTo(getQuery(), t.getName());
+    }
+
+    /**
+     * Check whether the column at the given index is already used in
+     *  a query or not.
+     */
+    boolean columnIsUsedInQuery(int id) {
         return false;
     }
 
+    @Override
+    public Boolean queryRefersTo(Table t, int columnId) {
+        return sqlManager.queryRefersTo(getQuery(), t.getName(), t.getColumnName(columnId));
+    }
     /*
      ************************************************************************************************************************
      *                                                       id

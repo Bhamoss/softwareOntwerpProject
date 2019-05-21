@@ -478,12 +478,16 @@ public class StoredTable extends Table {
         return false;
     }
 
+    @Override
+    public Boolean queryRefersTo(Table t, int columnId) {
+        return false;
+    }
+
     /**
      * Check whether the column at the given index is already used in
      *  a query or not.
      */
     boolean columnIsUsedInQuery(int id) {
-        //TODO write this method
         return false;
     }
 

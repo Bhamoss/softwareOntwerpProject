@@ -568,6 +568,11 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
+        for (Table t:tables) {
+            if (t.queryRefersTo(table, columnId)) {
+                return false;
+            }
+        }
         return table.canHaveAsColumnName(columnId, newName);
     }
 
@@ -675,10 +680,9 @@ public class TableManager {
     public void setColumnName(int tableId, int columnId, String newColumnName) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
+        if (!canHaveAsColumnName(tableId, columnId, newColumnName))
+            throw  new IllegalArgumentException();
         Table table = getTable(tableId);
-        for (Table t:tables) {
-            // todo check if for all tables the query doesn't refer to the column
-        }
         table.setColumnName(columnId, newColumnName);
 
     }
@@ -808,7 +812,11 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
-        // TODO remove all tables that refer to the column that should be deleted
+        for (int i = 0; i< tables.size(); i++){
+            if (tables.get(i).queryRefersTo(table, columnId)) {
+                removeTableAt(i);
+            }
+        }
         table.removeColumn(columnId);
     }
 

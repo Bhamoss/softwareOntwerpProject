@@ -19,9 +19,7 @@ CellId       ::= RowId . ColumnName
 
  */
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -75,12 +73,9 @@ interface TableSpecs {
     void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier);
 
     /**
-     * Checks if a given cellId is refered to by this tableSpec
-     *
-     * @param cellId cellId to check
-     * @return true if it refers else false
+     * Returns all cellIds used.
      */
-    boolean refersTo(CellId cellId);
+    List<CellId> getCellIds();
 }
 
 /**
@@ -103,8 +98,8 @@ class Scan implements TableSpecs {
     }
 
     @Override
-    public boolean refersTo(CellId cellId) {
-        return false;
+    public List<CellId> getCellIds() {
+        return new LinkedList<>();
     }
 
     public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
@@ -154,8 +149,11 @@ class Join implements TableSpecs {
     }
 
     @Override
-    public boolean refersTo(CellId cellId) {
-        return cell1.refersTo(cellId) || cell2.refersTo(cellId) || specs.refersTo(cellId);
+    public List<CellId> getCellIds() {
+        List<CellId> res = specs.getCellIds();
+        res.add(cell1);
+        res.add(cell2);
+        return res;
     }
 
     @Override
@@ -192,9 +190,12 @@ class Filter implements TableSpecs {
         },recordifier);
     }
 
+
     @Override
-    public boolean refersTo(CellId cellId) {
-        return pred.refersTo(cellId) || specs.refersTo(cellId);
+    public List<CellId> getCellIds() {
+        List<CellId> res = specs.getCellIds();
+        res.addAll(pred.getCellIds());
+        return res;
     }
 
     @Override
@@ -265,7 +266,11 @@ abstract class Expr {
      * @return The return type of this expression
      */
     abstract CType getType(Function<CellId,CType> cellResolver);
-    abstract boolean refersTo(CellId cellId);
+
+    /**
+     * Returns all used cell ids.
+     */
+    abstract List<CellId> getCellIds();
 }
 
 // OPERATIONS
@@ -290,8 +295,10 @@ abstract class BinOp extends Expr {
     }
 
     @Override
-    boolean refersTo(CellId cellId) {
-        return lhs.refersTo(cellId) || rhs.refersTo(cellId);
+    List<CellId> getCellIds() {
+        List<CellId> res = lhs.getCellIds();
+        res.addAll(rhs.getCellIds());
+        return res;
     }
 }
 
@@ -466,7 +473,6 @@ class Greater extends BinOp {
 }
 
 // CELL ID
-
 /**
  * Grammar for:
  * CellId ::= RowId . ColumnName
@@ -500,8 +506,8 @@ class CellId extends Expr {
     }
 
     @Override
-    boolean refersTo(CellId cellId) {
-        return cellId.equals(this);
+    List<CellId> getCellIds() {
+        return Arrays.asList(this);
     }
 
     @Override
@@ -528,8 +534,8 @@ abstract class Literal<T> extends Expr {
     T value;
 
     @Override
-    boolean refersTo(CellId cellId) {
-        return false;
+    List<CellId> getCellIds() {
+        return new LinkedList<>();
     }
 
     @Override

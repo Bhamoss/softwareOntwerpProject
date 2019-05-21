@@ -64,6 +64,11 @@ class SQLParser extends StreamTokenizer {
 	static SQLQuery parseQuery(String text) { return new SQLParser(text).parseQuery(); }
 
 
+	/**
+	 * Parses the next token from the input stream.
+	 * If it is a string the sval is set, for a int nval is set.
+	 * @return The type of the token
+	 */
 	@Override
 	public int nextToken() {
 		try {
@@ -103,6 +108,10 @@ class SQLParser extends StreamTokenizer {
 		nextToken();
 	}
 
+	/**
+	 * Consume a identifier
+	 * @return identifier string
+	 */
 	private String expectIdent() {
 		if (ttype != TT_IDENT)
 			throw error();
@@ -110,14 +119,34 @@ class SQLParser extends StreamTokenizer {
 		nextToken();
 		return result;
 	}
-	
+
+	/*
+	 * Parsing functions.
+	 * Each of these functions will try to parse
+	 * a string to a kind of data class (defined in TreeModule).
+	 *
+	 * Note that expressions are parsed in stages.
+	 * This makes sure that the operator precedences are respected,
+	 * as well as the associativity rules. (All expressions are left to right)
+	 */
+
+	/**
+	 * Parse a cellId.
+	 * @return the CellId
+	 */
 	private CellId parseCellId() {
 		String rowId = expectIdent();
 		expect('.');
 		String colName = expectIdent();
 		return new CellId(rowId, colName);
 	}
-	
+
+	/**
+	 * Parse a primary expression. This are literals,
+	 * or an expression in brackets
+	 *
+	 * @return the parsed expression
+	 */
 	private Expr parsePrimaryExpr() {
 		switch (ttype) {
 		case TT_TRUE:
@@ -146,7 +175,14 @@ class SQLParser extends StreamTokenizer {
 		default: throw error();
 		}
 	}
-	
+
+	/**
+	 * Parse a sum expression. This are plus or
+	 * minus expressions.
+	 *
+	 * @return the parsed expression
+	 */
+
 	private Expr parseSum() {
 		Expr e = parsePrimaryExpr();
 		for (;;) {
@@ -164,7 +200,13 @@ class SQLParser extends StreamTokenizer {
 			}
 		}
 	}
-		
+
+	/**
+	 * Parse a relational expression. This are
+	 * expression of comparison (equals,less,greater)
+	 *
+	 * @return the parsed expression
+	 */
 	private Expr parseRelationalExpr() {
 		Expr e = parseSum();
 		switch (ttype) {
@@ -181,7 +223,13 @@ class SQLParser extends StreamTokenizer {
 			return e;
 		}
 	}
-	
+
+	/**
+	 * Parse a conjunction expression.
+	 * This are AND expressions.
+	 *
+	 * @return the parsed expression
+	 */
 	private Expr parseConjunction() {
 		Expr e = parseRelationalExpr();
 		switch (ttype) {
@@ -192,7 +240,13 @@ class SQLParser extends StreamTokenizer {
 			return e;
 		}
 	}
-	
+
+	/**
+	 * Parse a disjunction expression.
+	 * This are OR expressions.
+	 *
+	 * @return the parsed expression
+	 */
 	private Expr parseDisjunction() {
 		Expr e = parseConjunction();
 		switch (ttype) {
@@ -204,10 +258,21 @@ class SQLParser extends StreamTokenizer {
 		}
 	}
 
+	/**
+	 * Parse an expression.
+	 *
+	 * @return the parsed expression
+	 */
 	private Expr parseExpr() {
 		return parseDisjunction();
 	}
-	
+
+
+	/**
+	 * Parse a SQL Query
+	 *
+	 * @return the SQLQuery
+	 */
 	private SQLQuery parseQuery() {
 		expect(TT_SELECT);
 		LinkedList<ColumnSpec> columnSpecs = new LinkedList<>();
