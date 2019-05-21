@@ -14,13 +14,13 @@ import java.util.LinkedList;
  * and parsing is possible in O(n). This is also why the parser is build
  * on StreamTokenizer, which is usually used for lexing instead of parsing.
  */
-public class SQLParser extends StreamTokenizer {
+class SQLParser extends StreamTokenizer {
 
 	private static HashMap<String, Integer> keywords = new HashMap<>();
 
 
     // Keywords
-	public static final int
+	static final int
 		TT_IDENT = -9,
 		TT_SELECT = -10,
 		TT_OR = -11,
@@ -48,7 +48,7 @@ public class SQLParser extends StreamTokenizer {
 		keywords.put("WHERE", TT_WHERE);
 	}
 	
-	public static class ParseException extends RuntimeException {}
+	static class ParseException extends RuntimeException {}
 
 	/**
 	 * creates a new instance of this class with the text as parameter and calls parseQuery on it.
@@ -61,7 +61,7 @@ public class SQLParser extends StreamTokenizer {
 	 *
 	 * @throws RuntimeException, if text is not a valid sql query
 	 */
-	public static SQLQuery parseQuery(String text) { return new SQLParser(text).parseQuery(); }
+	static SQLQuery parseQuery(String text) { return new SQLParser(text).parseQuery(); }
 
 
 	@Override
@@ -97,13 +97,13 @@ public class SQLParser extends StreamTokenizer {
 	 * @param ttype expected token type
 	 * @throws RuntimeException if the token is of illegal type
 	 */
-	public void expect(int ttype) {
+	private void expect(int ttype) {
 		if (this.ttype != ttype)
 			throw new RuntimeException("Expected " + ttype + ", found " + this.ttype);
 		nextToken();
 	}
 
-	public String expectIdent() {
+	private String expectIdent() {
 		if (ttype != TT_IDENT)
 			throw error();
 		String result = sval;
@@ -111,14 +111,14 @@ public class SQLParser extends StreamTokenizer {
 		return result;
 	}
 	
-	public CellId parseCellId() {
+	private CellId parseCellId() {
 		String rowId = expectIdent();
 		expect('.');
 		String colName = expectIdent();
 		return new CellId(rowId, colName);
 	}
 	
-	public Expr parsePrimaryExpr() {
+	private Expr parsePrimaryExpr() {
 		switch (ttype) {
 		case TT_TRUE:
 			nextToken();
@@ -147,7 +147,7 @@ public class SQLParser extends StreamTokenizer {
 		}
 	}
 	
-	public Expr parseSum() {
+	private Expr parseSum() {
 		Expr e = parsePrimaryExpr();
 		for (;;) {
 			switch (ttype) {
@@ -165,7 +165,7 @@ public class SQLParser extends StreamTokenizer {
 		}
 	}
 		
-	public Expr parseRelationalExpr() {
+	private Expr parseRelationalExpr() {
 		Expr e = parseSum();
 		switch (ttype) {
 		case '=':
@@ -182,7 +182,7 @@ public class SQLParser extends StreamTokenizer {
 		}
 	}
 	
-	public Expr parseConjunction() {
+	private Expr parseConjunction() {
 		Expr e = parseRelationalExpr();
 		switch (ttype) {
 		case TT_AND:
@@ -193,7 +193,7 @@ public class SQLParser extends StreamTokenizer {
 		}
 	}
 	
-	public Expr parseDisjunction() {
+	private Expr parseDisjunction() {
 		Expr e = parseConjunction();
 		switch (ttype) {
 		case TT_OR:
@@ -204,11 +204,11 @@ public class SQLParser extends StreamTokenizer {
 		}
 	}
 
-	public Expr parseExpr() {
+	private Expr parseExpr() {
 		return parseDisjunction();
 	}
 	
-	public SQLQuery parseQuery() {
+	private SQLQuery parseQuery() {
 		expect(TT_SELECT);
 		LinkedList<ColumnSpec> columnSpecs = new LinkedList<>();
 		for (;;) {

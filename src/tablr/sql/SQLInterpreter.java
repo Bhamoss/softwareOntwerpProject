@@ -1,16 +1,14 @@
 package tablr.sql;
 
 import tablr.StoredTable;
-import tablr.Table;
 import tablr.TableManager;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class SQLInterpreter {
+class SQLInterpreter {
 
     private TableManager tableManager;
     private StoredTable result;
@@ -20,12 +18,25 @@ public class SQLInterpreter {
         this.tableManager = tableManager;
     }
 
+    /**
+     * Interprets a given query
+     * @param query SQLQuery to be interpreted
+     * @return storedTable, containing the parsed query
+     */
     StoredTable interpret(SQLQuery query) {
         initTable(query);
         query.tableSpecs.interpret(rec -> addRecord(rec, query.columnSpecs), this::recordify);
         return result;
     }
 
+    /**
+     * Reverse interprets a sql query. A this allows to edit
+     * a computed table, by applying changes to the underlying table.
+     * @param query the query of the changed table
+     * @param colId the columnId of the changed value
+     * @param rowId the rowId of the changed value
+     * @param val the new value
+     */
     void reverseInterpret(SQLQuery query, int colId, int rowId, Value val) {
         initTable(query);
         inverseCount = 0;
@@ -57,12 +68,13 @@ public class SQLInterpreter {
         tableManager.setCellValue(refTableId, refColId, refRowId, invval);
     }
 
-    public boolean refersTo(SQLQuery query, String tableName) {
+
+    boolean refersTo(SQLQuery query, String tableName) {
         TRMap = query.tableSpecs.getTRMap();
         return TRMap.values().contains(tableName);
     }
 
-    public boolean refersTo(SQLQuery query, String tableName, String columnName) {
+    boolean refersTo(SQLQuery query, String tableName, String columnName) {
         TRMap = query.tableSpecs.getTRMap();
         String TRef = null;
         for (String k : TRMap.keySet())
@@ -73,7 +85,7 @@ public class SQLInterpreter {
         return containsCellId(query, new CellId(TRef, columnName));
     }
 
-    public boolean containsCellId(SQLQuery query, CellId cellId) {
+    private boolean containsCellId(SQLQuery query, CellId cellId) {
         for (ColumnSpec cspec : query.columnSpecs) {
             if (cspec.expr.refersTo(cellId))
                 return true;
@@ -83,6 +95,12 @@ public class SQLInterpreter {
         return false;
     }
 
+    /**
+     * Initializes a table for a given query.
+     * The columnSpecs are used to add the correct
+     * number of columns, set the names and types.
+     * @param query
+     */
     private void initTable(SQLQuery query) {
         TRMap = query.tableSpecs.getTRMap();
         result = new StoredTable(Integer.MAX_VALUE, "initTableInterpreter");
@@ -93,6 +111,11 @@ public class SQLInterpreter {
         });
     }
 
+    /**
+     * Add a record to the table
+     * @param rec the record to add
+     * @param columnSpecs columnSpecs of table
+     */
     private void addRecord(Record rec, List<ColumnSpec> columnSpecs) {
         result.addRow();
         int rowId = result.getNbRows();
@@ -105,6 +128,11 @@ public class SQLInterpreter {
 
     // UTILITY
 
+    /**
+     * Yields all records from a given scan.
+     * @param yld consumer for the records
+     * @param scan scan referring to a table
+     */
     private void recordify(Consumer<Record> yld, Scan scan) {
         int tableId = tableManager.getTableId(TRMap.get(scan.tRef));
         for (int i=1; i<=tableManager.getNbRows(tableId); i++)
@@ -112,6 +140,14 @@ public class SQLInterpreter {
     }
 
     // TODO: use less maps in java?
+
+    /**
+     * Get a record (=row) from a table
+     * @param tableId tableId of record
+     * @param rowId rowId of record
+     * @param name tRef used in the query
+     * @return the record
+     */
     private Record getRecord(int tableId, int rowId, String name) {
         return new Record(
                 tableManager.getColumnIds(tableId).stream().map(
@@ -136,23 +172,20 @@ public class SQLInterpreter {
     static Value toValue(String value, String type) {
         if (value.equals(""))
             return new BlankValue();
-        if (type.equals("Boolean"))
-            return new BooleanValue(Boolean.valueOf(value));
-        else if (type.equals("Integer"))
-            return new IntValue(Integer.valueOf(value));
-        else
-            return new StringValue(value);
+        switch (type) {
+            case "Boolean": return new BooleanValue(Boolean.valueOf(value));
+            case "Integer": return new IntValue(Integer.valueOf(value));
+            default:        return new StringValue(value);
+        }
     }
 
     static CType toType(String type) {
-        if (type.equals("Boolean"))
-            return new BoolType();
-        else if (type.equals("Integer"))
-            return new IntType();
-        else if (type.equals("Email"))
-            return new EmailType();
-        else if (type.equals("String"))
-            return new StringType();
+        switch (type) {
+            case "Boolean": return new BoolType();
+            case "Integer": return new IntType();
+            case "Email":   return new EmailType();
+            case "String":  return new StringType();
+        }
         throw new IllegalArgumentException("Illegal type");
     }
 }
