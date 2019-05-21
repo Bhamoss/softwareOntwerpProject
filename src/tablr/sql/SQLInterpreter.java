@@ -55,7 +55,32 @@ public class SQLInterpreter {
         int refRowId = rec.getId(refCellId);
         int refColId = tableManager.getColumnId(refTableId, refCellId.columnName);
         tableManager.setCellValue(refTableId, refColId, refRowId, invval);
+    }
 
+    public boolean refersTo(SQLQuery query, String tableName) {
+        TRMap = query.tableSpecs.getTRMap();
+        return TRMap.values().contains(tableName);
+    }
+
+    public boolean refersTo(SQLQuery query, String tableName, String columnName) {
+        TRMap = query.tableSpecs.getTRMap();
+        String TRef = null;
+        for (String k : TRMap.keySet())
+            if (TRMap.get(k).equals(tableName))
+                TRef = k;
+        if (TRef == null)
+            return false;
+        return containsCellId(query, new CellId(TRef, columnName));
+    }
+
+    public boolean containsCellId(SQLQuery query, CellId cellId) {
+        for (ColumnSpec cspec : query.columnSpecs) {
+            if (cspec.expr.refersTo(cellId))
+                return true;
+        }
+        if (query.tableSpecs.refersTo(cellId))
+                return true;
+        return false;
     }
 
     private void initTable(SQLQuery query) {

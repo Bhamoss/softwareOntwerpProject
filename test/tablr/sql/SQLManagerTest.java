@@ -2,8 +2,8 @@ package tablr.sql;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import tablr.Table;
 import tablr.TableManager;
 
@@ -93,9 +93,12 @@ class SQLManagerTest {
         assertEquals(2, result.getNbColumns());
         assertEquals("names", result.getColumnName(1));
         assertEquals("String", result.getColumnType(1));
+        assertEquals("ids", result.getColumnName(2));
+        assertEquals("Integer", result.getColumnType(2));
 
         assertEquals(1, result.getNbRows());
         assertEquals("Lorem", result.getCellValue(1,1));
+        assertEquals("3", result.getCellValue(2,1));
     }
 
     private void printTable(Table table) {
@@ -117,7 +120,7 @@ class SQLManagerTest {
 
     @Test
     void inverseQuery() {
-        interpreter.inverseInterpret("SELECT test.ints + 1 AS ids FROM testTable1 AS test WHERE TRUE", 1, 1, new IntValue(42));
+        interpreter.inverseInterpret("SELECT test.ints + 1 AS ids FROM testTable1 AS test WHERE TRUE", 1, 1, "42", "Integer");
         assertEquals("41", tableManager.getCellValue(1,3,1));
 
     }
@@ -130,9 +133,18 @@ class SQLManagerTest {
                 "SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE"
         ));
 
-        interpreter.interpretQuery(
+        assertTrue(interpreter.isValidQuery(
                 "SELECT test.bools2 OR TRUE AS bools FROM testTable1 AS test WHERE test.bools2 = FALSE"
-        );
+        ));
+
+        assertTrue(interpreter.isValidQuery(
+                "SELECT test.ints + 1 AS ids FROM testTable1 AS test WHERE TRUE"
+        ));
+
+        assertTrue(interpreter.isValidQuery(
+                "SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test INNER JOIN table2 AS test2 ON test.ints = test2.id WHERE test2.name = \"Lorem\""
+        ));
+
     }
 
     @Test
@@ -144,6 +156,22 @@ class SQLManagerTest {
         assertFalse(interpreter.isValidQuery(
                 "SELECT test.bools FROM testTable1 AS test WHERE test.bools1"
         ));
+        assertFalse(interpreter.isValidQuery(
+                "SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test INNER JOIN table2 AS test2 ON test.ints = test2.ints WHERE test2.id = \"Lorem\""
+        ));
+
+    }
+
+    @Test
+    void refersToTable() {
+        assertTrue(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1"));
+        assertFalse(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "test"));
+    }
+
+    @Test
+    void refersToColumn() {
+        assertTrue(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1", "bools1"));
+        assertFalse(interpreter.queryRefersTo("SELECT test.bools1 AS bools FROM testTable1 AS test WHERE TRUE", "testTable1", "bools"));
     }
 
 

@@ -62,6 +62,7 @@ class SQLQuery {
 interface TableSpecs {
     Map<String, String> getTRMap();
     void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier);
+    boolean refersTo(CellId cellId);
 }
 
 class Scan implements TableSpecs {
@@ -77,6 +78,11 @@ class Scan implements TableSpecs {
         Map<String, String> TRMap = new HashMap<>();
         TRMap.put(tRef,tableName);
         return TRMap;
+    }
+
+    @Override
+    public boolean refersTo(CellId cellId) {
+        return false;
     }
 
     public void interpret(Consumer<Record> yld, BiConsumer<Consumer<Record>, Scan> recordifier) {
@@ -122,6 +128,11 @@ class Join implements TableSpecs {
     }
 
     @Override
+    public boolean refersTo(CellId cellId) {
+        return cell1.refersTo(cellId) || cell2.refersTo(cellId) || specs.refersTo(cellId);
+    }
+
+    @Override
     public boolean equals(Object o) {
         return (o instanceof Join)
                 && ((Join) o).specs.equals(specs)
@@ -153,9 +164,15 @@ class Filter implements TableSpecs {
     }
 
     @Override
+    public boolean refersTo(CellId cellId) {
+        return pred.refersTo(cellId) || specs.refersTo(cellId);
+    }
+
+    @Override
     public boolean equals(Object o) {
         return (o instanceof Filter) && ((Filter) o).specs.equals(specs) && ((Filter) o).pred.equals(pred);
     }
+
 }
 
 // COLUMN SPECS
@@ -187,6 +204,7 @@ abstract class Expr {
         throw new RuntimeException();
     }
     abstract CType getType(Function<CellId,CType> cellResolver);
+    abstract boolean refersTo(CellId cellId);
 }
 
 // OPERATIONS
@@ -206,6 +224,10 @@ abstract class BinOp extends Expr {
         return ((BinOp) o).lhs.equals(this.lhs) && ((BinOp) o).rhs.equals(this.rhs);
     }
 
+    @Override
+    boolean refersTo(CellId cellId) {
+        return lhs.refersTo(cellId) || rhs.refersTo(cellId);
+    }
 }
 
 class Plus extends BinOp {
@@ -390,6 +412,11 @@ class CellId extends Expr {
     }
 
     @Override
+    boolean refersTo(CellId cellId) {
+        return cellId.equals(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof CellId))
             return false;
@@ -406,6 +433,11 @@ class CellId extends Expr {
 // LITERALS
 abstract class Literal<T> extends Expr {
     T value;
+
+    @Override
+    boolean refersTo(CellId cellId) {
+        return false;
+    }
 
     @Override
     public boolean equals(Object o) {

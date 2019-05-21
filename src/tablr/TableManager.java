@@ -312,12 +312,12 @@ public class TableManager {
      */
     public boolean queryRefersToTable(int tableId) {
         Table table = getTable(tableId);
-        for (Table t :tables) {
+        for (Table t : tables) {
             if (t.queryRefersTo(table)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**

@@ -9,11 +9,23 @@ import tablr.TableManager;
 public class SQLManager {
 
     private SQLInterpreter interpreter;
-    private TableManager tableManager;
 
     public SQLManager(TableManager tableManager) {
-        this.tableManager = tableManager;
         this.interpreter = new SQLInterpreter(tableManager);
+    }
+
+    /**
+     * Checks if a given query has valid grammar
+     * @param query
+     * @return true if valid else false
+     */
+    public boolean isParsableQuery(String query) {
+        try {
+            SQLParser.parseQuery(query);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -41,6 +53,10 @@ public class SQLManager {
 
     /**
      * Checks if a given column can be edited (by reverse interpreting)
+     *
+     * @pre query needs to be parsable
+     * @throws RuntimeException if the column does not exist in the query
+     *
      * @param query
      * @param columnName
      * @return
@@ -58,14 +74,44 @@ public class SQLManager {
      * Allows for editing a computed table. It will reverse interpret the query, and
      * perform the change to the underlying stored table
      *
+     * @pre The query needs to be valid
+     * @pre The column needs to be editable
+     *
      * @param query of computed table where value was changed
-     * @param tableId the tableId of the computed table where the value was changed
      * @param colId the column Id of the changed value
      * @param rowId the row Id of the change value
      * @param sval the string of the new value
+     * @param type the type of the column of the changed value
      */
-    public void inverseInterpret(String query, int colId, int rowId, Value val) {
-        //Value val = SQLInterpreter.toValue(sval, tableManager.getColumnType(tableId,colId));
-        interpreter.reverseInterpret(SQLParser.parseQuery(query),colId,rowId,val);
+    public void inverseInterpret(String query, int colId, int rowId, String sval, String type) {
+        interpreter.reverseInterpret(SQLParser.parseQuery(query),colId,rowId,SQLInterpreter.toValue(sval,type));
+    }
+
+
+    /**
+     * Checks if a query refers to a certain table.
+     *
+     * @pre Query needs to be parsable
+     *
+     * @param query
+     * @param tableName
+     * @return true if it refers else false
+     */
+    public boolean queryRefersTo(String query, String tableName) {
+        return interpreter.refersTo(SQLParser.parseQuery(query), tableName);
+    }
+
+    /**
+     * Checks if a query refers to a certain table and column.
+     *
+     * @pre query needs to be parsable
+     *
+     * @param query
+     * @param tableName
+     * @return true if it refers else false
+     */
+
+    public boolean queryRefersTo(String query, String tableName, String columnName) {
+        return interpreter.refersTo(SQLParser.parseQuery(query), tableName, columnName);
     }
 }
