@@ -42,7 +42,7 @@ public class ComputedTable extends Table {
      */
 
     @Override
-    public Boolean isValidQuery(String q){
+    Boolean isValidQuery(String q){
         return sqlManager.isValidQuery(q);
     }
 
@@ -64,10 +64,10 @@ public class ComputedTable extends Table {
     public boolean uses(Table table, int columnId) {
         for (Table t : getTables()) {
             for (String columnName : getColumnRefs(t.getName())){
-                if (columnName.equals(t.getColumnName(columnId)))
+                if (columnName.equals(table.getColumnName(columnId)))
                     return true;
             }
-            if (t.uses(table, columnId))
+            if (table.getId() != t.getId() && t.uses(table, columnId))
                 return true;
         }
         return false;
