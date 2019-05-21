@@ -40,9 +40,8 @@ public class RemoveTableCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public RemoveTableCommand(Supplier<Integer> tableIDSupplier, UIHandler uiHandler, WindowCompositor compositor, CommandBus bus){
-        super(bus, uiHandler);
+        super(bus, uiHandler,compositor);
         this.tableIDSupplier = tableIDSupplier;
-        this.compositor = compositor;
 
         this.tableName = null;
         this.tableId = -1;
@@ -59,9 +58,8 @@ public class RemoveTableCommand extends UndoableCommand {
                                String tableName, int tableId, int tablePlace, List<List<String>> values,
                                List<Integer> columnIds, List<String> columnNames, List<String> columnDefaults,
                                List<String> columnTypes, List<Boolean> columnBlanks){
-        super(bus, uiHandler);
+        super(bus, uiHandler, compositor);
         this.tableIDSupplier = tableIDSupplier;
-        this.compositor = compositor;
 
         this.tableName = tableName;
         this.tableId = tableId;
@@ -129,21 +127,11 @@ public class RemoveTableCommand extends UndoableCommand {
         return columnBlanks;
     }
 
-    public WindowCompositor getCompositor() {
-        return compositor;
-    }
 
     /**
      * The supplier of the id of the table which you want to remove.
      */
     private final Supplier<Integer> tableIDSupplier;
-
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
 
     /**
      * Returns the supplier of the id of the table.
@@ -169,14 +157,6 @@ public class RemoveTableCommand extends UndoableCommand {
         return null;
     }
 
-    /**
-     * Return the WindowCompositor.
-     * @return The WindowCompositor.
-     */
-    @Basic
-    public WindowCompositor getWindowCompositor() {
-        return compositor;
-    }
 
     @Override
     protected RemoveTableCommand cloneWithValues() {
@@ -208,7 +188,7 @@ public class RemoveTableCommand extends UndoableCommand {
             columnBlanks.add(getUiHandler().getColumnAllowBlank(tableId, columnId));
             ind++;
         }
-        return new RemoveTableCommand(getTableIDSupplier(), getUiHandler(), getCompositor(), getBus(),
+        return new RemoveTableCommand(getTableIDSupplier(), getUiHandler(), getWindowCompositor(), getBus(),
                 tableName, tableId, tablePlace, values, columnIds, columnNames,
                 columnDefaults, columnTypes, columnBlanks);
     }

@@ -46,10 +46,9 @@ public class RemoveColumnCommand extends UndoableCommand {
      */
     public RemoveColumnCommand(int tableID, Supplier<Integer> columnIDSupplier, UIHandler uiHandler,
                                WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.columnIDSupplier = columnIDSupplier;
-        this.compositor = compositor;
         this.columnValues = null;
         this.columnId = -1;
         this.columnSpace = -1;
@@ -63,10 +62,9 @@ public class RemoveColumnCommand extends UndoableCommand {
                                WindowCompositor compositor, CommandBus commandBus,
                                 List<String> columnValues, int columnId, int columnSpace, boolean blanks,
                                 String defaultValue, String name, String type){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.columnIDSupplier = columnIDSupplier;
-        this.compositor = compositor;
         this.columnValues = columnValues;
         this.columnId = columnId;
         this.columnSpace = columnSpace;
@@ -132,13 +130,6 @@ public class RemoveColumnCommand extends UndoableCommand {
      */
     private final Supplier<Integer> columnIDSupplier;
 
-
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
     /**
      * Returns the id of the table.
      * @return The id of the table.
@@ -164,18 +155,6 @@ public class RemoveColumnCommand extends UndoableCommand {
     @Basic
     public Supplier<Integer> getColumnIDSupplier() {
         return columnIDSupplier;
-    }
-
-
-
-
-    /**
-     * Return the WindowCompositor.
-     * @return The WindowCompositor.
-     */
-    @Basic
-    public WindowCompositor getWindowCompositor() {
-        return compositor;
     }
 
     @Override

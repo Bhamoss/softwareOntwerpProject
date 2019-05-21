@@ -10,11 +10,10 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
 
     public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
                                        UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, windowCompositor);
         this.tableId = tableId;
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
-        this.windowCompositor = windowCompositor;
         this.oldBlank = false;
         this.newBlank = false;
     }
@@ -22,11 +21,10 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
     public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
                                        UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor,
                                        boolean oldBlank, boolean newBlank){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, windowCompositor);
         this.tableId = tableId;
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
-        this.windowCompositor = windowCompositor;
         this.oldBlank = oldBlank;
         this.newBlank = newBlank;
     }
@@ -67,13 +65,6 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
 
     private Supplier<Boolean> getBooleanSupplier() {
         return booleanSupplier;
-    }
-
-
-    private final WindowCompositor windowCompositor;
-
-    private WindowCompositor getWindowCompositor() {
-        return windowCompositor;
     }
 
     private final boolean oldBlank;

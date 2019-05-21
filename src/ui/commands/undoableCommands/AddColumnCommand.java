@@ -35,9 +35,8 @@ public class AddColumnCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableId = tableID;
-        this.compositor = compositor;
     }
 
     /**
@@ -63,25 +62,10 @@ public class AddColumnCommand extends UndoableCommand {
         return tableId;
     }
 
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
-
-
-    /**
-     *  Returns the window compositor.
-     * @return The window compositor.
-     */
-    @Basic
-    public WindowCompositor getCompositor() {
-        return compositor;
-    }
 
     @Override
     protected AddColumnCommand cloneWithValues() {
-        return new AddColumnCommand(getOldTableId(), getUiHandler(), getCompositor(), getBus());
+        return new AddColumnCommand(getOldTableId(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -97,7 +81,7 @@ public class AddColumnCommand extends UndoableCommand {
     @Override
     protected void doWork() {
         getUiHandler().addColumn(getOldTableId());
-        getCompositor().rebuildAllWidgets();
+        getWindowCompositor().rebuildAllWidgets();
     }
 
 }

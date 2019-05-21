@@ -1355,7 +1355,6 @@ public class TableManager {
     //TODO Commentaar
     public TableMemento createTableMemento(Integer tableId){
         if(tableId  != null){
-
                 TableMemento memento = new TableMemento();
                 memento.setIndex(getTableIndex(getTable(tableId)));
                 memento.setTable(getTable(tableId).copy());
@@ -1363,7 +1362,7 @@ public class TableManager {
         }
         else{
             TableMemento memento = new TableMemento();
-            memento.setIndex(getNbTables()+1);
+            memento.setIndex(1);
             return memento;
         }
     }

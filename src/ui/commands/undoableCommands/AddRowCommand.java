@@ -35,9 +35,8 @@ public class AddRowCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public AddRowCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
-        this.compositor = compositor;
     }
 
     /**
@@ -62,22 +61,6 @@ public class AddRowCommand extends UndoableCommand {
     public Integer getNewTableId() {
         return tableID;
     }
-
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
-    /**
-     *  Returns the window compositor.
-     * @return The window compositor.
-     */
-    @Basic
-    public WindowCompositor getWindowCompositor() {
-        return compositor;
-    }
-
 
     @Override
     protected AddRowCommand cloneWithValues() {

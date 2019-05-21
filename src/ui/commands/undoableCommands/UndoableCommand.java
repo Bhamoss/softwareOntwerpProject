@@ -2,6 +2,7 @@ package ui.commands.undoableCommands;
 
 import tablr.TableMemento;
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 import ui.commands.UICommand;
 
@@ -32,17 +33,28 @@ public abstract class UndoableCommand extends UICommand {
      *          | if(!(isValidBus(bus) &&
      *          |       isValidUiHandler(uiHandler)))
      */
-    protected UndoableCommand(CommandBus bus, UIHandler uiHandler) throws IllegalArgumentException{
-        if(!(isValidBus(bus) && isValidUiHandler(uiHandler)))throw new IllegalArgumentException("Invalid bus, compositor or uiHandler");
+    protected UndoableCommand(CommandBus bus, UIHandler uiHandler, WindowCompositor windowCompositor) throws IllegalArgumentException{
+        if(!(isValidBus(bus) && isValidUiHandler(uiHandler)))throw new IllegalArgumentException("Invalid bus or uiHandler");
         this.bus = bus;
         this.uiHandler = uiHandler;
+        this.windowCompositor = windowCompositor;
         setUndone(false);
+    }
+
+    protected UndoableCommand(CommandBus bus, UIHandler uiHandler) throws IllegalArgumentException{
+        this(bus,uiHandler,null);
     }
 
     /**
      * The commandBus to which this command will be posted.
      */
     private final CommandBus bus;
+
+    private WindowCompositor windowCompositor;
+
+    public WindowCompositor getWindowCompositor(){
+        return windowCompositor;
+    }
 
     public abstract Integer getOldTableId();
 
@@ -74,6 +86,8 @@ public abstract class UndoableCommand extends UICommand {
     protected CommandBus getBus(){
         return bus;
     }
+
+
 
     /**
      * Returns whether or not the given commandBus is valid to be set.
@@ -120,6 +134,9 @@ public abstract class UndoableCommand extends UICommand {
         clone.setPreTableMemento(getUiHandler().createTableMemento(getOldTableId()));
         clone.doWork();
         getBus().post(clone);
+        if(getWindowCompositor() != null){
+            getWindowCompositor().rebuildAllWidgets();
+        }
     }
 
 
@@ -129,6 +146,9 @@ public abstract class UndoableCommand extends UICommand {
     public void redo(){
         getUiHandler().setTableMemento(getPostTableMemento());
         setUndone(false);
+        if(getWindowCompositor() != null){
+            getWindowCompositor().rebuildAllWidgets();
+        }
     }
 
     /**
@@ -138,6 +158,9 @@ public abstract class UndoableCommand extends UICommand {
         setPostTableMemento(getUiHandler().createTableMemento(getNewTableId()));
         getUiHandler().setTableMemento(getPreTableMemento());
         setUndone(true);
+        if(getWindowCompositor() != null){
+            getWindowCompositor().rebuildAllWidgets();
+        }
     }
 
 

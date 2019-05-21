@@ -356,7 +356,7 @@ public class CommandBus {
 
     public boolean canRedo()
     {
-        if (history.isEmpty() || historyIndex < history.size() - 1) return false;
+        if (history.isEmpty() || historyIndex >= history.size() - 1) return false;
         return true;
     }
 
@@ -364,7 +364,7 @@ public class CommandBus {
     {
         if(!canRedo()) throw new IllegalStateException();
         setHistoryIndex(getHistoryIndex() + 1);
-        getHistoryAt(getHistoryIndex()).execute();
+        getHistoryAt(getHistoryIndex()).redo();
         postWithoutHistory(getHistoryAt(getHistoryIndex()));
     }
 

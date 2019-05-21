@@ -45,20 +45,18 @@ public class RemoveRowCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.rowIDSupplier = rowIDSupplier;
-        this.compositor = compositor;
         this.rowValues = null;
         this.rowId = -1;
     }
 
     private RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler,
                              WindowCompositor compositor, CommandBus commandBus, List<String> rowValues, int rowId){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.rowIDSupplier = rowIDSupplier;
-        this.compositor = compositor;
         this.rowValues = rowValues;
         this.rowId = rowId;
     }
@@ -115,22 +113,6 @@ public class RemoveRowCommand extends UndoableCommand {
         return rowIDSupplier;
     }
 
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
-
-
-    /**
-     * Return the WindowCompositor.
-     * @return The WindowCompositor.
-     */
-    @Basic
-    private WindowCompositor getWindowCompositor() {
-        return compositor;
-    }
-
     @Override
     protected RemoveRowCommand cloneWithValues() {
         List<String> values = new LinkedList<>();
@@ -167,7 +149,6 @@ public class RemoveRowCommand extends UndoableCommand {
     @Override
     protected void doWork() {
         getUiHandler().removeRow(getOldTableId(),getRowIDSupplier().get());
-        getWindowCompositor().rebuildAllWidgets();
     }
 
 

@@ -30,16 +30,10 @@ public class AddTableCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public AddTableCommand(UIHandler uiHandler, CommandBus commandBus, WindowCompositor compositor){
-        super(commandBus, uiHandler);
-        this.compositor = compositor;
+        super(commandBus, uiHandler, compositor);
     }
 
 
-
-    /**
-     * The WindowCompositor to be called to rebuild the widgets.
-     */
-    private final WindowCompositor compositor;
 
 
     @Override
@@ -50,15 +44,6 @@ public class AddTableCommand extends UndoableCommand {
     @Override
     public Integer getOldTableId() {
         return null;
-    }
-
-    /**
-     *  Returns the window compositor.
-     * @return The window compositor.
-     */
-    @Basic
-    private WindowCompositor getWindowCompositor() {
-        return compositor;
     }
 
     @Override
