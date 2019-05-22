@@ -1,30 +1,123 @@
 @startuml
+
 package "commands" {
 
-        class UICommand <<(A, lightgreen)>> {
-
+        abstract class UICommand {
+            + {abstract} execute()
+            + {abstract} getReturn() : Boolean
         }
 
-        class ConcreteCommandA{
+        note left of UICommand: "Niet alle command klassen \n zijn weergegeven, telkens minstens \n 1 voorbeeld klasse per abstracte klasse."
 
+        class AddTableWindowCommand {
+            - compositor : WindowCompositor
+            __Inspectors__
+            + getReturn() : Boolean
+            + getCompositor() : WindowCompositor
+            __Mutators__
+            + execute()
         }
 
-        class ConcreteCommandB{
-
+        class RedoCommand {
+            - commandBus : CommandBus
+            __Inspectors__
+            + getCommandBus() : CommandBus
+            + getReturn() : Boolean
+            __Mutators__
+            + execute()
         }
 
-        class ConcreteCommandC{
+        AddTableWindowCommand -up-|> UICommand
+        RedoCommand -up-|> UICommand
 
+        abstract class ResizeCommand {
+            - columnWidth : Supplier<Integer>
+            - uiHandler : UIHandler
+            - commandBus : CommandBus
+            __Inspectors__
+            + getColumnWidth() : Integer
+            + getUIHandler() : UIHandler
+            + getCommandBus() : CommandBus
+            __Mutators__
+            + setColumnWidth(columnWidth : Supplier<Integer>)
         }
 
-        class ConcreteCommandD{
-
+        class ResizeColumnCommand {
+            - tableId : Integer
+            - columnNumber : Integer
+            __Inspectors__
+            + getTableId() : Integer
+            + getColumnNumber() : Integer
+            + getReturn() : Boolean
+            __Mutators__
+            + execute()
         }
 
-        ConcreteCommandA --|> UICommand
-        ConcreteCommandB --|> UICommand
-        ConcreteCommandC --|> UICommand
-        ConcreteCommandD --|> UICommand
+        ResizeColumnCommand -up-|> ResizeCommand
+
+        ResizeCommand -up-|> UICommand
+
+        package undoableCommands {
+            abstract class UndoableCommand {
+                - bus : CommandBus
+                - windowCompositor : WindowCompositor
+                - uiHandler : UIHandler
+                - preTableMemento : TableMemento
+                - postTableMemento : TableMemento
+                - undone : boolean
+                __Inspectors__
+                # {abstract} getOldTableId()
+                # {abstract} getNewTableId()
+                + getPreTableMemento() : TableMemento
+                + getPostTableMemento() : TableMemento
+                # getUiHandler() : UIHandler
+                # getBus()
+                # isValidBus(c : CommandBus) : boolean
+                + isUndone() : boolean
+                + getReturn() : Boolean
+                __Mutators__
+                - setPreTableMemento()
+                - setPostTableMemento()
+                + execute()
+                + redo()
+                + undo()
+                - setUndone(u : Boolean)
+                # {abstract} cloneWithValues() : UndoableCommand
+                # {abstract} doWork()
+            }
+
+            class AddTableCommand {
+                + getNewTableId() : Integer
+                + getOldTableId() : Integer
+                # cloneWithValues() : AddTableCommand
+                # doWork()
+            }
+
+            AddTableCommand -up-|> UndoableCommand
+
+            class UndoableStaticTableCommand {
+                - tableId : Integer
+                __Inspectors__
+                + getTableId() : Integer
+                # getOldTableId() : Integer
+                # getNewTableId() : Integer
+                __Mutators__
+                # cloneWithValues() : UndoableCommand
+                # doWork()
+            }
+
+            class AddColumnCommand {
+                # cloneWithValues() : AddColumnCommand
+                # doWork()
+            }
+
+
+            UndoableStaticTableCommand -up-|> UndoableCommand
+            AddColumnCommand -up-|> UndoableStaticTableCommand
+        }
+
+
+        UndoableCommand -up-|> UICommand
     }
 
 @enduml
