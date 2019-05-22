@@ -147,6 +147,41 @@ public class UIHandler {
         return getTablesHandler().isValidQuery(query);
     }
 
+    /**
+     * checks whether the first given table is relevant to the second given table.
+     *
+     * @param table1Id
+     * @param table2Id
+     */
+    public boolean isRelevantTo (int table1Id, int table2Id) {
+        return getTablesHandler().isRelevantTo(table1Id, table2Id);
+    }
+
+    /**
+     * checks whether the first given column is relevant to the second given table.
+     *
+     * @param table1Id
+     * @param column1Id
+     * @param table2Id
+     * @return
+     */
+    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id) {
+        return getTablesHandler().isRelevantTo(table1Id, column1Id, table2Id);
+    }
+
+    /**
+     * checks whether the first given row is relevant to the second given table.
+     *
+     * @param table1Id
+     * @param column1Id
+     * @param row1Id
+     * @param table2Id
+     * @return
+     */
+    public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id) {
+        return getTablesHandler().isRelevantTo(table1Id, column1Id, row1Id, table2Id);
+    }
+
 
 
     /**
