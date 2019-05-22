@@ -191,12 +191,12 @@ package "ui" {
     WindowCompositor --> ModeBuilder : uses
     ModeBuilder --> Widget : uses
 
-    UIHandler --> TableLayout : uses
+    UIHandler -left-> TableLayout : uses
     ModeBuilder -up-> UIHandler : uses
 
     UICommand --> WindowCompositor : uses
     UICommand --> UIHandler : uses
-    WindowCompositor --|> CanvasWindow
+    WindowCompositor -up-|> CanvasWindow
 
 
     Updater -left-> UIHandler : uses
@@ -226,6 +226,10 @@ package tablr {
 
 
 
+    class TableMemento {
+        - index : int
+        - table : Table
+    }
 
     abstract class Table{
         - name : String
@@ -252,6 +256,7 @@ package tablr {
     ComputedTable -up-|> Table
     ComputedTable -left-> "1" StoredTable
 
+    TableMemento --> Table : has
     class ColumnConverter{
 
     }
@@ -291,6 +296,7 @@ package tablr {
     }
 }
 
+UndoableCommand --> TableMemento : has
 UIHandler --> TablesHandler : uses
 
 
