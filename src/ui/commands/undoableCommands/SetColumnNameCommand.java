@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * A command for setting a column name.
  */
-public class SetColumnNameCommand extends UndoableCommand {
+public class SetColumnNameCommand extends UndoableStaticTableCommands {
 
     /**
      * Only use as a prototype to give to a widget which can be cloned.
@@ -19,9 +19,8 @@ public class SetColumnNameCommand extends UndoableCommand {
      * @param commandBus
      */
     public SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, UIHandler uiHandler, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler,tableId);
         this.newNameSupplier = newNameSupplier;
-        this.tableId = tableId;
         this.columnId = columnId;
     }
 
@@ -36,26 +35,6 @@ public class SetColumnNameCommand extends UndoableCommand {
     private Supplier<String> getNewNameSupplier(){
         return newNameSupplier;
     }
-
-    /**
-     * The id of the table.
-     */
-    private final int tableId;
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getNewTableId() {
-        return tableId;
-    }
-
 
     /**
      * The id of the column.
@@ -77,7 +56,7 @@ public class SetColumnNameCommand extends UndoableCommand {
     @Override
     protected SetColumnNameCommand cloneWithValues() {
 
-        return new SetColumnNameCommand(getNewNameSupplier(), getOldTableId(), getColumnId(), getUiHandler(), getBus());
+        return new SetColumnNameCommand(getNewNameSupplier(), getTableId(), getColumnId(), getUiHandler(), getBus());
     }
 
     /**
@@ -85,7 +64,7 @@ public class SetColumnNameCommand extends UndoableCommand {
      */
     @Override
     protected void doWork(){
-        getUiHandler().setColumnName(getOldTableId(),getColumnId(),getNewNameSupplier().get());
+        getUiHandler().setColumnName(getTableId(),getColumnId(),getNewNameSupplier().get());
     }
 
 }

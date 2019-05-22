@@ -12,7 +12,7 @@ import ui.commandBus.CommandBus;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class AddRowCommand extends UndoableCommand {
+public class AddRowCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.
@@ -35,31 +35,7 @@ public class AddRowCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public AddRowCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler, compositor);
-        this.tableID = tableID;
-    }
-
-    /**
-     * The id of the table where you want to add the row to.
-     */
-    private final int tableID;
-
-    /**
-     *  Returns the table id.
-     * @return The table id.
-     */
-    @Basic
-    public Integer getOldTableId() {
-        return tableID;
-    }
-
-    /**
-     *  Returns the table id.
-     * @return The table id.
-     */
-    @Basic
-    public Integer getNewTableId() {
-        return tableID;
+        super(commandBus, uiHandler, compositor, tableID);
     }
 
     @Override
@@ -88,7 +64,7 @@ public class AddRowCommand extends UndoableCommand {
      */
     @Override
     public void doWork() {
-        getUiHandler().addRow(getOldTableId());
+        getUiHandler().addRow(getTableId());
     }
 
 

@@ -5,35 +5,15 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetCellValueCommand extends UndoableCommand {
+public class SetCellValueCommand extends UndoableStaticTableCommands {
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
                                Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus){
-        super(commandBus, uiHandler);
-        this.tableId = tableId;
+        super(commandBus, uiHandler, tableId);
         this.columnId = columnId;
         this.rowId = rowId;
         this.stringSupplier = stringSupplier;
     }
-    /**
-     * The id of the table.
-     */
-    private  final int tableId;
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getNewTableId() {
-        return tableId;
-    }
-
 
     /**
      * The id of the column.
@@ -69,12 +49,12 @@ public class SetCellValueCommand extends UndoableCommand {
 
     @Override
     protected SetCellValueCommand cloneWithValues() {
-        return new SetCellValueCommand(getOldTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
+        return new SetCellValueCommand(getTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
                 getBus());
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setCellValue(getOldTableId(),getColumnId(),getRowId(),getStringSupplier().get());
+        getUiHandler().setCellValue(getTableId(),getColumnId(),getRowId(),getStringSupplier().get());
     }
 }

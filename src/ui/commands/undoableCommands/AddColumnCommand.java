@@ -12,7 +12,7 @@ import ui.commandBus.CommandBus;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class AddColumnCommand extends UndoableCommand {
+public class AddColumnCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates an AddColumnCommand with a given tableId, UIHandler and WindowCompositor.
@@ -35,37 +35,12 @@ public class AddColumnCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public AddColumnCommand(int tableID, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler, compositor);
-        this.tableId = tableID;
+        super(commandBus, uiHandler, compositor, tableID);
     }
-
-    /**
-     * The id of the table where you want to add the column to.
-     */
-    private final int tableId;
-
-    /**
-     *  Returns the table id.
-     * @return The table id.
-     */
-    @Basic
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     *  Returns the table id.
-     * @return The table id.
-     */
-    @Basic
-    public Integer getNewTableId() {
-        return tableId;
-    }
-
 
     @Override
     protected AddColumnCommand cloneWithValues() {
-        return new AddColumnCommand(getOldTableId(), getUiHandler(), getWindowCompositor(), getBus());
+        return new AddColumnCommand(getTableId(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -74,13 +49,10 @@ public class AddColumnCommand extends UndoableCommand {
      * @effect  Adds a column to the table with the tableId using the UIHandler.
      *          |getUIHandler().addColumn(getOldTableId())
      *
-     * @effect  Rebuilds the widgets using the WindowCompositor
-     *          |getCompositor().rebuildAllWidgets()
-     *
      */
     @Override
     protected void doWork() {
-        getUiHandler().addColumn(getOldTableId());
+        getUiHandler().addColumn(getTableId());
     }
 
 }

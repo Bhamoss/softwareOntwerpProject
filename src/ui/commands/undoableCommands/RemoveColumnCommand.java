@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class RemoveColumnCommand extends UndoableCommand {
+public class RemoveColumnCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates an AddColumnCommand with a given tableId columnIDSupplier, UIHandler and WindowCompositor.
@@ -46,39 +46,15 @@ public class RemoveColumnCommand extends UndoableCommand {
      */
     public RemoveColumnCommand(int tableID, Supplier<Integer> columnIDSupplier, UIHandler uiHandler,
                                WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler, compositor);
-        this.tableID = tableID;
+        super(commandBus, uiHandler, compositor, tableID);
         this.columnIDSupplier = columnIDSupplier;
 
     }
 
     /**
-     * The id of the table of which you want to remove the column.
-     */
-    private final int tableID;
-
-    /**
      * The supplier of the id of the column which you want to remove.
      */
     private final Supplier<Integer> columnIDSupplier;
-
-    /**
-     * Returns the id of the table.
-     * @return The id of the table.
-     */
-    @Basic
-    public Integer getOldTableId() {
-        return tableID;
-    }
-
-    /**
-     * Returns the id of the table.
-     * @return The id of the table.
-     */
-    @Basic
-    public Integer getNewTableId() {
-        return tableID;
-    }
 
     /**
      * Returns the supplier of the id of the column.
@@ -91,7 +67,7 @@ public class RemoveColumnCommand extends UndoableCommand {
 
     @Override
     protected RemoveColumnCommand cloneWithValues() {
-        return new RemoveColumnCommand(getOldTableId(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus());
+        return new RemoveColumnCommand(getTableId(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -118,8 +94,7 @@ public class RemoveColumnCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().removeColumn(getOldTableId(), getColumnIDSupplier().get());
-        getWindowCompositor().rebuildAllWidgets();
+        getUiHandler().removeColumn(getTableId(), getColumnIDSupplier().get());
     }
 
 }

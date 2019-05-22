@@ -5,11 +5,10 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnDefaultValueCommand extends UndoableCommand {
+public class SetColumnDefaultValueCommand extends UndoableStaticTableCommands {
 
     public SetColumnDefaultValueCommand(int tableId, int columnId, Supplier<String> stringSupplier, UIHandler uiHandler, CommandBus commandBus){
-        super(commandBus, uiHandler);
-        this.tableId = tableId;
+        super(commandBus, uiHandler,tableId);
         this.columnId = columnId;
         this.stringSupplier = stringSupplier;
     }
@@ -28,25 +27,6 @@ public class SetColumnDefaultValueCommand extends UndoableCommand {
     }
 
     /**
-     * The id of the table.
-     */
-    private  final int tableId;
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getNewTableId() {
-        return tableId;
-    }
-
-    /**
      * The id of the column.
      */
     private final int columnId;
@@ -60,12 +40,12 @@ public class SetColumnDefaultValueCommand extends UndoableCommand {
 
     @Override
     protected SetColumnDefaultValueCommand cloneWithValues() {
-        return new SetColumnDefaultValueCommand(getOldTableId(), getColumnId(), getStringSupplier(), getUiHandler(),
+        return new SetColumnDefaultValueCommand(getTableId(), getColumnId(), getStringSupplier(), getUiHandler(),
                 getBus());
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setColumnDefaultValue(getOldTableId(),getColumnId(),getStringSupplier().get());
+        getUiHandler().setColumnDefaultValue(getTableId(),getColumnId(),getStringSupplier().get());
     }
 }

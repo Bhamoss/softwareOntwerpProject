@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * A command used to set to name of a table.
  */
-public class SetTableNameCommand extends UndoableCommand {
+public class SetTableNameCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates a setTableNameCommand with no old or new name, this should only be used to give to a widget.
@@ -18,9 +18,8 @@ public class SetTableNameCommand extends UndoableCommand {
      * @param commandBus
      */
     public SetTableNameCommand(Supplier<String> newNameSupplier, int id, UIHandler uiHandler, CommandBus commandBus){
-        super(commandBus, uiHandler);
+        super(commandBus, uiHandler,id);
         this.newNameSupplier = newNameSupplier;
-        this.id = id;
     }
 
 
@@ -36,27 +35,6 @@ public class SetTableNameCommand extends UndoableCommand {
         return newNameSupplier;
     }
 
-
-    /**
-     * The id of the table of which this command can change the name.
-     */
-    final private int id;
-
-    /**
-     * Returns the id of the table.
-     */
-    @Basic
-    public Integer getOldTableId() {
-        return id;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    @Basic
-    public Integer getNewTableId() {
-        return id;
-    }
 
 
     /*
@@ -74,7 +52,7 @@ public class SetTableNameCommand extends UndoableCommand {
      */
     @Override
     protected SetTableNameCommand cloneWithValues() {
-        SetTableNameCommand clone = new SetTableNameCommand(getNewNameSupplier(), getOldTableId(), getUiHandler(),
+        SetTableNameCommand clone = new SetTableNameCommand(getNewNameSupplier(), getTableId(), getUiHandler(),
                 getBus());
         return clone;
     }
@@ -84,6 +62,6 @@ public class SetTableNameCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().setTableName(getOldTableId(),getNewNameSupplier().get());
+        getUiHandler().setTableName(getTableId(),getNewNameSupplier().get());
     }
 }

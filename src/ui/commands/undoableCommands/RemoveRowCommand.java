@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * @author Michiel Provoost
  * @version 1.0.0
  */
-public class RemoveRowCommand extends UndoableCommand {
+public class RemoveRowCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates an RemoveRowCommand with a given tableId rowIDSupplier, UIHandler and WindowCompositor.
@@ -45,33 +45,8 @@ public class RemoveRowCommand extends UndoableCommand {
      *          |getUIHandler() == uiHandler
      */
     public RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler, WindowCompositor compositor, CommandBus commandBus){
-        super(commandBus, uiHandler, compositor);
-        this.tableID = tableID;
+        super(commandBus, uiHandler, compositor, tableID);
         this.rowIDSupplier = rowIDSupplier;
-    }
-
-
-    /**
-     * The id of the table of which you want to remove the row.
-     */
-    private final int tableID;
-
-    /**
-     * Returns the id of the table.
-     * @return The id of the table.
-     */
-    @Basic
-    public Integer getOldTableId() {
-        return tableID;
-    }
-
-    /**
-     * Returns the id of the table.
-     * @return The id of the table.
-     */
-    @Basic
-    public Integer getNewTableId() {
-        return tableID;
     }
 
     /**
@@ -91,7 +66,7 @@ public class RemoveRowCommand extends UndoableCommand {
     @Override
     protected RemoveRowCommand cloneWithValues() {
 
-        return new RemoveRowCommand(getOldTableId(), getRowIDSupplier(), getUiHandler(),
+        return new RemoveRowCommand(getTableId(), getRowIDSupplier(), getUiHandler(),
                 getWindowCompositor(), getBus());
     }
 
@@ -119,7 +94,7 @@ public class RemoveRowCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().removeRow(getOldTableId(),getRowIDSupplier().get());
+        getUiHandler().removeRow(getTableId(),getRowIDSupplier().get());
     }
 
 }

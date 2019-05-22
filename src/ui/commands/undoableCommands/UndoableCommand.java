@@ -56,9 +56,9 @@ public abstract class UndoableCommand extends UICommand {
         return windowCompositor;
     }
 
-    public abstract Integer getOldTableId();
+    protected abstract Integer getOldTableId();
 
-    public abstract Integer getNewTableId();
+    protected abstract Integer getNewTableId();
 
     public TableMemento getPreTableMemento() {
         return preTableMemento;

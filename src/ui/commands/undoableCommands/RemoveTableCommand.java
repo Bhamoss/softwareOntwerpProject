@@ -104,7 +104,5 @@ public class RemoveTableCommand extends UndoableCommand {
     @Override
     protected void doWork() {
         getUiHandler().removeTable(getOldTableId());
-        getWindowCompositor().removeSubWindowWithID(getOldTableId());
-        getWindowCompositor().rebuildAllWidgets();
     }
 }

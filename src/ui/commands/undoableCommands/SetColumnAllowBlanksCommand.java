@@ -6,35 +6,14 @@ import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
 
-public class SetColumnAllowBlanksCommand extends UndoableCommand {
+public class SetColumnAllowBlanksCommand extends UndoableStaticTableCommands {
 
     public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
                                        UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor){
-        super(commandBus, uiHandler, windowCompositor);
-        this.tableId = tableId;
+        super(commandBus, uiHandler, windowCompositor,tableId);
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
     }
-
-    /**
-     * The id of the table.
-     */
-    private  final int tableId;
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getNewTableId() {
-        return tableId;
-    }
-
 
     /**
      * The id of the column.
@@ -57,15 +36,12 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
 
     @Override
     protected SetColumnAllowBlanksCommand cloneWithValues() {
-        return new SetColumnAllowBlanksCommand(getOldTableId(), getColumnId(), getBooleanSupplier(),
+        return new SetColumnAllowBlanksCommand(getTableId(), getColumnId(), getBooleanSupplier(),
                 getUiHandler(), getBus(), getWindowCompositor());
     }
 
     @Override
     protected void doWork() {
-        getUiHandler().setColumnAllowBlanks(getOldTableId(),getColumnId(),!getBooleanSupplier().get());
-        if(getUiHandler().getColumnType(getOldTableId(),getColumnId()) =="Boolean"){
-            getWindowCompositor().rebuildAllWidgets();
-        }
+        getUiHandler().setColumnAllowBlanks(getTableId(),getColumnId(),!getBooleanSupplier().get());
     }
 }

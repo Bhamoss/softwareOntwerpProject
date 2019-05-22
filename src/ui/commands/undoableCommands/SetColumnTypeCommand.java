@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * A command for changing the type of a column.
  */
-public class SetColumnTypeCommand extends UndoableCommand {
+public class SetColumnTypeCommand extends UndoableStaticTableCommands {
 
     /**
      * Creates a SetColumnTypeCommand with no old or new name, this should only be used to give to a widget.
@@ -21,31 +21,10 @@ public class SetColumnTypeCommand extends UndoableCommand {
      * @param compositor
      */
     public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, UIHandler uiHandler, CommandBus commandBus, WindowCompositor compositor){
-        super(commandBus, uiHandler);
-        this.tableId = tableId;
+        super(commandBus, uiHandler,tableId);
         this.columnId = columnId;
         this.typeSupplier = typeSupplier;
         this.compositor = compositor;
-    }
-
-
-    /**
-     * The id of the table.
-     */
-    private  final int tableId;
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getOldTableId() {
-        return tableId;
-    }
-
-    /**
-     * Returns the id of the table.
-     */
-    public Integer getNewTableId() {
-        return tableId;
     }
 
 
@@ -97,7 +76,7 @@ public class SetColumnTypeCommand extends UndoableCommand {
      */
     @Override
     protected SetColumnTypeCommand cloneWithValues() {
-        return new SetColumnTypeCommand(getOldTableId(), getColumnId(), getTypeSupplier(),
+        return new SetColumnTypeCommand(getTableId(), getColumnId(), getTypeSupplier(),
                 getUiHandler(), getBus(), getCompositor());
     }
 
@@ -106,8 +85,7 @@ public class SetColumnTypeCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getTypeSupplier().get());
-        getCompositor().rebuildAllWidgets();
+        getUiHandler().setColumnType(getTableId(),getColumnId(),getTypeSupplier().get());
     }
 
 }
