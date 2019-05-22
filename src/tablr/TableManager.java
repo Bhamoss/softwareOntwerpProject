@@ -105,6 +105,11 @@ public class TableManager {
             table.setQuery(q);
     }
 
+    public boolean isValidQuery(String query) {
+        SQLManager tmp = new SQLManager(this);
+        return tmp.isValidQuery(query);
+    }
+
     /**
      * checks whether the first given table is relevant to the second given table.
      *
@@ -828,8 +833,8 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
-        for (int i = 0; i< tables.size(); i++){
-            if (tables.get(i).queryRefersTo(table, columnId)) {
+        for (int i = 1; i<= tables.size(); i++){
+            if (getTableAt(i).queryRefersTo(table, columnId)) {
                 removeTableAt(i);
             }
         }
@@ -1259,8 +1264,8 @@ public class TableManager {
         Table t = getTableAt(index);
         // kijk of er een andere table referred naar de table die verwijdert moet wordne
         //  verwijder eerst die, daarna pas de gegeven table.
-        for (int i = 0; i < tables.size(); i++) {
-            if (tables.get(i).queryRefersTo(t)){
+        for (int i = 1; i <= tables.size(); i++) {
+            if (getTableAt(i).queryRefersTo(t)){
                 removeTableAt(i);
             }
         }

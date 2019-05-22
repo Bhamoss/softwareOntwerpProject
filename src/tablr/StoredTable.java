@@ -24,7 +24,7 @@ public class StoredTable extends Table {
      */
 
     @Override
-    public Boolean isValidQuery(String q) {
+    Boolean isValidQuery(String q) {
         return q.equals("");
     }
 

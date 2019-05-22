@@ -79,7 +79,7 @@ abstract public class Table {
         this.query = q;
     }
 
-    abstract public Boolean isValidQuery(String q);
+    abstract Boolean isValidQuery(String q);
 
     abstract public Boolean queryRefersTo(Table t);
 
