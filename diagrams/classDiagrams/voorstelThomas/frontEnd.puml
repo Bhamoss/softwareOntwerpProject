@@ -101,12 +101,9 @@ class CanvasWindow{
                 + unsubscribe(subscriber : Object) : void
                 + post(command : PushCommand) : void
                 + subscribe(subscriber : Object) : void
+                + undo() : void
+                + redo() : void
                 }
-                note left
-                        Probleem bij undo
-                        command van een table
-                        die computed is?
-                end note
                 class Subscription
 
                 interface Subscribe <<(@, lightgreen)>>
@@ -243,19 +240,6 @@ class CanvasWindow{
 
                     ModeBuilder --> UICommand: uses
 
-class CommandHistory {
-history
-undo()
-redo()
-}
-note left
-    ofwel dit in commandBus,
-    met een unpost command
-    wat echt nog legit zou zijn
-    OF brute force?
-end note
-CommandBus <--> CommandHistory
-CommandHistory <-- Compositor : ?
 }
 
 
