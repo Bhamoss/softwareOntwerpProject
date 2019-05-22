@@ -194,6 +194,9 @@ package "ui" {
     UIHandler --> TableLayout : uses
     ModeBuilder -up-> UIHandler : uses
 
+    UICommand --> WindowCompositor : uses
+    UICommand --> UIHandler : uses
+    WindowCompositor --|> CanvasWindow
 
 }
 
