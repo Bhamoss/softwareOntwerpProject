@@ -34,7 +34,7 @@ public class mainTest {
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 // Start UI
-                uiStarter.getCompositor().recordSession("C:\\Users\\michi\\Desktop\\EditRowValue\\EditRowValue.txt");
+                uiStarter.getCompositor().recordSession("/home/m/Documents/KULeuven/Fase_3/swop/testUseCaseResources/CreateTable/CreateTableMSS.txt");
             });
         } catch (InterruptedException e) {
             e.printStackTrace();
