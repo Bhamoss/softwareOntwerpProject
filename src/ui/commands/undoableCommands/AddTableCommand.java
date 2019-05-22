@@ -70,51 +70,7 @@ public class AddTableCommand extends UndoableCommand {
     @Override
     protected void doWork() {
         getUiHandler().addTable();
-        getWindowCompositor().rebuildAllWidgets();
     }
 
-    /**
-     * Adds a row to the table and asks the window compositor to rebuild all widgets.
-     *
-     * @effect  Gets the compositor.
-     *          |getWindowCompositor()
-     *
-     * @effect  Gets the UIHandler.
-     *          |getUIHandler()
-     *
-     * @effect  Adds a table using the UIHandler.
-     *          |getUIHandler().addTable()
-     *
-     * @effect  Rebuilds the widgets using the WindowCompositor
-     *          |getWindowCompositor().rebuildAllWidgets()
-     *
-     */
-    protected void redoWork() {
-        getUiHandler().addTable();
-        getWindowCompositor().rebuildAllWidgets();
-    }
-
-    /**
-     * Adds a row to the table and asks the window compositor to rebuild all widgets.
-     *
-     * @effect  Gets the compositor.
-     *          |getWindowCompositor()
-     *
-     * @effect  Gets the UIHandler.
-     *          |getUIHandler()
-     *
-     * @effect  Adds a table using the UIHandler.
-     *          |getUIHandler().addTable()
-     *
-     * @effect  Rebuilds the widgets using the WindowCompositor
-     *          |getWindowCompositor().rebuildAllWidgets()
-     *
-     */
-    protected void undoWork() {
-        //TODO: is het de eerste of de laatste als je een nieuwe table toevoegd
-        // voor het moment is het de laatste.
-        getUiHandler().removeTable(getUiHandler().getTableIds().get(getUiHandler().getTableIds().size() - 1));
-        getWindowCompositor().rebuildAllWidgets();
-    }
 
 }

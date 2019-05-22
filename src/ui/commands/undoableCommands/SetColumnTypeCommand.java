@@ -26,31 +26,6 @@ public class SetColumnTypeCommand extends UndoableCommand {
         this.columnId = columnId;
         this.typeSupplier = typeSupplier;
         this.compositor = compositor;
-        this.oldType = null;
-        this.newType = null;
-    }
-
-    /**
-     * Creates a SetColumnTypeCommand, this should be used to make a clone to put on the commandBus.
-     * @param tableId
-     * @param columnId
-     * @param typeSupplier
-     * @param uiHandler
-     * @param commandBus
-     * @param compositor
-     * @param oldType
-     * @param newType
-     */
-    private SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier,
-                                 UIHandler uiHandler, CommandBus commandBus, WindowCompositor compositor,
-                                 String oldType, String newType){
-        super(commandBus, uiHandler);
-        this.tableId = tableId;
-        this.columnId = columnId;
-        this.typeSupplier = typeSupplier;
-        this.compositor = compositor;
-        this.oldType = oldType;
-        this.newType = newType;
     }
 
 
@@ -115,30 +90,6 @@ public class SetColumnTypeCommand extends UndoableCommand {
 
 
     /**
-     * The type of the column before executing this command.
-     */
-    private final String oldType;
-
-    /**
-     * Returns the type of the column before executing this command.
-     */
-    public String getOldType(){
-        return oldType;
-    }
-
-    /**
-     * The type of the column after executing this command.
-     */
-    private final String newType;
-
-    /**
-     * Return the type of the column after executing this command.
-     */
-    public String getNewType(){
-        return newType;
-    }
-
-    /**
      * Creates a new SetColumnTypeCommand with the same tableId, columnId, typeSupplier, uiHandler, commandbus,
      * compositor and the current type of the column
      * as old type and the type supplied by the typeSupplier as the newType.
@@ -146,10 +97,8 @@ public class SetColumnTypeCommand extends UndoableCommand {
      */
     @Override
     protected SetColumnTypeCommand cloneWithValues() {
-        String old = getUiHandler().getColumnType(getOldTableId(), getColumnId());
-        String newType = getTypeSupplier().get();
         return new SetColumnTypeCommand(getOldTableId(), getColumnId(), getTypeSupplier(),
-                getUiHandler(), getBus(), getCompositor(), old, newType);
+                getUiHandler(), getBus(), getCompositor());
     }
 
     /**
@@ -160,22 +109,5 @@ public class SetColumnTypeCommand extends UndoableCommand {
         getUiHandler().setColumnType(getOldTableId(),getColumnId(),getTypeSupplier().get());
         getCompositor().rebuildAllWidgets();
     }
-
-    /**
-     * Sets the type of the column to the type before this command was executed, and rebuilds all widgets.
-     */
-    protected void undoWork() {
-        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getOldType());
-        getCompositor().rebuildAllWidgets();
-    }
-
-    /**
-     * Sets the type of the column to the type to which it was originally set, and rebuilds all widgets.
-     */
-    protected void redoWork() {
-        getUiHandler().setColumnType(getOldTableId(),getColumnId(),getNewType());
-        getCompositor().rebuildAllWidgets();
-    }
-
 
 }
