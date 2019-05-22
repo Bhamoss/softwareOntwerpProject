@@ -1,6 +1,7 @@
 package ui.commands.undoableCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import tablr.TableMemento;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
@@ -65,14 +66,17 @@ public class RemoveTableCommand extends UndoableCommand {
      * @effect  Gets the supplier of the id of the table.
      *          |getTableIDSupplier()
      */
-    public Integer getOldTableId() {
-        return getTableIDSupplier().get();
+
+
+    @Override
+    protected TableMemento generatePreTableMemento() {
+        return getUiHandler().createTableMemento(getTableIDSupplier().get());
     }
 
-    public Integer getNewTableId(){
-        return null;
+    @Override
+    protected TableMemento generatePostTableMemento() {
+        return getPreTableMemento().makeEmptyMemento();
     }
-
 
     @Override
     protected RemoveTableCommand cloneWithValues() {
@@ -103,6 +107,6 @@ public class RemoveTableCommand extends UndoableCommand {
      */
     @Override
     protected void doWork() {
-        getUiHandler().removeTable(getOldTableId());
+        getUiHandler().removeTable(getTableIDSupplier().get());
     }
 }

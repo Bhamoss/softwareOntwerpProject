@@ -40,7 +40,7 @@ public class AddRowCommand extends UndoableStaticTableCommands {
 
     @Override
     protected AddRowCommand cloneWithValues() {
-        return new AddRowCommand(getOldTableId(), getUiHandler(), getWindowCompositor(), getBus());
+        return new AddRowCommand(getTableId(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**

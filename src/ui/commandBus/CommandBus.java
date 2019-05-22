@@ -356,7 +356,7 @@ public class CommandBus {
 
     public boolean canRedo()
     {
-        if (history.isEmpty() || historyIndex >= history.size() - 1) return false;
+        if (history.isEmpty() || historyIndex >= history.size()-1) return false;
         return true;
     }
 
@@ -407,7 +407,8 @@ public class CommandBus {
      */
     private void overwriteHistory()
     {
-        for (int i = getHistoryIndex(); i < history.size() - 1; i++) {
+        int historySize = history.size();
+        for (int i = getHistoryIndex(); i < historySize - 1; i++) {
             removeHistoryAt(getHistoryIndex() + 1);
         }
     }
@@ -423,7 +424,7 @@ public class CommandBus {
     }
 
     private boolean canHaveAsHistoryIndex(int index){
-        if (index < -1 || index >= history.size()) return false;
+        if (index < -1 || index > history.size()) return false;
         return true;
     }
 
@@ -433,7 +434,7 @@ public class CommandBus {
     }
 
     private boolean historyIndexOnLastElement(){
-        return getHistoryIndex() == history.size() - 1;
+        return getHistoryIndex() == history.size()-1;
     }
 }
 

@@ -277,7 +277,7 @@ class CommandBusTest {
 
 
         // setting the value of (1,1) to swop
-        SetCellValueCommand se = new SetCellValueCommand(1,1,1,()->{return "swop";}, handler, bus);
+        SetCellValueCommand se = new SetCellValueCommand(1,1,1,()->{return "swop";}, handler, bus,comp);
         se.execute();
         assertEquals("swop", handler.getCellValue(1,1,1));
         bus.undo();
@@ -295,9 +295,6 @@ class CommandBusTest {
         // redo to much
         assertThrows(IllegalStateException.class, () -> bus.redo());
 
-
-        //TODO verkeerde table wordt verwijder. na de vorige redo() zou table 1 weg moeten zijn, maar table 2 is verwijderd
-        //TODO hier heeft hij een error dat de table niet kan ge add worden op plaats 1.
 
         // overwrite
         bus.undo();

@@ -56,10 +56,6 @@ public abstract class UndoableCommand extends UICommand {
         return windowCompositor;
     }
 
-    protected abstract Integer getOldTableId();
-
-    protected abstract Integer getNewTableId();
-
     public TableMemento getPreTableMemento() {
         return preTableMemento;
     }
@@ -121,7 +117,9 @@ public abstract class UndoableCommand extends UICommand {
         return c != null;
     }
 
+    protected abstract TableMemento generatePreTableMemento();
 
+    protected abstract TableMemento generatePostTableMemento();
 
     @Override
     public void execute()
@@ -129,7 +127,7 @@ public abstract class UndoableCommand extends UICommand {
         setUndone(false);
         // you must clone before you do the work
         UndoableCommand clone = cloneWithValues();
-        clone.setPreTableMemento(getUiHandler().createTableMemento(getOldTableId()));
+        clone.setPreTableMemento( generatePreTableMemento());
         clone.doWork();
         getBus().post(clone);
         if(getWindowCompositor() != null){
@@ -153,7 +151,7 @@ public abstract class UndoableCommand extends UICommand {
      * Undoes what execute() did.
      */
     public void undo(){
-        setPostTableMemento(getUiHandler().createTableMemento(getNewTableId()));
+        setPostTableMemento(generatePostTableMemento());
         getUiHandler().setTableMemento(getPreTableMemento());
         setUndone(true);
         if(getWindowCompositor() != null){

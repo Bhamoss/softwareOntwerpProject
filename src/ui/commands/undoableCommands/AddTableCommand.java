@@ -1,6 +1,7 @@
 package ui.commands.undoableCommands;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import tablr.TableMemento;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
@@ -34,16 +35,14 @@ public class AddTableCommand extends UndoableCommand {
     }
 
 
-
-
     @Override
-    public Integer getNewTableId() {
-        return getUiHandler().getTableIds().get(0);
+    protected TableMemento generatePreTableMemento() {
+        return getUiHandler().createTableMemento(-1);
     }
 
     @Override
-    public Integer getOldTableId() {
-        return null;
+    protected TableMemento generatePostTableMemento() {
+        return  getUiHandler().createTableMemento(getUiHandler().getTableIds().get(0));
     }
 
     @Override

@@ -5,6 +5,9 @@ import ui.commandBus.Subscribe;
 import ui.commands.undoableCommands.SetCellValueCommand;
 import ui.widget.LabelWidget;
 
+/**
+ * A class representing an updater for a widget containing a cell value.
+ */
 public class CellValueUpdater extends Updater {
 
     public CellValueUpdater(int tableId, int columnid, int rowId, LabelWidget w, UIHandler handler) {
@@ -55,7 +58,6 @@ public class CellValueUpdater extends Updater {
 
     @Override
     public void update() {
-        System.out.println("Updating table " + getTableId() + " column " + getColumnid() + " row " + getRowId());
         getWidget().setText(getHandler().getCellValue(getTableId(),getColumnid(),getRowId()));
     }
 }

@@ -1,10 +1,11 @@
 package ui.commands.undoableCommands;
 
+import tablr.TableMemento;
 import ui.UIHandler;
 import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
-public class UndoableStaticTableCommands extends UndoableCommand {
+public abstract class UndoableStaticTableCommands extends UndoableCommand {
 
     /**
      * A constructor to be used in the constructors of the subclasses
@@ -35,16 +36,6 @@ public class UndoableStaticTableCommands extends UndoableCommand {
         this.tableId = tableId;
     }
 
-    @Override
-    protected Integer getOldTableId() {
-        return tableId;
-    }
-
-    @Override
-    protected Integer getNewTableId() {
-        return tableId;
-    }
-
     public Integer getTableId(){
         return tableId;
     }
@@ -52,12 +43,12 @@ public class UndoableStaticTableCommands extends UndoableCommand {
     private final Integer tableId;
 
     @Override
-    protected UndoableCommand cloneWithValues() {
-        return null;
+    public TableMemento generatePostTableMemento(){
+       return getUiHandler().createTableMemento(getTableId()) ;
     }
 
     @Override
-    protected void doWork() {
-
+    protected TableMemento generatePreTableMemento() {
+        return getUiHandler().createTableMemento(getTableId()) ;
     }
 }

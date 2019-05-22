@@ -2,17 +2,23 @@ package tablr;
 
 public class TableMemento  {
 
-    private int index;
-
-    private Table table;
-
-    public void setIndex(int index) {
+    public TableMemento(int index, Table table){
         this.index =index;
+        this.table = table;
+        isEmpty = false;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public TableMemento(int index){
+        this.index =index;
+        this.table = null;
+        isEmpty = true;
     }
+
+    private final int index;
+
+    private final Table table;
+
+    public final Boolean isEmpty;
 
     public Table getTable() {
         return table;
@@ -20,5 +26,9 @@ public class TableMemento  {
 
     public int getIndex() {
         return index;
+    }
+
+    public TableMemento makeEmptyMemento(){
+        return new TableMemento(index);
     }
 }

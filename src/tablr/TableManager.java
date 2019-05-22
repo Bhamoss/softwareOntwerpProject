@@ -1364,27 +1364,23 @@ public class TableManager {
 
     //TODO Commentaar
     public TableMemento createTableMemento(Integer tableId){
-        if(tableId  != null){
-                TableMemento memento = new TableMemento();
-                memento.setIndex(getTableIndex(getTable(tableId)));
-                memento.setTable(getTable(tableId).copy());
-                return memento;
+        if(tableId  > -1) {
+            TableMemento tableMemento = new TableMemento(getTableIndex(getTable(tableId)), getTable(tableId).copy());
+            return tableMemento;
         }
-        else{
-            TableMemento memento = new TableMemento();
-            memento.setIndex(1);
-            return memento;
-        }
+        else
+            return new TableMemento(1);
     }
 
     //TODO Commentaar
     public void setTableMemento(TableMemento memento){
-        if(memento.getTable() != null) {
+
+        if(!memento.isEmpty) {
             if (canHaveAsTableAt(memento.getIndex(), memento.getTable())) {
-                addTableAt(memento.getIndex(), memento.getTable());
+                addTableAt(memento.getIndex(), memento.getTable().copy());
             } else {
                 removeTable(memento.getTable().getId());
-                addTableAt(memento.getIndex(), memento.getTable());
+                addTableAt(memento.getIndex(), memento.getTable().copy());
             }
         }
         else{
