@@ -290,16 +290,23 @@ public class TableManager {
     public boolean canHaveAsName(int tableId, String newTableName) throws  IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
-        Table t = getTable(tableId);
+        Table table = getTable(tableId);
         // checking wether there already is a table with that name.
-        for(Table table: this.tables)
+        for(Table t: this.tables)
         {
-            if(table != t && table.getName().equals(newTableName))
+            if(t != table && t.getName().equals(newTableName))
             {
                 return false;
             }
         }
-
+        // check whether there is a reference to this table
+        if (!newTableName.equals(table.getName())){
+            for (Table t : tables) {
+                if (t.queryRefersTo(table)) {
+                    return false;
+                }
+            }
+        }
         return Table.isValidName(newTableName);
     }
 
@@ -344,7 +351,6 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         if(!canHaveAsName(tableId, newName)){throw new IllegalArgumentException("The new name is not valid.");}
-        if (queryRefersToTable(tableId)) throw new IllegalArgumentException("There is a reference in a query to the given table, the name cannot be edited");
         getTable(tableId).setName(newName);
     }
 
