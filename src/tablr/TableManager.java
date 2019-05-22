@@ -587,9 +587,11 @@ public class TableManager {
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
-        for (Table t:tables) {
-            if (t.queryRefersTo(table, columnId)) {
-                return false;
+        if (!newName.equals(table.getColumnName(columnId))) {
+            for (Table t : tables) {
+                if (t.queryRefersTo(table, columnId)) {
+                    return false;
+                }
             }
         }
         return table.canHaveAsColumnName(columnId, newName);
