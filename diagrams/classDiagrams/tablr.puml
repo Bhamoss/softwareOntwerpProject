@@ -167,7 +167,6 @@ package "tablr" {
         - query : String
         + {static} MAX_COLUMNS : int
         __Inspector__
-        + {abstract} copy() : Table
         + isTerminated() : boolean
         _query_
         + getQuery() : String
@@ -196,7 +195,7 @@ package "tablr" {
         + getColumnIndex(id : int) : int
         + {abstract} hasAsColumn(id : int) : boolean
         + getColumnNames() : ArrayList<String>
-        + canHaveAsColumnName(id : int, name : String) : boolean
+        + {abstract} canHaveAsColumnName(id : int, name : String) : boolean
         + getColumnName(id : int) : String
         + getColumnId(name : String) : int
         + getColumnType(id : int) : String
@@ -213,6 +212,7 @@ package "tablr" {
 
 
         __Mutator__
+        + {abstract} copy() : Table
         + terminate()
         _query_
         + setQuery(q : String)
@@ -230,23 +230,109 @@ package "tablr" {
         + {abstract} addRow()
         + {abstract} removeRow(row : int)
         + setCellValue(id : int, row : int, value : String)
-        __Responsibility__
-        manage Column
     }
 
     class StoredTable {
-        - columns : List<Column>
         __Inspector__
+        _query_
+        ~ isValidQuery(q : String) : boolean
+        + queryRefersTo(t : Table) : boolean
+        + queryRefersTo(t : Table, columnId : int) : boolean
+        + uses(table : Table) : boolean
+        + uses(table : Table, columnId : int) : boolean
+        + uses(table : Table, columnId : int, rowId : int) boolean
+        + columnIsUsedInQuery(id : int) : boolean
+        _id_
+        + getColumnIds() : ArrayList<Integer>
+        _columns_
+        + getNbColumns() : int
+        ~ getColumnAt(index : int) : Column
+        ~ getColumn(id : int) : Column
+        ~ canHaveAsColumn(column : Column) : boolean
+        + hasProperColumns() : boolean
+        + hasAsColumn(id : int) : boolean
+        + canHaveAsColumnName(id : int, name : String) : boolean
+        - isAlreadyUsedColumnName(name : String) : boolean
+        + canHaveAsColumn(id : int, type : String) : boolean
+        + canHaveAsDefaultValue(id : int, dv : String) : boolean
+        + canHaveAsColumnAllowBlanks(int : id,
+            \t blanksAllowed : boolean) : boolean
+
         __Mutator__
+        + copy() : Table
+        + terminate()
+        _columns_
+        + addColumn() : int
+        - addColumnAt(index : int) : int
+        - addColumnAt(index : int, column : Column)
+        + removeColumnAt(index : int)
+        + removeColumn(id : int)
+        - removeColumn(column : Column)
+        + setColumnName(id : int, name : String)
+        + setColumnType(id : int, type : String)
+        + setColumnDefaultValue(id : int, dv : String)
+        + setColumnBlanksAllowed(id : int, blanksAllowed : boolean)
+        _rows_
+        + addRow()
+        + removeRow(row : int)
+        __Responsibility__
+            manage Column
     }
 
     class ComputedTable {
+        - storedTable : StoredTable
+        - sqlManager : SQLManager
         __Inspector__
+        + getStoredTable() : StoredTable
+        _query_
+        ~ isValidQuery(q : String) : boolean
+        + queryRefersTo(t : Table) : boolean
+        + queryRefersTo(t : Table, columnId : int) : boolean
+        + uses(table : Table) : boolean
+        + uses(table : Table, columnId : int) : boolean
+        + uses(table : Table, columnId : int, rowId : int) boolean
+        + columnIsUsedInQuery(id : int) : boolean
+        + getTableRefs() : Collection<String>
+        + getTables() : Collection<Table>
+        + getColumnRefs(tableName : String) : List<String>
+        _id_
+        + getColumnIds() : ArrayList<Integer>
+        _columns_
+        + getNbColumns() : int
+        ~ getColumnAt(index : int) : Column
+        ~ getColumn(id : int) : Column
+        ~ canHaveAsColumn(column : Column) : boolean
+        + hasProperColumns() : boolean
+        + hasAsColumn(id : int) : boolean
+        + canHaveAsColumnName(id : int, name : String) : boolean
+        + canHaveAsColumn(id : int, type : String) : boolean
+        + canHaveAsDefaultValue(id : int, dv : String) : boolean
+        + canHaveAsColumnAllowBlanks(int : id,
+            \t blanksAllowed : boolean) : boolean
+        _rows_
+        canHaveAsCellValue(id : int, row : int, value : String) : boolean
+
         __Mutator__
+        + updateStoredTable()
+        + copy() : Table
+        + terminate()
+        _columns_
+        + addColumn() : int
+        + removeColumnAt(index : int)
+        + removeColumn(id : int)
+        + setColumnName(id : int, name : String)
+        + setColumnType(id : int, type : String)
+        + setColumnDefaultValue(id : int, dv : String)
+        + setColumnBlanksAllowed(id : int, blanksAllowed : boolean)
+        _rows_
+        + addRow()
+        + removeRow(row : int)
+        + setCellValue(id : int, row : int, value : String)
     }
 
     StoredTable -up-|> Table
     ComputedTable -up-|> Table
+    ComputedTable -left-> "1" StoredTable
 
     package "column" {
 
@@ -255,16 +341,45 @@ package "tablr" {
         Column <|-- EmailColumn
         Column <|-- StringColumn
 
-        class Column <<(A, lightgreen)>>{
-            -name:String
-            -allowsBlanks: boolean
-            -defaultValue: String = ""
+        abstract class Column {
+            -name : String
+            - id : int
+            -blanksAllowed : boolean
+            -defaultValue : String
             -values : List<String>
-            __
+            - isTerminated : boolean
+            __Inspectors__
+            + getId() : int
+            + getName() : String
+            + canHaveAsName(name : String) : boolean
+            + {abstract} getType() : String
+            + isBlanksAllowed() : boolean
+            + canHaveAsBlanksAllowed(blanksAllowed : boolean) : boolean
+            + isValueBlank(value : String) : boolean
+            + getDefaultValue() : String
+            + hasAsValue(id : int) : boolean
+            + getNbValues() : int
+            + getValueAt(index : int) : String
+            + canHaveAsValue(value : String) : boolean
+            + canHaveAsDefaultValue(dv : String) : boolean
+            + canHaveAsValueAt(index : int, value : String) : boolean
+            + hasProperValues() : boolean
+            + {abstract} canHaveAsType(type : String)
 
-
-        __Responsibility__
-        Manage list with correct entries
+            __Mutators__
+            + setName(name : String)
+            + setBlanksAllowed(blanksAllowed : boolean)
+            + setDefaultValue(value : String)
+            + addValueAt(index : int, value : String)
+            + addValue(value : String)
+            + addValue()
+            + setValueAt(index : int, value : String)
+            + removeValueAt(index : int)
+            + setColumnType(type : String)
+            + {abstract} copy() : Column
+            + terminate()
+            __Responsibility__
+            Manage list with correct entries
         }
 
         StoredTable *-- "0..*" Column
@@ -275,6 +390,8 @@ package "tablr" {
             +getType(): String
             +canHaveAsType(type : String) : boolean
             +canHaveAsValue(value : String) : boolean
+            __Mutators__
+            + copy() : Column
         }
         class StringColumn{
             -type: String = "String"
@@ -282,6 +399,8 @@ package "tablr" {
             +getType(): String
             +canHaveAsType(type : String) : boolean
             +canHaveAsValue(value : String) : boolean
+            __Mutators__
+            + copy() : Column
         }
         class EmailColumn{
             -type: String = "Email"
@@ -289,6 +408,9 @@ package "tablr" {
             +getType(): String
             +canHaveAsType(type : String) : boolean
             +canHaveAsValue(value : String) : boolean
+            + isEmail(value : String) : boolean
+            __Mutators__
+            + copy() : Column
         }
         class IntegerColumn{
             -type: String = "Integer"
@@ -296,6 +418,9 @@ package "tablr" {
             +getType(): String
             +canHaveAsType(type : String) : boolean
             +canHaveAsValue(value : String) : boolean
+            + isInteger(value : String) : boolean
+            __Mutators__
+            + copy() : Column
         }
     }
 }

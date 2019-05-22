@@ -215,14 +215,6 @@ class ColumnTest {
 
     }
 
-    @Test
-    void setType()
-    {
-        Column c = boolColumn10.setColumnType("String");
-        assertEquals(c.getId(), boolColumn10.getId());
-        assertEquals(c.getName(), boolColumn10.getName());
-        assertEquals(c.getNbValues(), boolColumn10.getNbValues());
-        assertEquals("String" , c.getType());
-    }
+
 
 }

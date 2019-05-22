@@ -137,27 +137,6 @@ public abstract class Column {
     public abstract String getType();
 
     /**
-     * Returns a new list of all the possible types of columns.
-     */
-    @Basic
-    public static ArrayList<String> getAllTypes() {
-        ArrayList<String> result = new ArrayList<>();
-        for (int i = 1; i <= allTypes.size(); i++)
-            result.add(allTypes.get(i - 1));
-        return result;
-    }
-
-    /**
-     * Static final list registering all the possible types that are possible for a column.
-     */
-    private static final ArrayList<String> allTypes = new ArrayList<String>() {{
-        add("String");
-        add("Email");
-        add("Boolean");
-        add("Integer");
-    }};
-
-    /**
      * Returns whether blanks are allowed in this column or not.
      */
     @Basic
@@ -495,91 +474,6 @@ public abstract class Column {
      *          The type to be checked.
      */
     public abstract boolean canHaveAsType(String type);
-
-
-    public Column setColumnType(String type) {
-        Column newColumn;
-        String dv;
-        switch (type) {
-            case "String":
-                newColumn = new StringColumn(getId(), getName(), getNbValues(),
-                        getDefaultValue(), isBlanksAllowed());
-                break;
-            case "Email":
-                newColumn = new EmailColumn(getId(), getName(), getNbValues(),
-                        getDefaultValue(), isBlanksAllowed());
-                break;
-            case "Boolean":
-                dv = getDefaultValue();
-                if (getType().equals("Integer")) {
-                    switch (getDefaultValue()) {
-                        case "0":
-                            dv = "False";
-                            break;
-                        case "1":
-                            dv = "True";
-                            break;
-                        case "":
-                            dv = "";
-                            break;
-                    }
-                }
-                newColumn = new BooleanColumn(getId(), getName(), getNbValues(),
-                        dv, isBlanksAllowed());
-                break;
-            case "Integer":
-                dv = getDefaultValue();
-                if (getType().equals("Boolean")) {
-                    switch (getDefaultValue()) {
-                        case "True":
-                            dv ="1";
-                            break;
-                        case "False":
-                            dv ="0";
-                            break;
-                        case "":
-                            dv ="";
-                            break;
-                    }
-                }
-                newColumn = new IntegerColumn(getId(), getName(), getNbValues(),
-                        dv, isBlanksAllowed());
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        for (int i = 1; i <= getNbValues(); i++){
-            if (type.equals("Boolean") && getType().equals("Integer")) {
-                switch (getValueAt(i)) {
-                    case "0":
-                        newColumn.setValueAt(i, "False");
-                        break;
-                    case "1":
-                        newColumn.setValueAt(i, "True");
-                        break;
-                    case "":
-                        newColumn.setValueAt(i, "");
-                        break;
-                }
-            }
-            else if (type.equals("Integer") && getType().equals("Boolean")){
-                switch (getValueAt(i)) {
-                    case "True":
-                        newColumn.setValueAt(i, "1");
-                        break;
-                    case "False":
-                        newColumn.setValueAt(i, "0");
-                        break;
-                    case "":
-                        newColumn.setValueAt(i, "");
-                        break;
-                }
-            } else {
-                newColumn.setValueAt(i, getValueAt(i));
-            }
-        }
-        return newColumn;
-    }
 
     /*
      ************************************************************************************************************************

@@ -33,6 +33,39 @@ public class StoredTable extends Table {
         return false;
     }
 
+    @Override
+    public boolean uses(Table table) {
+        return table.getId() == this.getId();
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId) {
+        if (table.getId() == this.getId())
+            return hasAsColumn(columnId);
+        return false;
+    }
+
+    @Override
+    public boolean uses(Table table, int columnId, int rowId) {
+        if (table.getId() == this.getId() && hasAsColumn(columnId)){
+            return getColumn(columnId).hasAsValue(rowId);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean queryRefersTo(Table t, int columnId) {
+        return false;
+    }
+
+    /**
+     * Check whether the column at the given index is already used in
+     *  a query or not.
+     */
+    boolean columnIsUsedInQuery(int id) {
+        return false;
+    }
+
     /*
      ************************************************************************************************************************
      *                                                       id
@@ -478,38 +511,6 @@ public class StoredTable extends Table {
         return false;
     }
 
-    @Override
-    public boolean uses(Table table) {
-        return table.getId() == this.getId();
-    }
-
-    @Override
-    public boolean uses(Table table, int columnId) {
-        if (table.getId() == this.getId())
-            return hasAsColumn(columnId);
-        return false;
-    }
-
-    @Override
-    public boolean uses(Table table, int columnId, int rowId) {
-        if (table.getId() == this.getId() && hasAsColumn(columnId)){
-            return getColumn(columnId).hasAsValue(rowId);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean queryRefersTo(Table t, int columnId) {
-        return false;
-    }
-
-    /**
-     * Check whether the column at the given index is already used in
-     *  a query or not.
-     */
-    boolean columnIsUsedInQuery(int id) {
-        return false;
-    }
 
     /*
      ************************************************************************************************************************
