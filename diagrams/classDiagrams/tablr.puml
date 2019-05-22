@@ -334,6 +334,25 @@ package "tablr" {
     ComputedTable -up-|> Table
     ComputedTable -left-> "1" StoredTable
 
+    class ColumnConverter{
+        + convertToStringColumn(column : Column) {static}
+        + convertToEmailColumn(column : Column) {static}
+        +convertToIntegerColumn(column : Column) {static}
+        +convertToIntegerColumn(column : BooleanColumn) {static}
+        +convertToBooleanColumn(column : Column) {static}
+        +convertToBooleanColumn(column : IntegerColumn) {static}
+        +canConvertToStringColumn(column : Column) : boolean {static}
+        +canConvertToEmailColumn(column : Column) : boolean {static}
+        +canConvertToIntegerColumn(column : Column) : boolean {static}
+        +canConvertToIntegerColumn(column : BooleanColumn) : boolean  {static}
+        +canConvertToBooleanColumn(column : Column) : boolean {static}
+        +canConvertToBooleanColumn(column : IntegerColumn) : boolean {static}
+        + canConvertTo(c : Column, c2 : Column) : boolean {static}
+        - booleanToInt(b : String) : String {static}
+        - intToBoolean(i : String) : String {static}
+    }
+    ColumnConverter -left...- Table
+
     package "column" {
 
         Column <|-- BooleanColumn
