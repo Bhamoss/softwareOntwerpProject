@@ -42,6 +42,10 @@ public class TablesHandler {
         getTableManager().setQuery(id, query);
     }
 
+    public boolean isValidQuery(String query){
+        return getTableManager().isValidQuery(query);
+    }
+
 
     /*
      *  TableHandler

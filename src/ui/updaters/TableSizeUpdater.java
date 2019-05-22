@@ -7,12 +7,20 @@ import ui.widget.ColumnWidget;
 
 public class TableSizeUpdater extends SizeUpdater {
 
-    public TableSizeUpdater(ColumnWidget w, UIHandler handler) {
+    public TableSizeUpdater(Integer columnNumber, ColumnWidget w, UIHandler handler) {
         super(w,handler);
+        this.columnNumber = columnNumber;
     }
 
-    public TableSizeUpdater(UIHandler handler) {
+    public TableSizeUpdater(Integer columnNumber,UIHandler handler) {
         super(handler);
+        this.columnNumber = columnNumber;
+    }
+
+    private final Integer columnNumber;
+
+    public Integer getColumnNumber() {
+        return columnNumber;
     }
 
     @Subscribe
@@ -20,7 +28,7 @@ public class TableSizeUpdater extends SizeUpdater {
 
     @Override
     public void update() {
-        getWidget().forceResize(getHandler().getTableWidth());
+        getWidget().forceResize(getHandler().getTableWidth(getColumnNumber()));
     }
 
 }

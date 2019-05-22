@@ -105,7 +105,7 @@ public class TableManager {
 
     public boolean isValidQuery(String query) {
         SQLManager tmp = new SQLManager(this);
-        return tmp.isValidQuery(query);
+        return query.equals("") || tmp.isValidQuery(query);
     }
 
     /**

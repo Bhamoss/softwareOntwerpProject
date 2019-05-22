@@ -7,29 +7,26 @@ import java.util.function.Supplier;
 
 public class ResizeTableCommand extends ResizeCommand{
 
-    public ResizeTableCommand( Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
+    public ResizeTableCommand(Integer columnNumber, Supplier<Integer> columnwidth, UIHandler uiHandler, CommandBus commandBus){
+        super(columnwidth,uiHandler,commandBus);
+        this.columnNumber =columnNumber;
+    }
+
+    public ResizeTableCommand(Integer columnNumber,UIHandler uiHandler, CommandBus commandBus){
         super(uiHandler,commandBus);
-        this.columnwidth = columnwidth;
+        this.columnNumber =columnNumber;
     }
 
-    public ResizeTableCommand(UIHandler uiHandler, CommandBus commandBus){
-        super(uiHandler,commandBus);
+
+    private final Integer columnNumber;
+
+    public Integer getColumnNumber() {
+        return columnNumber;
     }
-
-    private Supplier<Integer> columnwidth;
-
-    public void setColumnwidth(Supplier<Integer> columnwidth) {
-        this.columnwidth = columnwidth;
-    }
-
-    public Integer getColumnwidth() {
-        return columnwidth.get();
-    }
-
 
     @Override
     public void execute() {
-        getUIHandler().setTableWidth(getColumnwidth());
+        getUIHandler().putTableWidth(getColumnNumber(),getColumnWidth());
         getCommandBus().post(this);
     }
 

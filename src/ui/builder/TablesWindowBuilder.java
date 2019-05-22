@@ -7,7 +7,9 @@ import ui.commands.*;
 import ui.commands.undoableCommands.AddTableCommand;
 import ui.commands.undoableCommands.RemoveTableCommand;
 import ui.commands.undoableCommands.SetTableNameCommand;
+import ui.commands.undoableCommands.SetTableQueryCommand;
 import ui.updaters.TableNameUpdater;
+import ui.updaters.TableQueryUpdater;
 import ui.updaters.TableSizeUpdater;
 import ui.widget.*;
 
@@ -64,44 +66,62 @@ public class TablesWindowBuilder extends  ModeBuilder{
 
         // encapsulate in scrolling decorator
 
-        TableSizeUpdater tableSizeUpdater = new TableSizeUpdater(uiHandler);
-        ResizeTableCommand resizeTableCommand = new ResizeTableCommand(uiHandler, bus);
-        ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, x->{});
-        tablesColumn.setResizeCommand(resizeTableCommand);
-        tablesColumn.setGetHandler(tableSizeUpdater, bus);
-        resizeTableCommand.setColumnwidth(()->tablesColumn.getWidth());
+        TableWidget table = new TableWidget(10, 10);
+        window.addWidget(table);
 
-        window.addWidget(tablesColumn);
-        SelectorColumnWidget selectorColumn = new SelectorColumnWidget(20, 10, "S");
-        window.addWidget(selectorColumn);
+        TableSizeUpdater tableNameSizeUpdater = new TableSizeUpdater(1,uiHandler);
+        TableSizeUpdater tableQuerrySizeUpdater = new TableSizeUpdater(2,uiHandler);
 
+        table.addSelectorColumn("S");
+        table.addColumn(uiHandler.getTableWidth(1),
+                true,
+                "Name",
+                tableNameSizeUpdater,
+                new ResizeTableCommand(1,uiHandler,bus),
+                bus);
+
+        table.addColumn(uiHandler.getTableWidth(2),
+                true,
+                "Querry",
+                tableQuerrySizeUpdater,
+                new ResizeTableCommand(2,uiHandler,bus),
+                bus);
 
         // fill all 3 columns with corresponding widgets
         for(Integer tableID : uiHandler.getTableIds()) {
+
+            table.addEntry(tableID);
+
             // Create the editor widgets which holds the names for the tables and is able to change those names
-            EditorWidget editor = new EditorWidget(true);
+            EditorWidget nameEditor = new EditorWidget(true);
+            nameEditor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
+            nameEditor.setGetHandler(new TableNameUpdater(tableID, nameEditor, uiHandler), bus);
+            nameEditor.setPushHandler(new SetTableNameCommand(nameEditor::getText, tableID, uiHandler, bus));
+            nameEditor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
 
-            editor.setValidHandler((String s) -> uiHandler.canHaveAsName(tableID, s));
-            editor.setGetHandler(new TableNameUpdater(tableID, editor, uiHandler), bus);
-            editor.setPushHandler(new SetTableNameCommand(()->editor.getText(), tableID, uiHandler, bus));
-            editor.setClickHandler(new OpenTableCommand(tableID, compositor, uiHandler));
+            table.addEntry(nameEditor);
 
-            tablesColumn.addWidget(editor);
-            selectorColumn.addRow(tableID);
+            // Create the editor widgets which holds the names for the tables and is able to change those names
+            EditorWidget queryEditor = new EditorWidget(true);
+            queryEditor.setValidHandler((String s) -> uiHandler.isValidQuery(s));
+            queryEditor.setGetHandler(new TableQueryUpdater(tableID, queryEditor, uiHandler), bus);
+            queryEditor.setPushHandler(new SetTableQueryCommand(()->queryEditor.getText(), tableID, uiHandler, bus));
+
+            table.addEntry(queryEditor);
         }
 
         // Create button at the bottom to add new tables on the bottom left
         HashMap<Integer, UICommand> onClick = new HashMap<>();
         onClick.put(2, new AddTableCommand(uiHandler, bus, compositor));
         window.addWidget(new ButtonWidget(
-                20,selectorColumn.getY()+selectorColumn.getHeight()+5,105,30,
+                20,table.getY()+table.getHeight()+5,105,30,
                 true,"Create table", onClick
                 ));
 
         // is an invisible widget which listens for key events
-        window.addWidget(new KeyEventWidget(new RemoveTableCommand(()->selectorColumn.getSelectedId(), uiHandler, compositor, bus), KeyEvent.VK_DELETE, false));
+        window.addWidget(new KeyEventWidget(new RemoveTableCommand(table::getSelectedId, uiHandler, compositor, bus), KeyEvent.VK_DELETE, false));
         window.addWidget(
-                new KeyEventWidget(new AddFormWindowCommand(()->selectorColumn.getSelectedId(),uiHandler,compositor),
+                new KeyEventWidget(new AddFormWindowCommand(table::getSelectedId,uiHandler,compositor),
                         KeyEvent.VK_F, true
                 ));
         ComponentWidget scrollWindow = new ScrollHorizontalWidget(new ScrollVerticalWidget(window));

@@ -5,12 +5,12 @@ import java.util.HashMap;
 public class TableLayout {
 
     public TableLayout(){
-        tableWidth = getDefaultWidth();
+        tableWidths = new HashMap<>();
         columnWidths = new HashMap<>();
         rowWidths = new HashMap<>();
     }
 
-    private Integer tableWidth;
+    private HashMap<Integer,Integer> tableWidths;
 
     private HashMap<Integer,HashMap<Integer,Integer>> columnWidths;
 
@@ -22,13 +22,6 @@ public class TableLayout {
         return defaultWidth;
     }
 
-    public Integer getTableWidth() {
-        return tableWidth;
-    }
-
-    public void setTableWidth(Integer tableWidth) {
-        this.tableWidth = tableWidth;
-    }
 
     public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
         if (columnWidths.containsKey(tableId)&& columnWidths.get(tableId).containsKey(columnNumber))
@@ -43,6 +36,19 @@ public class TableLayout {
         }
         columnWidths.get(tableId).put(columnNumber,columnWidth);
     }
+
+    public Integer getTableWidth(Integer columnNumber) {
+        if (tableWidths.containsKey(columnNumber))
+            return tableWidths.get(columnNumber);
+        else
+            return getDefaultWidth();
+    }
+
+    public void putTableWidth(Integer columnNumber, Integer columnWidth) {
+        tableWidths.put(columnNumber,columnWidth);
+    }
+
+
 
     public Integer getRowWidth(Integer tableId, Integer columnNumber) {
         if (rowWidths.containsKey(tableId)&& rowWidths.get(tableId).containsKey(columnNumber))
