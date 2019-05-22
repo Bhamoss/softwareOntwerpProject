@@ -42,20 +42,32 @@ class SQLInterpreter {
         initTable(query);
         inverseCount = 0;
         query.tableSpecs.interpret(
-                rec -> inverter(rec, query.columnSpecs, colId,rowId,val),
+                rec -> inverter(rec, query.columnSpecs.get(colId-1).expr, colId,rowId,val),
                 this::recordify
         );
     }
 
-    //TODO: cleanup
     private int inverseCount;
-    public void inverter(Record rec, List<ColumnSpec> columnSpecs, int colId, int rowId, Value val) {
+
+    /**
+     * Help function for reverse interpretation.
+     * @param rec current record
+     * @param rExpr the expression to be reversed.
+     * @param colId the columnId of the changed value
+     * @param rowId the rowId of the changed value
+     * @param val the new value
+     */
+    public void inverter(Record rec, Expr rExpr, int colId, int rowId, Value val) {
         inverseCount++;
+        // Return if the current record does not have the required rowId
         if (inverseCount != rowId)
             return;
+
+        // Edit the record with the new value and reverse interpret
         rec.write(colId+1,val);
-        Expr rExpr = columnSpecs.get(colId-1).expr;
         String invval = rExpr.inverseEval(rec).toString();
+
+        // Find the table,column and row Id that the new value refers to
         CellId refCellId;
         if (rExpr instanceof CellId)
             refCellId = (CellId) rExpr;
@@ -66,19 +78,25 @@ class SQLInterpreter {
         int refTableId = tableManager.getTableId(TRMap.get(refCellId.tRef));
         int refRowId = rec.getId(refCellId);
         int refColId = tableManager.getColumnId(refTableId, refCellId.columnName);
+        // apply the change to the underlying table
         tableManager.setCellValue(refTableId, refColId, refRowId, invval);
     }
 
 
+    /**
+     * Returns all tables used in a query
+     * @param query
+     * @return list of tables
+     */
     Collection<String> getTables(SQLQuery query) {
         return query.tableSpecs.getTRMap().values();
     }
 
 
     /**
-     * Returns whether a query contains a cellId.
+     * Returns all cellIds used in a query.
      * @param query
-     * @return
+     * @return list of CellId(tableName,columnName)
      */
     List<CellId> getCellIds(SQLQuery query) {
         TRMap = query.tableSpecs.getTRMap();
@@ -93,8 +111,9 @@ class SQLInterpreter {
 
     /**
      * Initializes a table for a given query.
-     * The columnSpecs are used to add the correct
-     * number of columns, set the names and types.
+     * The table references map is initialized,
+     * and the columnSpecs are used to add the correct
+     * number of columns, and set the names and types.
      * @param query
      */
     private void initTable(SQLQuery query) {
@@ -168,7 +187,14 @@ class SQLInterpreter {
         return toType(tableManager.getColumnType(tableId,columnId));
     }
 
-    // TODO: Move to columns?
+
+    /**
+     * Conversion from String value as used in the Column classes,
+     * to a Value type
+     * @param value the string representation of the value
+     * @param type the type of the string representation
+     * @return depending on the type, a Boolean-, Integer- or StringValue
+     */
     static Value toValue(String value, String type) {
         if (value.equals(""))
             return new BlankValue();
@@ -179,6 +205,13 @@ class SQLInterpreter {
         }
     }
 
+
+    /**
+     * Conversion from String types as used in the Column classes,
+     * to a CType type
+     * @param type string representation of the type
+     * @return the CType type
+     */
     private static CType toType(String type) {
         switch (type) {
             case "Boolean": return new BoolType();

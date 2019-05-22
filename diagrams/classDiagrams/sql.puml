@@ -1,0 +1,70 @@
+@startuml
+
+package "sql" {
+
+
+
+    class SQLManager{
+        tableManager : TableManager
+        __Inspector__
+
+        + boolean isParsableQuery(String query)
+        + boolean isValidQuery(String query)
+        + StoredTable interpretQuery(String query)
+        + boolean isColumnEditable(String query, String columnName)
+        + void inverseInterpret(String query, int colId, int rowId, String sval, String type)
+        + boolean queryRefersTo(String query, String tableName)
+        + Collection<String> getTableRefs(String query)
+        + boolean queryRefersTo(String query, String tableName, String columnName)
+        + List<String> getColumnRefs(String query, String tableName)
+
+        __Responsibilities__
+        providing a facade for all SQL functionality
+    }
+
+    SQLManager --> SQLParser
+    SQLManager --> SQLInterpreter
+    SQLParser --> TreeModule
+    SQLInterpreter --> TreeModule
+    SQLInterpreter --> RecordModule
+
+
+    class SQLInterpreter{
+        ~ StoredTable interpret(SQLQuery query)
+        ~ void reverseInterpret(SQLQuery query, int colId, int rowId, Value val)
+        ~ Collection<String> getTables(SQLQuery query)
+        ~ List<CellId> getCellIds(SQLQuery query)
+
+        __Responsibilities__
+        Interpreting parsed SQL code
+    }
+
+
+
+
+
+    class TreeModule{
+        __Responsibilities__
+        Provide data classes for the SQL AST
+    }
+
+    class RecordModule {
+      __Responsibilities__
+        Provide data classes used in interpretation
+    }
+
+    class SQLParser {
+        ~ {static} SQLQuery parseQuery(String text)
+        __Responsibilities__
+        Parsing SQL
+    }
+
+}
+
+class TableManager {
+}
+SQLManager <-> TableManager
+SQLInterpreter -> TableManager
+
+
+@enduml
