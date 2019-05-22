@@ -64,13 +64,13 @@ public class ComputedTable extends Table {
     }
 
     @Override
-    public boolean uses(Table table, int columnId) {
+    public boolean uses(Table table, int columnId, int column2Id) {
         for (Table t : getTables()) {
             for (String columnName : getColumnRefs(t.getName())){
                 if (columnName.equals(table.getColumnName(columnId)))
                     return true;
             }
-            if (table.getId() != t.getId() && t.uses(table, columnId))
+            if (table.getId() != t.getId() && t.uses(table, columnId, column2Id))
                 return true;
         }
         return false;
@@ -80,7 +80,7 @@ public class ComputedTable extends Table {
     public boolean uses(Table table, int columnId, int rowId, int column2Id, int row2Id) {
         System.out.println(getNbRows() + " " + rowId);
         if (row2Id >= 1 && row2Id <= getNbRows())
-            return uses(table, columnId);
+            return uses(table, columnId, column2Id);
         return false;
     }
 

@@ -40,7 +40,7 @@ public class ColumnDefaultValueUpdater extends Updater {
 
     @Subscribe
     public void update(SetColumnDefaultValueCommand command) {
-        if (getHandler().isRelevantTo(getTableId(), getColumnId(),command.getTableId())) {
+        if (getHandler().isRelevantTo(command.getTableId(), command.getColumnId(),getTableId(), getColumnId())) {
             update();
         }
     }

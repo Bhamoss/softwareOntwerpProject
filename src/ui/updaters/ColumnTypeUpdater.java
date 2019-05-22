@@ -41,7 +41,7 @@ public class ColumnTypeUpdater extends Updater {
 
     @Subscribe
     public void update(SetColumnTypeCommand command) {
-        if (getHandler().isRelevantTo(getTableId(), getColumnId(),command.getTableId())) {
+        if (getHandler().isRelevantTo(command.getTableId(), command.getColumnId(),getTableId(), getColumnId())) {
             update();
         }
     }

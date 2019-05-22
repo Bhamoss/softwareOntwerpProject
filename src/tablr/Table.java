@@ -95,7 +95,7 @@ abstract public class Table {
      * @param table
      * @return
      */
-    abstract public boolean uses(Table table, int columnId);
+    abstract public boolean uses(Table table, int columnId, int column2Id);
     /**
      * checks whether this table uses directly or indirectly the given row in his query
      * @param table

@@ -129,13 +129,13 @@ public class TableManager {
      * @param table2Id
      * @return
      */
-    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id){
+    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id, int column2Id){
         if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
             throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
         if (!getTable(table1Id).hasAsColumn(column1Id))
             throw new IllegalArgumentException("the given column doesnt exist in the given table");
         Table table2 = getTable(table2Id);
-        return table2.uses(getTable(table1Id), column1Id);
+        return table2.uses(getTable(table1Id), column1Id, column2Id);
     }
 
     public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id, int column2Id, int row2Id) {

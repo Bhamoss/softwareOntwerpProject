@@ -165,8 +165,8 @@ public class UIHandler {
      * @param table2Id
      * @return
      */
-    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id) {
-        return getTablesHandler().isRelevantTo(table1Id, column1Id, table2Id);
+    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id, int column2Id) {
+        return getTablesHandler().isRelevantTo(table1Id, column1Id, table2Id, column2Id);
     }
 
     /**
