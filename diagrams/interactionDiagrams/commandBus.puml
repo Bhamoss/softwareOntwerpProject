@@ -16,6 +16,23 @@ alt subscription.getOnEventClass() ==  command.class
 commandBus -> subscription : trigger(command)
 subscription -> subscriber : onEvent(command)
 end
+alt command.class == UndoableCommand
+alt !historyIndexOnLastElement()
+commandBus -> commandBus : overwriteHistory()
+end
+commandBus -> commandBus : addHistory(command);
+commandBus -> commandBus : setHistoryIndex(getHistoryIndex() + 1)
+end
+... UNDO ...
+user -> commandBus: undo()
+commandBus -> commandBus : getHistoryAt(getHistoryIndex()).undo()
+commandBus -> commandBus : postWithoutHistory(getHistoryAt(getHistoryIndex()))
+commandBus -> commandBus : setHistoryIndex(getHistoryIndex() - 1)
+... REDO ...
+user -> commandBus: redo()
+commandBus -> commandBus : setHistoryIndex(getHistoryIndex() + 1);
+commandBus -> commandBus : getHistoryAt(getHistoryIndex()).redo();
+commandBus -> commandBus : postWithoutHistory(getHistoryAt(getHistoryIndex()));
 ... UNSUBSCRIBE ...
 user -> commandBus : unsubscribe(subscriber)
 commandBus -> subscription : destroy
@@ -37,5 +54,19 @@ newpage unsubscribe: wrong subscriber
 user -> commandBus : subscribe(subscriber)
 alt subscriber is not subscribed
 commandBus -> user : throw new IllegalArgumentException("Subscriber is not subscribed")
+end
+
+newpage undo : cannot undo
+
+user -> commandBus : undo()
+alt no commands to undo or all commands undone
+commandBus -> user : throw new IllegalStateException()
+end
+
+newpage redo : cannot redo
+
+user -> commandBus : redo()
+alt no commands or nothing to redo
+commandBus -> user : throw new IllegalStateException()
 end
 @enduml
