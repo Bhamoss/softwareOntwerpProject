@@ -198,6 +198,10 @@ package "ui" {
     UICommand --> UIHandler : uses
     WindowCompositor --|> CanvasWindow
 
+
+    Updater -left-> UIHandler : uses
+    LabelWidget <-> Updater
+
 }
 
 package tablr {

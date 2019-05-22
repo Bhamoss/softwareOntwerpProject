@@ -147,7 +147,7 @@ public class ComputedTable extends Table {
      * Sets the given value as value for the cell
      * of the given column (given column id) at the given row.
      *
-     * @param id    The id of the column.
+     * @param columnId    The id of the column.
      * @param row   The row number of the row.
      * @param value The value to be set.
      * @throws IllegalColumnException There isn't a column with the given columnName in this table.
@@ -160,10 +160,11 @@ public class ComputedTable extends Table {
      * | getColumn(columnName).setValueAt(row, value)
      */
     @Override
-    public void setCellValue(int id, int row, String value) throws IllegalColumnException, IllegalRowException, IllegalArgumentException {
-        if (sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
+    public void setCellValue(int columnId, int row, String value) throws IllegalColumnException, IllegalRowException, IllegalArgumentException {
+        if (!sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(columnId)))
             throw new IllegalArgumentException("Given column is not editable.");
-        super.setCellValue(id, row, value);
+        super.setCellValue(columnId, row, value);
+        sqlManager.inverseInterpret(getQuery(), columnId ,row, value, getColumnType(columnId));
     }
 
     /**
