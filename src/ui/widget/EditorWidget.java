@@ -130,7 +130,7 @@ public class EditorWidget extends LabelWidget {
     @Override
     public boolean handleKeyEvent(int id, int keyCode, char keyChar, boolean ctrl) {
         if (selected && id == KeyEvent.KEY_PRESSED) {
-            if (keyCode >= 48) { // Alphanumerical key
+            if (keyCode >= 32) { // Alphanumerical key
                 setText(text + keyChar);
                 return true;
             } else if (keyCode == KeyEvent.VK_BACK_SPACE && text.length() > 0) {

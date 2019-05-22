@@ -1,5 +1,5 @@
 @startuml
-titleLabel Class Diagram
+title Class Diagram
 
 package "ui" {
     class Widget{

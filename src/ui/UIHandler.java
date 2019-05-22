@@ -30,12 +30,12 @@ public class UIHandler {
     private final TableLayout tableLayout;
 
 
-    public Integer getTableWidth() {
-        return getTableLayout().getTableWidth();
+    public Integer getTableWidth(Integer columnNumber) {
+        return getTableLayout().getTableWidth(columnNumber);
     }
 
-    public void setTableWidth(Integer tableWidth) {
-        getTableLayout().setTableWidth(tableWidth);
+    public void putTableWidth(Integer columnNumber, Integer columnWidth) {
+        getTableLayout().putTableWidth(columnNumber, columnWidth);
     }
 
     public Integer getColumnWidth(Integer tableId, Integer columnNumber) {
@@ -141,6 +141,10 @@ public class UIHandler {
 
     public void setQuery(int id, String q) {
         getTablesHandler().setQuery(id, q);
+    }
+
+    public boolean isValidQuery(String query){
+        return getTablesHandler().isValidQuery(query);
     }
 
 
