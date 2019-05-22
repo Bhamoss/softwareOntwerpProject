@@ -1,0 +1,290 @@
+@startuml
+
+title Class Diagram Iteration 3
+package "ui" {
+    package "builder" {
+        abstract class ModeBuilder {
+            - compositor : WindowCompositor
+            - uiHandler : UIHandler
+            - bus : CommandBus
+            __
+            + build(...) : ComponentWidget
+        }
+
+        class FormWindowBuilder {
+
+        }
+        class TableDesignWindowBuilder {
+
+        }
+        class TableRowsWindowBuilder {
+
+        }
+        class TablesWindowBuilder {
+
+        }
+
+        FormWindowBuilder -up-|> ModeBuilder
+        TableDesignWindowBuilder -up-|> ModeBuilder
+        TableRowsWindowBuilder -up-|> ModeBuilder
+        TablesWindowBuilder -up-|> ModeBuilder
+    }
+
+    package "commandBus" {
+        class CommandBus {
+            + unsubscribe(subscriber : Object)
+            + post(command : UndoableCommand)
+            + postWithoutHistory(command : UICommand)
+            + undo()
+            + redo()
+        }
+
+        class Subscription {
+            - subscriber : Object
+            - onEvent : Method
+            __
+            + trigger(command : UICommand)
+        }
+
+        interface Subscribe <<(@, lightgreen)>>
+
+        CommandBus -right-> Subscription : has
+        CommandBus -left-> Subscribe : uses
+
+
+    }
+
+    package "commands" {
+
+        abstract class UICommand {
+
+        }
+
+        package undoableCommands {
+            abstract class UndoableCommand {
+
+            }
+        }
+
+        UndoableCommand -up-|> UICommand
+
+    }
+
+    CommandBus <-down-> UICommand : uses
+
+
+    package "updaters" {
+        abstract class SizeUpdater {
+
+        }
+
+        abstract class Updater {
+
+        }
+
+        SizeUpdater -up-|> Updater
+    }
+
+    package "widget" {
+        class Widget {
+            -x: int
+            -y: int
+            -width: int
+            -height: int
+            #border: boolean
+            #blocked: boolean
+            __Inspectors__
+            +containsPoint(x: int, y: int): boolean
+            +isBlocking(): boolean
+            __Mutators__
+            #setPosition(x: int, y: int): void
+            +paint(g: Graphics): void
+            +handleKeyEvent(id: int, keyCode: int,
+                \t keyChar: char): boolean
+            +handleMouseEvent(id: int, x: int, y: int,
+                \t clickCount: int): boolean
+            +update(command: UICommand): void
+        }
+
+
+        class LabelWidget{
+            #text: String
+            __Inspectors__
+            +getText(): String
+            __Mutators__
+            #setText(text: String): void
+        }
+        LabelWidget -up-|> Widget
+
+        class CheckBoxWidget{
+            -checked: boolean
+            __Inspectors__
+            +isChecked(): boolean
+            __Mutators__
+            +setChecked(c: boolean): void
+            +forceUncheck(): void
+        }
+        CheckBoxWidget -up-|> Widget
+
+        package compositeWidgets{
+            class CompositeWidget{
+                - widgets: LinkedList<Widget>
+                __Mutators__
+                + addWidget(w: Widget): void
+                + removeWidget(w: Widget): void
+            }
+
+            package componentWidgets{
+                class ComponentWidget{
+                    -isActive: boolean
+                }
+
+
+
+                ComponentWidget -up-|> CompositeWidget
+
+
+            }
+
+            CompositeWidget -up-|> Widget
+
+
+        }
+    }
+
+    class CanvasWindow {
+
+    }
+
+    class TableLayout {
+        __responsibility__
+        information for layout
+    }
+
+    class UIHandler {
+        __responsibility__
+        controller for UI
+    }
+
+    class UIStarter {
+
+    }
+
+    class WindowCompositor {
+        - subWindows : List<ComponentWidget>
+        - bus : CommandBus
+        __Mutators__
+        - addSubWindow(subWindow : ComponentWidget)
+        + addTablesSubWindow()
+        + addDesignSubWindow(id : int)
+        + addFormSubWindow(tableId : int, rowId : int)
+        + addRowsSubWindow(id : int)
+        + removeSubWindow(subWindow : ComponentWidget)
+        + rebuildAllWidgets()
+        + rebuildWindow(subWindow : ComponentWidget)
+        # handleMouseEvent(...)
+        # handleKeyEvent(...)
+    }
+    UIStarter -right-> WindowCompositor : has
+    WindowCompositor -left-> "0..*" ComponentWidget : has
+    WindowCompositor -down-> "1" CommandBus : has
+    WindowCompositor --> ModeBuilder : uses
+    ModeBuilder --> Widget : uses
+
+    UIHandler --> TableLayout : uses
+    ModeBuilder -up-> UIHandler : uses
+
+
+}
+
+package tablr {
+
+
+
+    class TablesHandler{
+        - tableManager : TableManager
+        __Responsibilities__
+        providing a controller for tables
+    }
+
+
+    class TableManager{
+        - tables : List<Table> [*] = new LinkedList<Table>
+        __Responsibility__
+        manage tables and manage access to tables
+    }
+
+    TableManager -right-> "0..*" Table
+    TablesHandler -right-> "1" TableManager
+
+
+
+
+    abstract class Table{
+        - name : String
+        - isTerminated : boolean
+        - id : int
+        - query : String
+        + {static} MAX_COLUMNS : int
+
+    }
+
+    class StoredTable {
+
+        __Responsibility__
+            manage Column
+    }
+
+    class ComputedTable {
+        - storedTable : StoredTable
+        - sqlManager : SQLManager
+
+    }
+
+    StoredTable -up-|> Table
+    ComputedTable -up-|> Table
+    ComputedTable -left-> "1" StoredTable
+
+    class ColumnConverter{
+
+    }
+    ColumnConverter -left...- Table
+
+    package "column" {
+
+        Column <|-- BooleanColumn
+        Column <|-- IntegerColumn
+        Column <|-- EmailColumn
+        Column <|-- StringColumn
+
+        abstract class Column {
+            -name : String
+            - id : int
+            -blanksAllowed : boolean
+            -defaultValue : String
+            -values : List<String>
+            __Responsibility__
+            Manage list with correct entries
+        }
+
+        StoredTable *-- "0..*" Column
+
+        class BooleanColumn{
+
+        }
+        class StringColumn{
+
+        }
+        class EmailColumn{
+
+        }
+        class IntegerColumn{
+
+        }
+    }
+}
+
+UIHandler --> TablesHandler : uses
+
+
+@enduml
