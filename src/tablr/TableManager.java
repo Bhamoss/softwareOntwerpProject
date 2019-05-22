@@ -3,11 +3,9 @@ package tablr;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
-import be.kuleuven.cs.som.taglet.*;
 import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -127,11 +125,11 @@ public class TableManager {
      * checks whether the first given column is relevant to the second given column.
      *
      * @param table1Id
-     * @param table2Id
      * @param column1Id
+     * @param table2Id
      * @return
      */
-    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id){
+    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id){
         if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
             throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
         if (!getTable(table1Id).hasAsColumn(column1Id))
@@ -140,7 +138,7 @@ public class TableManager {
         return table2.uses(getTable(table1Id), column1Id);
     }
 
-    public boolean isRelevantTo(int table1Id, int table2Id, int column1Id, int row1Id) {
+    public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id) {
         if (!hasAsTable(table1Id) || !hasAsTable(table2Id))
             throw new IllegalArgumentException("one of the two tables doesn't exist in this tableManager");
         if (!getTable(table1Id).hasAsColumn(column1Id))

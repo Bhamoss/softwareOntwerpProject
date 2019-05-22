@@ -822,7 +822,7 @@ public class TablesHandler {
      * @return
      */
     public boolean isRelevantTo(int table1Id, int column1Id, int table2Id) {
-        return tableManager.isRelevantTo(table1Id,table2Id,column1Id);
+        return tableManager.isRelevantTo(table1Id, column1Id, table2Id);
     }
 
     /**
@@ -835,7 +835,7 @@ public class TablesHandler {
      * @return
      */
     public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id) {
-        return tableManager.isRelevantTo(table1Id,table2Id,column1Id, row1Id);
+        return tableManager.isRelevantTo(table1Id, column1Id, row1Id, table2Id);
     }
 
     /**
