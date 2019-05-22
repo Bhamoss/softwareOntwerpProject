@@ -38,7 +38,7 @@ public class AddTableCommand extends UndoableCommand {
 
     @Override
     public Integer getNewTableId() {
-        return getUiHandler().getTableIds().get(getUiHandler().getNbTables()-1);
+        return getUiHandler().getTableIds().get(0);
     }
 
     @Override

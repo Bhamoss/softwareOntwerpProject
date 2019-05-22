@@ -129,8 +129,6 @@ public abstract class UndoableCommand extends UICommand {
         setUndone(false);
         // you must clone before you do the work
         UndoableCommand clone = cloneWithValues();
-        if(getOldTableId() != null)
-            System.out.println("old Table name: "+ getUiHandler().getTableName(getOldTableId()));
         clone.setPreTableMemento(getUiHandler().createTableMemento(getOldTableId()));
         clone.doWork();
         getBus().post(clone);

@@ -65,7 +65,7 @@ public class EditorWidget extends LabelWidget {
      * @return whether deselection succeeded
      */
     public boolean attemptDeselect() {
-        if (!isBlocking()) {
+        if (!isBlocking() && selected == true) {
             selected = false;
             UICommand.execute();
             //UICommand.accept(id, getText());

@@ -35,7 +35,6 @@ public class TableNameUpdater extends Updater {
 
     @Subscribe
     public void update(SetTableNameCommand command) {
-        System.out.println("updater is called" );
         if (getTableID() == command.getOldTableId()) {
             update();
         }
