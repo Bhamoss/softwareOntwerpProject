@@ -89,19 +89,6 @@ public class AddRowCommand extends UndoableCommand {
     @Override
     public void doWork() {
         getUiHandler().addRow(getOldTableId());
-        getWindowCompositor().rebuildAllWidgets();
-    }
-
-
-    protected void undoWork() {
-        getUiHandler().removeRow(getOldTableId(), getUiHandler().getNbRows(getOldTableId()));
-        getWindowCompositor().rebuildAllWidgets();
-    }
-
-
-    protected void redoWork() {
-        getUiHandler().addRow(getOldTableId());
-        getWindowCompositor().rebuildAllWidgets();
     }
 
 

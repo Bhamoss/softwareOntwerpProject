@@ -81,7 +81,6 @@ public class AddColumnCommand extends UndoableCommand {
     @Override
     protected void doWork() {
         getUiHandler().addColumn(getOldTableId());
-        getWindowCompositor().rebuildAllWidgets();
     }
 
 }

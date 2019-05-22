@@ -14,19 +14,6 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
         this.tableId = tableId;
         this.columnId = columnId;
         this.booleanSupplier = booleanSupplier;
-        this.oldBlank = false;
-        this.newBlank = false;
-    }
-
-    public SetColumnAllowBlanksCommand(int tableId, int columnId, Supplier<Boolean> booleanSupplier,
-                                       UIHandler uiHandler, CommandBus commandBus, WindowCompositor windowCompositor,
-                                       boolean oldBlank, boolean newBlank){
-        super(commandBus, uiHandler, windowCompositor);
-        this.tableId = tableId;
-        this.columnId = columnId;
-        this.booleanSupplier = booleanSupplier;
-        this.oldBlank = oldBlank;
-        this.newBlank = newBlank;
     }
 
     /**
@@ -67,25 +54,11 @@ public class SetColumnAllowBlanksCommand extends UndoableCommand {
         return booleanSupplier;
     }
 
-    private final boolean oldBlank;
-
-    private boolean getOldBlank(){
-        return oldBlank;
-    }
-
-    private final boolean newBlank;
-
-    private boolean getNewBlank(){
-        return newBlank;
-    }
-
 
     @Override
     protected SetColumnAllowBlanksCommand cloneWithValues() {
-        boolean o = getUiHandler().getColumnAllowBlank(getOldTableId(), getColumnId());
-        boolean n = !getBooleanSupplier().get();
         return new SetColumnAllowBlanksCommand(getOldTableId(), getColumnId(), getBooleanSupplier(),
-                getUiHandler(), getBus(), getWindowCompositor(), o, n);
+                getUiHandler(), getBus(), getWindowCompositor());
     }
 
     @Override

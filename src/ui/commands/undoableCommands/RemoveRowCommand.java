@@ -48,33 +48,8 @@ public class RemoveRowCommand extends UndoableCommand {
         super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.rowIDSupplier = rowIDSupplier;
-        this.rowValues = null;
-        this.rowId = -1;
     }
 
-    private RemoveRowCommand(int tableID, Supplier<Integer> rowIDSupplier, UIHandler uiHandler,
-                             WindowCompositor compositor, CommandBus commandBus, List<String> rowValues, int rowId){
-        super(commandBus, uiHandler, compositor);
-        this.tableID = tableID;
-        this.rowIDSupplier = rowIDSupplier;
-        this.rowValues = rowValues;
-        this.rowId = rowId;
-    }
-
-    private final List<String> rowValues;
-
-    private List<String> getRowValues(){
-        return rowValues;
-    }
-
-    /**
-     * The id, aka where the row is/was.
-     */
-    private final int rowId;
-
-    private int getRowId(){
-        return rowId;
-    }
 
     /**
      * The id of the table of which you want to remove the row.
@@ -115,13 +90,9 @@ public class RemoveRowCommand extends UndoableCommand {
 
     @Override
     protected RemoveRowCommand cloneWithValues() {
-        List<String> values = new LinkedList<>();
-        for (int column :
-                getUiHandler().getColumnIds(getOldTableId())) {
-            values.add(getUiHandler().getCellValue(getOldTableId(), column, getRowIDSupplier().get()));
-        }
+
         return new RemoveRowCommand(getOldTableId(), getRowIDSupplier(), getUiHandler(),
-                getWindowCompositor(), getBus(), values, getRowIDSupplier().get());
+                getWindowCompositor(), getBus());
     }
 
     /**
@@ -151,22 +122,4 @@ public class RemoveRowCommand extends UndoableCommand {
         getUiHandler().removeRow(getOldTableId(),getRowIDSupplier().get());
     }
 
-
-    protected void undoWork() {
-        //TODO: set the row layout
-        // TODO: ik moet kunnen een row inserten
-        //getUiHandler().addRow(getTableID(), getRowId());
-        int i = 0;
-        for (int column :
-                getUiHandler().getColumnIds(getOldTableId())) {
-            getUiHandler().setCellValue(getOldTableId(), column, getRowId(), getRowValues().get(i));
-            i++;
-        }
-    }
-
-
-    protected void redoWork() {
-        getUiHandler().removeRow(getOldTableId(), getRowId());
-        getWindowCompositor().rebuildAllWidgets();
-    }
 }

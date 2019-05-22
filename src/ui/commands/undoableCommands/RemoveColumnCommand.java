@@ -49,76 +49,8 @@ public class RemoveColumnCommand extends UndoableCommand {
         super(commandBus, uiHandler, compositor);
         this.tableID = tableID;
         this.columnIDSupplier = columnIDSupplier;
-        this.columnValues = null;
-        this.columnId = -1;
-        this.columnSpace = -1;
-        this.blanks = false;
-        this.defaultValue = null;
-        this.name = null;
-        this.type = null;
+
     }
-
-    private RemoveColumnCommand(int tableID, Supplier<Integer> columnIDSupplier, UIHandler uiHandler,
-                               WindowCompositor compositor, CommandBus commandBus,
-                                List<String> columnValues, int columnId, int columnSpace, boolean blanks,
-                                String defaultValue, String name, String type){
-        super(commandBus, uiHandler, compositor);
-        this.tableID = tableID;
-        this.columnIDSupplier = columnIDSupplier;
-        this.columnValues = columnValues;
-        this.columnId = columnId;
-        this.columnSpace = columnSpace;
-        this.blanks = blanks;
-        this.defaultValue = defaultValue;
-        this.name = name;
-        this.type = type;
-    }
-
-    private final String type;
-
-    private String getType(){
-        return type;
-    }
-
-    private final List<String> columnValues;
-
-    private List<String> getcolumnValues(){
-        return columnValues;
-    }
-
-    /**
-     * The id the column is/was.
-     */
-    private final int columnId;
-
-    private int getColumnId(){
-        return columnId;
-    }
-
-    private final int columnSpace;
-
-    private int getColumnSpace(){
-        return  columnSpace;
-    }
-
-    private final boolean blanks;
-
-    private boolean getBlanks(){
-        return blanks;
-    }
-
-    private final String defaultValue;
-
-    private String getDefaultValue(){
-        return defaultValue;
-    }
-
-    private final String name;
-
-    private String getName(){
-        return name;
-    }
-
 
     /**
      * The id of the table of which you want to remove the column.
@@ -159,18 +91,7 @@ public class RemoveColumnCommand extends UndoableCommand {
 
     @Override
     protected RemoveColumnCommand cloneWithValues() {
-        List<String> values = new LinkedList<>();
-        for (int i = 0; i < getUiHandler().getNbRows(getOldTableId()); i++) {
-            values.add(getUiHandler().getCellValue(getOldTableId(), getColumnIDSupplier().get(), i));
-        }
-        int id = getColumnIDSupplier().get();
-        int place = getUiHandler().getColumnIds(getOldTableId()).indexOf(id);
-        boolean blanks = getUiHandler().getColumnAllowBlank(getOldTableId(), getColumnIDSupplier().get());
-        String defaultValue = getUiHandler().getColumnDefaultValue(getOldTableId(), getColumnIDSupplier().get());
-        String name = getUiHandler().getColumnName(getOldTableId(), getColumnIDSupplier().get());
-        String type = getUiHandler().getColumnType(getOldTableId(), getColumnIDSupplier().get());
-        return new RemoveColumnCommand(getOldTableId(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus(),
-                values, id, place, blanks, defaultValue, name, type);
+        return new RemoveColumnCommand(getOldTableId(), getColumnIDSupplier(), getUiHandler(), getWindowCompositor(), getBus());
     }
 
     /**
@@ -200,28 +121,5 @@ public class RemoveColumnCommand extends UndoableCommand {
         getUiHandler().removeColumn(getOldTableId(), getColumnIDSupplier().get());
         getWindowCompositor().rebuildAllWidgets();
     }
-
-
-    protected void undoWork() {
-        //TODO: set the column layout
-        //TODO: ik moet kunnen een column met een bepaalde id hermaken en hem kunnen zetten op een bepaalde plaats
-        //getUiHandler().addColumn(getTableID(), getColumnId(), getColumnSpace());
-        getUiHandler().setColumnType(getOldTableId(), getColumnId(), getType());
-        // a new column has blanks true, so no problem if there are blanks in the values, because the blanks are set after it.
-        for (int i = 1; i <= getUiHandler().getNbRows(getOldTableId()); i++) {
-            getUiHandler().setCellValue(getOldTableId(), getColumnId(), i, getcolumnValues().get(i));
-        }
-        getUiHandler().setColumnAllowBlanks(getOldTableId(), getColumnId(), getBlanks());
-        getUiHandler().setColumnDefaultValue(getOldTableId(), getColumnId(), getDefaultValue());
-        getUiHandler().setColumnName(getOldTableId(), getColumnId(), getName());
-
-        getWindowCompositor().rebuildAllWidgets();
-    }
-
-    protected void redoWork() {
-        getUiHandler().removeColumn(getOldTableId(), getColumnId());
-        getWindowCompositor().rebuildAllWidgets();
-    }
-
 
 }

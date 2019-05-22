@@ -23,30 +23,6 @@ public class SetColumnNameCommand extends UndoableCommand {
         this.newNameSupplier = newNameSupplier;
         this.tableId = tableId;
         this.columnId = columnId;
-        this.oldName = null;
-        this.newName = null;
-    }
-
-
-    /**
-     * Use to create a clone to be posted on the bus, which can redo and undo.
-     *
-     * @param newNameSupplier
-     * @param tableId
-     * @param columnId
-     * @param uiHandler
-     * @param commandBus
-     * @param oldName
-     * @param newName
-     */
-    private SetColumnNameCommand(Supplier<String> newNameSupplier, int tableId, int columnId, UIHandler uiHandler,
-                                 CommandBus commandBus, String oldName, String newName){
-        super(commandBus, uiHandler);
-        this.newNameSupplier = newNameSupplier;
-        this.tableId = tableId;
-        this.columnId = columnId;
-        this.oldName = oldName;
-        this.newName = newName;
     }
 
     /**
@@ -93,34 +69,6 @@ public class SetColumnNameCommand extends UndoableCommand {
         return columnId;
     }
 
-
-
-
-    /**
-     * The name of the table before this command was executed.
-     */
-    private final String oldName;
-
-    /**
-     * Returns the old name of this command.
-     */
-    public String getOldName(){
-        return oldName;
-    }
-
-
-    /**
-     * Returns the new name this command set its tablename to.
-     */
-    private final String newName;
-
-    /**
-     * Returns the new name of this command.
-     */
-    private String getNewName(){
-        return newName;
-    }
-
     /**
      * Creates a new SetColumnNameCommand with the same table and column id, supplier, uiHandler, commandbus and the current name of the column
      * as old name and the name supplied by the newNameSupplier as the newName.
@@ -128,9 +76,8 @@ public class SetColumnNameCommand extends UndoableCommand {
      */
     @Override
     protected SetColumnNameCommand cloneWithValues() {
-        String old = getUiHandler().getColumnName(getOldTableId(), getColumnId());
-        String newn = getNewNameSupplier().get();
-        return new SetColumnNameCommand(getNewNameSupplier(), getOldTableId(), getColumnId(), getUiHandler(), getBus(), getOldName(), getNewName());
+
+        return new SetColumnNameCommand(getNewNameSupplier(), getOldTableId(), getColumnId(), getUiHandler(), getBus());
     }
 
     /**
