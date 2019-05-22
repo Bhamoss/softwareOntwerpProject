@@ -27,7 +27,7 @@ import java.util.*;
  *
  * @resp    Generating the ui for the table rows mode.
  */
-public class TableRowsWindowBuilder {
+public class TableRowsWindowBuilder extends  ModeBuilder{
 
 
     /**
@@ -144,6 +144,31 @@ public class TableRowsWindowBuilder {
         scrollWindow.setTableId(tableID);
         scrollWindow.setMode("rows");
         return scrollWindow;
+    }
+
+    @Override
+    public Boolean canRebuild(ComponentWidget componentWidget) {
+        if(componentWidget.getMode().equals("rows")&&
+                uiHandler.hasAsTable(componentWidget.getTableId()))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public ComponentWidget rebuild(ComponentWidget componentWidget) throws IllegalComponentWidgetException{
+        if(canRebuild(componentWidget)) {
+            ComponentWidget newSubWindow = build(componentWidget.getTableId());
+            newSubWindow.setX(componentWidget.getX());
+            newSubWindow.setY(componentWidget.getY());
+            newSubWindow.resizeWidth(componentWidget.getWidth());
+            newSubWindow.resizeHeight(componentWidget.getHeight());
+            newSubWindow.setHorizontalBarPosition(componentWidget.getHorizontalBarPosition());
+            newSubWindow.setVerticalBarPosition(componentWidget.getVerticalBarPosition());
+            return newSubWindow;
+        }
+        else
+            throw new IllegalComponentWidgetException();
     }
 
 

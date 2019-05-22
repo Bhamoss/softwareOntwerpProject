@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @resp    Generating the ui for the form mode.
  */
-public class FormWindowBuilder {
+public class FormWindowBuilder extends  ModeBuilder{
 
 
     /**
@@ -152,4 +152,29 @@ public class FormWindowBuilder {
     }
 
 
+    @Override
+    public Boolean canRebuild(ComponentWidget componentWidget) {
+        if(componentWidget.getMode().equals("form")&&
+                getUIHandler().hasAsTable(componentWidget.getTableId())&&
+                getUIHandler().getNbRows(componentWidget.getTableId())>=componentWidget.getRowId())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public ComponentWidget rebuild(ComponentWidget componentWidget) throws IllegalComponentWidgetException{
+        if(canRebuild(componentWidget)) {
+            ComponentWidget newSubWindow = build(componentWidget.getTableId(), componentWidget.getRowId());
+            newSubWindow.setX(componentWidget.getX());
+            newSubWindow.setY(componentWidget.getY());
+            newSubWindow.resizeWidth(componentWidget.getWidth());
+            newSubWindow.resizeHeight(componentWidget.getHeight());
+            newSubWindow.setHorizontalBarPosition(componentWidget.getHorizontalBarPosition());
+            newSubWindow.setVerticalBarPosition(componentWidget.getVerticalBarPosition());
+            return newSubWindow;
+        }
+        else
+            throw new IllegalComponentWidgetException();
+    }
 }

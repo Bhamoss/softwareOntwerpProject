@@ -22,7 +22,7 @@ import java.util.HashMap;
  *
  * @resp    Generating the ui for the tables mode.
  */
-public class TablesWindowBuilder {
+public class TablesWindowBuilder extends  ModeBuilder{
 
     /**
      * Create a ui for the tables mode
@@ -108,5 +108,29 @@ public class TablesWindowBuilder {
         onClose.setSubwindow(scrollWindow);
         scrollWindow.setMode("tables");
         return scrollWindow;
+    }
+
+    @Override
+    public Boolean canRebuild(ComponentWidget componentWidget) {
+        if(componentWidget.getMode().equals("tables"))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public ComponentWidget rebuild(ComponentWidget componentWidget) throws IllegalComponentWidgetException{
+        if(canRebuild(componentWidget)) {
+            ComponentWidget newSubWindow = build();
+            newSubWindow.setX(componentWidget.getX());
+            newSubWindow.setY(componentWidget.getY());
+            newSubWindow.resizeWidth(componentWidget.getWidth());
+            newSubWindow.resizeHeight(componentWidget.getHeight());
+            newSubWindow.setHorizontalBarPosition(componentWidget.getHorizontalBarPosition());
+            newSubWindow.setVerticalBarPosition(componentWidget.getVerticalBarPosition());
+            return newSubWindow;
+        }
+        else
+            throw new IllegalComponentWidgetException();
     }
 }

@@ -156,7 +156,7 @@ public class UIHandler {
      *  | return == getTablesHandler().hasAsTable(name)
      *
      */
-    boolean hasAsTable(String name)
+    public boolean hasAsTable(String name)
     {
 
         return getTablesHandler().hasAsTable(name);
@@ -173,7 +173,7 @@ public class UIHandler {
      *  | return == getTableManager().getTableNames().contains(name)
      *
      */
-    boolean hasAsTable(int tableId)
+    public boolean hasAsTable(int tableId)
     {
 
         return getTablesHandler().hasAsTable(tableId);

@@ -112,8 +112,16 @@ public class WindowCompositor extends CanvasWindow {
     public void rebuildAllWidgets() {
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
-        for (ComponentWidget subWindow : oldSubWindows)
-            addSubWindow(rebuildWindow(subWindow));
+        for (ComponentWidget subWindow : oldSubWindows) {
+            if(subWindow.getMode().equals("tables") && tablesWindowBuilder.canRebuild(subWindow))
+                addSubWindow(tablesWindowBuilder.rebuild(subWindow));
+            if(subWindow.getMode().equals("design") && tableDesignWindowBuilder.canRebuild(subWindow))
+                addSubWindow(tableDesignWindowBuilder.rebuild(subWindow));
+            if(subWindow.getMode().equals("rows") && tableRowsWindowBuilder.canRebuild(subWindow))
+                addSubWindow(tableRowsWindowBuilder.rebuild(subWindow));
+            if(subWindow.getMode().equals("form") && formWindowBuilder.canRebuild(subWindow))
+                addSubWindow(formWindowBuilder.rebuild(subWindow));
+        }
         repaint();
     }
 

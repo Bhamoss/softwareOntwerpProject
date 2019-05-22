@@ -48,7 +48,7 @@ public class CellValueUpdater extends Updater {
 
     @Subscribe
     public void update(SetCellValueCommand command) {
-        if (getTableId() == command.getOldTableId() && getColumnid() == command.getColumnId()&& getRowId() == command.getRowId()) {
+        if (getTableId() == command.getTableId() && getColumnid() == command.getColumnId()&& getRowId() == command.getRowId()) {
             update();
         }
     }

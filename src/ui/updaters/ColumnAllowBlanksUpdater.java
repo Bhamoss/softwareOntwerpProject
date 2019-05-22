@@ -41,7 +41,7 @@ public class ColumnAllowBlanksUpdater extends Updater {
 
     @Subscribe
     public void update(SetColumnAllowBlanksCommand command) {
-        if (getTableId() == command.getOldTableId() && getColumnId() == command.getColumnId()) {
+        if (getTableId() == command.getTableId() && getColumnId() == command.getColumnId()) {
             update();
         }
     }

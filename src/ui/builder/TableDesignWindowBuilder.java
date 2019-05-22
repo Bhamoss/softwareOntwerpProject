@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @resp    Generating the ui for the table design mode.
  */
-public class TableDesignWindowBuilder {
+public class TableDesignWindowBuilder extends  ModeBuilder{
 
     /**
      * Create a ui class for the table design mode
@@ -168,6 +168,31 @@ public class TableDesignWindowBuilder {
         scrollWindow.setTableId(tableID);
         scrollWindow.setMode("design");
         return scrollWindow;
+    }
+
+    @Override
+    public Boolean canRebuild(ComponentWidget componentWidget) {
+        if(componentWidget.getMode().equals("design")&&
+                uiHandler.hasAsTable(componentWidget.getTableId()))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public ComponentWidget rebuild(ComponentWidget componentWidget) throws IllegalComponentWidgetException{
+        if(canRebuild(componentWidget)) {
+            ComponentWidget newSubWindow = build(componentWidget.getTableId());
+            newSubWindow.setX(componentWidget.getX());
+            newSubWindow.setY(componentWidget.getY());
+            newSubWindow.resizeWidth(componentWidget.getWidth());
+            newSubWindow.resizeHeight(componentWidget.getHeight());
+            newSubWindow.setHorizontalBarPosition(componentWidget.getHorizontalBarPosition());
+            newSubWindow.setVerticalBarPosition(componentWidget.getVerticalBarPosition());
+            return newSubWindow;
+        }
+        else
+            throw new IllegalComponentWidgetException();
     }
 
 
