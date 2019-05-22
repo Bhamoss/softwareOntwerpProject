@@ -64,11 +64,11 @@ public class TablesWindowBuilder {
 
         // encapsulate in scrolling decorator
 
-        TableSizeUpdater updateTableSizeCommand = new TableSizeUpdater(uiHandler);
+        TableSizeUpdater tableSizeUpdater = new TableSizeUpdater(uiHandler);
         ResizeTableCommand resizeTableCommand = new ResizeTableCommand(uiHandler, bus);
         ColumnWidget tablesColumn = new ColumnWidget(46,10,80, "Tables", true, x->{});
         tablesColumn.setResizeCommand(resizeTableCommand);
-        tablesColumn.setGetHandler(updateTableSizeCommand, bus);
+        tablesColumn.setGetHandler(tableSizeUpdater, bus);
         resizeTableCommand.setColumnwidth(()->tablesColumn.getWidth());
 
         window.addWidget(tablesColumn);
