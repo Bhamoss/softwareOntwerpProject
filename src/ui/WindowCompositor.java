@@ -102,13 +102,6 @@ public class WindowCompositor extends CanvasWindow {
         subwindow.unsubscribe(bus);
     }
 
-    public void removeSubWindowWithID(int id) {
-        for (ComponentWidget subwindow : subWindows) {
-            if (!subwindow.getMode().equals("tables") && subwindow.getTableId() == id)
-                removeSubWindow(subwindow);
-        }
-    }
-
     public void rebuildAllWidgets() {
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         subWindows.clear();
@@ -123,31 +116,6 @@ public class WindowCompositor extends CanvasWindow {
                 addSubWindow(formWindowBuilder.rebuild(subWindow));
         }
         repaint();
-    }
-
-    private ComponentWidget rebuildWindow(ComponentWidget subwindow) {
-        subwindow.unsubscribe(bus);
-        ComponentWidget newSubWindow;
-        String type = subwindow.getMode();
-        // TODO: make enum?
-        if (type.equals("tables"))
-            newSubWindow = tablesWindowBuilder.build();
-        else if (type.equals("design"))
-            newSubWindow = tableDesignWindowBuilder.build(subwindow.getTableId());
-        else if (type.equals("rows"))
-            newSubWindow = tableRowsWindowBuilder.build(subwindow.getTableId());
-        else if (type.equals("form"))
-            newSubWindow = formWindowBuilder.build(subwindow.getTableId(),subwindow.getRowId());
-        else
-            throw new IllegalArgumentException("State not supported");
-
-        newSubWindow.setX(subwindow.getX());
-        newSubWindow.setY(subwindow.getY());
-        newSubWindow.resizeWidth(subwindow.getWidth());
-        newSubWindow.resizeHeight(subwindow.getHeight());
-        newSubWindow.setHorizontalBarPosition(subwindow.getHorizontalBarPosition());
-        newSubWindow.setVerticalBarPosition(subwindow.getVerticalBarPosition());
-        return newSubWindow;
     }
 
     private void setActiveSubWindow(ComponentWidget subwindow) {
