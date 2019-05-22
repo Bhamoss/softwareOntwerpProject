@@ -2,10 +2,8 @@ package tablr;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Model;
-import be.kuleuven.cs.som.taglet.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Thomas Bamelis
@@ -40,8 +38,8 @@ public class TablesHandler {
         return getTableManager().getQuery(id);
     }
 
-    public void setQuery(int id, String q) {
-        getTableManager().setQuery(id, q);
+    public void setQuery(int id, String query) {
+        getTableManager().setQuery(id, query);
     }
 
 
@@ -150,7 +148,7 @@ public class TablesHandler {
      *
      * @param tableId
      *  the id of the table to check on.
-     * @param newTableName
+     * @param name
      *  the name you want to check on.
      *
      * @return true if the table with tableId exist, no other table has that name and the name is valid.
@@ -161,9 +159,9 @@ public class TablesHandler {
      *  | ∀ints in getTableManager().getTableIds(): ints != tableId
      *
      */
-    public boolean canHaveAsName(int tableId, String newTableName) throws IllegalTableException
+    public boolean canHaveAsName(int tableId, String name) throws IllegalTableException
     {
-        return getTableManager().canHaveAsName(tableId, newTableName);
+        return getTableManager().canHaveAsName(tableId, name);
     }
 
 
@@ -376,7 +374,7 @@ public class TablesHandler {
      * @param   tableId the id of the table
      * @param   columnId
      *          The id of the column of which the given name should be checked.
-     * @param   newName
+     * @param   name
      *          The name to be checked
      * @return  True if and only if the column can accept the given name and
      *              if the name is not already used in this table, if it is already used
@@ -390,12 +388,11 @@ public class TablesHandler {
      * If there is no table with tableId as id.
      * | !getTableManager().hasAsTable(tableId) == false
      */
-    public boolean canHaveAsColumnName(int tableId, int columnId, String newName) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnName(int tableId, int columnId, String name) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsColumnName(tableId, columnId, newName);
+        return getTableManager().canHaveAsColumnName(tableId, columnId, name);
     }
 
-    // Dit kan enum type zijn of string
 
     /**
      *
@@ -450,7 +447,7 @@ public class TablesHandler {
      * @param   tableId the id of the table
      * @param   columnId
      *          The id of the column of which the given default value should be checked.
-     * @param   newDefaultValue
+     * @param   dv
      *          The default value to be checked
      * @return
      * @throws  IllegalColumnException
@@ -460,9 +457,9 @@ public class TablesHandler {
      * If there is no table with tableId as id.
      * | !getTableManager().hasAsTable(tableId) == false
      */
-    public boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsDefaultValue(int tableId, int columnId, String dv) throws IllegalColumnException, IllegalTableException
     {
-        return getTableManager().canHaveAsDefaultValue(tableId, columnId, newDefaultValue);
+        return getTableManager().canHaveAsDefaultValue(tableId, columnId, dv);
     }
 
     /**
@@ -820,11 +817,11 @@ public class TablesHandler {
      * checks whether the first given column is relevant to the second given table.
      *
      * @param table1Id
-     * @param table2Id
      * @param column1Id
+     * @param table2Id
      * @return
      */
-    public boolean isRelevantTo (int table1Id, int table2Id, int column1Id) {
+    public boolean isRelevantTo(int table1Id, int column1Id, int table2Id) {
         return tableManager.isRelevantTo(table1Id,table2Id,column1Id);
     }
 
@@ -832,12 +829,12 @@ public class TablesHandler {
      * checks whether the first given row is relevant to the second given table.
      *
      * @param table1Id
-     * @param table2Id
      * @param column1Id
      * @param row1Id
+     * @param table2Id
      * @return
      */
-    public boolean isRelevantTo (int table1Id, int table2Id, int column1Id, int row1Id) {
+    public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id) {
         return tableManager.isRelevantTo(table1Id,table2Id,column1Id, row1Id);
     }
 
