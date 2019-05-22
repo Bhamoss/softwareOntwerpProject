@@ -107,14 +107,14 @@ public class TableRowsWindowBuilder extends  ModeBuilder{
                     SwitchBoxWidget editor = new SwitchBoxWidget(true, options);
                     editor.setValidHandler((String s) ->
                             getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
-                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
+                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus, compositor));
                     editor.setGetHandler(new CellValueUpdater(tableID, columnID,rowID, editor, uiHandler), bus);
                     table.addEntry(editor);
                 } else {
                     EditorWidget editor = new EditorWidget(true);
                     editor.setValidHandler((String s) ->
                             getUIHandler().canHaveAsCellValue(tableID, columnID, rid, s));
-                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus));
+                    editor.setPushHandler(new SetCellValueCommand( tableID, columnID,rowID, () -> editor.getText(), uiHandler, bus, compositor));
                     editor.setGetHandler(new CellValueUpdater(tableID, columnID,rowID, editor, uiHandler), bus);
                     table.addEntry(editor);
                 }

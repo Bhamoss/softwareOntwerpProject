@@ -101,7 +101,7 @@ abstract public class Table {
      * @param table
      * @return
      */
-    abstract public boolean uses(Table table, int columnId, int rowId);
+    abstract public boolean uses(Table table, int columnId, int rowId, int column2Id, int row2Id);
 
     public Collection<String> getTableRefs() {
         return Collections.EMPTY_LIST;

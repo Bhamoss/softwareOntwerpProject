@@ -77,8 +77,11 @@ public class ComputedTable extends Table {
     }
 
     @Override
-    public boolean uses(Table table, int columnId, int rowId) {
-        return uses(table, columnId);
+    public boolean uses(Table table, int columnId, int rowId, int column2Id, int row2Id) {
+        System.out.println(getNbRows() + " " + rowId);
+        if (row2Id >= 1 && row2Id <= getNbRows())
+            return uses(table, columnId);
+        return false;
     }
 
     @Override

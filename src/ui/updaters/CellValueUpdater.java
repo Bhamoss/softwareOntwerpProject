@@ -48,13 +48,14 @@ public class CellValueUpdater extends Updater {
 
     @Subscribe
     public void update(SetCellValueCommand command) {
-        if (getHandler().isRelevantTo(getTableId(),getColumnid(),getRowId(),command.getTableId())) {
+        if (getHandler().isRelevantTo(command.getTableId(),command.getColumnId(),command.getRowId(),getTableId(), getColumnid(), getRowId())) {
             update();
         }
     }
 
     @Override
     public void update() {
+        System.out.println("Updating table " + getTableId() + " column " + getColumnid() + " row " + getRowId());
         getWidget().setText(getHandler().getCellValue(getTableId(),getColumnid(),getRowId()));
     }
 }

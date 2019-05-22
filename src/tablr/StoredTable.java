@@ -46,7 +46,7 @@ public class StoredTable extends Table {
     }
 
     @Override
-    public boolean uses(Table table, int columnId, int rowId) {
+    public boolean uses(Table table, int columnId, int rowId, int column2Id, int row2Id) {
         if (table.getId() == this.getId() && hasAsColumn(columnId)){
             return getColumn(columnId).hasAsValue(rowId);
         }

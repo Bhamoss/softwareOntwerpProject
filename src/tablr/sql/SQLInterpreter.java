@@ -64,7 +64,7 @@ class SQLInterpreter {
             return;
 
         // Edit the record with the new value and reverse interpret
-        rec.write(colId+1,val);
+        rec.write(colId-1,val);
         String invval = rExpr.inverseEval(rec).toString();
 
         // Find the table,column and row Id that the new value refers to

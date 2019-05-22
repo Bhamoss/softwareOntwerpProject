@@ -178,8 +178,10 @@ class ComputedTableTest {
         assertTrue(tableManager.isRelevantTo(2, 3));
         assertTrue(tableManager.isRelevantTo(2, 2, 3));
         assertFalse(tableManager.isRelevantTo(2, 3, 3));
-        assertTrue(tableManager.isRelevantTo(2, 1, 1, 2));
-        assertTrue(tableManager.isRelevantTo(2, 2, 1, 3));
-        assertFalse(tableManager.isRelevantTo(2, 3, 1, 3));
+        assertTrue(tableManager.isRelevantTo(2, 1, 1, 2, 1, 1));
+        assertTrue(tableManager.isRelevantTo(2, 2, 1, 3, 2 ,1));
+        assertFalse(tableManager.isRelevantTo(2, 3, 1, 3, 3, 1));
+        tableManager.setQuery(3, "SELECT t.name AS n FROM table2 AS t WHERE t.name = \"Lorem\"");
+        assertTrue(tableManager.isRelevantTo(2,2,1,3,2,1));
     }
 }

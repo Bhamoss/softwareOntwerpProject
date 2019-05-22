@@ -102,7 +102,7 @@ public class FormWindowBuilder extends  ModeBuilder{
                         SwitchBoxWidget editor = new SwitchBoxWidget(80, Y, 60, 20, true, options);
                         editor.setValidHandler((String s) ->
                                 getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
-                        editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus));
+                        editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus, compositor));
                         editor.setGetHandler(new CellValueUpdater(tableID, columnID, rowID, editor, uiHandler), bus);
                         editor.setTransparency(false);
                         editor.setBackgroundColor(Color.WHITE);
@@ -111,7 +111,7 @@ public class FormWindowBuilder extends  ModeBuilder{
                         EditorWidget editor = new EditorWidget(80, Y, 60, 20, true);
                         editor.setValidHandler((String s) ->
                                 getUIHandler().canHaveAsCellValue(tableID, columnID, rowID, s));
-                        editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus));
+                        editor.setPushHandler(new SetCellValueCommand(tableID, columnID, rowID, () -> editor.getText(), uiHandler, bus, compositor));
                         editor.setGetHandler(new CellValueUpdater(tableID, columnID, rowID, editor, uiHandler), bus);
                         editor.setTransparency(false);
                         editor.setBackgroundColor(Color.WHITE);

@@ -1,6 +1,7 @@
 package ui.commands.undoableCommands;
 
 import ui.UIHandler;
+import ui.WindowCompositor;
 import ui.commandBus.CommandBus;
 
 import java.util.function.Supplier;
@@ -8,8 +9,9 @@ import java.util.function.Supplier;
 public class SetCellValueCommand extends UndoableStaticTableCommands {
 
     public SetCellValueCommand(int tableId, int columnId, int rowId,
-                               Supplier<String> stringSupplier, UIHandler uiHandler,  CommandBus commandBus){
-        super(commandBus, uiHandler, tableId);
+                               Supplier<String> stringSupplier, UIHandler uiHandler, CommandBus commandBus,
+                               WindowCompositor windowCompositor){
+        super(commandBus, uiHandler, windowCompositor,tableId);
         this.columnId = columnId;
         this.rowId = rowId;
         this.stringSupplier = stringSupplier;
@@ -50,7 +52,7 @@ public class SetCellValueCommand extends UndoableStaticTableCommands {
     @Override
     protected SetCellValueCommand cloneWithValues() {
         return new SetCellValueCommand(getTableId(), getColumnId(), getRowId(), getStringSupplier(), getUiHandler(),
-                getBus());
+                getBus(),getWindowCompositor());
     }
 
     @Override

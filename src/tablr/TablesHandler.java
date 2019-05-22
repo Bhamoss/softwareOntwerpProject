@@ -838,8 +838,8 @@ public class TablesHandler {
      * @param table2Id
      * @return
      */
-    public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id) {
-        return tableManager.isRelevantTo(table1Id, column1Id, row1Id, table2Id);
+    public boolean isRelevantTo(int table1Id, int column1Id, int row1Id, int table2Id, int column2Id, int row2Id) {
+        return tableManager.isRelevantTo(table1Id, column1Id, row1Id, table2Id, column2Id, row2Id);
     }
 
     /**
