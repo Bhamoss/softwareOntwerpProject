@@ -181,7 +181,7 @@ public class ComputedTable extends Table {
      */
     @Override
     public boolean canHaveAsCellValue(int id, int row, String value) throws IllegalColumnException, IllegalRowException {
-        if (sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
+        if (!sqlManager.isColumnEditable(getQuery(), storedTable.getColumnName(id)))
             return false;
         return super.canHaveAsCellValue(id, row, value);
     }
