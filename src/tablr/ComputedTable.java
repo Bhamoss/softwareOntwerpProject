@@ -7,7 +7,6 @@ import tablr.sql.SQLManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class ComputedTable extends Table {
@@ -46,12 +45,12 @@ public class ComputedTable extends Table {
      */
 
     @Override
-    Boolean isValidQuery(String q){
+    boolean isValidQuery(String q){
         return sqlManager.isValidQuery(q);
     }
 
     @Override
-    public Boolean queryRefersTo(Table t) {
+    public boolean queryRefersTo(Table t) {
         return sqlManager.queryRefersTo(getQuery(), t.getName());
     }
 
@@ -107,7 +106,7 @@ public class ComputedTable extends Table {
     }
 
     @Override
-    public Boolean queryRefersTo(Table t, int columnId) {
+    public boolean queryRefersTo(Table t, int columnId) {
         return sqlManager.queryRefersTo(getQuery(), t.getName(), t.getColumnName(columnId));
     }
     /*
@@ -230,7 +229,7 @@ public class ComputedTable extends Table {
     /**
      * Returns whether or not the given Id is already in use.
      */
-    boolean hasAsColumn(int id){
+    public boolean hasAsColumn(int id){
         return storedTable.hasAsColumn(id);
     }
 

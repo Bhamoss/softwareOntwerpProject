@@ -5,40 +5,248 @@ package "tablr" {
 
 
     class TablesHandler{
-        tableManager : TableManager {readOnly}
-        terminated : boolean
+         - tableManager : TableManager {readOnly}
+        - terminated : boolean
         __Inspector__
-
+        - getTableManager() : TableManager
+        - canHaveAsTableManager(tableManager : TableManager) : boolean
+        + isTerminated() : boolean
+        + isRelevantTo(table1Id : int, table2Id : int) : boolean
+        + isRelevantTo(table1Id : int, column1Id : int,
+            \t table2Id : int) : boolean
+        + isRelevantTo(table1Id : int, column1Id : int,
+            \t row1Id : int , table2Id : int) : boolean
+        _Tables_
+        + getQuery(id : int) : String
+        + getNbTables() : int
+        + getTableIds() : ArrayList<Integer>
+        + getTableName(id : int) : String
+        + hasAsTable(name : String) : boolean
+        + hasAsTable(tableId : int) : boolean
+        + getTableNames() : ArrayList<String>
+        + canHaveAsName(tableId : int, name : String) : boolean
+        + isTableEmpty(tableId : int) : boolean
+        _Columns_
+        + getColumnNames(tableId : int) : ArrayList<String>
+        + getColumnName(tableId : int, columnId : int) : String
+        + getColumnIds(tableId : int): ArrayList<Integer>
+        + getNbColumns(tableId : int) : int
+        + getColumnType((tableId : int, columnId : int) : String
+        + getColumnAllowBlank(tableId : int, columnId : int) : boolean
+        + getColumnDefaultValue(tableId : int, columnId : int) : String
+        + canHaveAsColumnName(tableId : int, columnId : int,
+            \t name : String) : boolean
+        + canHaveAsColumnType(tableId : int, columnId : int,
+            \t type : String) : boolean
+        + canHaveAsColumnBlanksAllowed(tableId : int,
+            \t columnId : int, blanksAllowed : boolean) :boolean
+        + canHaveAsColumnDefaultValue(tableId : int, columnId : int,
+            \t dv : String) :boolean
+        _Cells_
+        + getCellValue(tableId : int, columnId : int, row : int) : String
+        + getNbRows(tableId : int) : int
+        + canHaveAsCellValue(tableId : int, columnId : int, row : int,
+            \t value : String) : boolean
+        __Mutator__
+        _Tables_
+        + setQuery(id : int, query : String)
+        + setTableName(tableId : int, newName : String)
+        + addTable()
+        + removeTable(tableId : int)
+        _Columns_
+        +setColumnName(tableId : int, columnId : int, newName : String)
+        +setColumnType(tableId : int, columnId : int, newType : String)
+        +setColumnBlanksAllowed(tableId : int, columnId : int,
+            \ŧ blanksAllowed : boolean)
+        +setColumnDefaultValue(tableId : int, columnId : int, dv : String)
+        +addColumn(tableId : int)
+        +removeColumn(tableId : int, columnId : int)
+        _Cells_
+        + setCellValue(tableId : int, columnId : int, row : int, value : String)
+        + addRow(tableId: int)
+        + removeRow(tableID : int, row : int)
         __Responsibilities__
         providing a controller for tables
     }
 
 
     class TableManager{
-        tables : List<Table> [*] = new LinkedList<Table>
-        currentTable : Table [0...1] = null
-        terminated : boolean = false
-        __
-
+        - tables : List<Table> [*] = new LinkedList<Table>
+        - terminated : boolean = false
+        ~ {static} MAX_TABLES
+        __Inspectors__
+        + isTerminated() : boolean
+        + canTerminate() : boolean
+        _Tables_
+        - getNbTables() : int
+        - hasAsTable(table : Table) : boolean
+        - getTableAt(index : int) : Table
+        + getTable(tableId : int) : Table
+        - canHaveAsTable(table : Table) : boolean
+        - canHaveAsTableAt(index : int, table : Table) : boolean
+        - getTableIndex(table : Table) : int
+        - hasProperTables() : boolean
+        + getQuery(id : int) : String
+        + isValidQuery(id : int, q: String) : boolean
+        + isRelevantTo(table1Id : int, table2Id : int) : boolean
+        + isRelevantTo(table1Id : int, column1Id : int,
+            \t table2Id : int) : boolean
+        + isRelevantTo(table1Id : int, column1Id : int,
+            \t row1Id : int, table2Id : int) : boolean
+        + getTableName(id : int) : String
+        + getTableId(name : String) : int
+        + hasAsTable(name : String) : boolean
+        + hasAsTable(id : int) : boolean
+        + getTableNames() : ArrayList<String>
+        + getTableIds() : ArrayList<Integer>
+        + canHaveAsName(tableId : int, name : String) : boolean
+        + isTableEmpty(tableId : int) : boolean
+        + queryRefersToTable(tableId : int) : boolean
+        _Columns_
+        + getColumnNames(tableId : int) : ArrayList<String>
+        + getColumnName(tableId : int, columnId : int) : String
+        + getColumnIds(tableId : int) : ArrayList<Integer>
+        + getColumnType(tableId : int, columnId : int) : String
+        + getColumnAllowBlank(tableId : int, columnId : int) : boolean
+        + getColumnDefaultValue(tableId : int, columnId : int) : String
+        + canHaveAsColumnName(tableId : int, columnId : int,
+            \t name : String) : boolean
+        + canHaveAsColumnType(tableId : int, columnId : int,
+            \t type : String) : boolean
+        + canHaveAsColumnAllowBlanks(tableId : int, columnId : int,
+            \t blanksAllowed : boolean) : boolean
+        + canHaveAsColumnDefaultValue(tableId : int, columnId : int,
+            \t dv : String) : boolean
+        _Cells_
+        + getNbRows(tableId : int) : int
+        + getCellValue(tableId : int, columnId : int, row : int) : String
+        + canHaveAsCellValue(tableId : int, columnId : int, row : int,
+            \t value : String) : boolean
+        __Mutators__
+        + terminate()
+        _Tables_
+        - addTableAt(index : int, table : Table)
+        - appendTable(table : Table)
+        - insertAtFrontTable(table : Table)
+        - removeTableAt(index : int)
+        - removeTable(table : Table)
+        + setQuery(query : String)
+        + setTableName(tableId : int, name : String)
+        + addTable()
+        + removeTable(tableId : int)
+        _Columns_
+        + setColumnName(tableId : int, columnId : int, newName : String)
+        + setColumnType(tableId : int, columnId : int, type : String)
+        + setColumnAllowBlanks(tableId : int, columnId : int,
+            \t blanksAllowed : boolean)
+        + setColumnDefaultValue(tableId : int, columnId : int, dv : String)
+        + addColumn(tableId : int)
+        + removeColumn(tableId : int, columnId : int)
+        _Cells_
+        + setCellValue(tableId : int, columnId : int, row : int,
+            \t value : String)
+        + addRow(tableId : int)
+        + removeRow(tableId : int, row : int)
+        _TableMemento_
+        + createTableMemento(tableId : int) : TableMemento
+        + setTableMemento(memento : TableMemento)
         __Responsibility__
         manage tables and manage access to tables
     }
 
-    Table "0..*" <-- TableManager
-    TablesHandler --> "1" TableManager
+    TableManager -right-> "0..*" Table
+    TablesHandler -right-> "1" TableManager
 
 
 
 
-    class Table{
-        -name
-        -columns
-        -isTerminated
-        __
+    abstract class Table{
+        - name : String
+        - isTerminated : boolean
+        - id : int
+        - query : String
+        + {static} MAX_COLUMNS : int
+        __Inspector__
+        + {abstract} copy() : Table
+        + isTerminated() : boolean
+        _query_
+        + getQuery() : String
+        ~ {abstract} isValidQuery(q : String) : boolean
+        + {abstract} queryRefersTo(t : Table) : boolean
+        + {abstract} queryRefersTo(t : Table, columnId : int) : boolean
+        + {abstract} uses(table : Table) : boolean
+        + {abstract} uses(table : Table, columnId : int) : boolean
+        + {abstract} uses(table : Table, columnId : int, rowId : int) boolean
+        + getTableRefs() : Collection<String>
+        + getColumnRefs(tableName : String) : List<String>
+        + {abstract} columnIsUsedInQuery(id : int) : boolean
+        _id_
+        + {abstract} getColumnIds() : ArrayList<Integer>
+        + getId() : int
+        _name_
+        + getName() : String
+        + isValidName(name : String) : boolean
+        _columns_
+        + {abstract} getNbColumns() : int
+        ~ {abstract} getColumnAt(index : int) : Column
+        ~ {abstract} getColumn(id : int) : Column
+        ~ {abstract} canHaveAsColumn(column : Column) : boolean
+        ~ canHaveAsColumnAt(index : int, column : Column
+        + {abstract} hasProperColumns() : boolean
+        + getColumnIndex(id : int) : int
+        + {abstract} hasAsColumn(id : int) : boolean
+        + getColumnNames() : ArrayList<String>
+        + canHaveAsColumnName(id : int, name : String) : boolean
+        + getColumnName(id : int) : String
+        + getColumnId(name : String) : int
+        + getColumnType(id : int) : String
+        + {abstract} canHaveAsColumn(id : int, type : String) : boolean
+        + getColumnDefaultValue(id : int) : String
+        + {abstract} canHaveAsDefaultValue(id : int, dv : String) : boolean
+        + getColumnAllowBlank(id : int) : boolean
+        + {abstract} canHaveAsColumnAllowBlanks(int : id,
+            \t blanksAllowed : boolean) : boolean
+        _rows_
+        + getNbRows() : int
+        + getCellValue(id : int, row : int) : String
+        + canHaveAsCellValue(id : int, row : int, value : String) : boolean
 
+
+        __Mutator__
+        + terminate()
+        _query_
+        + setQuery(q : String)
+        _name_
+        + setName(name : String)
+        _columns_
+        + {abstract} addColumn() : int
+        + {abstract} removeColumnAt(index : int)
+        + {abstract} removeColumn(id : int)
+        + {abstract} setColumnName(id : int, name : String)
+        + {abstract} setColumnType(id : int, type : String)
+        + {abstract} setColumnDefaultValue(id : int, dv : String)
+        + {abstract} setColumnBlanksAllowed(id : int, blanksAllowed : boolean)
+        _rows_
+        + {abstract} addRow()
+        + {abstract} removeRow(row : int)
+        + setCellValue(id : int, row : int, value : String)
         __Responsibility__
         manage Column
     }
+
+    class StoredTable {
+        - columns : List<Column>
+        __Inspector__
+        __Mutator__
+    }
+
+    class ComputedTable {
+        __Inspector__
+        __Mutator__
+    }
+
+    StoredTable -up-|> Table
+    ComputedTable -up-|> Table
 
     package "column" {
 
@@ -59,7 +267,7 @@ package "tablr" {
         Manage list with correct entries
         }
 
-        Table *-- "0..*" Column
+        StoredTable *-- "0..*" Column
 
         class BooleanColumn{
             -type: String = "Boolean"

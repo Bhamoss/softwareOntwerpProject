@@ -1,7 +1,6 @@
 package tablr;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tablr.sql.SQLManager;
 
@@ -177,10 +176,10 @@ class ComputedTableTest {
     @Test
     void isRelevantToTest() {
         assertTrue(tableManager.isRelevantTo(2, 3));
-        assertTrue(tableManager.isRelevantTo(2, 3, 2));
+        assertTrue(tableManager.isRelevantTo(2, 2, 3));
         assertFalse(tableManager.isRelevantTo(2, 3, 3));
-        assertTrue(tableManager.isRelevantTo(2,2,1,1));
-        assertTrue(tableManager.isRelevantTo(2, 3, 2, 1));
-        assertFalse(tableManager.isRelevantTo(2, 3, 3, 1));
+        assertTrue(tableManager.isRelevantTo(2, 1, 1, 2));
+        assertTrue(tableManager.isRelevantTo(2, 2, 1, 3));
+        assertFalse(tableManager.isRelevantTo(2, 3, 1, 3));
     }
 }

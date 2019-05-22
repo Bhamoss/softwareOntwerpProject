@@ -73,12 +73,12 @@ public class TableManager {
     static final int MAX_TABLES = 100;
 
 
-    String getQuery(int id) throws  IllegalTableException {
+    public String getQuery(int id) throws  IllegalTableException {
         if (!hasAsTable(id)) throw  new IllegalTableException();
         return getTable(id).getQuery();
     }
 
-    void setQuery(int id, String q) throws  IllegalTableException {
+    public void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
         Table table = getTable(id);
         int index = getTableIndex(table);
@@ -196,7 +196,7 @@ public class TableManager {
      *
      */
     @Model
-    boolean hasAsTable(String name)
+    public boolean hasAsTable(String name)
     {
         for (Table table: tables)
         {
@@ -221,7 +221,7 @@ public class TableManager {
      *
      */
     @Model
-    boolean hasAsTable(int id)
+    public boolean hasAsTable(int id)
     {
         for (Table table: tables)
         {
@@ -240,7 +240,7 @@ public class TableManager {
      *
      */
     @Model
-    ArrayList<String> getTableNames()
+    public ArrayList<String> getTableNames()
     {
         ArrayList<String> list = new ArrayList<String>();
         for(Table table: tables)
@@ -287,7 +287,7 @@ public class TableManager {
      *
      */
     @Model
-    boolean canHaveAsName(int tableId, String newTableName) throws  IllegalTableException
+    public boolean canHaveAsName(int tableId, String newTableName) throws  IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table t = getTable(tableId);
@@ -311,7 +311,7 @@ public class TableManager {
      * @param tableId the id of the table whos name is to be changed.
      * @return true if the has columns else false.
      */
-    boolean isTableEmpty(int tableId)
+    public boolean isTableEmpty(int tableId)
     {
         return getTable(tableId).getNbColumns() == 0;
     }
@@ -429,7 +429,7 @@ public class TableManager {
      * | !getTableIds().contains(tableId)
      */
     @Model
-    void removeTable(int tableId) throws IllegalTableException
+    public void removeTable(int tableId) throws IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         removeTable(getTable(tableId));
@@ -534,7 +534,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean getColumnAllowBlank(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
+    public boolean getColumnAllowBlank(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -553,7 +553,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    String getColumnDefaultValue(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
+    public String getColumnDefaultValue(int tableId, int columnId) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -583,7 +583,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnName(int tableId, int columnId, String newName) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnName(int tableId, int columnId, String newName) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -595,7 +595,6 @@ public class TableManager {
         return table.canHaveAsColumnName(columnId, newName);
     }
 
-    // Dit kan enum type zijn of string
 
     /**
      *
@@ -615,7 +614,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -641,7 +640,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsColumnAllowBlanks(int tableId, int columnId, boolean blanksAllowed) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -666,7 +665,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue) throws IllegalColumnException, IllegalTableException
+    public boolean canHaveAsDefaultValue(int tableId, int columnId, String newDefaultValue) throws IllegalColumnException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -827,7 +826,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void removeColumn(int tableId, int columnId) throws IllegalArgumentException, IllegalTableException
+    public void removeColumn(int tableId, int columnId) throws IllegalArgumentException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -902,7 +901,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    boolean canHaveAsCellValue(int tableId, int columnId, int row, String value)
+    public boolean canHaveAsCellValue(int tableId, int columnId, int row, String value)
             throws IllegalColumnException, IllegalRowException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
@@ -984,7 +983,7 @@ public class TableManager {
      * | !hasAsTable(tableId) == false
      */
     @Model
-    void removeRow(int tableId, int row) throws IllegalRowException, IllegalTableException
+    public void removeRow(int tableId, int row) throws IllegalRowException, IllegalTableException
     {
         if(!hasAsTable(tableId)){throw new IllegalTableException();}
         Table table = getTable(tableId);
@@ -1400,7 +1399,7 @@ public class TableManager {
      * @return true if all tables in tables can terminate, false otherwise.
      *  | return == ( for all i: 0 < i < getNbTables(): getTableAt(i).canBeTerminated())
      */
-    boolean canTerminate()
+    public boolean canTerminate()
     {
         for (Table table:tables)
         {
@@ -1413,7 +1412,7 @@ public class TableManager {
      * Returns whether or not this table is terminated
      */
     @Basic @Raw
-    boolean isTerminated() {return terminated;}
+    public boolean isTerminated() {return terminated;}
 
     /**
      * Terminates this object and all tables.
@@ -1427,7 +1426,7 @@ public class TableManager {
      *  | canBeTerminated()
      *
      */
-    void terminate() throws IllegalStateException
+    public void terminate() throws IllegalStateException
     {
         if(!canTerminate()) throw new IllegalStateException();
        int i;

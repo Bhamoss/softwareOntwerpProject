@@ -1,7 +1,6 @@
 package tablr;
 
 import be.kuleuven.cs.som.annotate.*;
-import be.kuleuven.cs.som.taglet.*;
 import tablr.column.*;
 
 import java.util.*;
@@ -79,11 +78,11 @@ abstract public class Table {
         this.query = q;
     }
 
-    abstract Boolean isValidQuery(String q);
+    abstract boolean isValidQuery(String q);
 
-    abstract public Boolean queryRefersTo(Table t);
+    abstract public boolean queryRefersTo(Table t);
 
-    abstract public Boolean queryRefersTo(Table t, int columnId);
+    abstract public boolean queryRefersTo(Table t, int columnId);
 
     /**
      * checks whether this table uses directly or indirectly the given table in his query
@@ -133,7 +132,7 @@ abstract public class Table {
     /**
      * Returns the ID of the table.
      */
-    int getId()
+    public int getId()
     {
         return id;
     }
@@ -387,7 +386,7 @@ abstract public class Table {
      *          There isn't a column with the given id in this table.
      *          | !hasAsColumn(id)
      */
-    int getColumnIndex(int id) throws IllegalColumnException {
+    public int getColumnIndex(int id) throws IllegalColumnException {
         for (int i = 1; i <= getNbColumns(); i++)
             if (getColumnAt(i).getId() == id)
                 return i;
@@ -397,7 +396,7 @@ abstract public class Table {
     /**
      * Returns whether or not the given Id is already in use.
      */
-    abstract boolean hasAsColumn(int id);
+    public abstract boolean hasAsColumn(int id);
 
     /**
      * Returns the column with the given column id

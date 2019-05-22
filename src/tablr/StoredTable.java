@@ -24,12 +24,12 @@ public class StoredTable extends Table {
      */
 
     @Override
-    Boolean isValidQuery(String q) {
+    boolean isValidQuery(String q) {
         return q.equals("");
     }
 
     @Override
-    public Boolean queryRefersTo(Table t) {
+    public boolean queryRefersTo(Table t) {
         return false;
     }
 
@@ -207,7 +207,7 @@ public class StoredTable extends Table {
      *
      */
     @Override
-    boolean hasAsColumn(int id)
+    public boolean hasAsColumn(int id)
     {
         for (Column column:
                 columns) {
@@ -499,7 +499,7 @@ public class StoredTable extends Table {
     }
 
     @Override
-    public Boolean queryRefersTo(Table t, int columnId) {
+    public boolean queryRefersTo(Table t, int columnId) {
         return false;
     }
 
