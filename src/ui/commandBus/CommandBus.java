@@ -436,3 +436,5 @@ public class CommandBus {
         return getHistoryIndex() == history.size() - 1;
     }
 }
+
+

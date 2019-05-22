@@ -5,6 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tablr.TablesHandler;
+import ui.UIHandler;
+import ui.UIStarter;
+import ui.WindowCompositor;
+import ui.commands.undoableCommands.*;
+import ui.updaters.CellValueUpdater;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -216,5 +221,110 @@ class CommandBusTest {
         testWidget.setTestvarTen();
         bus.post(subTestCommand);
         assertEquals(10 , testWidget.testvar);
+    }
+
+
+    /*
+     *      UNDO / REDO
+     */
+
+    @Test
+    @DisplayName("Some undos and redos")
+    void undosAndRedos(){
+        UIStarter starter = new UIStarter(true);
+        UIHandler handler = starter.getUIHandler();
+        WindowCompositor comp = starter.getCompositor();
+        CommandBus bus = starter.getCommandBus();
+
+        // adding and removing a table
+        AddTableCommand add = new AddTableCommand(handler, bus, comp);
+        add.execute();
+        assertEquals(1, handler.getTableIds().size());
+        bus.undo();
+        assertEquals(0, handler.getTableIds().size());
+        bus.redo();
+        assertEquals(1, handler.getTableIds().size());
+
+        // setting and unsetting the name
+        SetTableNameCommand setName = new SetTableNameCommand((() -> {return "newName";}), 1, handler, bus);
+        setName.execute();
+        assertEquals("newName", handler.getTableName(1));
+        bus.undo();
+        assertEquals("Table1", handler.getTableName(1));
+        bus.redo();
+        assertEquals("newName", handler.getTableName(1));
+
+        // adding another table
+        add.execute();
+
+        // removing and adding the first one
+        RemoveTableCommand r = new RemoveTableCommand(()->{return 1;}, handler, comp, bus);
+        r.execute();
+        assertEquals(1, handler.getTableIds().size());
+        bus.undo();
+        assertEquals(2, handler.getTableIds().size());
+        assertEquals("newName", handler.getTableName(1));
+
+
+        // adding two collumns and 2 rows
+        AddColumnCommand col =  new AddColumnCommand(1, handler, comp, bus);
+        col.execute();
+        col.execute();
+        AddRowCommand row = new AddRowCommand(1, handler, comp, bus);
+        row.execute();
+        row.execute();
+
+
+
+        // setting the value of (1,1) to swop
+        SetCellValueCommand se = new SetCellValueCommand(1,1,1,()->{return "swop";}, handler, bus);
+        se.execute();
+        assertEquals("swop", handler.getCellValue(1,1,1));
+        bus.undo();
+        assertEquals("", handler.getCellValue(1,1,1));
+        bus.redo();
+        assertEquals("swop", handler.getCellValue(1,1,1));
+
+        // remove table and redo
+        r.execute();
+        assertEquals(1, handler.getTableIds().size());
+        bus.undo();
+        assertEquals("swop", handler.getCellValue(1,1,1));
+        bus.redo();
+
+        // redo to much
+        assertThrows(IllegalStateException.class, () -> bus.redo());
+
+
+        //TODO verkeerde table wordt verwijder. na de vorige redo() zou table 1 weg moeten zijn, maar table 2 is verwijderd
+        //TODO hier heeft hij een error dat de table niet kan ge add worden op plaats 1.
+
+        // overwrite
+        bus.undo();
+        bus.undo();
+        bus.undo();
+        assertEquals(1, handler.getNbRows(1));
+        bus.redo();
+        assertEquals(2, handler.getNbRows(1));
+        bus.undo();
+
+        // so there should only be one row left
+        se.execute();
+        assertThrows(IllegalStateException.class, () -> bus.redo());
+
+        // should not throw error
+        bus.undo();
+        bus.redo();
+
+        // flush bus and try undo redo on empty history
+        bus.flushHistory();
+        assertThrows(IllegalStateException.class, () -> bus.undo());
+        assertThrows(IllegalStateException.class, () -> bus.redo());
+
+        // undo to much
+        add.execute();
+        bus.undo();
+        assertThrows(IllegalStateException.class, () -> bus.undo());
+
     }
 }
