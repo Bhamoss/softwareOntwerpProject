@@ -42,7 +42,7 @@ class SQLInterpreter {
         initTable(query);
         inverseCount = 0;
         query.tableSpecs.interpret(
-                rec -> inverter(rec, query.columnSpecs.get(colId-1).expr, colId,rowId,val),
+                rec -> inverter(rec, query.columnSpecs.get(colId-1).expr,rowId,val),
                 this::recordify
         );
     }
@@ -53,19 +53,14 @@ class SQLInterpreter {
      * Help function for reverse interpretation.
      * @param rec current record
      * @param rExpr the expression to be reversed.
-     * @param colId the columnId of the changed value
      * @param rowId the rowId of the changed value
      * @param val the new value
      */
-    public void inverter(Record rec, Expr rExpr, int colId, int rowId, Value val) {
+    public void inverter(Record rec, Expr rExpr, int rowId, Value val) {
         inverseCount++;
         // Return if the current record does not have the required rowId
         if (inverseCount != rowId)
             return;
-
-        // Edit the record with the new value and reverse interpret
-        rec.write(colId-1,val);
-        String invval = rExpr.inverseEval(rec).toString();
 
         // Find the table,column and row Id that the new value refers to
         CellId refCellId;
@@ -78,6 +73,11 @@ class SQLInterpreter {
         int refTableId = tableManager.getTableId(TRMap.get(refCellId.tRef));
         int refRowId = rec.getId(refCellId);
         int refColId = tableManager.getColumnId(refTableId, refCellId.columnName);
+
+        // Edit the record with the new value and reverse interpret
+        rec.write(refColId-1,val);
+        String invval = rExpr.inverseEval(rec).toString();
+
         // apply the change to the underlying table
         tableManager.setCellValue(refTableId, refColId, refRowId, invval);
     }
