@@ -39,7 +39,10 @@ public class PreviousRowCommand extends UICommand {
     @Override
     public void execute() {
         getCompositor().removeSubWindow(getComponentWidget());
-        getCompositor().addFormSubWindow(getTableID(),getRowID()-1);
+        if(getRowID()> 1)
+            getCompositor().addFormSubWindow(getTableID(),getRowID()-1);
+        else
+            getCompositor().addFormSubWindow(getTableID(),1);
 
     }
 

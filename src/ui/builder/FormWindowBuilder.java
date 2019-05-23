@@ -131,11 +131,11 @@ public class FormWindowBuilder extends  ModeBuilder{
 
         window.addWidget(
                 new KeyEventWidget(new NextRowCommand(tableID, rowID, compositor, scrollWindow),
-                        KeyEvent.VK_PAGE_UP, false
+                        KeyEvent.VK_PAGE_DOWN, false
                 ));
         window.addWidget(
                 new KeyEventWidget(new PreviousRowCommand(tableID, rowID, compositor,scrollWindow),
-                        KeyEvent.VK_PAGE_DOWN, false
+                        KeyEvent.VK_PAGE_UP, false
                 ));
         window.addWidget(
                 new KeyEventWidget(new AddRowCommand(tableID, getUIHandler(),compositor, getBus()),
@@ -156,7 +156,7 @@ public class FormWindowBuilder extends  ModeBuilder{
     public Boolean canRebuild(ComponentWidget componentWidget) {
         if(componentWidget.getMode().equals("form")&&
                 getUIHandler().hasAsTable(componentWidget.getTableId())&&
-                (getUIHandler().getNbRows(componentWidget.getTableId())>=componentWidget.getRowId() ||
+                (componentWidget.getRowId() > 0 ||
                         ( getUIHandler().getNbRows(componentWidget.getTableId()) == 0  &&
                                 componentWidget.getRowId() == 1)))
             return true;
