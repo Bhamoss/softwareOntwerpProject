@@ -156,7 +156,9 @@ public class FormWindowBuilder extends  ModeBuilder{
     public Boolean canRebuild(ComponentWidget componentWidget) {
         if(componentWidget.getMode().equals("form")&&
                 getUIHandler().hasAsTable(componentWidget.getTableId())&&
-                getUIHandler().getNbRows(componentWidget.getTableId())>=componentWidget.getRowId())
+                (getUIHandler().getNbRows(componentWidget.getTableId())>=componentWidget.getRowId() ||
+                        ( getUIHandler().getNbRows(componentWidget.getTableId()) == 0  &&
+                                componentWidget.getRowId() == 1)))
             return true;
         else
             return false;

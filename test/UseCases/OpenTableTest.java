@@ -36,15 +36,55 @@ public class OpenTableTest {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
                 /**
-                 * double click op een table name
+                 * double click op een table name, die nog geen columns heeft
+                 *      een nieuw table design subwindow wordt gemaakt voor de aangeklikte table
                  */
-                File file = new File(classLoader.getResource("resources/OpenTable/OpenTableMSS1.txt").getFile());
+                File file = new File(classLoader.getResource("resources/OpenTable/OpenTableDesign.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
-                 * nieuw subwindow wordt aangemaakt met daarin de tableDesignMode van de aangeklikte table
+                 * Een paar columns worden toegevoegd aan de table (Table2)
                  */
-                file = new File(classLoader.getResource("resources/OpenTable/OpenTableMSS2.txt").getFile());
+                file = new File(classLoader.getResource("resources/OpenTable/OpenTableAddSomeColumns.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
+                 * Opnieuw wordt er dubbel geklikt op dezelfde table name, nu heeft die wel al columns
+                 *      een nieuw table rows subwindow wordt gemaakt
+                 */
+                file = new File(classLoader.getResource("resources/OpenTable/OpenTableRow.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void OpenTableForm() {
+
+        try {
+            java.awt.EventQueue.invokeAndWait(() -> {
+                ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * double click op een table name, die nog geen columns heeft
+                 *      een nieuw table design subwindow wordt gemaakt voor de aangeklikte table
+                 */
+                File file = new File(classLoader.getResource("resources/OpenTable/OpenTableDesign.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
+                 * Een paar columns worden toegevoegd aan de table (Table2)
+                 */
+                file = new File(classLoader.getResource("resources/OpenTable/OpenTableAddSomeColumns.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
+                 * Table2 wordt geselecteerd en er wordt op CTRL + F geklikt
+                 *  een nieuw Form subwindow wordt gemaakt
+                 */
+                file = new File(classLoader.getResource("resources/OpenTable/OpenTableForm.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
             });
         } catch (InterruptedException e) {
             e.printStackTrace();

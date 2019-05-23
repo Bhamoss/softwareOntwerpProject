@@ -1,0 +1,46 @@
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 16 65535
+KeyEvent KEY_PRESSED 84 84
+KeyEvent KEY_TYPED 0 84
+Paint
+KeyEvent KEY_PRESSED 65 97
+KeyEvent KEY_TYPED 0 97
+Paint
+KeyEvent KEY_PRESSED 66 98
+KeyEvent KEY_TYPED 0 98
+Paint
+KeyEvent KEY_PRESSED 76 108
+KeyEvent KEY_TYPED 0 108
+Paint
+KeyEvent KEY_PRESSED 69 101
+KeyEvent KEY_TYPED 0 101
+Paint
+KeyEvent KEY_PRESSED 98 50
+KeyEvent KEY_TYPED 0 50
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint
+KeyEvent KEY_PRESSED 8 8
+KeyEvent KEY_TYPED 0 8
+Paint

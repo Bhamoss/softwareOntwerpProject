@@ -38,24 +38,30 @@ public class EditTableNameTest {
                 /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
+                 *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS1.txt").getFile());
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * het aanpassen van de tableName
+                 *  stappen 3 en 4
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep3en4.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * er wordt op Enter geduwd, cursor verdwijnt en naam is aangepast
+                 *  of er wordt ergens buiten de tablename geklikt, de cursor verdwijnt en de naam is aangepast
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS3.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep5.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
             });
         } catch (InterruptedException e) {
+            System.out.println("EditTableName test");
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            System.out.println("EditTableName test");
+
             e.printStackTrace();
         }
     }
@@ -69,24 +75,31 @@ public class EditTableNameTest {
                 /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
+                 *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS1.txt").getFile());
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * het aanpassen van de tableName
+                 *  stappen 3 en 4
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep3en4.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * er wordt op ESC geduwd, cursor verdwijnt en naam is gereset
+                 *  stap 5a
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS5a.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep5a.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
             });
         } catch (InterruptedException e) {
+            System.out.println("EditTableNameESC test");
+
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            System.out.println("EditTableNameESC test");
+
             e.printStackTrace();
         }
     }
@@ -100,24 +113,32 @@ public class EditTableNameTest {
                 /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
+                 *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS1.txt").getFile());
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * het aanpassen van de tableName
+                 *  stappen 3 en 4
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep3en4.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
-                 * er wordt een invalid name ingegeven, rood boordje rond widget
+                 * er wordt een invalid name ingegeven, rood boordje rond widget, er kan niet op enter geklikt worden
+                 *  tot de name valid is
+                 *      stap 6a
                  */
-                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameMSS5a.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep6a.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
             });
         } catch (InterruptedException e) {
+            System.out.println("EditTableNameInValid test");
+
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            System.out.println("EditTableNameInValid test");
+
             e.printStackTrace();
         }
     }
