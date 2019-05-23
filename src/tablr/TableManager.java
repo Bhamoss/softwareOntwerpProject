@@ -81,6 +81,7 @@ public class TableManager {
     public void setQuery(int id, String q) throws  IllegalTableException {
         if(!hasAsTable(id)){throw new IllegalTableException();}
         Table table = getTable(id);
+        // TODO: isn't index==id
         int index = getTableIndex(table);
         for (Table t : tables) {
             if (t.queryRefersTo(table))

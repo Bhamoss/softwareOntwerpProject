@@ -98,7 +98,7 @@ class Subscription {
         {
             // Occurs when the subscribed method throws an exception
             System.out.println("The onEvent method has thrown an error.");
-            System.out.println(e.getCause());
+            e.printStackTrace();
             throw new IllegalArgumentException("");
         }
     }

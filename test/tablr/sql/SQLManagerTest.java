@@ -123,7 +123,15 @@ class SQLManagerTest {
     void inverseQuery() {
         interpreter.inverseInterpret("SELECT test.ints + 1 AS ids FROM testTable1 AS test WHERE TRUE", 1, 1, "42", "Integer");
         assertEquals("41", tableManager.getCellValue(1,3,1));
+    }
 
+
+    @Test
+    void inverseJoinQuery() {
+        interpreter.inverseInterpret(
+                "SELECT test2.name AS Names, test.bools2 AS Bools FROM testTable1 AS test INNER JOIN table2 AS test2 ON test.ints = test2.id WHERE TRUE",
+                2, 1, "false", "Boolean"
+        );
     }
 
 

@@ -102,9 +102,15 @@ public class WindowCompositor extends CanvasWindow {
         subwindow.unsubscribe(bus);
     }
 
+    private void removeAllSubWindows() {
+        for (int i=1; i<subWindows.size(); i++) {
+            removeSubWindow(subWindows.get(i));
+        }
+    }
+
     public void rebuildAllWidgets() {
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
-        subWindows.clear();
+        removeAllSubWindows();
         for (ComponentWidget subWindow : oldSubWindows) {
             if(subWindow.getMode().equals("tables") && tablesWindowBuilder.canRebuild(subWindow))
                 addSubWindow(tablesWindowBuilder.rebuild(subWindow));
