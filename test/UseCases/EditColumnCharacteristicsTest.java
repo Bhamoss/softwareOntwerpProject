@@ -30,39 +30,168 @@ public class EditColumnCharacteristicsTest {
     }
 
     @Test
-    void OpenTable() {
+    void EditColumnNameValid() {
 
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
                 /**
-                 * table maken, dan column maken en dan de naam bijwerken
+                 * table wordt aangemaakt en er wordt naar de designmode subwindow gegaan
                  */
-                File file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnCharacteristicsMSS.txt").getFile());
-                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
-                /**
-                 * table maken, dan column maken en dan door de types scrollen
-                 */
-                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnCharacteristicsA.txt").getFile());
+                File file = new File(classLoader.getResource("resources/AddColumn/AddColumnSETUP.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
                 /**
-                 * table maken, dan column maken dan een paar default values invullen en dan door de types scrollen
+                 * Er wordt een nieuwe column toegevoegd
                  */
-                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnCharacteristicsA2.txt").getFile());
+                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
                 /**
-                 * table maken, dan column maken dan blanks selecteren en deselecteren
+                 * Column name wordt aangepast
+                 *      eerst naar een lege string, invalid
+                 *      daarna naar Column5, valid
                  */
-                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnCharacteristicsB.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnName/EditColumnNameStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void EditColumnNameInValid() {
+
+        try {
+            java.awt.EventQueue.invokeAndWait(() -> {
+                ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * User clicks a table query in a tables subwindow
+                 *      cursor bij table query
+                 *   Eerst en vooral worden er 2 tables aangemaakt, een stored en een computed
+                 *      De stored krijgt een column met als naam Col, type String, blanksAllowed false en default "test"
+                 *   Daarna wordt de query van de computedTable (table1) gezet:
+                 *      SELECT t.Col AS col FROM Table2 AS t WHERE t.Col = "test"
+                 *   Vervolgens worden van beide tables de tableRowMode geopend en zien we dat bij het
+                 *      toevoegen van een row bij Table2, er ook een row wordt toegevoegd bij Table1
+                 *      Als er een value verandert van "test" naar iets anders, dan wordt die row bij Table1 verwijderd
+                 */
+                File file = new File(classLoader.getResource("resources/EditTableQuery/EditTableQueryStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
+                 * Naar designMode subwindow gaan
+                 *      column Col proberen de naam aan te passen, onmogelijk want
+                 *      Table1 verwijst naar die column
+                 *      enkel de oude naam is valid
+                 */
+                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnName/EditColumnNameStep2a.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void EditColumnType() {
+
+        try {
+            java.awt.EventQueue.invokeAndWait(() -> {
+                ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * table wordt aangemaakt en er wordt naar de designmode subwindow gegaan
+                 */
+                File file = new File(classLoader.getResource("resources/AddColumn/AddColumnSETUP.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
                 /**
-                 * table maken, dan column maken dan een paar default values invullen
+                 * Er wordt een nieuwe column toegevoegd
                  */
-                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnCharacteristicsC.txt").getFile());
+                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+                /**
+                 * Column type wordt aangepast
+                 *      eerst met een blank default value --> alle types zijn valid
+                 *      daarna een string in blank default --> enkel String type is valid,
+                 *          de rest wordt rood en moet je doorklikken tot String type om iets anders aan te passen
+                 */
+                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnType/EditColumnTypeStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void EditColumnBlanksAllowed() {
+
+        try {
+            java.awt.EventQueue.invokeAndWait(() -> {
+                ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * table wordt aangemaakt en er wordt naar de designmode subwindow gegaan
+                 */
+                File file = new File(classLoader.getResource("resources/AddColumn/AddColumnSETUP.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+                /**
+                 * Er wordt een nieuwe column toegevoegd
+                 */
+                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+                /**
+                 * Column blanksallowed wordt aangepast
+                 *      eerst proberen het uit te zetten --> kan niet want default value is blank
+                 *      daarna default value aangepast en blanks allowed kan nu wel uitgezet worden
+                 */
+                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnBlanksAllowed/EditColumnBlanksStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void EditColumnDV() {
+
+        try {
+            java.awt.EventQueue.invokeAndWait(() -> {
+                ClassLoader classLoader = getClass().getClassLoader();
+                /**
+                 * table wordt aangemaakt en er wordt naar de designmode subwindow gegaan
+                 */
+                File file = new File(classLoader.getResource("resources/AddColumn/AddColumnSETUP.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+                /**
+                 * Er wordt een nieuwe column toegevoegd
+                 */
+                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+
+                /**
+                 * Column blanksallowed wordt aangepast
+                 *      eerst proberen het uit te zetten --> kan niet want default value is blank
+                 *      daarna default value aangepast en blanks allowed kan nu wel uitgezet worden
+                 */
+                //file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnDV/EditColumnDVStep1.txt").getFile());
+                //CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                throw new IllegalStateException("Nog te testen");
             });
         } catch (InterruptedException e) {
             e.printStackTrace();
