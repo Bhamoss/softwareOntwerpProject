@@ -42,8 +42,8 @@ public class TablesHandler {
         getTableManager().setQuery(id, query);
     }
 
-    public boolean isValidQuery(String query){
-        return getTableManager().isValidQuery(query);
+    public boolean isValidQuery(int id, String query){
+        return getTableManager().isValidQuery(id, query);
     }
 
 
@@ -417,7 +417,6 @@ public class TablesHandler {
      */
     public boolean canHaveAsColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalTableException
     {
-        //System.out.println();
         return getTableManager().canHaveAsColumnType(tableId, columnId, type);
     }
 
@@ -516,7 +515,6 @@ public class TablesHandler {
      */
     public void setColumnType(int tableId, int columnId, String type) throws IllegalColumnException, IllegalArgumentException, IllegalTableException
     {
-        //System.out.println("SETTING COLUMN TYPE");
         getTableManager().setColumnType(tableId, columnId, type);
     }
 

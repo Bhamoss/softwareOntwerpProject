@@ -70,7 +70,7 @@ public class TablesWindowBuilder extends  ModeBuilder{
         window.addWidget(table);
 
         TableSizeUpdater tableNameSizeUpdater = new TableSizeUpdater(1,uiHandler);
-        TableSizeUpdater tableQuerrySizeUpdater = new TableSizeUpdater(2,uiHandler);
+        TableSizeUpdater tableQuerySizeUpdater = new TableSizeUpdater(2,uiHandler);
 
         table.addSelectorColumn("S");
         table.addColumn(uiHandler.getTableWidth(1),
@@ -82,8 +82,8 @@ public class TablesWindowBuilder extends  ModeBuilder{
 
         table.addColumn(uiHandler.getTableWidth(2),
                 true,
-                "Querry",
-                tableQuerrySizeUpdater,
+                "Query",
+                tableQuerySizeUpdater,
                 new ResizeTableCommand(2,uiHandler,bus),
                 bus);
 
@@ -103,9 +103,9 @@ public class TablesWindowBuilder extends  ModeBuilder{
 
             // Create the editor widgets which holds the names for the tables and is able to change those names
             EditorWidget queryEditor = new EditorWidget(true);
-            queryEditor.setValidHandler((String s) -> uiHandler.isValidQuery(s));
+            queryEditor.setValidHandler(s->uiHandler.isValidQuery(tableID,s));
             queryEditor.setGetHandler(new TableQueryUpdater(tableID, queryEditor, uiHandler), bus);
-            queryEditor.setPushHandler(new SetTableQueryCommand(()->queryEditor.getText(), tableID, uiHandler, bus));
+            queryEditor.setPushHandler(new SetTableQueryCommand(queryEditor::getText, tableID, uiHandler, bus));
 
             table.addEntry(queryEditor);
         }
@@ -132,10 +132,7 @@ public class TablesWindowBuilder extends  ModeBuilder{
 
     @Override
     public Boolean canRebuild(ComponentWidget componentWidget) {
-        if(componentWidget.getMode().equals("tables"))
-            return true;
-        else
-            return false;
+        return componentWidget.getMode().equals("tables");
     }
 
     @Override

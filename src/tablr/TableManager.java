@@ -78,15 +78,15 @@ public class TableManager {
         return getTable(id).getQuery();
     }
 
-    public void setQuery(int id, String q) throws  IllegalTableException {
-        if(!hasAsTable(id)){throw new IllegalTableException();}
+    void setQuery(int id, String q) throws  IllegalTableException {
+        if(!hasAsTable(id))
+            throw new IllegalTableException();
+        if(!isValidQuery(id, q))
+            throw new IllegalStateException();
+
         Table table = getTable(id);
-        // TODO: isn't index==id
+        // TODO: isn't index==id?
         int index = getTableIndex(table);
-        for (Table t : tables) {
-            if (t.queryRefersTo(table))
-                throw new IllegalStateException();
-        }
         // maak nieuwe table aan als er van computed naar stored gaat of omgekeerd
         //  en voeg er de juiste nieuwe terug aan toe op de juiste index
         // Indien niet geswitcht wordt --> gewoon setquery van de table.
@@ -104,7 +104,11 @@ public class TableManager {
             table.setQuery(q);
     }
 
-    public boolean isValidQuery(String query) {
+    public boolean isValidQuery(int id, String query) {
+        for (Table t : tables) {
+            if (t.queryRefersTo(getTable(id)))
+                return false;
+        }
         SQLManager tmp = new SQLManager(this);
         return query.equals("") || tmp.isValidQuery(query);
     }

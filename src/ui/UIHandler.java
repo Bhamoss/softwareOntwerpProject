@@ -143,8 +143,8 @@ public class UIHandler {
         getTablesHandler().setQuery(id, q);
     }
 
-    public boolean isValidQuery(String query){
-        return getTablesHandler().isValidQuery(query);
+    public boolean isValidQuery(int id, String query){
+        return getTablesHandler().isValidQuery(id, query);
     }
 
     /**

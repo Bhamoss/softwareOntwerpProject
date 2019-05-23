@@ -73,33 +73,33 @@ class ComputedTableTest {
     @Test
     void getColumnIds()
     {
-
-
         ArrayList<Integer> cs = new ArrayList<Integer>();
         for (int i = 1; i <= 2; i++) {
             cs.add(i);
         }
         ArrayList<Integer> c = tableManager.getTable(3).getColumnIds();
         for (int i = 0; i < c.size(); i++) {
-            assertTrue(cs.get(i).equals(c.get(i)));
+            assertEquals(cs.get(i), c.get(i));
         }
     }
 
+
     @Test
     void isValidQuery(){
-        assertTrue(tableManager.isValidQuery("SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
+        assertTrue(tableManager.isValidQuery(3,"SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
                 "INNER JOIN table2 AS test2 ON test.ints = test2.id " +
-                "WHERE test2.name = \"Lorem\""));
-        assertFalse(tableManager.isValidQuery("SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
+                        "WHERE test2.name = \"Lorem\""));
+        assertFalse(tableManager.isValidQuery(3, "SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
                 "INNER JOIN table2 AS test2 ON test.ints = test2.id " +
                 "WHER test2.name = \"Lorem\""));
-        assertFalse(tableManager.isValidQuery("SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
+        assertFalse(tableManager.isValidQuery(3, "SELECT test2.name AS names, test2.id AS ids FROM testTable1 AS test " +
                 "INNER JOIN table2 AS test ON test.ints = test2.id " +
                 "WHERE test2.name = \"Lorem\""));
-        assertFalse(tableManager.isValidQuery("SELECT test2.name AS names, test2.i AS ids FROM testTable1 AS test " +
+        assertFalse(tableManager.isValidQuery(3, "SELECT test2.name AS names, test2.i AS ids FROM testTable1 AS test " +
                 "INNER JOIN table2 AS test2 ON test.ints = test2.id " +
                 "WHERE test2.name = \"Lorem\""));
     }
+
 
     @Test
     void addRow() {

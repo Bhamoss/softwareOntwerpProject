@@ -217,7 +217,7 @@ abstract public class Table {
     public int getNbRows() {
 
         if(getNbColumns() == 0)
-            return -1;
+            return 0;
         else    // there should always be a column at one if there are columns.
             return getColumnAt(1).getNbValues();
     }
