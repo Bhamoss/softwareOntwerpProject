@@ -21,10 +21,9 @@ public class SetColumnTypeCommand extends UndoableStaticTableCommands {
      * @param compositor
      */
     public SetColumnTypeCommand(int tableId, int columnId, Supplier<String> typeSupplier, UIHandler uiHandler, CommandBus commandBus, WindowCompositor compositor){
-        super(commandBus, uiHandler,tableId);
+        super(commandBus, uiHandler,compositor,tableId);
         this.columnId = columnId;
         this.typeSupplier = typeSupplier;
-        this.compositor = compositor;
     }
 
 
@@ -55,20 +54,6 @@ public class SetColumnTypeCommand extends UndoableStaticTableCommands {
 
 
     /**
-     * The compositor used in this command.
-     */
-    private final WindowCompositor compositor;
-
-    /**
-     * Returns the compositor of this command.
-     */
-    private WindowCompositor getCompositor()
-    {
-        return compositor;
-    }
-
-
-    /**
      * Creates a new SetColumnTypeCommand with the same tableId, columnId, typeSupplier, uiHandler, commandbus,
      * compositor and the current type of the column
      * as old type and the type supplied by the typeSupplier as the newType.
@@ -77,7 +62,7 @@ public class SetColumnTypeCommand extends UndoableStaticTableCommands {
     @Override
     protected SetColumnTypeCommand cloneWithValues() {
         return new SetColumnTypeCommand(getTableId(), getColumnId(), getTypeSupplier(),
-                getUiHandler(), getBus(), getCompositor());
+                getUiHandler(), getBus(), getWindowCompositor());
     }
 
     /**

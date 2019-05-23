@@ -30,7 +30,7 @@ public class UndoModificationTest {
     }
 
     @Test
-    void CreateTable() {
+    void UndoModification() {
 
         try {
             java.awt.EventQueue.invokeAndWait(() -> {
