@@ -263,7 +263,6 @@ public class CommandBus {
         // Get the exact class of the command
         Class<?> commandClass = command.getClass();
 
-        //TODO: trigger all subscribe methods of superClasses?
         // you can do this with the following
         // while(!commandClass.equals(Object.class)) { ...; commandClass = commandClass.getSuperClass()}
         // because UICommando is a direct subclass of the Object class
