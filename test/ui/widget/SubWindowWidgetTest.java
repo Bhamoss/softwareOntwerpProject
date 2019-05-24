@@ -3,8 +3,10 @@ package ui.widget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.commands.UICommand;
+import ui.commands.undoableCommands.AddTableCommand;
 
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +40,13 @@ class SubWindowWidgetTest {
                 return null;
             }
         });
-        //btn = new ButtonWidget(0,0, 100,100, true, "Button", x->{btn.setText("Changed"); return false;});
+        HashMap<Integer, UICommand> onClick = new HashMap<>();
+        onClick.put(2, new TestCommand());
+        btn = new ButtonWidget(
+                0,0,100,100,
+                true,"Button", onClick
+        );
+        btn = new ButtonWidget(0,0, 100,100, true, "Button", onClick);
         label = new LabelWidget(250, 250, 100,100,true,"Label");
         swFilled.addWidget(btn);
         swFilled.addWidget(label);
@@ -73,14 +81,14 @@ class SubWindowWidgetTest {
     @Test
     void getTotalHeight() {
         assertEquals(0, swEmpty.getTotalHeight());
-        assertEquals(350 + SubWindowWidget.getMarginTop() - SubWindowWidget.getMarginBottom(),
-                            swFilled.getTotalHeight()); // label is het meest naar onderen: y = 250, height = 100
+        assertEquals(400 + SubWindowWidget.getMarginTop() - SubWindowWidget.getMarginBottom(),
+                            swFilled.getTotalHeight()); // label is het meest naar onderen: y = 300, height = 100
     }
 
     @Test
     void getTotalWidth() {
         assertEquals(0, swEmpty.getTotalWidth());
-        assertEquals(350, swFilled.getTotalWidth()); // label is het meest rechtse: x = 250, width = 100
+        assertEquals(350 + SubWindowWidget.getMarginRight(), swFilled.getTotalWidth()); // label is het meest rechtse: x = 250, width = 100
     }
 
     @Test
@@ -92,12 +100,6 @@ class SubWindowWidgetTest {
         assertEquals(250 + swFilled.getY() + SubWindowWidget.getMarginTop(), label.getY() );
         assertEquals(250 + swFilled.getX() + SubWindowWidget.getMarginLeft(), label.getX() );
 
-    }
-
-    @Test
-    void handleMouseEventCloseButton() {
-        assertTrue(swEmpty.handleMouseEvent(MouseEvent.MOUSE_PRESSED, 175, 10, 1));
-        assertFalse(swEmpty.handleMouseEvent(MouseEvent.MOUSE_PRESSED, 100, 100, 1));
     }
 
     @Test
@@ -164,4 +166,20 @@ class SubWindowWidgetTest {
     }
 
 
+}
+
+
+class TestCommand extends UICommand
+{
+
+    @Override
+    public void execute() {
+    }
+
+    @Override
+    public Boolean getReturn() {
+        return true;
+    }
+
+    public int t = 69;
 }

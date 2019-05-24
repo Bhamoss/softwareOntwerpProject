@@ -59,7 +59,7 @@ class Subscription {
         // Checking if the onEvent is valid.
 
         if (!canHaveAsOnEvent(onEvent)) {
-            System.out.println(onEvent.getName());
+            //System.out.println(onEvent.getName());
             throw new IllegalArgumentException("The event is invalid.");
         }
 
