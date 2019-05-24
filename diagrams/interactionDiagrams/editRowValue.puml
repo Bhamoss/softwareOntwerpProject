@@ -1,26 +1,24 @@
 @startuml
-titleLabel Delete Row\nMSS
+title Edit Row Value\nMSS
 Actor User
 
-User -> EditorWidget: changes column name
+User -> EditorWidget: edits text and presses enter
 activate EditorWidget
-EditorWidget -> TableRowsHandler: setCellValue(columnName,row,value)
-deactivate UIWindowHandler
-
-activate TableRowsHandler
-TableRowsHandler -> Table: isValidCell(cell, value)
+EditorWidget -> SetCellValueCommand: execute()
+activate SetCellValueCommand
+SetCellValueCommand -> UIHandler: setCellValue(tableId,columnId,rowId,value)
+activate UIHandler
+UIHandler -> TableManager: setCellValue(tableId,columnId,value)
+activate TableManager
+TableManager -> Table: isValidCell(value)
 activate Table
-TableRowsHandler -> Table: editCell(cell, value)
+TableManager -> Table: editCell(columnId,rowId,value)
 
-Table -> Column: editCell(cell, value)
+Table -> Column: editCell(rowId, value)
 activate Column
-Column -> Cell: setValue(value)
-activate Cell
-Cell -> Cell: isValidValue(value)
-deactivate Cell
 deactivate Column
-
 deactivate Table
 
-deactivate TableRowsHandler
+SetCellValueCommand -> CommandBus: post(this)
+
 @enduml

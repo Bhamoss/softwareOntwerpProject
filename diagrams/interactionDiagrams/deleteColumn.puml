@@ -1,36 +1,32 @@
 @startuml
-titleLabel Delete column\nMSS
+title Delete column\nMSS
 Actor User
-User->ButtonWidget: Presses delete
-activate ButtonWidget
-ButtonWidget ->UIWindowHandler: getSelectedItem()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: columnName
-deactivate UIWindowHandler
-ButtonWidget -> TableDesignHandler: deleteColumn(columnName)
-activate TableDesignHandler
-TableDesignHandler -> Table: deleteColumn(column)
+User->KeyEventWidget: Presses delete
+activate KeyEventWidget
+activate RemoveColumnCommand
+KeyEventWidget -> RemoveColumnCommand: execute()
+RemoveColumnCommand ->SelectorColumn: getSelectedItem()
+activate SelectorColumn
+RemoveColumnCommand <-- SelectorColumn: columnId
+deactivate SelectorColumn
+RemoveColumnCommand -> UIHandler: deleteColumn(columnId)
+activate UIHandler
+UIHandler -> TableManager: deleteColumn(columnId)
+TableManager -> Table: deleteColumn(columnId)
 activate Table
 alt isValidColumn(column)
     Table -> Column: destroy()
     destroy Column
 else
-    Table -> TableDesignHandler: ERROR
+    Table -> UIHandler: ERROR
     deactivate Table
-    TableDesignHandler -> ButtonWidget: ERROR
-    deactivate TableDesignHandler
+    UIHandler -> RemoveColumnCommand: ERROR
+    deactivate UIHandler
 end
-ButtonWidget -> UIWindowHandler: getOpenTable()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: tableName
-deactivate UIWindowHandler
 
-ButtonWidget -> UIWindowHandler: removeTableRowsEntry(tableName,columnName)
-activate UIWindowHandler
-deactivate UIWindowHandler
-
-ButtonWidget -> UIWindowHandler: loadTableDesign(tableName)
-deactivate ButtonWidget
-activate UIWindowHandler
-
+RemoveColumnCommand -> WindowCompositor: rebuildAllWindows()
+activate WindowCompositor
+deactivate WindowCompositor
+deactivate RemoveColumnCommand
+deactivate KeyEventWidget
 @enduml

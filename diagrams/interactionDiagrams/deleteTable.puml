@@ -1,27 +1,28 @@
 @startuml
-titleLabel Delete Table\nMSS
+title Delete Table\nMSS
 Actor User
 
-User->ButtonWidget: Presses delete
-activate ButtonWidget
-ButtonWidget ->UIWindowHandler: getSelectedItem()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: tableName
-deactivate UIWindowHandler
-
-ButtonWidget -> TablesHandler: deleteTable(tableName)
-alt is(Valid)Table(table)
-activate TablesHandler
-
-TablesHandler -> Table: destroy()
+User->KeyEventWidget: Presses delete
+activate KeyEventWidget
+activate RemoveTableCommand
+KeyEventWidget -> RemoveTableCommand: execute()
+RemoveTableCommand ->SelectorColumn: getSelectedItem()
+activate SelectorColumn
+RemoveTableCommand <-- SelectorColumn: tableId
+deactivate SelectorColumn
+RemoveTableCommand -> UIHandler: deleteTable(tableId)
+activate UIHandler
+UIHandler -> TableManager: deleteTable(tableId)
+TableManager -> Table: destroy()
 destroy Table
-else
-deactivate TablesHandler
-TablesHandler-> ButtonWidget : ERROR
-end
-ButtonWidget -> UIWindowHandler: loadTables()
 
-activate UIWindowHandler
-deactivate ButtonWidget
+deactivate UIHandler
+deactivate Table
+
+RemoveTableCommand -> WindowCompositor: rebuildAllWindows()
+activate WindowCompositor
+deactivate WindowCompositor
+deactivate KeyEventWidget
+deactivate RemoveTableCommand
 
 @enduml
