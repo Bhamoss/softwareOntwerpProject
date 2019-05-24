@@ -1,3 +1,0 @@
-KeyEvent KEY_PRESSED 10 10
-KeyEvent KEY_TYPED 0 10
-Paint

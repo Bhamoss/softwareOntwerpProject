@@ -1,3 +1,0 @@
-KeyEvent KEY_PRESSED 27 27
-KeyEvent KEY_TYPED 0 27
-Paint

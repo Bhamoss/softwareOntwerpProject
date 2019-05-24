@@ -60,7 +60,7 @@ public class DeleteRowTest {
                 file = new File(classLoader.getResource("resources/EditRowValue/EditRowRowMode.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
-                 * De eerste row wordt verwijderd, ook zichtbaar in beide subwindows
+                 * De enkele rows worden verwijderd, ook zichtbaar in beide subwindows
                  */
                 file = new File(classLoader.getResource("resources/DeleteRow/DeleteRowStep1.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());

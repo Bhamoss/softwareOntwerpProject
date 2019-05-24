@@ -95,6 +95,9 @@ public class EditRowValueTest {
                  * Er wordt een form  subwindow aangemaakt
                  * De eerste row wordt geedit in form subwindow
                  *  in beide subwindows is de nieuwe value zichtbaar
+                 *
+                 *  er wordt ook een paar keer op PageDn geklikt, tot er geen row meer is van de columns
+                 *      daarin kan er geen value aangepast worden
                  */
                 file = new File(classLoader.getResource("resources/EditRowValue/EditRowFormMode.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
