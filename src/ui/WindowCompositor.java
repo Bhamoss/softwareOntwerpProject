@@ -1,5 +1,6 @@
 package ui;
 
+import sun.awt.image.ImageWatched;
 import ui.builder.FormWindowBuilder;
 import ui.builder.TableDesignWindowBuilder;
 import ui.builder.TableRowsWindowBuilder;
@@ -103,14 +104,17 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     private void removeAllSubWindows() {
-        for (int i=0; i<subWindows.size(); i++) {
-            removeSubWindow(subWindows.get(i));
+        LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
+        for (int i=0; i<oldSubWindows.size(); i++) {
+            //System.out.println("i: " + i);
+            removeSubWindow(oldSubWindows.get(i));
         }
     }
 
     public void rebuildAllWidgets() {
         LinkedList<ComponentWidget> oldSubWindows = (LinkedList<ComponentWidget>) subWindows.clone();
         removeAllSubWindows();
+//        subWindows.clear();
         for (ComponentWidget subWindow : oldSubWindows) {
             if(subWindow.getMode().equals("tables") && tablesWindowBuilder.canRebuild(subWindow))
                 addSubWindow(tablesWindowBuilder.rebuild(subWindow));
