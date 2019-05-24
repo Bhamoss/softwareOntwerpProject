@@ -1,20 +1,20 @@
 @startuml
-titleLabel Delete Row\nMSS
+title Delete Row\nMSS
 Actor User
-User->ButtonWidget: Presses delete
-activate ButtonWidget
-ButtonWidget ->UIWindowHandler: getSelectedItem()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: rowIndex
-deactivate UIWindowHandler
 
-ButtonWidget -> TableRowsHandler: deleteRow(rowIndex)
-activate TableRowsHandler
-
-TableRowsHandler -> Table: isValidRowIndex(rowIndex)
+User->KeyEventWidget: Presses delete
+activate KeyEventWidget
+activate RemoveRowCommand
+KeyEventWidget -> RemoveRowCommand: execute()
+RemoveRowCommand ->SelectorColumn: getSelectedItem()
+activate SelectorColumn
+RemoveRowCommand <-- SelectorColumn: rowId
+deactivate SelectorColumn
+KeyEventWidget -> UIHandler: deleteRow(tableId, rowId)
+activate UIHandler
+UIHandler -> TableManager: deleteRow(tableId, rowId)
+TableManager -> Table: deleteRow(rowId)
 activate Table
-TableRowsHandler -> Table: deleteRow(rowIndex)
-
 loop
     Table -> Column: deleteCell(index)
     activate Column
@@ -22,18 +22,14 @@ loop
     deactivate Column
     destroy Cell
 end
+
+deactivate UIHandler
 deactivate Table
-deactivate TableRowsHandler
-ButtonWidget -> TableRowsHandler: getOpenTable()
-activate TableRowsHandler
-ButtonWidget <-- TableRowsHandler: tableName
-deactivate UIWindowHandler
-ButtonWidget -> UIWindowHandler: removeTableRowsEntry(tableName,rowIndex)
-activate UIWindowHandler
-deactivate UIWindowHandler
 
-ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
+RemoveRowCommand -> WindowCompositor: rebuildAllWindows()
+activate WindowCompositor
+deactivate WindowCompositor
+deactivate KeyEventWidget
 
-activate UIWindowHandler
-deactivate ButtonWidget
+
 @enduml

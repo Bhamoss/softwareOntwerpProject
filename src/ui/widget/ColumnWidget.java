@@ -125,7 +125,6 @@ public class ColumnWidget extends CompositeWidget {
      * Resizes the width of the column
      * @param w new width, needs be at least 5.
      */
-    //TODO comments ma kik, twas 00:17
     public void forceResize(int w) {
         if (w <= 5)
             return;

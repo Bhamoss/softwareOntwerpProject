@@ -1,14 +1,16 @@
 @startuml
+title edit tableName MSS
 actor User
 
-User -> TableHandler: setTableName(table, name)
-activate TableHandler
-activate Table
-TableHandler -> TableHandler: isNameAlreadyUsed(name)
-TableHandler -> Table: setName(name)
-Table -> Table: isNameEmpty(name)
-deactivate Table
-deactivate TableHandler
+User -> EditorWidget: Press enter
+EditorWidget -> SetTableNameCommand: execute()
+SetTableNameCommand -> UIHandler: setTableName(tableId, name)
+UIHandler -> TableManager: setTableName(tableId, name)
+TableManager -> Table: setName(name)
+SetTableNameCommand -> CommandBus: post(this)
+CommandBus -> TableNameUpdater: update()
+TableNameUpdater -> UIHandler: getTableName(tableId)
+TableNameUpdater -> EditorWidget2: setText(tableName)
 
 
 @enduml

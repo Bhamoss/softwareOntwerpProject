@@ -83,7 +83,6 @@ abstract class Value<T> {
         return ((StringValue) this).value;
     }
 
-    // TODO: check consistency with column casing
     @Override
     public String toString() {
         return value.toString();

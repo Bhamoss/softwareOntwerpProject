@@ -2,18 +2,13 @@
 actor User
 
 User->ButtonWidget: Presses button
-
-ButtonWidget -> TableHandler: addTable()
-
-activate TableHandler
+ButtonWidget -> AddTableCommand: execute()
+AddTableCommand -> UIHandler: addTable()
+UIHandler -> TableManager: addTable()
 create Table
-TableHandler -> Table: create Table(N)
-activate Table
-Table -> Table: setName("TableN")
-return Table
-deactivate TableHandler
+TableManager -> Table: create
 
-activate UIWindowHandler
-ButtonWidget -> UIWindowHandler: loadTables()
+AddTableCommand -> WindowCompositor: rebuildAllWindows()
+
 
 @enduml

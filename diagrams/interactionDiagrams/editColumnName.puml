@@ -1,36 +1,25 @@
 @startuml
-titleLabel Edit Column Name
+title Edit Column Name MSS
 Actor User
 
 
-User -> EditorWidget: changes column name
+User -> EditorWidget: Press enter
 activate EditorWidget
-EditorWidget -> TableDesignHandler: setColumnName(column, name)
-deactivate UIWindowHandler
-
-activate TableDesignHandler
-TableDesignHandler -> TableManager: setColumnName(column, name)
+EditorWidget -> SetColumnNameCommand: execute()
+activate SetColumnNameCommand
+SetColumnNameCommand -> UIHandler: setColumnName(tableId,columnId,name)
+activate UIHandler
+UIHandler -> TableManager: setColumnName(tableId,columnId,name)
 activate TableManager
-TableManager -> Table: setColumnName(column, name)
-
+TableManager -> Table: setColumnName(columnId,name)
 activate Table
-alt !isAllReadyUsedColumnName(name)
-    Table -> Column: setName(name)
-    activate Column
-
-    opt !canHaveAsName(name)
-        Column -> Table: ERROR
-        deactivate Column
-        Table -> TableManager: ERROR
-        deactivate Table
-        TableManager -> TableDesignHandler: ERROR
-        deactivate TableManager
-        TableDesignHandler -> User: ERROR
-    end
-else
-TableDesignHandler -> User: ERROR
-deactivate TableDesignHandler
-end
+Table->ColumnConverter:convertToType(column, type)
+activate ColumnConverter
+return newColumn
+deactivate ColumnConverter
+Table->Table: setColumn(columnId,newColumn)
+deactivate Table
+SetColumnNameCommand -> CommandBus: post(this)
 
 
 

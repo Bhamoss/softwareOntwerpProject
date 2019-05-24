@@ -1,11 +1,12 @@
 @startuml
-titleLabel Add column
+title Add column
 Actor User
 
 User->ButtonWidget: Presses button
-ButtonWidget -> TableDesignHandler: addColumn()
-activate TableDesignHandler
-TableDesignHandler -> Table: addColumn()
+ButtonWidget -> AddColumnCommand: execute()
+AddColumnCommand -> UIHandler: addColumn(id)
+UIHandler -> TableManager: addColumn(id)
+TableManager -> Table: addColumn()
 activate Table
 create Column
 Table -> Column: create Column(N)
@@ -19,14 +20,7 @@ loop for all Rows
     Column -> Cell: create()
     deactivate Column
 end
+AddColumnCommand -> WindowCompositor: rebuildAllWindows()
 deactivate Table
-deactivate TableDesignHandler
-ButtonWidget -> UIWindowHandler: getOpenTable()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: tableName
-deactivate UIWindowHandler
-ButtonWidget -> UIWindowHandler: loadTableDesign(tableName)
-activate UIWindowHandler
-deactivate UIWindowHandler
 
 @enduml

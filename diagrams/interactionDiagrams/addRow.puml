@@ -1,12 +1,12 @@
 @startuml
-titleLabel Add row
+title Add row
 Actor User
 
 User->ButtonWidget: Presses button
-
-ButtonWidget -> TableDesignHandler: addRow()
-activate TableDesignHandler
-TableDesignHandler -> Table: addRow()
+ButtonWidget -> AddRowCommand: execute()
+AddRowCommand -> UIHandler: addRow(id)
+UIHandler -> TableManager: addRow(id)
+TableManager -> Table: addRow()
 activate Table
 loop for all Columns
     Table -> Column: addCell()
@@ -15,14 +15,8 @@ loop for all Columns
     Column -> Cell: create()
     deactivate Column
 end
+AddRowCommand -> WindowCompositor: rebuildAllWindows()
 deactivate Table
-deactivate TableDesignHandler
-ButtonWidget -> UIWindowHandler: getOpenTable()
-activate UIWindowHandler
-ButtonWidget <-- UIWindowHandler: tableName
-deactivate UIWindowHandler
-ButtonWidget -> UIWindowHandler: loadTableRows(tableName)
-activate UIWindowHandler
-deactivate UIWindowHandler
+
 
 @enduml

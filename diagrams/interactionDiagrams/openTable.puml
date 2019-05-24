@@ -1,24 +1,20 @@
 @startuml
 actor User
 
-User -> TableHandler: isEmpty(table)
-activate TableHandler
-TableHandler -> Table: isEmpty()
-activate Table
-deactivate Table
+User -> ButtonWidget: double clicks
+activate ButtonWidget
+ButtonWidget -> OpenTableCommand: execute()
+activate OpenTableCommand
+OpenTableCommand -> UIHandler: isTableEmpty(id)
+activate UIHandler
+deactivate UIHandler
 alt empty
-    TableHandler -> TableHandler: setMode(designMode)
-    TableHandler -> DesignHandler: setTable(table)
-    activate DesignHandler
-    deactivate DesignHandler
+    OpenTableCommand -> WindowCompositor: addDesignWindow(id)
 else !empty
-    TableHandler -> TableHandler: setMode(rowsMode)
-    TableHandler -> RowsHandler: setTable(table)
-    activate RowsHandler
-    deactivate RowsHandler
+    OpenTableCommand -> WindowCompositor: addRowsWindow(id)
 end
-deactivate TableHandler
-
+deactivate OpenTableCommand
+deactivate ButtonWidget
 
 
 @enduml

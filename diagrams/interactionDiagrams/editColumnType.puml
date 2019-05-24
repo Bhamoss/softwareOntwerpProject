@@ -1,36 +1,16 @@
 @startuml
-titleLabel Edit Column Type
+title Edit Column Type
 Actor User
 
 
 
-User -> SwitchBoxWidget: changes type
-activate SwitchBoxWidget
-SwitchBoxWidget -> TableDesignHandler: setColumnType(column, type)
-deactivate UIWindowHandler
-
-activate TableDesignHandler
-TableDesignHandler -> TableManager: setColumnType(column, type)
-activate TableManager
-TableManager -> Table: setColumnType(column, type)
-activate Table
-Table -> Column: setType(type)
-activate Column
-
-alt canHaveAsType(newType)
-    create "newColumn : Column"
-    Column -> "newColumn : Column": create Column
-    Column --> Table: newColumn
-else
-    Column -> Table: ERROR
-    deactivate Column
-    Table -> TableManager: ERROR
-    deactivate Table
-    TableManager -> TableDesignHandler: ERROR
-    deactivate TableManager
-    TableDesignHandler -> User: ERROR
-    deactivate TableDesignHandler
-end
+User -> EditorWidget: Press enter
+EditorWidget -> SetColumnTypeCommand: execute()
+SetColumnTypeCommand -> UIHandler: setColumnType(tableId,columnId,type)
+UIHandler -> TableManager: setColumnType(tableId,columnId,type)
+TableManager -> Table: setColumnType(columnId,type)
+Table->Column:setName(name)
+SetColumnTypeCommand -> CommandBus: post(this)
 
 
 

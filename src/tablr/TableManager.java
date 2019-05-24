@@ -1368,7 +1368,6 @@ public class TableManager {
      */
     private List<Table> tables = new LinkedList<Table>();
 
-    //TODO Commentaar
     public TableMemento createTableMemento(Integer tableId){
         if(tableId  > -1) {
             TableMemento tableMemento = new TableMemento(getTableIndex(getTable(tableId)), getTable(tableId).copy());
@@ -1378,7 +1377,6 @@ public class TableManager {
             return new TableMemento(1);
     }
 
-    //TODO Commentaar
     public void setTableMemento(TableMemento memento){
 
         if(!memento.isEmpty) {
