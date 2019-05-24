@@ -185,13 +185,14 @@ public class EditColumnCharacteristicsTest {
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
 
                 /**
-                 * Column blanksallowed wordt aangepast
-                 *      eerst proberen het uit te zetten --> kan niet want default value is blank
-                 *      daarna default value aangepast en blanks allowed kan nu wel uitgezet worden
+                 * Column default value wordt aangepast
+                 *      Er wordt 1 extra columns toegevoegd
+                 *          elke column krijgt een verschillend type (email wordt hier niet getest, de computer waarop
+                 *              de tests uitgevoerd werden kon de @ niet geregistreerd worden door de applicatie)
+                 *      De default value van elke column wordt aangepast
                  */
-                //file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnDV/EditColumnDVStep1.txt").getFile());
-                //CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
-                throw new IllegalStateException("Nog te testen");
+                file = new File(classLoader.getResource("resources/EditColumnCharacteristics/EditColumnDV/EditColumnDVStep1.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
         } catch (InterruptedException e) {
             e.printStackTrace();

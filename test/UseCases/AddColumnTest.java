@@ -73,7 +73,7 @@ public class AddColumnTest {
                  *  daarna wordt een nieuwe column toegevoegd, en is te zien dat deze ook dezelfde
                  *      aantal rows krijgt met de gewone default values
                  */
-                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1.txt").getFile());
+                file = new File(classLoader.getResource("resources/AddColumn/AddColumnStep1a.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
             });
         } catch (InterruptedException e) {

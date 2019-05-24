@@ -103,7 +103,7 @@ public class WindowCompositor extends CanvasWindow {
     }
 
     private void removeAllSubWindows() {
-        for (int i=1; i<subWindows.size(); i++) {
+        for (int i=0; i<subWindows.size(); i++) {
             removeSubWindow(subWindows.get(i));
         }
     }

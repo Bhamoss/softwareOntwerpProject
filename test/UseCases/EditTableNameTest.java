@@ -36,11 +36,18 @@ public class EditTableNameTest {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
                 /**
+                 * de setup voor de testcase: 2 tables
+                 *  Table2 heeft een column Col
+                 *  Table1 heeft een query die refereert naar Table2 en Col van die table
+                 */
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameSETUP.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
                  *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * het aanpassen van de tableName
@@ -73,11 +80,18 @@ public class EditTableNameTest {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
                 /**
+                 * de setup voor de testcase: 2 tables
+                 *  Table2 heeft een column Col
+                 *  Table1 heeft een query die refereert naar Table2 en Col van die table
+                 */
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameSETUP.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
                  *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
                  * het aanpassen van de tableName
@@ -111,14 +125,21 @@ public class EditTableNameTest {
             java.awt.EventQueue.invokeAndWait(() -> {
                 ClassLoader classLoader = getClass().getClassLoader();
                 /**
+                 * de setup voor de testcase: 2 tables
+                 *  Table2 heeft een column Col
+                 *  Table1 heeft een query die refereert naar Table2 en Col van die table
+                 */
+                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameSETUP.txt").getFile());
+                CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
+                /**
                  * User clicks a table name in a tables subwindow
                  *      cursor bij table name
                  *   stappen 1 en 2
                  */
-                File file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
+                file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep1en2.txt").getFile());
                 CanvasWindow.replayRecording(file.getAbsolutePath(),uiStarter.getCompositor());
                 /**
-                 * het aanpassen van de tableName
+                 * het aanpassen van de tableName van table1
                  *  stappen 3 en 4
                  */
                 file = new File(classLoader.getResource("resources/EditTableName/EditTableNameStep3en4.txt").getFile());

@@ -85,7 +85,6 @@ public class TableManager {
             throw new IllegalStateException();
 
         Table table = getTable(id);
-        // TODO: isn't index==id?
         int index = getTableIndex(table);
         // maak nieuwe table aan als er van computed naar stored gaat of omgekeerd
         //  en voeg er de juiste nieuwe terug aan toe op de juiste index
@@ -105,10 +104,10 @@ public class TableManager {
     }
 
     public boolean isValidQuery(int id, String query) {
-        for (Table t : tables) {
-            if (t.queryRefersTo(getTable(id)))
-                return false;
-        }
+//        for (Table t : tables) {
+//            if (t.queryRefersTo(getTable(id)))
+//                return false;
+//        }
         SQLManager tmp = new SQLManager(this);
         return query.equals("") || tmp.isValidQuery(query);
     }

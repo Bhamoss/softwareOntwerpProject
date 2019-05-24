@@ -196,7 +196,7 @@ public class StoredTable extends Table {
         if(getNbColumns() >= MAX_COLUMNS) return false;
         if (column == null || column.isTerminated())
             return false;
-        if (getNbRows() > -1 && column.getNbValues() != getNbRows()) return false;
+        if (getNbRows() > 0 && column.getNbValues() != getNbRows()) return false;
         for (Column existingColumn:
                 columns) {
             // next statement is needed for has proper colums
