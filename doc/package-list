@@ -2,8 +2,11 @@
 UseCases
 tablr
 tablr.column
+tablr.sql
 ui
 ui.builder
 ui.commandBus
 ui.commands
+ui.commands.undoableCommands
+ui.updaters
 ui.widget
