@@ -104,12 +104,14 @@ public class TableManager {
     }
 
     public boolean isValidQuery(int id, String query) {
-//        for (Table t : tables) {
-//            if (t.queryRefersTo(getTable(id)))
-//                return false;
-//        }
+        if (query.equals(""))
+            return true;
+        for (Table t : tables) {
+            if (t.queryRefersTo(getTable(id)))
+                return false;
+        }
         SQLManager tmp = new SQLManager(this);
-        return query.equals("") || tmp.isValidQuery(query);
+        return tmp.isValidQuery(query);
     }
 
     /**
